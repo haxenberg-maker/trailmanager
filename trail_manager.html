@@ -1,0 +1,2106 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trail Running Manager 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0e0d;
+  --s1: #131613;
+  --s2: #191d1a;
+  --s3: #1f241f;
+  --border: #252b25;
+  --border2: #2e362e;
+  --accent: #b8ff4f;
+  --accent-dim: rgba(184,255,79,0.1);
+  --accent-border: rgba(184,255,79,0.2);
+  --green: #4fff9b;
+  --orange: #ff7c3b;
+  --yellow: #ffcb4f;
+  --red: #ff4f4f;
+  --text: #e6ece7;
+  --t2: #8a9c8c;
+  --t3: #546056;
+  --t4: #3a4a3c;
+  --r: 10px;
+  --display: 'Bebas Neue', sans-serif;
+  --body: 'DM Sans', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14px;line-height:1.5;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ── APP SHELL ── */
+.shell{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  background:var(--s1);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+.logo{padding:26px 22px 18px;border-bottom:1px solid var(--border)}
+.logo-mark{font-family:var(--display);font-size:28px;letter-spacing:3px;color:var(--accent);line-height:1;display:flex;align-items:center;gap:8px}
+.logo-mark span{font-size:20px}
+.logo-sub{color:var(--t3);font-size:10px;margin-top:5px;letter-spacing:2px;text-transform:uppercase}
+
+.nav{padding:14px 10px;flex:1}
+.nav-group{font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:2px;padding:10px 12px 6px;margin-top:6px}
+.ni{
+  display:flex;align-items:center;gap:9px;padding:9px 12px;
+  border-radius:8px;cursor:pointer;color:var(--t2);font-size:13px;
+  transition:all .15s;margin-bottom:1px;border:1px solid transparent;
+  user-select:none;
+}
+.ni:hover{background:var(--s2);color:var(--text)}
+.ni.on{background:var(--accent-dim);color:var(--accent);border-color:var(--accent-border);font-weight:600}
+.ni .ico{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+.ni .badge{margin-left:auto;background:var(--accent);color:#0c0e0d;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center}
+
+.sidebar-bottom{padding:14px 16px;border-top:1px solid var(--border)}
+.kpi{margin-bottom:12px}
+.kpi-label{font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:1.5px;display:block;margin-bottom:2px}
+.kpi-val{font-family:var(--display);font-size:26px;color:var(--accent);letter-spacing:1px;line-height:1}
+.kpi-sub{font-size:11px;color:var(--t3);margin-top:1px}
+
+.save-btn{
+  width:100%;padding:9px;border-radius:8px;background:var(--accent-dim);
+  border:1px solid var(--accent-border);color:var(--accent);font-family:var(--body);
+  font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;letter-spacing:.5px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.save-btn:hover{background:rgba(184,255,79,.18)}
+.save-btn.saved{color:var(--green);border-color:rgba(79,255,155,.3);background:rgba(79,255,155,.08)}
+
+/* ── MAIN ── */
+.main{overflow-x:hidden}
+.page{display:none;padding:32px 36px;animation:fadeIn .2s ease}
+.page.on{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── PAGE HEADER ── */
+.ph{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.ph-left h2{font-family:var(--display);font-size:46px;letter-spacing:2px;line-height:1;color:var(--text)}
+.ph-left p{color:var(--t2);font-size:13px;margin-top:5px}
+.ph-right{display:flex;gap:8px;align-items:center}
+
+/* ── BUTTONS ── */
+.btn{padding:9px 18px;border-radius:7px;font-family:var(--body);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;border:none;letter-spacing:.3px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn-primary{background:var(--accent);color:#0c0e0d}
+.btn-primary:hover{background:#caff6b;transform:translateY(-1px);box-shadow:0 4px 16px rgba(184,255,79,.25)}
+.btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--s2);color:var(--text)}
+.btn-danger{background:rgba(255,79,79,.08);color:var(--red);border:1px solid rgba(255,79,79,.2)}
+.btn-danger:hover{background:rgba(255,79,79,.18)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-icon{padding:6px 7px}
+
+/* ── CARDS GRID ── */
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+
+/* ── RACE CARD ── */
+.rc{
+  background:var(--s1);border:1px solid var(--border);border-radius:var(--r);
+  padding:18px;transition:all .15s;position:relative;overflow:hidden;cursor:default;
+}
+.rc:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,0,0,.3)}
+.rc.star{border-color:rgba(184,255,79,.25)}
+.rc.star::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--green))}
+.rc.past{opacity:.65}
+
+.rc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.rc-nr{font-size:10px;color:var(--t3);letter-spacing:1px;margin-bottom:2px}
+.rc-name{font-size:15px;font-weight:600;color:var(--text);line-height:1.3}
+.rc-date{font-size:12px;color:var(--accent);font-weight:600;margin-top:3px}
+.rc-cd{font-size:11px;color:var(--t3);margin-top:1px}
+.rc-cd.soon{color:var(--orange)}
+
+.rc-nums{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.rn{background:var(--s2);border-radius:6px;padding:7px 10px}
+.rn lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:1px}
+.rn .rv{font-family:var(--display);font-size:18px;color:var(--text);letter-spacing:.5px;line-height:1}
+.rn .ru{font-size:11px;color:var(--t3)}
+
+.rc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.tag{padding:3px 8px;border-radius:20px;font-size:11px;font-weight:500;border:1px solid}
+.tg{color:var(--green);background:rgba(79,255,155,.07);border-color:rgba(79,255,155,.2)}
+.ty{color:var(--yellow);background:rgba(255,203,79,.07);border-color:rgba(255,203,79,.2)}
+.tr{color:var(--red);background:rgba(255,79,79,.07);border-color:rgba(255,79,79,.2)}
+.tn{color:var(--t2);background:var(--s2);border-color:var(--border)}
+.ta{color:var(--accent);background:var(--accent-dim);border-color:var(--accent-border)}
+
+.rc-foot{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border)}
+.rc-cost{font-family:var(--display);font-size:20px;color:var(--text)}
+.rc-cost small{font-family:var(--body);font-size:11px;color:var(--t3);font-weight:400}
+.rc-actions{display:flex;gap:5px}
+.rc-note{margin-top:8px;font-size:11px;color:var(--t3);font-style:italic;padding-left:2px}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:3px;margin-bottom:20px;background:var(--s1);padding:4px;border-radius:9px;width:fit-content;border:1px solid var(--border)}
+.tab{padding:6px 15px;border-radius:6px;cursor:pointer;font-size:13px;color:var(--t2);transition:all .15s;border:none;background:none;font-family:var(--body)}
+.tab.on{background:var(--s2);color:var(--text);font-weight:600}
+
+/* ── STAT TILES ── */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:24px}
+.tile{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px}
+.tile lbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;display:block;margin-bottom:8px}
+.tile .tv{font-family:var(--display);font-size:34px;letter-spacing:1px;line-height:1}
+.tv.green{color:var(--green)}
+.tv.red{color:var(--red)}
+.tv.yellow{color:var(--yellow)}
+.tv.accent{color:var(--accent)}
+.tile .ts{font-size:12px;color:var(--t3);margin-top:4px}
+.pbar{height:3px;background:var(--s3);border-radius:2px;margin-top:10px;overflow:hidden}
+.pfill{height:100%;background:var(--accent);border-radius:2px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+
+/* ── TABLE ── */
+.tw{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r)}
+table{width:100%;border-collapse:collapse}
+th{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;background:var(--s1)}
+td{padding:10px 14px;border-bottom:1px solid rgba(37,43,38,.4);font-size:13px;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.015)}
+
+/* ── CALENDAR ── */
+.cal{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.month{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.month-name{font-family:var(--display);font-size:16px;color:var(--t2);margin-bottom:10px;letter-spacing:1.5px;text-transform:uppercase}
+.ev{background:var(--s2);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;padding:7px 9px;margin-bottom:5px;cursor:pointer;transition:all .15s}
+.ev:hover{background:var(--accent-dim)}
+.ev.ultra{border-left-color:var(--orange)}
+.ev-name{font-size:12px;font-weight:600}
+.ev-meta{font-size:10px;color:var(--t3);margin-top:2px}
+.ev-dist{font-size:11px;color:var(--accent);font-family:var(--display);margin-top:2px}
+.ev.ultra .ev-dist{color:var(--orange)}
+.no-ev{font-size:12px;color:var(--t4);padding:4px 0}
+
+/* ── EQ ITEMS ── */
+.eq-item{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:8px;transition:all .15s}
+.eq-item:hover{border-color:var(--border2)}
+.eq-ico{font-size:30px;width:48px;text-align:center;flex-shrink:0}
+.eq-body{flex:1;min-width:0}
+.eq-name{font-size:15px;font-weight:600}
+.eq-cat{font-size:11px;color:var(--t3);margin-top:2px}
+.km-wrap{margin-top:8px}
+.km-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--t3);margin-bottom:4px}
+.km-bar{height:4px;background:var(--s3);border-radius:2px;overflow:hidden}
+.km-fill{height:100%;border-radius:2px;transition:width .6s}
+.km-fill.ok{background:var(--green)}
+.km-fill.mid{background:var(--yellow)}
+.km-fill.worn{background:var(--red)}
+.eq-right{text-align:right;flex-shrink:0}
+.eq-price{font-family:var(--display);font-size:22px}
+.eq-price small{font-family:var(--body);font-size:11px;color:var(--t3);display:block;font-weight:400}
+
+/* ── NUTRITIE ── */
+.ng{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.nc{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:18px}
+.nc h4{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.nr{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(37,43,38,.4);font-size:13px}
+.nr:last-child{border-bottom:none}
+.nl{color:var(--t2)}
+.nv{font-weight:600}
+.nv.a{color:var(--accent);font-family:var(--display);font-size:16px}
+
+/* ── MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.overlay.on{display:flex}
+.modal{background:var(--s1);border:1px solid var(--border2);border-radius:14px;width:100%;max-width:660px;max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.mh{padding:22px 26px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.mh h3{font-family:var(--display);font-size:30px;letter-spacing:1px}
+.mx{background:none;border:none;color:var(--t3);font-size:20px;cursor:pointer;padding:4px;transition:color .15s}
+.mx:hover{color:var(--text)}
+.mb{padding:22px 26px}
+.mf{padding:14px 26px 22px;display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border)}
+
+/* ── FORM ── */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrow{grid-column:span 2}
+.fi{display:flex;flex-direction:column;gap:4px}
+.fi lbl{font-size:11px;color:var(--t3);font-weight:500;letter-spacing:.3px}
+input,select,textarea{background:var(--s2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:var(--body);font-size:13px;padding:9px 12px;width:100%;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+select option{background:var(--s2)}
+.cb-row{display:flex;align-items:center;gap:8px;padding:8px 0}
+.cb-row input[type=checkbox]{width:auto;accent-color:var(--accent)}
+.cb-row label{color:var(--t2);font-size:13px;cursor:pointer}
+.sl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--s2);border:1px solid var(--border2);border-radius:10px;padding:11px 18px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:200;transform:translateY(16px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px;pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.ok{border-color:rgba(79,255,155,.3);color:var(--green)}
+.toast.err{border-color:rgba(255,79,79,.3);color:var(--red)}
+.toast.info{border-color:var(--accent-border);color:var(--accent)}
+
+/* ── FILE PICKER BANNER ── */
+.filebanner{background:var(--s2);border:1px solid var(--border2);border-radius:var(--r);padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.filebanner p{font-size:13px;color:var(--t2);line-height:1.6}
+.filebanner strong{color:var(--text)}
+.filebanner .actions{display:flex;gap:8px;flex-shrink:0}
+
+/* ── SPONSOR ROW ── */
+.sp-row{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.sp-icon{font-size:22px}
+.sp-body{flex:1}
+.sp-name{font-weight:600}
+.sp-sub{font-size:12px;color:var(--t3);margin-top:2px}
+.sp-amount{font-family:var(--display);font-size:22px;color:var(--green)}
+
+/* ── SPONSOR PROGRESS BAR ── */
+.sp-progress-wrap{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;margin-bottom:4px}
+.sp-progress-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px}
+.sp-progress-header h3{font-family:var(--display);font-size:20px;letter-spacing:1px}
+.sp-progress-header .sp-nums{text-align:right}
+.sp-progress-header .sp-need{font-family:var(--display);font-size:28px;color:var(--red);letter-spacing:1px;line-height:1}
+.sp-progress-header .sp-have{font-size:12px;color:var(--t3);margin-top:2px}
+.sp-bar-track{height:12px;background:var(--s3);border-radius:6px;overflow:hidden;margin-bottom:10px;position:relative}
+.sp-bar-fill{height:100%;border-radius:6px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+.sp-bar-fill.over{background:var(--green)}
+.sp-bar-fill.close{background:var(--yellow)}
+.sp-bar-fill.low{background:var(--red)}
+.sp-bar-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--t3)}
+.sp-bar-labels .have{color:var(--green);font-weight:600}
+
+/* ── PAYMENT CARDS ── */
+.pay-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;margin-bottom:8px;transition:all .15s}
+.pay-card:hover{border-color:var(--border2)}
+.pay-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.pay-card-name{font-size:14px;font-weight:600}
+.pay-card-date{font-size:11px;color:var(--accent);margin-top:2px}
+.pay-rows{display:grid;gap:6px}
+.pay-row{display:flex;align-items:center;justify-content:space-between;background:var(--s2);border-radius:7px;padding:8px 12px}
+.pay-row-left{display:flex;align-items:center;gap:10px}
+.pay-row-icon{font-size:14px}
+.pay-row-lbl{font-size:12px;color:var(--t2)}
+.pay-row-amount{font-family:var(--display);font-size:16px;letter-spacing:.5px}
+.pay-row-amount.paid{color:var(--green)}
+.pay-row-amount.owed{color:var(--red)}
+.pay-row-amount.na{color:var(--t3);font-family:var(--body);font-size:12px}
+
+/* ── ESTIMARE BREAKDOWN ── */
+.breakdown-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:8px}
+.bk-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:18px}
+.bk-card h4{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between}
+.bk-card h4 span{color:var(--accent);font-family:var(--display);font-size:16px;letter-spacing:1px}
+.bk-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(37,43,38,.3);font-size:13px}
+.bk-row:last-child{border-bottom:none}
+.bk-row .bl{color:var(--t2)}
+.bk-row .bv{font-weight:600;color:var(--text)}
+.bk-row .bv.a{color:var(--accent);font-family:var(--display);font-size:15px}
+.bk-total{display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.bk-total .bl{font-weight:600;font-size:13px}
+.bk-total .bv{font-family:var(--display);font-size:20px;color:var(--accent)}
+
+/* ── TIMELINE ── */
+.timeline{display:grid;gap:8px}
+.tl-month{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.tl-head{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.tl-head:hover{background:var(--s2)}
+.tl-month-name{font-family:var(--display);font-size:18px;letter-spacing:1px;min-width:120px}
+.tl-bar-wrap{flex:1;height:6px;background:var(--s3);border-radius:3px;overflow:hidden}
+.tl-bar{height:100%;border-radius:3px;background:var(--accent);transition:width .6s}
+.tl-total{font-family:var(--display);font-size:18px;letter-spacing:.5px;min-width:110px;text-align:right}
+.tl-total.high{color:var(--red)}
+.tl-total.mid{color:var(--yellow)}
+.tl-total.low{color:var(--green)}
+.tl-body{padding:0 16px;max-height:0;overflow:hidden;transition:max-height .3s ease}
+.tl-body.open{max-height:400px}
+.tl-item{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(37,43,38,.3);font-size:13px}
+.tl-item:last-child{border-bottom:none}
+.tl-item-lbl{color:var(--t2)}
+.tl-item-val{font-weight:600}
+
+/* ── MOBILE TOP BAR ── */
+.mobile-topbar{
+  display:none;position:fixed;top:0;left:0;right:0;z-index:90;
+  background:var(--s1);border-bottom:1px solid var(--border);
+  height:54px;align-items:center;justify-content:space-between;
+  padding:0 16px;
+}
+.mobile-logo{font-family:var(--display);font-size:20px;letter-spacing:2px;color:var(--accent);display:flex;align-items:center;gap:7px}
+.mobile-logo span{font-size:16px}
+.mobile-topbar-right{display:flex;align-items:center;gap:10px}
+.mobile-sync{font-size:11px;color:var(--t3);display:flex;align-items:center;gap:5px}
+.hamburger{background:none;border:none;cursor:pointer;padding:6px;color:var(--t2);font-size:20px;display:flex;align-items:center}
+
+/* ── MOBILE DRAWER ── */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:95;display:none;backdrop-filter:blur(4px)}
+.drawer-overlay.on{display:block}
+.drawer{
+  position:fixed;left:0;top:0;bottom:0;width:260px;z-index:96;
+  background:var(--s1);border-right:1px solid var(--border2);
+  display:flex;flex-direction:column;
+  transform:translateX(-100%);transition:transform .25s cubic-bezier(.4,0,.2,1);
+}
+.drawer.on{transform:translateX(0)}
+.drawer-head{padding:20px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.drawer-logo{font-family:var(--display);font-size:22px;letter-spacing:2px;color:var(--accent)}
+.drawer-close{background:none;border:none;color:var(--t3);font-size:18px;cursor:pointer;padding:4px}
+.drawer-nav{padding:10px 8px;flex:1;overflow-y:auto}
+.drawer-kpi{padding:12px 16px;border-top:1px solid var(--border);background:var(--s2)}
+.drawer-kpi-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.drawer-kpi-row span{font-size:11px;color:var(--t3)}
+.drawer-kpi-row strong{font-family:var(--display);font-size:18px;color:var(--accent)}
+.drawer-save{margin:10px 10px 0;display:flex;flex-direction:column;gap:6px}
+
+/* ── MOBILE BOTTOM NAV ── */
+.bottom-nav{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:90;
+  background:var(--s1);border-top:1px solid var(--border);
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  display:none;grid-template-columns:repeat(5,1fr);gap:0;
+}
+.bn{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:6px 4px;border-radius:8px;cursor:pointer;
+  color:var(--t3);font-size:9px;font-weight:500;letter-spacing:.3px;
+  text-transform:uppercase;transition:color .15s;border:none;background:none;
+  font-family:var(--body);
+}
+.bn .bn-ico{font-size:18px;line-height:1}
+.bn.on{color:var(--accent)}
+.bn.on .bn-ico{filter:drop-shadow(0 0 6px rgba(184,255,79,.5))}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  .breakdown-grid{grid-template-columns:1fr}
+  .sp-progress-header{flex-direction:column;gap:8px}
+}
+
+@media(max-width:800px){
+  /* Hide desktop sidebar */
+  .sidebar{display:none}
+  /* Show mobile topbar */
+  .mobile-topbar{display:flex}
+  /* Show bottom nav */
+  .bottom-nav{display:grid}
+  /* Shell becomes single column */
+  .shell{grid-template-columns:1fr}
+  /* Main content padding adjustments */
+  .main{padding-top:54px;padding-bottom:70px}
+  .page{padding:16px 14px}
+  /* Page header smaller */
+  .ph{margin-bottom:18px;padding-bottom:14px}
+  .ph-left h2{font-size:32px}
+  /* Cards single column */
+  .cg{grid-template-columns:1fr}
+  /* Calendar 2 col */
+  .cal{grid-template-columns:repeat(2,1fr)}
+  /* Tiles 2 col */
+  .tiles{grid-template-columns:repeat(2,1fr)}
+  /* Banner layout */
+  .filebanner{flex-direction:column;gap:10px}
+  .filebanner > div:last-child{flex-direction:row;margin-left:0}
+  /* Bigger touch targets */
+  .btn{padding:11px 18px}
+  .btn-sm{padding:9px 14px;font-size:13px}
+  input,select,textarea{padding:11px 12px;font-size:16px} /* prevent zoom on iOS */
+  /* Modal full screen on mobile */
+  .overlay{padding:0;align-items:flex-end}
+  .modal{border-radius:18px 18px 0 0;max-height:92vh;max-width:100%}
+  /* Supabase banner */
+  #filebanner-wrap{padding:14px 14px 0}
+  /* Timeline bar labels smaller */
+  .tl-month-name{min-width:80px;font-size:15px}
+  .tl-total{min-width:90px;font-size:15px}
+  /* Pay card grid */
+  .pay-rows{gap:5px}
+}
+
+@media(max-width:400px){
+  .tiles{grid-template-columns:1fr}
+  .cal{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ── MOBILE TOP BAR ── -->
+<div class="mobile-topbar">
+  <div class="mobile-logo"><span>⛰️</span>TRAIL MANAGER</div>
+  <div class="mobile-topbar-right">
+    <div class="mobile-sync">
+      <span id="m-sync-dot" style="width:6px;height:6px;border-radius:50%;background:var(--t4);display:inline-block"></span>
+      <span id="m-sync-status">—</span>
+    </div>
+    <button class="hamburger" onclick="openDrawer()">☰</button>
+  </div>
+</div>
+
+<!-- ── MOBILE DRAWER ── -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="drawer-logo">⛰️ TRAIL</div>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-nav">
+    <div class="nav-group">Principal</div>
+    <div class="ni" onclick="go('dash',this);closeDrawer()"><span class="ico">🏠</span>Dashboard</div>
+    <div class="ni" onclick="go('curse',this);closeDrawer()"><span class="ico">🏁</span>Curse <span class="badge" id="db-curse">0</span></div>
+    <div class="ni" onclick="go('cal',this);closeDrawer()"><span class="ico">📅</span>Calendar</div>
+    <div class="nav-group">Finanțe & Gear</div>
+    <div class="ni" onclick="go('buget',this);closeDrawer()"><span class="ico">💰</span>Buget Curse</div>
+    <div class="ni" onclick="go('estimare',this);closeDrawer()"><span class="ico">📊</span>Estimare An</div>
+    <div class="ni" onclick="go('sponsori',this);closeDrawer()"><span class="ico">💼</span>Sponsori</div>
+    <div class="ni" onclick="go('echip',this);closeDrawer()"><span class="ico">👟</span>Echipament</div>
+    <div class="ni" onclick="go('nutri',this);closeDrawer()"><span class="ico">🍌</span>Nutriție</div>
+  </div>
+  <div class="drawer-kpi">
+    <div class="drawer-kpi-row"><span>Total km sezon</span><strong id="d-km">—</strong></div>
+    <div class="drawer-kpi-row"><span>Urmează în</span><strong id="d-next">—</strong></div>
+  </div>
+  <div class="drawer-save">
+    <button class="save-btn" onclick="saveData();closeDrawer()">☁️ Salvează</button>
+    <button class="save-btn" onclick="exportJSON();closeDrawer()" style="color:var(--t2);border-color:var(--border)">💾 Export JSON</button>
+  </div>
+</div>
+
+<!-- ── BOTTOM NAV ── -->
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="bn on" onclick="goBN('dash',this)"><span class="bn-ico">🏠</span>Home</button>
+  <button class="bn" onclick="goBN('curse',this)"><span class="bn-ico">🏁</span>Curse</button>
+  <button class="bn" onclick="goBN('buget',this)"><span class="bn-ico">💰</span>Buget</button>
+  <button class="bn" onclick="goBN('sponsori',this)"><span class="bn-ico">💼</span>Sponsori</button>
+  <button class="bn" onclick="goBN('nutri',this)"><span class="bn-ico">🍌</span>Nutriție</button>
+</nav>
+
+<div class="shell">
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark"><span>⛰️</span>TRAIL<br>MANAGER</div>
+    <div class="logo-sub">Sezon 2026</div>
+  </div>
+  <nav class="nav">
+    <div class="nav-group">Principal</div>
+    <div class="ni on" onclick="go('dash',this)"><span class="ico">🏠</span>Dashboard</div>
+    <div class="ni" onclick="go('curse',this)"><span class="ico">🏁</span>Curse <span class="badge" id="b-curse">0</span></div>
+    <div class="ni" onclick="go('cal',this)"><span class="ico">📅</span>Calendar</div>
+    <div class="nav-group">Finanțe & Gear</div>
+    <div class="ni" onclick="go('buget',this)"><span class="ico">💰</span>Buget Curse</div>
+    <div class="ni" onclick="go('estimare',this)"><span class="ico">📊</span>Estimare An</div>
+    <div class="ni" onclick="go('sponsori',this)"><span class="ico">💼</span>Sponsori <span class="badge" id="b-sp">0</span></div>
+    <div class="ni" onclick="go('echip',this)"><span class="ico">👟</span>Echipament</div>
+    <div class="ni" onclick="go('nutri',this)"><span class="ico">🍌</span>Nutriție & Transport</div>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="kpi">
+      <span class="kpi-label">Total km sezon</span>
+      <div class="kpi-val" id="sk-km">—</div>
+      <div class="kpi-sub" id="sk-kmsub">curse înregistrate</div>
+    </div>
+    <div class="kpi" style="margin-bottom:10px">
+      <span class="kpi-label">Urmează în</span>
+      <div class="kpi-val" id="sk-next">—</div>
+      <div class="kpi-sub" id="sk-nextn" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</div>
+    </div>
+    <div style="font-size:10px;color:var(--t3);margin-bottom:6px;display:flex;align-items:center;gap:6px">
+      <span id="sync-dot" style="width:7px;height:7px;border-radius:50%;background:var(--t4);display:inline-block"></span>
+      <span id="sync-status">Neconectat</span>
+    </div>
+    <button class="save-btn" id="save-btn" onclick="saveData()">☁️ Salvează</button>
+    <button class="save-btn" id="export-btn" onclick="exportJSON()" style="margin-top:6px;color:var(--t2);border-color:var(--border)">💾 Export JSON</button>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+<!-- CLOUD BANNER -->
+<div style="padding:20px 36px 0" id="filebanner-wrap">
+  <div class="filebanner">
+    <div style="flex:1">
+      <p><strong>☁️ Conectare Supabase</strong> — datele se salvează automat în cloud, accesibile de pe orice dispozitiv.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+        <div class="fi"><lbl style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Project URL</lbl>
+          <input id="sb-url" placeholder="https://xxxx.supabase.co" style="font-size:12px;padding:7px 10px">
+        </div>
+        <div class="fi"><lbl style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Anon Key</lbl>
+          <input id="sb-key" placeholder="eyJhbGciOiJIUzI1NiIs..." style="font-size:12px;padding:7px 10px">
+        </div>
+      </div>
+      <div style="margin-top:8px;font-size:11px;color:var(--t3)">
+        📖 <a href="https://supabase.com" target="_blank" style="color:var(--accent)">supabase.com</a> → New Project → Settings → API → copiază URL și anon key
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;margin-left:16px">
+      <button class="btn btn-primary btn-sm" onclick="connectSupabase()">☁️ Conectează</button>
+      <button class="btn btn-ghost btn-sm" onclick="newFileLocal()">💾 Local (fără cloud)</button>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="page on" id="pg-dash">
+  <div class="ph"><div class="ph-left"><h2>DASHBOARD</h2><p id="db-sub">Sezon 2026 · încarcă sau creează un fișier de date</p></div></div>
+
+  <!-- KPI tiles row -->
+  <div class="tiles" id="db-tiles"></div>
+
+  <!-- Sponsor progress -->
+  <div id="db-sponsor-bar"></div>
+
+  <!-- Plăți restante curse -->
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin:24px 0 12px" id="db-unpaid-label"></div>
+  <div id="db-unpaid-list"></div>
+
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin:24px 0 12px">Urmează curând</div>
+  <div class="cg" id="db-upcoming"></div>
+</div>
+
+<!-- CURSE -->
+<div class="page" id="pg-curse">
+  <div class="ph">
+    <div class="ph-left"><h2>CURSE</h2><p>Gestionează toate cursele sezonului</p></div>
+    <div class="ph-right"><button class="btn btn-primary" onclick="openRC(null)">＋ Adaugă cursă</button></div>
+  </div>
+  <div class="tabs">
+    <button class="tab on" onclick="filterC('all',this)">Toate</button>
+    <button class="tab" onclick="filterC('upcoming',this)">Viitoare</button>
+    <button class="tab" onclick="filterC('paid',this)">Înscrise</button>
+    <button class="tab" onclick="filterC('unpaid',this)">Neachitate</button>
+  </div>
+  <div class="cg" id="rc-list"></div>
+</div>
+
+<!-- CALENDAR -->
+<div class="page" id="pg-cal">
+  <div class="ph"><div class="ph-left"><h2>CALENDAR</h2><p>Sezon 2026 — vizualizare lunară</p></div></div>
+  <div class="cal" id="cal-view"></div>
+</div>
+
+<!-- BUGET -->
+<div class="page" id="pg-buget">
+  <div class="ph"><div class="ph-left"><h2>BUGET CURSE</h2><p>Costuri per cursă — ce mai e de plătit</p></div></div>
+  <div class="tiles" id="bg-tiles"></div>
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">Status plăți per cursă</div>
+  <div id="bg-curse-cards"></div>
+</div>
+
+<!-- ESTIMARE AN -->
+<div class="page" id="pg-estimare">
+  <div class="ph"><div class="ph-left"><h2>ESTIMARE AN</h2><p>Toate costurile 2026 — curse + recurente lunare</p></div></div>
+  <div class="tiles" id="est-tiles"></div>
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin:4px 0 14px">Defalcare pe categorii</div>
+  <div id="est-breakdown"></div>
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin:24px 0 14px">Timeline lunar — cheltuieli estimate</div>
+  <div id="est-timeline"></div>
+</div>
+
+<!-- SPONSORI -->
+<div class="page" id="pg-sponsori">
+  <div class="ph">
+    <div class="ph-left"><h2>SPONSORI</h2><p>Sponsorizări și finanțare sezon</p></div>
+    <div class="ph-right"><button class="btn btn-primary" onclick="openSP(null)">＋ Adaugă sponsor</button></div>
+  </div>
+  <div class="tiles" id="sp-tiles"></div>
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">Lista sponsori</div>
+  <div id="sp-cards"></div>
+</div>
+
+<!-- ECHIPAMENT -->
+<div class="page" id="pg-echip">
+  <div class="ph">
+    <div class="ph-left"><h2>ECHIPAMENT</h2><p>Pantofi și gear activ</p></div>
+    <div class="ph-right"><button class="btn btn-primary" onclick="openEQ(null)">＋ Adaugă</button></div>
+  </div>
+  <div id="eq-list"></div>
+</div>
+
+<!-- NUTRITIE -->
+<div class="page" id="pg-nutri">
+  <div class="ph">
+    <div class="ph-left"><h2>NUTRIȚIE & TRANSPORT</h2><p>Geluri, suplimente, destinații</p></div>
+  </div>
+
+  <!-- Geluri settings -->
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">⚙️ Setări geluri</div>
+  <div class="tiles" style="margin-bottom:28px" id="gel-settings-tiles">
+    <div class="tile" style="display:flex;flex-direction:column;gap:10px">
+      <lbl>Preț set 24 geluri (RON)</lbl>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="number" id="gel-pret" style="max-width:120px" placeholder="200">
+        <button class="btn btn-ghost btn-sm" onclick="saveGelSettings()">Salvează</button>
+      </div>
+    </div>
+    <div class="tile" style="display:flex;flex-direction:column;gap:10px">
+      <lbl>Geluri training lunar (buc)</lbl>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="number" id="gel-training" style="max-width:120px" placeholder="8">
+        <button class="btn btn-ghost btn-sm" onclick="saveGelSettings()">Salvează</button>
+      </div>
+    </div>
+    <div class="tile">
+      <lbl>Preț / gel calculat</lbl>
+      <div class="tv accent" id="gel-pret-calc">—</div>
+      <div class="ts">RON per gel</div>
+    </div>
+  </div>
+
+  <!-- Suplimente -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">💊 Suplimente lunare</div>
+    <button class="btn btn-ghost btn-sm" onclick="openSupl(null)">＋ Adaugă</button>
+  </div>
+  <div id="supl-list" style="margin-bottom:28px"></div>
+
+  <!-- Transport -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">🚗 Destinații transport</div>
+    <button class="btn btn-ghost btn-sm" onclick="openTr(null)">＋ Adaugă</button>
+  </div>
+  <div id="tr-list"></div>
+</div>
+
+</main>
+</div>
+
+<!-- MODAL CURSĂ -->
+<div class="overlay" id="ov-rc">
+<div class="modal">
+  <div class="mh"><h3 id="rc-title">CURSĂ NOUĂ</h3><button class="mx" onclick="closeRC()">✕</button></div>
+  <div class="mb">
+    <div class="fg">
+      <div class="fi fgrow"><lbl>Denumire cursă *</lbl><input id="f-den" placeholder="ex: Ultra Trail Apuseni"></div>
+      <div class="fi"><lbl>Distanță (km)</lbl><input type="number" id="f-dist" placeholder="42"></div>
+      <div class="fi"><lbl>Denivelare (m)</lbl><input type="number" id="f-deniv" placeholder="2400"></div>
+      <div class="fi"><lbl>Data cursei *</lbl><input type="date" id="f-dc"></div>
+      <div class="fi"><lbl>Ora start</lbl><input type="time" id="f-ora" value="09:00"></div>
+      <div class="fi"><lbl>Data plecare</lbl><input type="date" id="f-dp"></div>
+      <div class="fi"><lbl>Data întoarcere</lbl><input type="date" id="f-di"></div>
+      <div class="fi"><lbl>Încălțări</lbl>
+        <select id="f-inc">
+          <option>Hoka Speedgoat 6/7</option>
+          <option>Hoka Mafate X</option>
+          <option>Altele</option>
+        </select>
+      </div>
+      <div class="fi"><lbl>Nr. geluri estimat</lbl><input type="number" id="f-gel" placeholder="5"></div>
+      <div class="fi"><lbl>Cost cazare (RON)</lbl><input type="number" id="f-caz" placeholder="300"></div>
+      <div class="fi fgrow"><lbl>Cost înscriere (RON)</lbl><input type="number" id="f-ins" placeholder="200"></div>
+    </div>
+    <div class="sl">Status & plăți</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+      <div class="cb-row"><input type="checkbox" id="f-rez"><label for="f-rez">🏨 Cazare rezervată</label></div>
+      <div class="cb-row"><input type="checkbox" id="f-pcaz"><label for="f-pcaz">✅ Cazare plătită</label></div>
+      <div class="cb-row"><input type="checkbox" id="f-pins"><label for="f-pins">✅ Înscriere plătită</label></div>
+    </div>
+    <div class="sl">Note</div>
+    <textarea id="f-note" rows="2" placeholder="Observații, parteneri de cursă, detalii logistice..."></textarea>
+  </div>
+  <div class="mf">
+    <button class="btn btn-ghost" onclick="closeRC()">Anulează</button>
+    <button class="btn btn-primary" onclick="saveRC()">Salvează</button>
+  </div>
+</div>
+</div>
+
+<!-- MODAL ECHIPAMENT -->
+<div class="overlay" id="ov-eq">
+<div class="modal">
+  <div class="mh"><h3 id="eq-title">ECHIPAMENT NOU</h3><button class="mx" onclick="closeEQ()">✕</button></div>
+  <div class="mb">
+    <div class="fg">
+      <div class="fi fgrow"><lbl>Denumire *</lbl><input id="eq-den" placeholder="ex: Hoka Speedgoat 7"></div>
+      <div class="fi"><lbl>Categorie</lbl>
+        <select id="eq-cat">
+          <option>Pantofi Curse Scurte</option><option>Pantofi Curse Lungi</option>
+          <option>Rucsac</option><option>Bastoane</option><option>Altele</option>
+        </select>
+      </div>
+      <div class="fi"><lbl>Preț (RON)</lbl><input type="number" id="eq-prt" placeholder="700"></div>
+      <div class="fi"><lbl>Km maximi</lbl><input type="number" id="eq-kmx" placeholder="800"></div>
+      <div class="fi"><lbl>Km actuali parcurși</lbl><input type="number" id="eq-kma" placeholder="0"></div>
+      <div class="fi fgrow"><lbl>Note</lbl><textarea id="eq-note" rows="2" placeholder="Observații..."></textarea></div>
+    </div>
+  </div>
+  <div class="mf">
+    <button class="btn btn-ghost" onclick="closeEQ()">Anulează</button>
+    <button class="btn btn-primary" onclick="saveEQ()">Salvează</button>
+  </div>
+</div>
+</div>
+
+<!-- MODAL SPONSOR -->
+<div class="overlay" id="ov-sp">
+<div class="modal">
+  <div class="mh"><h3 id="sp-title">SPONSOR NOU</h3><button class="mx" onclick="closeSP()">✕</button></div>
+  <div class="mb">
+    <div class="fg">
+      <div class="fi fgrow"><lbl>Nume sponsor *</lbl><input id="sp-den" placeholder="ex: SC PRISCOM SRL"></div>
+      <div class="fi"><lbl>Sumă (RON)</lbl><input type="number" id="sp-suma" placeholder="5000"></div>
+      <div class="fi"><lbl>Data acordului</lbl><input type="date" id="sp-data"></div>
+      <div class="fi fgrow"><lbl>Contact</lbl><input id="sp-contact" placeholder="Persoană / telefon / email"></div>
+      <div class="fi fgrow"><lbl>Ce acoperă</lbl>
+        <select id="sp-tip">
+          <option value="general">General (sezon întreg)</option>
+          <option value="echipament">Echipament</option>
+          <option value="inscrisuri">Înscrieri curse</option>
+          <option value="transport">Transport</option>
+          <option value="nutritie">Nutriție</option>
+          <option value="altele">Altele</option>
+        </select>
+      </div>
+      <div class="fi fgrow"><lbl>Note</lbl><textarea id="sp-note" rows="2" placeholder="Condiții, termeni, observații..."></textarea></div>
+    </div>
+    <div class="sl">Status</div>
+    <div class="cb-row"><input type="checkbox" id="sp-primit"><label for="sp-primit">✅ Sumă primită / confirmată</label></div>
+  </div>
+  <div class="mf">
+    <button class="btn btn-ghost" onclick="closeSP()">Anulează</button>
+    <button class="btn btn-primary" onclick="saveSP()">Salvează</button>
+  </div>
+</div>
+</div>
+
+<!-- MODAL SUPLIMENT -->
+<div class="overlay" id="ov-supl">
+<div class="modal" style="max-width:480px">
+  <div class="mh"><h3 id="supl-title">SUPLIMENT NOU</h3><button class="mx" onclick="closeSupl()">✕</button></div>
+  <div class="mb">
+    <div class="fg">
+      <div class="fi fgrow"><lbl>Denumire *</lbl><input id="supl-den" placeholder="ex: Colagen"></div>
+      <div class="fi fgrow"><lbl>Cantitate / porții</lbl><input id="supl-cant" placeholder="ex: 500gr = 28 porții"></div>
+      <div class="fi fgrow"><lbl>Cost lunar (RON)</lbl><input type="number" id="supl-pret" placeholder="1400"></div>
+      <div class="fi fgrow"><lbl>Note</lbl><textarea id="supl-note" rows="2" placeholder="Observații..."></textarea></div>
+    </div>
+  </div>
+  <div class="mf">
+    <button class="btn btn-ghost" onclick="closeSupl()">Anulează</button>
+    <button class="btn btn-primary" onclick="saveSupl()">Salvează</button>
+  </div>
+</div>
+</div>
+
+<!-- MODAL TRANSPORT -->
+<div class="overlay" id="ov-tr">
+<div class="modal" style="max-width:480px">
+  <div class="mh"><h3 id="tr-title">DESTINAȚIE NOUĂ</h3><button class="mx" onclick="closeTr()">✕</button></div>
+  <div class="mb">
+    <div class="fg">
+      <div class="fi fgrow"><lbl>Destinație *</lbl><input id="tr-dest" placeholder="ex: Brașov"></div>
+      <div class="fi"><lbl>Distanță dus (km)</lbl><input type="number" id="tr-km" placeholder="456"></div>
+      <div class="fi fgrow"><lbl>Cost estimat dus-întors (RON)</lbl><input type="number" id="tr-pret" placeholder="260"></div>
+    </div>
+  </div>
+  <div class="mf">
+    <button class="btn btn-ghost" onclick="closeTr()">Anulează</button>
+    <button class="btn btn-primary" onclick="saveTr()">Salvează</button>
+  </div>
+</div>
+</div>
+
+<!-- MODAL SETUP GUIDE -->
+<div class="overlay" id="ov-setup">
+<div class="modal" style="max-width:560px">
+  <div class="mh"><h3>SETUP SUPABASE</h3><button class="mx" onclick="document.getElementById('ov-setup').classList.remove('on')">✕</button></div>
+  <div class="mb" style="line-height:1.8">
+    <div style="font-size:13px;color:var(--t2)">
+      <div style="margin-bottom:16px">Urmează pașii de mai jos — durează ~5 minute:</div>
+
+      <div style="background:var(--s2);border-radius:8px;padding:14px 16px;margin-bottom:10px">
+        <div style="font-weight:600;color:var(--text);margin-bottom:8px">1. Creează proiect Supabase</div>
+        <div>Mergi pe <a href="https://supabase.com" target="_blank" style="color:var(--accent)">supabase.com</a> → Sign up gratuit → New Project</div>
+      </div>
+
+      <div style="background:var(--s2);border-radius:8px;padding:14px 16px;margin-bottom:10px">
+        <div style="font-weight:600;color:var(--text);margin-bottom:8px">2. Creează tabelul</div>
+        <div>În proiect → <strong>SQL Editor</strong> → New Query → Rulează:</div>
+        <pre style="background:var(--bg);border-radius:6px;padding:10px;margin-top:8px;font-size:12px;color:var(--accent);overflow-x:auto">create table trail_data (
+  id integer primary key,
+  data jsonb
+);
+
+-- Permite acces fără autentificare
+alter table trail_data enable row level security;
+create policy "Allow all" on trail_data
+  for all using (true) with check (true);</pre>
+      </div>
+
+      <div style="background:var(--s2);border-radius:8px;padding:14px 16px;margin-bottom:10px">
+        <div style="font-weight:600;color:var(--text);margin-bottom:8px">3. Copiază credențialele</div>
+        <div>Settings → API → copiază <strong>Project URL</strong> și <strong>anon public key</strong></div>
+      </div>
+
+      <div style="background:var(--s2);border-radius:8px;padding:14px 16px">
+        <div style="font-weight:600;color:var(--text);margin-bottom:8px">4. Conectează</div>
+        <div>Lipește URL și key în câmpurile din banner și apasă <strong>Conectează</strong></div>
+      </div>
+    </div>
+  </div>
+  <div class="mf">
+    <button class="btn btn-primary" onclick="document.getElementById('ov-setup').classList.remove('on')">Am înțeles</button>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════
+let D = null;           // data object
+let fileHandle = null;  // File System Access handle
+let editRCid = null;
+let editEQid = null;
+let editSPid = null;
+let editSuplId = null;
+let editTrId = null;
+let curFilter = 'all';
+
+const DEFAULT = {
+  curse: [
+    {id:1,nr:1,denumire:"Transylvania 100",distanta:102,denivelare:6700,incaltari:"Hoka Mafate X",geluri:20,data_cursa:"2026-05-20",ora_start:"05:00",data_plecare:"2026-05-22",data_sfarsit:"2026-05-24",cazare:540,rezervat:true,plata_cazare:false,plata_concurs:490,plata_concurs_ok:false,note:""},
+    {id:2,nr:2,denumire:"Brasov Marathon",distanta:42,denivelare:2400,incaltari:"Hoka Speedgoat 6/7",geluri:8,data_cursa:"2026-05-30",ora_start:"08:00",data_plecare:"2026-05-29",data_sfarsit:"2026-05-30",cazare:321,rezervat:true,plata_cazare:false,plata_concurs:189,plata_concurs_ok:false,note:""},
+    {id:3,nr:3,denumire:"Skyrace Giants Race",distanta:40,denivelare:3000,incaltari:"Hoka Speedgoat 6/7",geluri:10,data_cursa:"2026-06-12",ora_start:"08:00",data_plecare:"2026-06-12",data_sfarsit:"2026-06-13",cazare:242,rezervat:true,plata_cazare:false,plata_concurs:200,plata_concurs_ok:false,note:""},
+    {id:4,nr:4,denumire:"Legendele Nemirei",distanta:25,denivelare:1250,incaltari:"Hoka Speedgoat 6/7",geluri:3,data_cursa:"2026-07-04",ora_start:"09:00",data_plecare:"2026-07-04",data_sfarsit:"2026-07-04",cazare:0,rezervat:true,plata_cazare:true,plata_concurs:155,plata_concurs_ok:false,note:""},
+    {id:5,nr:5,denumire:"Predeal Forest Run",distanta:38,denivelare:2420,incaltari:"Hoka Speedgoat 6/7",geluri:6,data_cursa:"2026-07-10",ora_start:"09:00",data_plecare:"2026-07-10",data_sfarsit:"2026-07-11",cazare:266,rezervat:true,plata_cazare:false,plata_concurs:250,plata_concurs_ok:false,note:""},
+    {id:6,nr:6,denumire:"UTMB Bucovina Ultra Rocks",distanta:114,denivelare:6300,incaltari:"Hoka Mafate X",geluri:22,data_cursa:"2026-07-24",ora_start:"23:00",data_plecare:"2026-07-23",data_sfarsit:"2026-07-26",cazare:420,rezervat:true,plata_cazare:false,plata_concurs:810,plata_concurs_ok:true,note:"Cursa principală a sezonului"},
+    {id:7,nr:7,denumire:"2X2 Race",distanta:46,denivelare:4200,incaltari:"Hoka Speedgoat 6/7",geluri:15,data_cursa:"2026-08-22",ora_start:"06:00",data_plecare:"2026-08-21",data_sfarsit:"2026-08-22",cazare:1040,rezervat:true,plata_cazare:false,plata_concurs:350,plata_concurs_ok:false,note:""},
+    {id:8,nr:8,denumire:"Ciucas X3",distanta:39,denivelare:2385,incaltari:"Hoka Speedgoat 6/7",geluri:5,data_cursa:"2026-09-06",ora_start:"10:00",data_plecare:"2026-09-05",data_sfarsit:"2026-09-06",cazare:null,rezervat:false,plata_cazare:false,plata_concurs:180,plata_concurs_ok:false,note:"David; 180"},
+    {id:9,nr:9,denumire:"Azuga L30 Dynafit",distanta:30,denivelare:1700,incaltari:"Hoka Speedgoat 6/7",geluri:4,data_cursa:"2026-10-17",ora_start:"10:00",data_plecare:"2026-10-16",data_sfarsit:"2026-10-17",cazare:null,rezervat:false,plata_cazare:false,plata_concurs:159,plata_concurs_ok:true,note:""},
+    {id:10,nr:10,denumire:"Istrița xScape",distanta:41,denivelare:1850,incaltari:"Hoka Speedgoat 6/7",geluri:3,data_cursa:"2026-11-07",ora_start:"10:00",data_plecare:"2026-11-06",data_sfarsit:"2026-11-08",cazare:null,rezervat:false,plata_cazare:false,plata_concurs:150,plata_concurs_ok:false,note:""}
+  ],
+  sponsori: [
+    {id:1,denumire:"SC PRISCOM DEZMEMBRARI AUTO SRL",suma:5000,data:"",contact:"",tip:"general",note:"",primit:false}
+  ],
+  echipament:[
+    {id:1,categorie:"Pantofi Curse Scurte",denumire:"Hoka Speedgoat 6/7",pret:700,km_max:800,km_actuali:0,note:"700-800 RON pret mediu"},
+    {id:2,categorie:"Pantofi Curse Lungi",denumire:"Hoka Mafate X",pret:900,km_max:800,km_actuali:0,note:"900-1000 RON pret mediu"}
+  ],
+  nutritie:{
+    gel_pret_set24:200,
+    gel_training_lunar:8,
+    suplimente:[
+      {id:1,denumire:"Colagen",cantitate:"500gr = 28 portii",pret_lunar:1430,note:""},
+      {id:2,denumire:"Alte suplimente",cantitate:"",pret_lunar:500,note:""},
+      {id:3,denumire:"Creatina",cantitate:"500gr = 50 portii",pret_lunar:1400,note:""}
+    ]
+  },
+  transport:[
+    {id:1,dest:"Brașov",km:456,pret:260},
+    {id:2,dest:"Bran",km:512,pret:290},
+    {id:3,dest:"Voluntari",km:560,pret:320},
+    {id:4,dest:"Sadova (SV)",km:574,pret:330},
+    {id:5,dest:"Cumpăna (CT)",km:612,pret:350},
+    {id:6,dest:"Predeal",km:672,pret:388},
+    {id:7,dest:"Lupeni (HD)",km:1368,pret:790}
+  ]
+};
+
+// ══════════════════════════════════════════════════════
+//  SUPABASE CONFIG
+// ══════════════════════════════════════════════════════
+let SB_URL = localStorage.getItem('sb_url') || '';
+let SB_KEY = localStorage.getItem('sb_key') || '';
+let isCloud = false;
+const SB_TABLE = 'trail_data';
+const SB_ROW_ID = 1; // single-row storage
+
+function sbHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + SB_KEY,
+    'Prefer': 'return=minimal'
+  };
+}
+
+function setSyncStatus(status, color) {
+  document.getElementById('sync-status').textContent = status;
+  document.getElementById('sync-dot').style.background = color;
+}
+
+async function connectSupabase() {
+  const url = document.getElementById('sb-url').value.trim().replace(/\/$/, '');
+  const key = document.getElementById('sb-key').value.trim();
+  if (!url || !key) { toast('⚠️ Completează URL și Key!', 'err'); return; }
+
+  SB_URL = url;
+  SB_KEY = key;
+  localStorage.setItem('sb_url', SB_URL);
+  localStorage.setItem('sb_key', SB_KEY);
+
+  toast('🔄 Conectare...', 'info');
+  setSyncStatus('Se conectează...', 'var(--yellow)');
+
+  try {
+    // Try to fetch existing data
+    const res = await fetch(`${SB_URL}/rest/v1/${SB_TABLE}?id=eq.${SB_ROW_ID}&select=data`, {
+      headers: sbHeaders()
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      // Table might not exist yet
+      if (res.status === 404 || (err.message && err.message.includes('does not exist'))) {
+        toast('❌ Tabelul "trail_data" nu există. Vezi ghidul de setup!', 'err');
+        setSyncStatus('Eroare tabel', 'var(--red)');
+        showSetupGuide();
+        return;
+      }
+      throw new Error(err.message || res.status);
+    }
+
+    const rows = await res.json();
+    isCloud = true;
+    hideBanner();
+    setSyncStatus('Conectat ☁️', 'var(--green)');
+
+    if (rows.length > 0 && rows[0].data) {
+      D = rows[0].data;
+      if (!D.sponsori) D.sponsori = [];
+      renderAll();
+      toast('☁️ Date încărcate din cloud!', 'ok');
+    } else {
+      // First time — push default data
+      D = JSON.parse(JSON.stringify(DEFAULT));
+      await pushToSupabase(true);
+      renderAll();
+      toast('✨ Cont nou — date inițiale salvate în cloud!', 'ok');
+    }
+  } catch(e) {
+    setSyncStatus('Eroare', 'var(--red)');
+    toast('❌ ' + (e.message || 'Eroare conexiune'), 'err');
+    console.error(e);
+  }
+}
+
+async function pushToSupabase(isInsert = false) {
+  if (!isCloud || !SB_URL || !SB_KEY) return false;
+  try {
+    const body = JSON.stringify(isInsert ? {id: SB_ROW_ID, data: D} : {data: D});
+    const url = isInsert
+      ? `${SB_URL}/rest/v1/${SB_TABLE}`
+      : `${SB_URL}/rest/v1/${SB_TABLE}?id=eq.${SB_ROW_ID}`;
+    const method = isInsert ? 'POST' : 'PATCH';
+    const res = await fetch(url, { method, headers: {...sbHeaders(), 'Prefer': isInsert ? 'return=minimal' : 'return=minimal'}, body });
+    return res.ok;
+  } catch(e) {
+    console.error('Supabase push error:', e);
+    return false;
+  }
+}
+
+async function saveData() {
+  if (!D) { toast('⚠️ Nu există date de salvat', 'err'); return; }
+  const btn = document.getElementById('save-btn');
+
+  if (isCloud) {
+    btn.textContent = '🔄 Se salvează...';
+    setSyncStatus('Se salvează...', 'var(--yellow)');
+    const ok = await pushToSupabase(false);
+    if (ok) {
+      btn.textContent = '✅ Salvat!';
+      btn.classList.add('saved');
+      setSyncStatus('Salvat ☁️', 'var(--green)');
+      toast('☁️ Salvat în cloud!', 'ok');
+    } else {
+      btn.textContent = '❌ Eroare';
+      setSyncStatus('Eroare sync', 'var(--red)');
+      toast('❌ Eroare la salvare cloud', 'err');
+    }
+    setTimeout(() => { btn.textContent = '☁️ Salvează'; btn.classList.remove('saved'); }, 2000);
+  } else {
+    // Fallback to local file
+    await saveFile();
+  }
+}
+
+// ── Auto-save after every change ─────────────────────
+let autoSaveTimer = null;
+function scheduleAutoSave() {
+  if (!isCloud) return;
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(async () => {
+    setSyncStatus('Se sincronizează...', 'var(--yellow)');
+    const ok = await pushToSupabase(false);
+    setSyncStatus(ok ? 'Sincronizat ☁️' : 'Eroare sync', ok ? 'var(--green)' : 'var(--red)');
+  }, 1500);
+}
+
+// ── Local file fallback ───────────────────────────────
+async function newFileLocal() {
+  D = JSON.parse(JSON.stringify(DEFAULT));
+  fileHandle = null;
+  isCloud = false;
+  setSyncStatus('Local (fără cloud)', 'var(--yellow)');
+  renderAll();
+  toast('💾 Mod local — nu uita să exportezi!', 'info');
+  hideBanner();
+}
+
+async function loadFile() {
+  try {
+    const [fh] = await window.showOpenFilePicker({
+      types:[{description:'JSON',accept:{'application/json':['.json']}}]
+    });
+    fileHandle = fh;
+    const file = await fh.getFile();
+    const text = await file.text();
+    D = JSON.parse(text);
+    if (!D.sponsori) D.sponsori = [];
+    isCloud = false;
+    setSyncStatus('Local', 'var(--yellow)');
+    renderAll();
+    toast('📂 Fișier încărcat!', 'ok');
+    hideBanner();
+  } catch(e) {
+    if (e.name !== 'AbortError') toast('❌ Eroare la deschidere fișier', 'err');
+  }
+}
+
+async function saveFile() {
+  if (!D) return;
+  const json = JSON.stringify(D, null, 2);
+  try {
+    if (!fileHandle) {
+      fileHandle = await window.showSaveFilePicker({
+        suggestedName:'trail_data.json',
+        types:[{description:'JSON',accept:{'application/json':['.json']}}]
+      });
+    }
+    const writable = await fileHandle.createWritable();
+    await writable.write(json);
+    await writable.close();
+    toast('💾 Salvat local!', 'ok');
+  } catch(e) {
+    if (e.name !== 'AbortError') toast('❌ Eroare salvare', 'err');
+  }
+}
+
+function exportJSON() {
+  if (!D) { toast('⚠️ Nu există date', 'err'); return; }
+  const blob = new Blob([JSON.stringify(D, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'trail_data_backup.json';
+  a.click();
+  toast('💾 Export descărcat!', 'ok');
+}
+
+function hideBanner() {
+  document.getElementById('filebanner-wrap').style.display = 'none';
+}
+
+// ── Setup guide modal ─────────────────────────────────
+function showSetupGuide() {
+  document.getElementById('ov-setup').classList.add('on');
+}
+
+// ── Auto-restore saved credentials ───────────────────
+window.addEventListener('load', () => {
+  if (SB_URL && SB_KEY) {
+    document.getElementById('sb-url').value = SB_URL;
+    document.getElementById('sb-key').value = SB_KEY;
+    // Auto-connect
+    connectSupabase();
+  }
+});
+
+// ══════════════════════════════════════════════════════
+//  MOBILE NAV
+// ══════════════════════════════════════════════════════
+function openDrawer() {
+  document.getElementById('drawer').classList.add('on');
+  document.getElementById('drawer-overlay').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('on');
+  document.getElementById('drawer-overlay').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+function goBN(id, el) {
+  // Navigate
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('pg-'+id).classList.add('on');
+  // Highlight bottom nav
+  document.querySelectorAll('.bn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  // Sync desktop sidebar
+  document.querySelectorAll('.sidebar .ni').forEach(n=>n.classList.remove('on'));
+}
+
+// Override setSyncStatus to also update mobile indicator
+const _origSetSync = setSyncStatus;
+function setSyncStatus(status, color) {
+  // Desktop
+  const dot = document.getElementById('sync-dot');
+  const txt = document.getElementById('sync-status');
+  if(dot) dot.style.background = color;
+  if(txt) txt.textContent = status;
+  // Mobile
+  const mdot = document.getElementById('m-sync-dot');
+  const mtxt = document.getElementById('m-sync-status');
+  if(mdot) mdot.style.background = color;
+  if(mtxt) mtxt.textContent = status;
+}
+
+// Update drawer KPIs when sidebar updates
+const _origRenderSidebar = renderSidebar;
+function renderSidebar() {
+  _origRenderSidebar();
+  // Sync drawer
+  const km = document.getElementById('sk-km');
+  const next = document.getElementById('sk-next');
+  const dkm = document.getElementById('d-km');
+  const dnext = document.getElementById('d-next');
+  if(dkm && km) dkm.textContent = km.textContent;
+  if(dnext && next) dnext.textContent = next.textContent;
+  // Sync badge
+  const bcurse = document.getElementById('b-curse');
+  const dbcurse = document.getElementById('db-curse');
+  if(dbcurse && bcurse) dbcurse.textContent = bcurse.textContent;
+}
+
+// Swipe to close drawer
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, {passive:true});
+document.addEventListener('touchend', e => {
+  const dx = touchStartX - e.changedTouches[0].clientX;
+  if (dx > 60 && document.getElementById('drawer').classList.contains('on')) closeDrawer();
+}, {passive:true});
+function go(id, el) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  document.getElementById('pg-'+id).classList.add('on');
+  if(el) el.classList.add('on');
+  // Sync bottom nav
+  document.querySelectorAll('.bn').forEach(b=>b.classList.remove('on'));
+  const bnMap = {dash:0,curse:1,buget:2,sponsori:3,nutri:4};
+  if(bnMap[id]!==undefined) document.querySelectorAll('.bn')[bnMap[id]]?.classList.add('on');
+}
+
+// ══════════════════════════════════════════════════════
+//  RENDER ALL
+// ══════════════════════════════════════════════════════
+function renderAll() {
+  if (!D) return;
+  if (!D.sponsori) D.sponsori = [];
+  renderSidebar();
+  renderDash();
+  renderCurse(curFilter);
+  renderCal();
+  renderBuget();
+  renderEstimare();
+  renderSponsori();
+  renderEchip();
+  renderNutri();
+}
+
+// ══════════════════════════════════════════════════════
+//  SIDEBAR
+// ══════════════════════════════════════════════════════
+function renderSidebar() {
+  const c = D.curse;
+  document.getElementById('b-curse').textContent = c.length;
+  document.getElementById('b-sp').textContent = (D.sponsori||[]).length;
+  const km = c.reduce((s,x)=>s+(x.distanta||0),0);
+  document.getElementById('sk-km').textContent = km;
+  document.getElementById('sk-kmsub').textContent = c.length + ' curse înregistrate';
+  const today = new Date(); today.setHours(0,0,0,0);
+  const up = [...c].filter(x=>new Date(x.data_cursa)>=today).sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+  if (up.length) {
+    const d = Math.ceil((new Date(up[0].data_cursa)-today)/86400000);
+    document.getElementById('sk-next').textContent = d + ' zile';
+    document.getElementById('sk-nextn').textContent = up[0].denumire;
+  } else {
+    document.getElementById('sk-next').textContent = '—';
+    document.getElementById('sk-nextn').textContent = 'Nicio cursă viitoare';
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════════════
+function renderDash() {
+  const c = D.curse;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const km = c.reduce((s,x)=>s+(x.distanta||0),0);
+  const gpp = D.nutritie.gel_pret_set24 / 24;
+
+  // Cost curse
+  const tIns = c.reduce((s,x)=>s+(x.plata_concurs||0),0);
+  const tCaz = c.reduce((s,x)=>s+(x.cazare||0),0);
+  const tGel = c.reduce((s,x)=>s+Math.round((x.geluri||0)*gpp),0);
+  const totCurse = tIns + tCaz + tGel;
+
+  // Costuri recurente anuale
+  const totalSuplLunar = (D.nutritie.suplimente||[]).reduce((s,x)=>s+(x.pret_lunar||0),0);
+  const totalSuplAnual = totalSuplLunar * 12;
+  const gelTrainingAnual = Math.round((D.nutritie.gel_training_lunar||8) * gpp * 12);
+  const totRecurente = totalSuplAnual + gelTrainingAnual;
+
+  // Total necesar an
+  const totalAn = totCurse + totRecurente;
+
+  // Sponsori
+  const spTotal = (D.sponsori||[]).reduce((s,x)=>s+(x.suma||0),0);
+  const spPrimit = (D.sponsori||[]).filter(x=>x.primit).reduce((s,x)=>s+(x.suma||0),0);
+  const spPct = totalAn > 0 ? Math.min(100, Math.round(spTotal/totalAn*100)) : 0;
+  const deficit = totalAn - spTotal;
+
+  // Plăți curse
+  const platitIns = c.filter(x=>x.plata_concurs_ok).reduce((s,x)=>s+(x.plata_concurs||0),0);
+  const platitCaz = c.filter(x=>x.plata_cazare).reduce((s,x)=>s+(x.cazare||0),0);
+  const totalPlatit = platitIns + platitCaz;
+  const totalDePlata = (tIns - platitIns) + (tCaz - platitCaz);
+
+  document.getElementById('db-sub').textContent = `${c.length} curse · ${km} km total · Sezon 2026`;
+
+  // KPI tiles
+  document.getElementById('db-tiles').innerHTML = `
+    <div class="tile">
+      <lbl>Total necesar 2026</lbl>
+      <div class="tv red">${fmt(totalAn)} RON</div>
+      <div class="ts">Curse + suplimente + geluri training</div>
+    </div>
+    <div class="tile">
+      <lbl>Sponsorizare angajată</lbl>
+      <div class="tv green">${fmt(spTotal)} RON</div>
+      <div class="ts">${fmt(spPrimit)} RON confirmat · ${spPct}% din necesar</div>
+      <div class="pbar"><div class="pfill" style="width:${spPct}%;background:${spPct>=100?'var(--green)':spPct>=60?'var(--yellow)':'var(--red)'}"></div></div>
+    </div>
+    <div class="tile">
+      <lbl>${deficit>0?'Deficit rămas':'Surplus'}</lbl>
+      <div class="tv ${deficit>0?'red':'green'}">${deficit>0?'-':'+'} ${fmt(Math.abs(deficit))} RON</div>
+      <div class="ts">${deficit>0?'Mai trebuie acoperit':'Depășești necesarul'}</div>
+    </div>
+    <div class="tile">
+      <lbl>Plăți curse restante</lbl>
+      <div class="tv ${totalDePlata>0?'yellow':'green'}">${fmt(totalDePlata)} RON</div>
+      <div class="ts">${fmt(totalPlatit)} RON din ${fmt(tIns+tCaz)} RON achitat</div>
+      <div class="pbar"><div class="pfill" style="width:${(tIns+tCaz)>0?Math.round(totalPlatit/(tIns+tCaz)*100):0}%"></div></div>
+    </div>
+  `;
+
+  // Sponsor progress bar detaliat
+  document.getElementById('db-sponsor-bar').innerHTML = `
+    <div class="sp-progress-wrap">
+      <div class="sp-progress-header">
+        <div>
+          <h3>💼 SPONSORIZARE vs NECESAR</h3>
+          <div style="font-size:12px;color:var(--t3);margin-top:4px">Curse (${fmt(totCurse)} RON) + Suplimente (${fmt(totalSuplAnual)} RON) + Geluri training (${fmt(gelTrainingAnual)} RON)</div>
+        </div>
+        <div class="sp-nums">
+          <div class="sp-need">${fmt(totalAn)} RON <span style="font-size:14px;font-family:var(--body);color:var(--t3)">necesar</span></div>
+          <div class="sp-have"><span style="color:var(--green);font-weight:700">${fmt(spTotal)} RON</span> angajat · <span style="color:var(--accent)">${fmt(spPrimit)} RON</span> primit</div>
+        </div>
+      </div>
+      <div class="sp-bar-track">
+        <div class="sp-bar-fill ${spPct>=100?'over':spPct>=60?'close':'low'}" style="width:${spPct}%"></div>
+      </div>
+      <div class="sp-bar-labels">
+        <span class="have">✓ ${fmt(spTotal)} RON acoperit (${spPct}%)</span>
+        <span>${deficit>0?'— lipsesc '+fmt(deficit)+' RON':'✓ acoperit complet'}</span>
+      </div>
+    </div>
+  `;
+
+  // Plăți restante curse
+  const unpaid = [...c]
+    .filter(x => (!x.plata_concurs_ok || !x.plata_cazare) && new Date(x.data_cursa) >= today)
+    .sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa))
+    .slice(0, 5);
+
+  if (unpaid.length > 0) {
+    document.getElementById('db-unpaid-label').textContent = '⚠️ Plăți restante — curse viitoare';
+    document.getElementById('db-unpaid-list').innerHTML = unpaid.map(x => {
+      const insOk = x.plata_concurs_ok;
+      const cazOk = x.plata_cazare || x.cazare === 0;
+      const deAchitat = (!insOk?x.plata_concurs||0:0) + (!cazOk?x.cazare||0:0);
+      return `
+        <div class="pay-card">
+          <div class="pay-card-top">
+            <div>
+              <div class="pay-card-name">${x.denumire}</div>
+              <div class="pay-card-date">${fd(x.data_cursa)} · ⏳ ${Math.ceil((new Date(x.data_cursa)-today)/86400000)} zile</div>
+            </div>
+            <div style="font-family:var(--display);font-size:20px;color:var(--red)">${fmt(deAchitat)} RON <span style="font-family:var(--body);font-size:11px;color:var(--t3)">restant</span></div>
+          </div>
+          <div class="pay-rows">
+            ${x.plata_concurs ? `<div class="pay-row">
+              <div class="pay-row-left"><span class="pay-row-icon">🏁</span><span class="pay-row-lbl">Înscriere</span></div>
+              <span class="pay-row-amount ${insOk?'paid':'owed'}">${insOk?'✓ Plătit':fmt(x.plata_concurs)+' RON'}</span>
+            </div>` : ''}
+            ${x.cazare > 0 ? `<div class="pay-row">
+              <div class="pay-row-left"><span class="pay-row-icon">🏨</span><span class="pay-row-lbl">Cazare ${x.rezervat?'(rezervat)':'(nerezerv.)'}</span></div>
+              <span class="pay-row-amount ${cazOk?'paid':'owed'}">${cazOk?'✓ Plătit':fmt(x.cazare)+' RON'}</span>
+            </div>` : x.cazare === 0 ? `<div class="pay-row">
+              <div class="pay-row-left"><span class="pay-row-icon">🏨</span><span class="pay-row-lbl">Cazare</span></div>
+              <span class="pay-row-amount na">Fără cazare</span>
+            </div>` : `<div class="pay-row">
+              <div class="pay-row-left"><span class="pay-row-icon">🏨</span><span class="pay-row-lbl">Cazare</span></div>
+              <span class="pay-row-amount na">Preț nesetat</span>
+            </div>`}
+          </div>
+        </div>
+      `;
+    }).join('');
+  } else {
+    document.getElementById('db-unpaid-label').textContent = '';
+    document.getElementById('db-unpaid-list').innerHTML = '';
+  }
+
+  const upcoming = [...c].filter(x=>new Date(x.data_cursa)>=today).sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa)).slice(0,3);
+  document.getElementById('db-upcoming').innerHTML = upcoming.map(rcCard).join('') || '<p style="color:var(--t3)">Nicio cursă viitoare înregistrată.</p>';
+}
+
+// ══════════════════════════════════════════════════════
+//  CURSE
+// ══════════════════════════════════════════════════════
+function filterC(f, el) {
+  curFilter = f;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  renderCurse(f);
+}
+
+function renderCurse(f = 'all') {
+  const today = new Date(); today.setHours(0,0,0,0);
+  let list = [...D.curse];
+  if (f === 'upcoming') list = list.filter(c=>new Date(c.data_cursa)>=today);
+  if (f === 'paid') list = list.filter(c=>c.plata_concurs_ok);
+  if (f === 'unpaid') list = list.filter(c=>!c.plata_concurs_ok);
+  list.sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+  document.getElementById('rc-list').innerHTML = list.map(rcCard).join('') || '<p style="color:var(--t3);padding:20px 0">Nicio cursă.</p>';
+}
+
+function rcCard(c) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const dc = new Date(c.data_cursa);
+  const past = dc < today;
+  const days = Math.ceil((dc - today) / 86400000);
+  const gel = Math.round((c.geluri||0)*(D.nutritie.gel_pret_set24/24));
+  const tot = (c.cazare||0) + (c.plata_concurs||0) + gel;
+  const isUltra = (c.distanta||0) >= 80;
+
+  let cdHtml = '';
+  if (past) cdHtml = `<div class="rc-cd">✓ Finalizat</div>`;
+  else if (days <= 14) cdHtml = `<div class="rc-cd soon">🔥 ${days} zile</div>`;
+  else cdHtml = `<div class="rc-cd">⏳ ${days} zile</div>`;
+
+  const tags = [];
+  if (c.rezervat) tags.push('<span class="tag tg">🏨 Rezervat</span>');
+  else tags.push('<span class="tag ty">🏨 Fără rezervare</span>');
+  if (c.plata_concurs_ok) tags.push('<span class="tag tg">✓ Înscris</span>');
+  else tags.push('<span class="tag tr">⚠ Neînscris</span>');
+  if (isUltra) tags.push('<span class="tag ty">🏔 Ultra</span>');
+
+  return `
+    <div class="rc ${past?'past':''}">
+      <div class="rc-top">
+        <div>
+          <div class="rc-nr">#${c.nr||c.id}</div>
+          <div class="rc-name">${c.denumire}</div>
+          <div class="rc-date">${fd(c.data_cursa)} · ${c.ora_start||''}</div>
+          ${cdHtml}
+        </div>
+      </div>
+      <div class="rc-nums">
+        <div class="rn"><lbl>Distanță</lbl><div class="rv">${c.distanta||'—'}<span class="ru"> km</span></div></div>
+        <div class="rn"><lbl>Denivelare</lbl><div class="rv">${c.denivelare?(c.denivelare/1000).toFixed(1):''}<span class="ru"> km D+</span></div></div>
+        <div class="rn"><lbl>Pantofi</lbl><div class="rv" style="font-size:12px;font-family:var(--body)">${c.incaltari||'—'}</div></div>
+        <div class="rn"><lbl>Geluri</lbl><div class="rv">${c.geluri||0}<span class="ru"> buc</span></div></div>
+      </div>
+      <div class="rc-tags">${tags.join('')}</div>
+      <div class="rc-foot">
+        <div>
+          <div class="rc-cost">${fmt(tot)} <small>RON est.</small></div>
+          ${c.sponsor?`<div style="font-size:11px;color:var(--t3);margin-top:2px">💼 ${c.sponsor}</div>`:''}
+        </div>
+        <div class="rc-actions">
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="openRC(${c.id})">✏️</button>
+          <button class="btn btn-danger btn-sm btn-icon" onclick="delRC(${c.id})">🗑</button>
+        </div>
+      </div>
+      ${c.note?`<div class="rc-note">📝 ${c.note}</div>`:''}
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════════════
+//  CALENDAR
+// ══════════════════════════════════════════════════════
+function renderCal() {
+  const months = ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
+  const byM = {};
+  D.curse.forEach(c => {
+    const m = new Date(c.data_cursa).getMonth();
+    if (!byM[m]) byM[m] = [];
+    byM[m].push(c);
+  });
+
+  document.getElementById('cal-view').innerHTML = months.map((name, m) => {
+    const races = byM[m] || [];
+    return `
+      <div class="month">
+        <div class="month-name">${name}</div>
+        ${races.length ? races.sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa)).map(c => `
+          <div class="ev ${(c.distanta||0)>=80?'ultra':''}">
+            <div class="ev-name">${c.denumire}</div>
+            <div class="ev-meta">${fd(c.data_cursa)} · ${c.ora_start||''}</div>
+            <div class="ev-dist">${c.distanta}km · ${c.denivelare}m D+</div>
+          </div>
+        `).join('') : '<div class="no-ev">—</div>'}
+      </div>
+    `;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  BUGET CURSE
+// ══════════════════════════════════════════════════════
+function renderBuget() {
+  const c = D.curse;
+  const gpp = D.nutritie.gel_pret_set24 / 24;
+  let tIns=0, tCaz=0, tGel=0, pIns=0, pCaz=0;
+  c.forEach(x => {
+    tIns += x.plata_concurs||0;
+    tCaz += x.cazare||0;
+    tGel += Math.round((x.geluri||0)*gpp);
+    if (x.plata_concurs_ok) pIns += x.plata_concurs||0;
+    if (x.plata_cazare) pCaz += x.cazare||0;
+  });
+  const tSp = (D.sponsori||[]).reduce((s,x)=>s+(x.suma||0),0);
+  const tot = tIns + tCaz + tGel;
+  const restantIns = tIns - pIns;
+  const restantCaz = tCaz - pCaz;
+  const totalRestant = restantIns + restantCaz;
+
+  document.getElementById('bg-tiles').innerHTML = `
+    <div class="tile"><lbl>Înscrieri totale</lbl><div class="tv">${fmt(tIns)} RON</div><div class="ts" style="color:var(--red)">${fmt(restantIns)} RON restant</div><div class="pbar"><div class="pfill" style="width:${tIns?Math.round(pIns/tIns*100):0}%"></div></div></div>
+    <div class="tile"><lbl>Cazare totală</lbl><div class="tv">${fmt(tCaz)} RON</div><div class="ts" style="color:var(--red)">${fmt(restantCaz)} RON restant</div><div class="pbar"><div class="pfill" style="width:${tCaz?Math.round(pCaz/tCaz*100):0}%"></div></div></div>
+    <div class="tile"><lbl>Geluri curse (est.)</lbl><div class="tv yellow">${fmt(tGel)} RON</div><div class="ts">${(gpp).toFixed(2)} RON/gel</div></div>
+    <div class="tile"><lbl>Total de achitat</lbl><div class="tv red">${fmt(totalRestant)} RON</div><div class="ts">din ${fmt(tIns+tCaz)} RON total curse</div></div>
+  `;
+
+  // Per-race payment cards
+  const sorted = [...c].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  document.getElementById('bg-curse-cards').innerHTML = sorted.map(x => {
+    const past = new Date(x.data_cursa) < today;
+    const insOk = x.plata_concurs_ok;
+    const cazOk = x.plata_cazare || x.cazare === 0;
+    const gelCost = Math.round((x.geluri||0)*gpp);
+    const deAchitat = (!insOk?x.plata_concurs||0:0) + (!cazOk&&x.cazare>0?x.cazare:0);
+    const totCursa = (x.plata_concurs||0) + (x.cazare||0) + gelCost;
+
+    return `
+      <div class="pay-card" style="${past?'opacity:.6':''}${deAchitat===0&&!past?';border-color:rgba(79,255,155,.2)':''}">
+        <div class="pay-card-top">
+          <div>
+            <div style="font-size:10px;color:var(--t3);margin-bottom:2px">#${x.nr||x.id} · ${fd(x.data_cursa)}</div>
+            <div class="pay-card-name">${x.denumire}</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:2px">${x.distanta}km · ${x.denivelare}m D+</div>
+          </div>
+          <div style="text-align:right">
+            ${deAchitat > 0
+              ? `<div style="font-family:var(--display);font-size:20px;color:var(--red)">${fmt(deAchitat)} RON</div><div style="font-size:11px;color:var(--t3)">de achitat</div>`
+              : `<div style="font-family:var(--display);font-size:18px;color:var(--green)">✓ Achitat</div>`
+            }
+          </div>
+        </div>
+        <div class="pay-rows">
+          <div class="pay-row">
+            <div class="pay-row-left"><span class="pay-row-icon">🏁</span><span class="pay-row-lbl">Înscriere</span></div>
+            <span class="pay-row-amount ${insOk?'paid':'owed'}">${insOk?`✓ ${fmt(x.plata_concurs||0)} RON`:fmt(x.plata_concurs||0)+' RON'}</span>
+          </div>
+          <div class="pay-row">
+            <div class="pay-row-left"><span class="pay-row-icon">🏨</span><span class="pay-row-lbl">Cazare${x.rezervat?' (rezervat)':''}</span></div>
+            ${x.cazare===0
+              ? `<span class="pay-row-amount na">Fără cazare</span>`
+              : x.cazare==null
+                ? `<span class="pay-row-amount na">Nesetat</span>`
+                : `<span class="pay-row-amount ${cazOk?'paid':'owed'}">${cazOk?`✓ ${fmt(x.cazare)} RON`:fmt(x.cazare)+' RON'}</span>`
+            }
+          </div>
+          <div class="pay-row">
+            <div class="pay-row-left"><span class="pay-row-icon">🍯</span><span class="pay-row-lbl">Geluri (est. ${x.geluri||0} buc)</span></div>
+            <span class="pay-row-amount" style="color:var(--yellow)">${fmt(gelCost)} RON</span>
+          </div>
+          <div class="pay-row" style="background:rgba(184,255,79,.04);border:1px solid var(--accent-border)">
+            <div class="pay-row-left"><span class="pay-row-icon">Σ</span><span class="pay-row-lbl" style="color:var(--text);font-weight:600">Total cursă</span></div>
+            <span class="pay-row-amount" style="color:var(--accent)">${fmt(totCursa)} RON</span>
+          </div>
+        </div>
+        ${x.note?`<div style="margin-top:8px;font-size:11px;color:var(--t3);font-style:italic">📝 ${x.note}</div>`:''}
+      </div>
+    `;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  ESTIMARE AN
+// ══════════════════════════════════════════════════════
+function renderEstimare() {
+  const c = D.curse;
+  const gpp = D.nutritie.gel_pret_set24 / 24;
+  const months = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
+  const monthsFull = ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
+
+  // ── Calcule categorii ──
+  const tIns  = c.reduce((s,x)=>s+(x.plata_concurs||0),0);
+  const tCaz  = c.reduce((s,x)=>s+(x.cazare||0),0);
+  const tGelC = c.reduce((s,x)=>s+Math.round((x.geluri||0)*gpp),0);
+
+  const suplLunar = (D.nutritie.suplimente||[]).reduce((s,x)=>s+(x.pret_lunar||0),0);
+  const suplAnual = suplLunar * 12;
+  const gelTrainLunar = Math.round((D.nutritie.gel_training_lunar||8)*gpp);
+  const gelTrainAnual = gelTrainLunar * 12;
+
+  const spTotal = (D.sponsori||[]).reduce((s,x)=>s+(x.suma||0),0);
+
+  const totCurse  = tIns + tCaz + tGelC;
+  const totRecur  = suplAnual + gelTrainAnual;
+  const totalAn   = totCurse + totRecur;
+  const deficit   = totalAn - spTotal;
+
+  // ── Tiles ──
+  document.getElementById('est-tiles').innerHTML = `
+    <div class="tile"><lbl>Total costuri curse</lbl><div class="tv red">${fmt(totCurse)} RON</div><div class="ts">Înscrisuri + cazare + geluri curse</div></div>
+    <div class="tile"><lbl>Costuri recurente anuale</lbl><div class="tv yellow">${fmt(totRecur)} RON</div><div class="ts">${fmt(suplLunar+gelTrainLunar)} RON/lună × 12</div></div>
+    <div class="tile"><lbl>TOTAL AN 2026</lbl><div class="tv red">${fmt(totalAn)} RON</div><div class="ts">Toate categoriile incluse</div></div>
+    <div class="tile"><lbl>Sponsorizare</lbl><div class="tv green">${fmt(spTotal)} RON</div><div class="ts">${fmt(totalAn-spTotal)>0?'Deficit: '+fmt(deficit)+' RON':'Surplus: '+fmt(-deficit)+' RON'}</div><div class="pbar"><div class="pfill" style="width:${totalAn>0?Math.min(100,Math.round(spTotal/totalAn*100)):0}%;background:${spTotal>=totalAn?'var(--green)':spTotal>totalAn*0.6?'var(--yellow)':'var(--red)'}"></div></div></div>
+  `;
+
+  // ── Breakdown grid ──
+  const bkInscrieri = c.map(x=>({lbl:x.denumire, v:x.plata_concurs||0, ok:x.plata_concurs_ok}));
+  const bkCazare = c.filter(x=>x.cazare>0).map(x=>({lbl:x.denumire, v:x.cazare, ok:x.plata_cazare}));
+  const bkGelCurse = c.filter(x=>x.geluri>0).map(x=>({lbl:`${x.denumire} (${x.geluri} gel)`, v:Math.round(x.geluri*gpp)}));
+  const bkSupl = (D.nutritie.suplimente||[]).map(x=>({lbl:`${x.denumire}${x.cantitate?' · '+x.cantitate:''}`, v:x.pret_lunar*12}));
+
+  function bkCard(title, total, rows, showOk=false) {
+    return `<div class="bk-card">
+      <h4>${title} <span>${fmt(total)} RON</span></h4>
+      ${rows.map(r=>`<div class="bk-row">
+        <span class="bl">${r.lbl}</span>
+        <span class="bv ${showOk&&r.ok?'':'a'}" style="${showOk?r.ok?'color:var(--green)':'color:var(--red)':''}">${showOk&&r.ok?'✓ ':''} ${fmt(r.v)} RON</span>
+      </div>`).join('')}
+      <div class="bk-total"><span class="bl">Total</span><span class="bv">${fmt(total)} RON</span></div>
+    </div>`;
+  }
+
+  document.getElementById('est-breakdown').innerHTML = `
+    <div class="breakdown-grid">
+      ${bkCard('🏁 Înscrieri curse', tIns, bkInscrieri, true)}
+      ${bkCard('🏨 Cazare curse', tCaz, bkCazare, true)}
+      ${bkCard('🍯 Geluri curse', tGelC, bkGelCurse)}
+      <div class="bk-card">
+        <h4>💊 Suplimente anuale <span>${fmt(suplAnual)} RON</span></h4>
+        ${(D.nutritie.suplimente||[]).map(s=>`<div class="bk-row">
+          <span class="bl">${s.denumire}</span>
+          <span class="bv a">${fmt(s.pret_lunar)} × 12 = ${fmt(s.pret_lunar*12)} RON</span>
+        </div>`).join('')}
+        <div class="bk-total"><span class="bl">Total</span><span class="bv">${fmt(suplAnual)} RON</span></div>
+      </div>
+      <div class="bk-card">
+        <h4>🍯 Geluri training anuale <span>${fmt(gelTrainAnual)} RON</span></h4>
+        <div class="bk-row"><span class="bl">${D.nutritie.gel_training_lunar||8} geluri/lună</span><span class="bv a">${fmt(gelTrainLunar)} RON/lună</span></div>
+        <div class="bk-row"><span class="bl">Anual (×12)</span><span class="bv a">${fmt(gelTrainAnual)} RON</span></div>
+        <div class="bk-total"><span class="bl">Total</span><span class="bv">${fmt(gelTrainAnual)} RON</span></div>
+      </div>
+      <div class="bk-card" style="border-color:${deficit<=0?'rgba(79,255,155,.3)':'rgba(255,79,79,.25)'}">
+        <h4>📊 Sumar final <span style="color:${deficit<=0?'var(--green)':'var(--red)'}"> ${fmt(totalAn)} RON</span></h4>
+        <div class="bk-row"><span class="bl">Costuri curse</span><span class="bv">${fmt(totCurse)} RON</span></div>
+        <div class="bk-row"><span class="bl">Costuri recurente</span><span class="bv">${fmt(totRecur)} RON</span></div>
+        <div class="bk-row"><span class="bl" style="font-weight:700">TOTAL NECESAR</span><span class="bv a" style="color:var(--red)">${fmt(totalAn)} RON</span></div>
+        <div class="bk-row"><span class="bl" style="color:var(--green)">Sponsorizare</span><span class="bv" style="color:var(--green)">− ${fmt(spTotal)} RON</span></div>
+        <div class="bk-total" style="border-top-color:${deficit<=0?'rgba(79,255,155,.3)':'rgba(255,79,79,.25)'}">
+          <span class="bl">${deficit<=0?'Surplus':'Deficit'}</span>
+          <span class="bv" style="font-family:var(--display);font-size:22px;color:${deficit<=0?'var(--green)':'var(--red)'}">${deficit<=0?'+':'-'}${fmt(Math.abs(deficit))} RON</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // ── Timeline lunar ──
+  // Build monthly costs
+  const monthly = Array.from({length:12}, (_,m) => ({
+    m, name: monthsFull[m], short: months[m],
+    items: [],
+    total: 0
+  }));
+
+  // Recurente (fiecare lună)
+  for (let m = 0; m < 12; m++) {
+    if (suplLunar > 0) {
+      monthly[m].items.push({lbl:'💊 Suplimente', v: suplLunar});
+      monthly[m].total += suplLunar;
+    }
+    if (gelTrainLunar > 0) {
+      monthly[m].items.push({lbl:'🍯 Geluri training', v: gelTrainLunar});
+      monthly[m].total += gelTrainLunar;
+    }
+  }
+
+  // Curse (luna plecării sau cursei)
+  c.forEach(x => {
+    const dataPlecare = x.data_plecare || x.data_cursa;
+    const m = new Date(dataPlecare).getMonth();
+    if (m < 0 || m > 11) return;
+    const gelCost = Math.round((x.geluri||0)*gpp);
+    const cursaTot = (x.plata_concurs||0) + (x.cazare||0) + gelCost;
+    monthly[m].items.push({lbl:`🏁 ${x.denumire}`, v: cursaTot, sub:`Inscr. ${x.plata_concurs||0} + Caz. ${x.cazare||0} + Gel. ${gelCost}`});
+    monthly[m].total += cursaTot;
+  });
+
+  const maxMonthly = Math.max(...monthly.map(m=>m.total), 1);
+
+  document.getElementById('est-timeline').innerHTML = `
+    <div class="timeline">
+      ${monthly.map((m,i) => `
+        <div class="tl-month">
+          <div class="tl-head" onclick="toggleMonth(${i})">
+            <div class="tl-month-name">${m.name}</div>
+            <div class="tl-bar-wrap"><div class="tl-bar" style="width:${Math.round(m.total/maxMonthly*100)}%"></div></div>
+            <div class="tl-total ${m.total>3000?'high':m.total>1000?'mid':'low'}">${m.total>0?fmt(m.total)+' RON':'—'}</div>
+          </div>
+          <div class="tl-body" id="tl-body-${i}">
+            <div style="padding:8px 0">
+              ${m.items.map(it=>`
+                <div class="tl-item">
+                  <div>
+                    <span class="tl-item-lbl">${it.lbl}</span>
+                    ${it.sub?`<div style="font-size:11px;color:var(--t3)">${it.sub}</div>`:''}
+                  </div>
+                  <span class="tl-item-val">${fmt(it.v)} RON</span>
+                </div>
+              `).join('')}
+              ${m.total>0?`<div class="tl-item" style="border-top:1px solid var(--border);margin-top:4px;padding-top:8px">
+                <span class="tl-item-lbl" style="font-weight:700">Total luna</span>
+                <span class="tl-item-val" style="color:var(--accent)">${fmt(m.total)} RON</span>
+              </div>`:''}
+            </div>
+          </div>
+        </div>
+      `).join('')}
+      <div style="background:var(--s2);border:1px solid var(--accent-border);border-radius:var(--r);padding:14px 20px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;color:var(--t2);font-weight:600">TOTAL AN 2026</span>
+        <span style="font-family:var(--display);font-size:28px;color:var(--accent);letter-spacing:1px">${fmt(totalAn)} RON</span>
+      </div>
+    </div>
+  `;
+}
+
+function toggleMonth(i) {
+  const body = document.getElementById('tl-body-' + i);
+  body.classList.toggle('open');
+}
+function renderEchip() {
+  const icons = {'Pantofi Curse Scurte':'👟','Pantofi Curse Lungi':'🥾','Rucsac':'🎒','Bastoane':'🪄','Altele':'⚙️'};
+  document.getElementById('eq-list').innerHTML = (D.echipament||[]).map(e => {
+    const pct = e.km_max>0 ? Math.min(100, Math.round((e.km_actuali||0)/e.km_max*100)) : 0;
+    const cls = pct<50?'ok':pct<80?'mid':'worn';
+    return `
+      <div class="eq-item">
+        <div class="eq-ico">${icons[e.categorie]||'⚙️'}</div>
+        <div class="eq-body">
+          <div class="eq-name">${e.denumire}</div>
+          <div class="eq-cat">${e.categorie}</div>
+          ${e.km_max>0?`
+            <div class="km-wrap">
+              <div class="km-labels"><span>${e.km_actuali||0} km parcurși</span><span>${e.km_max} km max</span></div>
+              <div class="km-bar"><div class="km-fill ${cls}" style="width:${pct}%"></div></div>
+            </div>
+          `:''}
+          ${e.note?`<div style="font-size:11px;color:var(--t3);margin-top:4px">${e.note}</div>`:''}
+        </div>
+        <div class="eq-right">
+          <div class="eq-price">${fmt(e.pret||0)}<small>RON</small></div>
+          <div style="display:flex;gap:4px;margin-top:8px;justify-content:flex-end">
+            <button class="btn btn-ghost btn-sm btn-icon" onclick="openEQ(${e.id})">✏️</button>
+            <button class="btn btn-danger btn-sm btn-icon" onclick="delEQ(${e.id})">🗑</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('') || '<p style="color:var(--t3)">Niciun echipament.</p>';
+}
+
+// ══════════════════════════════════════════════════════
+//  SPONSORI
+// ══════════════════════════════════════════════════════
+function renderSponsori() {
+  const sps = D.sponsori || [];
+  const total = sps.reduce((s,x)=>s+(x.suma||0),0);
+  const primit = sps.filter(x=>x.primit).reduce((s,x)=>s+(x.suma||0),0);
+  const tipLabel = {general:'Sezon general',echipament:'Echipament',inscrisuri:'Înscrieri curse',transport:'Transport',nutritie:'Nutriție',altele:'Altele'};
+
+  document.getElementById('sp-tiles').innerHTML = `
+    <div class="tile"><lbl>Total sponsori</lbl><div class="tv accent">${sps.length}</div><div class="ts">înregistrați</div></div>
+    <div class="tile"><lbl>Sumă totală</lbl><div class="tv green">${fmt(total)} RON</div><div class="ts">angajat / promis</div></div>
+    <div class="tile"><lbl>Sumă primită</lbl><div class="tv green">${fmt(primit)} RON</div><div class="ts">${total>0?Math.round(primit/total*100):0}% confirmat</div><div class="pbar"><div class="pfill" style="width:${total>0?Math.min(100,Math.round(primit/total*100)):0}%"></div></div></div>
+    <div class="tile"><lbl>În așteptare</lbl><div class="tv yellow">${fmt(total-primit)} RON</div><div class="ts">neconfirmat încă</div></div>
+  `;
+
+  document.getElementById('sp-cards').innerHTML = sps.length ? sps.map(s => `
+    <div class="eq-item" style="${s.primit?'border-color:rgba(79,255,155,.2)':''}">
+      <div class="eq-ico">💼</div>
+      <div class="eq-body">
+        <div class="eq-name">${s.denumire}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">
+          <span class="tag ${s.primit?'tg':'ty'}">${s.primit?'✓ Confirmat':'⏳ În așteptare'}</span>
+          <span class="tag tn">${tipLabel[s.tip]||s.tip}</span>
+          ${s.data?`<span class="tag tn">📅 ${fd(s.data)}</span>`:''}
+        </div>
+        ${s.contact?`<div style="font-size:12px;color:var(--t3);margin-top:6px">👤 ${s.contact}</div>`:''}
+        ${s.note?`<div style="font-size:11px;color:var(--t3);font-style:italic;margin-top:4px">📝 ${s.note}</div>`:''}
+      </div>
+      <div class="eq-right">
+        <div class="eq-price" style="color:var(--green)">${fmt(s.suma)}<small>RON</small></div>
+        <div style="display:flex;gap:4px;margin-top:8px;justify-content:flex-end">
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="openSP(${s.id})">✏️</button>
+          <button class="btn btn-danger btn-sm btn-icon" onclick="delSP(${s.id})">🗑</button>
+        </div>
+      </div>
+    </div>
+  `).join('') : `<div style="background:var(--s1);border:1px dashed var(--border2);border-radius:var(--r);padding:40px;text-align:center;color:var(--t3)">
+    <div style="font-size:32px;margin-bottom:12px">💼</div>
+    <div style="font-size:14px">Niciun sponsor înregistrat</div>
+    <div style="font-size:12px;margin-top:4px">Apasă "+ Adaugă sponsor" pentru a începe</div>
+  </div>`;
+}
+
+function openSP(id) {
+  editSPid = id;
+  document.getElementById('sp-title').textContent = id ? 'EDITEAZĂ SPONSOR' : 'SPONSOR NOU';
+  const s = id ? (D.sponsori||[]).find(x=>x.id===id) : {};
+  document.getElementById('sp-den').value = s.denumire||'';
+  document.getElementById('sp-suma').value = s.suma||'';
+  document.getElementById('sp-data').value = s.data||'';
+  document.getElementById('sp-contact').value = s.contact||'';
+  document.getElementById('sp-tip').value = s.tip||'general';
+  document.getElementById('sp-note').value = s.note||'';
+  document.getElementById('sp-primit').checked = !!s.primit;
+  document.getElementById('ov-sp').classList.add('on');
+}
+function closeSP() { document.getElementById('ov-sp').classList.remove('on'); editSPid=null; }
+function saveSP() {
+  const den = document.getElementById('sp-den').value.trim();
+  if (!den) { toast('⚠️ Introduceți numele sponsorului!','err'); return; }
+  const payload = {
+    denumire: den,
+    suma: +document.getElementById('sp-suma').value||0,
+    data: document.getElementById('sp-data').value,
+    contact: document.getElementById('sp-contact').value.trim(),
+    tip: document.getElementById('sp-tip').value,
+    note: document.getElementById('sp-note').value.trim(),
+    primit: document.getElementById('sp-primit').checked
+  };
+  if (!D.sponsori) D.sponsori = [];
+  if (editSPid) {
+    const idx = D.sponsori.findIndex(x=>x.id===editSPid);
+    D.sponsori[idx] = {...D.sponsori[idx], ...payload};
+    toast('✅ Sponsor actualizat!','ok'); scheduleAutoSave();
+  } else {
+    const maxId = Math.max(0,...D.sponsori.map(x=>x.id));
+    D.sponsori.push({id:maxId+1, ...payload});
+    toast('✅ Sponsor adăugat!','ok'); scheduleAutoSave();
+  }
+  closeSP();
+  renderAll();
+}
+function delSP(id) {
+  const s = D.sponsori.find(x=>x.id===id);
+  if (!confirm(`Ștergi sponsorul "${s?.denumire}"?`)) return;
+  D.sponsori = D.sponsori.filter(x=>x.id!==id);
+  renderAll();
+  toast('🗑 Sponsor șters','ok'); scheduleAutoSave();
+}
+
+// ══════════════════════════════════════════════════════
+//  NUTRITIE (fully editable)
+// ══════════════════════════════════════════════════════
+function renderNutri() {
+  const n = D.nutritie;
+  // Populate settings inputs
+  document.getElementById('gel-pret').value = n.gel_pret_set24||200;
+  document.getElementById('gel-training').value = n.gel_training_lunar||8;
+  const gpp = (n.gel_pret_set24||200)/24;
+  document.getElementById('gel-pret-calc').textContent = gpp.toFixed(2);
+
+  const totalGelCurse = D.curse.reduce((s,c)=>s+(c.geluri||0),0);
+  const costGelCurse = Math.round(totalGelCurse * gpp);
+  const costTrainingLunar = Math.round((n.gel_training_lunar||8)*gpp);
+  const totalSupl = (n.suplimente||[]).reduce((s,x)=>s+(x.pret_lunar||0),0);
+
+  // Suplimente list
+  document.getElementById('supl-list').innerHTML = (n.suplimente||[]).length ?
+    `<div style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden">
+      ${(n.suplimente||[]).map(s=>`
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(37,43,38,.4)">
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:13px">${s.denumire}</div>
+            ${s.cantitate?`<div style="font-size:11px;color:var(--t3);margin-top:2px">${s.cantitate}</div>`:''}
+            ${s.note?`<div style="font-size:11px;color:var(--t3);font-style:italic">${s.note}</div>`:''}
+          </div>
+          <div style="font-family:var(--display);font-size:20px;color:var(--accent);min-width:90px;text-align:right">${fmt(s.pret_lunar)} <span style="font-family:var(--body);font-size:11px;color:var(--t3)">RON/lună</span></div>
+          <div style="display:flex;gap:4px">
+            <button class="btn btn-ghost btn-sm btn-icon" onclick="openSupl(${s.id})">✏️</button>
+            <button class="btn btn-danger btn-sm btn-icon" onclick="delSupl(${s.id})">🗑</button>
+          </div>
+        </div>
+      `).join('')}
+      <div style="padding:10px 16px;background:var(--s2);display:flex;justify-content:space-between;font-size:13px">
+        <span style="color:var(--t2);font-weight:600">TOTAL / lună</span>
+        <span style="font-family:var(--display);font-size:18px;color:var(--accent)">${fmt(totalSupl)} RON</span>
+      </div>
+    </div>` :
+    `<div style="background:var(--s1);border:1px dashed var(--border2);border-radius:var(--r);padding:24px;text-align:center;color:var(--t3)">Niciun supliment. Apasă + Adaugă.</div>`;
+
+  // Transport list
+  document.getElementById('tr-list').innerHTML = (D.transport||[]).length ?
+    `<div style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden">
+      ${(D.transport||[]).map(t=>`
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(37,43,38,.4)">
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:13px">${t.dest}</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:2px">${t.km} km dus · ~${(t.km*2*0.075).toFixed(1)}L total</div>
+          </div>
+          <div style="font-family:var(--display);font-size:20px;color:var(--accent);min-width:90px;text-align:right">${fmt(t.pret)} <span style="font-family:var(--body);font-size:11px;color:var(--t3)">RON</span></div>
+          <div style="display:flex;gap:4px">
+            <button class="btn btn-ghost btn-sm btn-icon" onclick="openTr(${t.id})">✏️</button>
+            <button class="btn btn-danger btn-sm btn-icon" onclick="delTr(${t.id})">🗑</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>` :
+    `<div style="background:var(--s1);border:1px dashed var(--border2);border-radius:var(--r);padding:24px;text-align:center;color:var(--t3)">Nicio destinație. Apasă + Adaugă.</div>`;
+}
+
+function saveGelSettings() {
+  D.nutritie.gel_pret_set24 = +document.getElementById('gel-pret').value||200;
+  D.nutritie.gel_training_lunar = +document.getElementById('gel-training').value||8;
+  renderNutri();
+  toast('✅ Setări geluri salvate!','ok'); scheduleAutoSave();
+}
+
+// Suplimente CRUD
+function openSupl(id) {
+  editSuplId = id;
+  document.getElementById('supl-title').textContent = id ? 'EDITEAZĂ SUPLIMENT' : 'SUPLIMENT NOU';
+  const s = id ? (D.nutritie.suplimente||[]).find(x=>x.id===id) : {};
+  document.getElementById('supl-den').value = s.denumire||'';
+  document.getElementById('supl-cant').value = s.cantitate||'';
+  document.getElementById('supl-pret').value = s.pret_lunar||'';
+  document.getElementById('supl-note').value = s.note||'';
+  document.getElementById('ov-supl').classList.add('on');
+}
+function closeSupl() { document.getElementById('ov-supl').classList.remove('on'); editSuplId=null; }
+function saveSupl() {
+  const den = document.getElementById('supl-den').value.trim();
+  if (!den) { toast('⚠️ Introduceți denumirea!','err'); return; }
+  const payload = { denumire:den, cantitate:document.getElementById('supl-cant').value.trim(), pret_lunar:+document.getElementById('supl-pret').value||0, note:document.getElementById('supl-note').value.trim() };
+  if (!D.nutritie.suplimente) D.nutritie.suplimente=[];
+  if (editSuplId) {
+    const idx = D.nutritie.suplimente.findIndex(x=>x.id===editSuplId);
+    D.nutritie.suplimente[idx] = {...D.nutritie.suplimente[idx], ...payload};
+  } else {
+    const maxId = Math.max(0,...D.nutritie.suplimente.map(x=>x.id));
+    D.nutritie.suplimente.push({id:maxId+1, ...payload});
+  }
+  closeSupl(); renderNutri(); toast('✅ Supliment salvat!','ok'); scheduleAutoSave();
+}
+function delSupl(id) {
+  const s = D.nutritie.suplimente.find(x=>x.id===id);
+  if (!confirm(`Ștergi "${s?.denumire}"?`)) return;
+  D.nutritie.suplimente = D.nutritie.suplimente.filter(x=>x.id!==id);
+  renderNutri(); toast('🗑 Șters','ok'); scheduleAutoSave(); scheduleAutoSave();
+}
+
+// Transport CRUD
+function openTr(id) {
+  editTrId = id;
+  document.getElementById('tr-title').textContent = id ? 'EDITEAZĂ DESTINAȚIE' : 'DESTINAȚIE NOUĂ';
+  const t = id ? (D.transport||[]).find(x=>x.id===id) : {};
+  document.getElementById('tr-dest').value = t.dest||'';
+  document.getElementById('tr-km').value = t.km||'';
+  document.getElementById('tr-pret').value = t.pret||'';
+  document.getElementById('ov-tr').classList.add('on');
+}
+function closeTr() { document.getElementById('ov-tr').classList.remove('on'); editTrId=null; }
+function saveTr() {
+  const dest = document.getElementById('tr-dest').value.trim();
+  if (!dest) { toast('⚠️ Introduceți destinația!','err'); return; }
+  const payload = { dest, km:+document.getElementById('tr-km').value||0, pret:+document.getElementById('tr-pret').value||0 };
+  if (!D.transport) D.transport=[];
+  if (editTrId) {
+    const idx = D.transport.findIndex(x=>x.id===editTrId);
+    D.transport[idx] = {...D.transport[idx], ...payload};
+  } else {
+    const maxId = Math.max(0,...D.transport.map(x=>x.id));
+    D.transport.push({id:maxId+1, ...payload});
+  }
+  closeTr(); renderNutri(); toast('✅ Destinație salvată!','ok'); scheduleAutoSave();
+}
+function delTr(id) {
+  const t = D.transport.find(x=>x.id===id);
+  if (!confirm(`Ștergi destinația "${t?.dest}"?`)) return;
+  D.transport = D.transport.filter(x=>x.id!==id);
+  renderNutri(); toast('🗑 Șters','ok'); scheduleAutoSave(); scheduleAutoSave();
+}
+
+// ══════════════════════════════════════════════════════
+//  MODAL CURSĂ
+// ══════════════════════════════════════════════════════
+function openRC(id) {
+  editRCid = id;
+  document.getElementById('rc-title').textContent = id ? 'EDITEAZĂ CURSĂ' : 'CURSĂ NOUĂ';
+  const c = id ? D.curse.find(x=>x.id===id) : {};
+  const v = (fid, val) => document.getElementById(fid).value = val||'';
+  const ck = (fid, val) => document.getElementById(fid).checked = !!val;
+  v('f-den',c.denumire); v('f-dist',c.distanta); v('f-deniv',c.denivelare);
+  v('f-dc',c.data_cursa); v('f-ora',c.ora_start||'09:00');
+  v('f-dp',c.data_plecare); v('f-di',c.data_sfarsit);
+  document.getElementById('f-inc').value = c.incaltari||'Hoka Speedgoat 6/7';
+  v('f-gel',c.geluri); v('f-caz',c.cazare);
+  v('f-ins',c.plata_concurs);
+  ck('f-rez',c.rezervat); ck('f-pcaz',c.plata_cazare); ck('f-pins',c.plata_concurs_ok);
+  v('f-note',c.note);
+  document.getElementById('ov-rc').classList.add('on');
+}
+
+function closeRC() { document.getElementById('ov-rc').classList.remove('on'); editRCid=null; }
+
+function saveRC() {
+  const den = document.getElementById('f-den').value.trim();
+  if (!den) { toast('⚠️ Introduceți denumirea cursei!','err'); return; }
+  if (!D) { toast('⚠️ Creați sau deschideți un fișier mai întâi!','err'); return; }
+
+  const payload = {
+    denumire: den,
+    distanta: +document.getElementById('f-dist').value||0,
+    denivelare: +document.getElementById('f-deniv').value||0,
+    data_cursa: document.getElementById('f-dc').value,
+    ora_start: document.getElementById('f-ora').value,
+    data_plecare: document.getElementById('f-dp').value,
+    data_sfarsit: document.getElementById('f-di').value,
+    incaltari: document.getElementById('f-inc').value,
+    geluri: +document.getElementById('f-gel').value||0,
+    cazare: +document.getElementById('f-caz').value||0,
+    plata_concurs: +document.getElementById('f-ins').value||0,
+    rezervat: document.getElementById('f-rez').checked,
+    plata_cazare: document.getElementById('f-pcaz').checked,
+    plata_concurs_ok: document.getElementById('f-pins').checked,
+    note: document.getElementById('f-note').value.trim()
+  };
+
+  if (editRCid) {
+    const idx = D.curse.findIndex(c=>c.id===editRCid);
+    D.curse[idx] = {...D.curse[idx], ...payload};
+    toast('✅ Cursă actualizată!','ok'); scheduleAutoSave();
+  } else {
+    const maxId = Math.max(0, ...D.curse.map(c=>c.id));
+    D.curse.push({id:maxId+1, nr:D.curse.length+1, ...payload});
+    toast('✅ Cursă adăugată!','ok'); scheduleAutoSave();
+  }
+  closeRC();
+  renderAll();
+}
+
+function delRC(id) {
+  const c = D.curse.find(x=>x.id===id);
+  if (!confirm(`Ștergi "${c?.denumire}"?`)) return;
+  D.curse = D.curse.filter(x=>x.id!==id);
+  renderAll();
+  toast('🗑 Cursă ștearsă','ok'); scheduleAutoSave();
+}
+
+// ══════════════════════════════════════════════════════
+//  MODAL ECHIPAMENT
+// ══════════════════════════════════════════════════════
+function openEQ(id) {
+  editEQid = id;
+  document.getElementById('eq-title').textContent = id ? 'EDITEAZĂ ECHIPAMENT' : 'ECHIPAMENT NOU';
+  const e = id ? D.echipament.find(x=>x.id===id) : {};
+  document.getElementById('eq-den').value = e.denumire||'';
+  document.getElementById('eq-cat').value = e.categorie||'Pantofi Curse Scurte';
+  document.getElementById('eq-prt').value = e.pret||'';
+  document.getElementById('eq-kmx').value = e.km_max||'';
+  document.getElementById('eq-kma').value = e.km_actuali||'';
+  document.getElementById('eq-note').value = e.note||'';
+  document.getElementById('ov-eq').classList.add('on');
+}
+
+function closeEQ() { document.getElementById('ov-eq').classList.remove('on'); editEQid=null; }
+
+function saveEQ() {
+  const den = document.getElementById('eq-den').value.trim();
+  if (!den) { toast('⚠️ Introduceți denumirea!','err'); return; }
+  const payload = {
+    denumire: den,
+    categorie: document.getElementById('eq-cat').value,
+    pret: +document.getElementById('eq-prt').value||0,
+    km_max: +document.getElementById('eq-kmx').value||0,
+    km_actuali: +document.getElementById('eq-kma').value||0,
+    note: document.getElementById('eq-note').value.trim()
+  };
+  if (editEQid) {
+    const idx = D.echipament.findIndex(e=>e.id===editEQid);
+    D.echipament[idx] = {...D.echipament[idx], ...payload};
+  } else {
+    const maxId = Math.max(0,...D.echipament.map(e=>e.id));
+    D.echipament.push({id:maxId+1, ...payload});
+  }
+  closeEQ();
+  renderEchip();
+  toast('✅ Salvat!','ok'); scheduleAutoSave();
+}
+
+function delEQ(id) {
+  const e = D.echipament.find(x=>x.id===id);
+  if (!confirm(`Ștergi "${e?.denumire}"?`)) return;
+  D.echipament = D.echipament.filter(x=>x.id!==id);
+  renderEchip();
+  toast('🗑 Șters','ok'); scheduleAutoSave();
+}
+
+// ══════════════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════════════
+function fd(d) {
+  if (!d) return '—';
+  const [y,m,day] = d.split('-');
+  return `${day}.${m}.${y}`;
+}
+function fmt(n) { return (n||0).toLocaleString('ro-RO'); }
+
+function toast(msg, type='ok') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast show ${type}`;
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// Close overlays on click outside
+['ov-rc','ov-eq','ov-sp','ov-supl','ov-tr'].forEach(id => {
+  document.getElementById(id).addEventListener('click', e => {
+    if (e.target === e.currentTarget) { closeRC(); closeEQ(); closeSP(); closeSupl(); closeTr(); }
+  });
+});
+
+// Keyboard: Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeRC(); closeEQ(); closeSP(); closeSupl(); closeTr(); }
+});
+
+// ── AUTO-SAVE hint: Ctrl+S
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey||e.metaKey) && e.key==='s') { e.preventDefault(); saveFile(); }
+});
+</script>
+</body>
+</html>
