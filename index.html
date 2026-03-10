@@ -316,6 +316,39 @@ select option{background:var(--s2)}
 .tl-item-lbl{color:var(--t2)}
 .tl-item-val{font-weight:600}
 
+/* ── STATS PAGE ── */
+.act-row{
+  display:grid;grid-template-columns:80px 1fr 70px 70px 60px 80px;
+  gap:8px;align-items:center;padding:10px 14px;
+  border-radius:8px;border:1px solid var(--border);
+  background:var(--s1);margin-bottom:6px;font-size:12px;
+  transition:background .15s;cursor:default;
+}
+.act-row:hover{background:var(--s2)}
+.act-row-head{
+  display:grid;grid-template-columns:80px 1fr 70px 70px 60px 80px;
+  gap:8px;padding:6px 14px;font-size:10px;color:var(--t3);
+  text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;
+}
+.act-name{font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.act-tag{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;
+  background:rgba(184,255,79,.1);color:var(--accent);border:1px solid var(--accent-border)}
+.act-tag.road{background:rgba(79,200,255,.1);color:#4fc8ff;border-color:rgba(79,200,255,.2)}
+.act-tag.track{background:rgba(255,200,79,.1);color:var(--yellow);border-color:rgba(255,200,79,.2)}
+.st-bar-wrap{position:absolute;bottom:0;left:0;right:0;top:0;display:flex;align-items:flex-end;gap:3px;padding:0 2px}
+.st-bar{flex:1;border-radius:3px 3px 0 0;min-height:2px;transition:height .3s ease;cursor:default;position:relative}
+.st-bar:hover::after{content:attr(data-tip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);
+  background:var(--s3);border:1px solid var(--border2);color:var(--text);font-size:11px;
+  padding:4px 8px;border-radius:5px;white-space:nowrap;z-index:10;margin-bottom:4px}
+.st-line-svg{width:100%;height:100%;overflow:visible}
+.st-axis{font-size:9px;fill:var(--t4)}
+@media(max-width:800px){
+  .act-row,.act-row-head{grid-template-columns:64px 1fr 60px 60px}
+  .act-row > *:nth-child(5),.act-row > *:nth-child(6),
+  .act-row-head > *:nth-child(5),.act-row-head > *:nth-child(6){display:none}
+  #st-charts-row{grid-template-columns:1fr}
+}
+
 /* ── LOGIN SCREEN ── */
 .login-screen{
   position:fixed;inset:0;z-index:200;
@@ -520,6 +553,8 @@ select option{background:var(--s2)}
     <div class="ni" onclick="go('sponsori',this);closeDrawer()"><span class="ico">💼</span>Sponsori</div>
     <div class="ni" onclick="go('echip',this);closeDrawer()"><span class="ico">👟</span>Echipament</div>
     <div class="ni" onclick="go('nutri',this);closeDrawer()"><span class="ico">🍌</span>Nutriție</div>
+    <div class="nav-group">Performanță</div>
+    <div class="ni" onclick="go('stats',this);closeDrawer()"><span class="ico">📈</span>Statistici</div>
   </div>
   <div class="drawer-kpi">
     <div class="drawer-kpi-row"><span>Total km sezon</span><strong id="d-km">—</strong></div>
@@ -535,8 +570,8 @@ select option{background:var(--s2)}
 <nav class="bottom-nav" id="bottom-nav">
   <button class="bn on" onclick="goBN('dash',this)"><span class="bn-ico">🏠</span>Home</button>
   <button class="bn" onclick="goBN('curse',this)"><span class="bn-ico">🏁</span>Curse</button>
+  <button class="bn" onclick="goBN('stats',this)"><span class="bn-ico">📈</span>Stats</button>
   <button class="bn" onclick="goBN('buget',this)"><span class="bn-ico">💰</span>Buget</button>
-  <button class="bn" onclick="goBN('sponsori',this)"><span class="bn-ico">💼</span>Sponsori</button>
   <button class="bn" onclick="goBN('nutri',this)"><span class="bn-ico">🍌</span>Nutriție</button>
 </nav>
 
@@ -559,6 +594,8 @@ select option{background:var(--s2)}
     <div class="ni" onclick="go('sponsori',this)"><span class="ico">💼</span>Sponsori <span class="badge" id="b-sp">0</span></div>
     <div class="ni" onclick="go('echip',this)"><span class="ico">👟</span>Echipament</div>
     <div class="ni" onclick="go('nutri',this)"><span class="ico">🍌</span>Nutriție & Transport</div>
+    <div class="nav-group">Performanță</div>
+    <div class="ni" onclick="go('stats',this)"><span class="ico">📈</span>Statistici Alergări</div>
   </nav>
   <div class="sidebar-bottom">
     <div class="kpi">
@@ -708,10 +745,86 @@ select option{background:var(--s2)}
   <div id="tr-list"></div>
 </div>
 
-</main>
+<!-- STATISTICI ALERGĂRI -->
+<div class="page" id="pg-stats">
+  <div class="ph">
+    <div class="ph-left"><h2>STATISTICI</h2><p>Toate alergările tale · 3 ani de date</p></div>
+    <div class="ph-right">
+      <label class="btn btn-primary" style="cursor:pointer">
+        ＋ Import fișiere
+        <input type="file" id="stats-file-input" accept=".csv,.gpx,.tcx,.fit" multiple style="display:none" onchange="importActivities(this.files)">
+      </label>
+      <button class="btn btn-ghost btn-sm" onclick="clearActivities()" title="Șterge toate activitățile">🗑</button>
+    </div>
+  </div>
+
+  <!-- KPI tiles -->
+  <div class="tiles" id="st-tiles" style="margin-bottom:28px"></div>
+
+  <!-- Charts row -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px" id="st-charts-row">
+    <!-- km per luna -->
+    <div class="bk-card" style="padding:20px">
+      <h4 style="margin-bottom:16px">📅 KM pe lună</h4>
+      <div style="position:relative;height:160px" id="chart-km-month"></div>
+    </div>
+    <!-- elevatie per luna -->
+    <div class="bk-card" style="padding:20px">
+      <h4 style="margin-bottom:16px">⛰️ Elevație D+ pe lună</h4>
+      <div style="position:relative;height:160px" id="chart-elev-month"></div>
+    </div>
+  </div>
+
+  <!-- Km per an bar -->
+  <div class="bk-card" style="padding:20px;margin-bottom:28px">
+    <h4 style="margin-bottom:16px">📊 KM pe an</h4>
+    <div style="position:relative;height:120px" id="chart-km-year"></div>
+  </div>
+
+  <!-- Km cumulate -->
+  <div class="bk-card" style="padding:20px;margin-bottom:28px">
+    <h4 style="margin-bottom:16px">📈 KM cumulați în timp</h4>
+    <div style="position:relative;height:180px" id="chart-cumulative"></div>
+  </div>
+
+  <!-- Filter + activity list -->
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+    <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">📋 Toate activitățile</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <select id="st-filter-year" onchange="renderStats()" style="padding:6px 10px;font-size:12px;background:var(--s2);border:1px solid var(--border);border-radius:6px;color:var(--text)">
+        <option value="">Toți anii</option>
+      </select>
+      <select id="st-filter-type" onchange="renderStats()" style="padding:6px 10px;font-size:12px;background:var(--s2);border:1px solid var(--border);border-radius:6px;color:var(--text)">
+        <option value="">Toate tipurile</option>
+        <option value="trail">Trail</option>
+        <option value="road">Road</option>
+        <option value="track">Track</option>
+      </select>
+    </div>
+  </div>
+  <div id="st-activity-list"></div>
+
+  <!-- Empty state -->
+  <div id="st-empty" style="display:none;text-align:center;padding:60px 20px">
+    <div style="font-size:48px;margin-bottom:16px">📂</div>
+    <div style="font-family:var(--display);font-size:28px;letter-spacing:2px;color:var(--t2);margin-bottom:8px">NICIO ACTIVITATE</div>
+    <div style="color:var(--t3);font-size:13px;margin-bottom:24px">Importă fișiere CSV, GPX sau TCX din Garmin, Strava, Coros etc.</div>
+    <label class="btn btn-primary" style="cursor:pointer">
+      ＋ Import primul fișier
+      <input type="file" accept=".csv,.gpx,.tcx,.fit" multiple style="display:none" onchange="importActivities(this.files)">
+    </label>
+    <div style="margin-top:20px;font-size:12px;color:var(--t3)">
+      💡 <strong style="color:var(--t2)">Strava:</strong> Settings → My Account → Download or Delete Your Data → Request Archive (CSV)<br>
+      💡 <strong style="color:var(--t2)">Garmin:</strong> Garmin Connect → activitate → Export GPX / TCX<br>
+      💡 <strong style="color:var(--t2)">Coros:</strong> App → Training → Export
+    </div>
+  </div>
 </div>
 
-<!-- MODAL CURSĂ -->
+
+
+</main>
+</div>
 <div class="overlay" id="ov-rc">
 <div class="modal">
   <div class="mh"><h3 id="rc-title">CURSĂ NOUĂ</h3><button class="mx" onclick="closeRC()">✕</button></div>
@@ -1312,7 +1425,7 @@ function go(id, el) {
   if(el) el.classList.add('on');
   // Sync bottom nav
   document.querySelectorAll('.bn').forEach(b=>b.classList.remove('on'));
-  const bnMap = {dash:0,curse:1,buget:2,sponsori:3,nutri:4};
+  const bnMap = {dash:0,curse:1,stats:2,buget:3,nutri:4};
   if(bnMap[id]!==undefined) document.querySelectorAll('.bn')[bnMap[id]]?.classList.add('on');
 }
 
@@ -1331,6 +1444,7 @@ function renderAll() {
   renderSponsori();
   renderEchip();
   renderNutri();
+  renderStats();
 }
 
 // ══════════════════════════════════════════════════════
@@ -1695,26 +1809,29 @@ function renderEstimare() {
   const gelTrainLunar = Math.round((D.nutritie.gel_training_lunar||8)*gpp);
   const gelTrainAnual = gelTrainLunar * 12;
 
+  // Echipament — suma totală a tuturor itemelor
+  const echipTotal = (D.echipament||[]).reduce((s,x)=>s+(x.pret||0),0);
+
   const spTotal = (D.sponsori||[]).reduce((s,x)=>s+(x.suma||0),0);
 
   const totCurse  = tIns + tCaz + tGelC;
   const totRecur  = suplAnual + gelTrainAnual;
-  const totalAn   = totCurse + totRecur;
+  const totalAn   = totCurse + totRecur + echipTotal;
   const deficit   = totalAn - spTotal;
 
   // ── Tiles ──
   document.getElementById('est-tiles').innerHTML = `
     <div class="tile"><lbl>Total costuri curse</lbl><div class="tv red">${fmt(totCurse)} RON</div><div class="ts">Înscrisuri + cazare + geluri curse</div></div>
     <div class="tile"><lbl>Costuri recurente anuale</lbl><div class="tv yellow">${fmt(totRecur)} RON</div><div class="ts">${fmt(suplLunar+gelTrainLunar)} RON/lună × 12</div></div>
-    <div class="tile"><lbl>TOTAL AN 2026</lbl><div class="tv red">${fmt(totalAn)} RON</div><div class="ts">Toate categoriile incluse</div></div>
-    <div class="tile"><lbl>Sponsorizare</lbl><div class="tv green">${fmt(spTotal)} RON</div><div class="ts">${fmt(totalAn-spTotal)>0?'Deficit: '+fmt(deficit)+' RON':'Surplus: '+fmt(-deficit)+' RON'}</div><div class="pbar"><div class="pfill" style="width:${totalAn>0?Math.min(100,Math.round(spTotal/totalAn*100)):0}%;background:${spTotal>=totalAn?'var(--green)':spTotal>totalAn*0.6?'var(--yellow)':'var(--red)'}"></div></div></div>
+    <div class="tile"><lbl>Echipament</lbl><div class="tv yellow">${fmt(echipTotal)} RON</div><div class="ts">${(D.echipament||[]).length} item(e) înregistrate</div></div>
+    <div class="tile"><lbl>TOTAL AN 2026</lbl><div class="tv red">${fmt(totalAn)} RON</div><div class="ts">Curse + recurente + echipament</div></div>
+    <div class="tile"><lbl>Sponsorizare</lbl><div class="tv green">${fmt(spTotal)} RON</div><div class="ts">${deficit>0?'Deficit: '+fmt(deficit)+' RON':'Surplus: '+fmt(-deficit)+' RON'}</div><div class="pbar"><div class="pfill" style="width:${totalAn>0?Math.min(100,Math.round(spTotal/totalAn*100)):0}%;background:${spTotal>=totalAn?'var(--green)':spTotal>totalAn*0.6?'var(--yellow)':'var(--red)'}"></div></div></div>
   `;
 
   // ── Breakdown grid ──
   const bkInscrieri = c.map(x=>({lbl:x.denumire, v:x.plata_concurs||0, ok:x.plata_concurs_ok}));
   const bkCazare = c.filter(x=>x.cazare>0).map(x=>({lbl:x.denumire, v:x.cazare, ok:x.plata_cazare}));
   const bkGelCurse = c.filter(x=>x.geluri>0).map(x=>({lbl:`${x.denumire} (${x.geluri} gel)`, v:Math.round(x.geluri*gpp)}));
-  const bkSupl = (D.nutritie.suplimente||[]).map(x=>({lbl:`${x.denumire}${x.cantitate?' · '+x.cantitate:''}`, v:x.pret_lunar*12}));
 
   function bkCard(title, total, rows, showOk=false) {
     return `<div class="bk-card">
@@ -1746,10 +1863,19 @@ function renderEstimare() {
         <div class="bk-row"><span class="bl">Anual (×12)</span><span class="bv a">${fmt(gelTrainAnual)} RON</span></div>
         <div class="bk-total"><span class="bl">Total</span><span class="bv">${fmt(gelTrainAnual)} RON</span></div>
       </div>
+      <div class="bk-card">
+        <h4>👟 Echipament <span>${fmt(echipTotal)} RON</span></h4>
+        ${(D.echipament||[]).map(e=>`<div class="bk-row">
+          <span class="bl">${e.denumire}<br><span style="font-size:11px;color:var(--t3)">${e.categorie} · ${e.km_max||0}km max</span></span>
+          <span class="bv a">${fmt(e.pret||0)} RON</span>
+        </div>`).join('')}
+        <div class="bk-total"><span class="bl">Total</span><span class="bv">${fmt(echipTotal)} RON</span></div>
+      </div>
       <div class="bk-card" style="border-color:${deficit<=0?'rgba(79,255,155,.3)':'rgba(255,79,79,.25)'}">
         <h4>📊 Sumar final <span style="color:${deficit<=0?'var(--green)':'var(--red)'}"> ${fmt(totalAn)} RON</span></h4>
         <div class="bk-row"><span class="bl">Costuri curse</span><span class="bv">${fmt(totCurse)} RON</span></div>
         <div class="bk-row"><span class="bl">Costuri recurente</span><span class="bv">${fmt(totRecur)} RON</span></div>
+        <div class="bk-row"><span class="bl">Echipament</span><span class="bv">${fmt(echipTotal)} RON</span></div>
         <div class="bk-row"><span class="bl" style="font-weight:700">TOTAL NECESAR</span><span class="bv a" style="color:var(--red)">${fmt(totalAn)} RON</span></div>
         <div class="bk-row"><span class="bl" style="color:var(--green)">Sponsorizare</span><span class="bv" style="color:var(--green)">− ${fmt(spTotal)} RON</span></div>
         <div class="bk-total" style="border-top-color:${deficit<=0?'rgba(79,255,155,.3)':'rgba(255,79,79,.25)'}">
@@ -1761,33 +1887,26 @@ function renderEstimare() {
   `;
 
   // ── Timeline lunar ──
-  // Build monthly costs
-  const monthly = Array.from({length:12}, (_,m) => ({
-    m, name: monthsFull[m], short: months[m],
-    items: [],
-    total: 0
-  }));
+  const monthly = Array.from({length:12}, (_,m) => ({ m, name: monthsFull[m], short: months[m], items:[], total:0 }));
 
-  // Recurente (fiecare lună)
   for (let m = 0; m < 12; m++) {
-    if (suplLunar > 0) {
-      monthly[m].items.push({lbl:'💊 Suplimente', v: suplLunar});
-      monthly[m].total += suplLunar;
-    }
-    if (gelTrainLunar > 0) {
-      monthly[m].items.push({lbl:'🍯 Geluri training', v: gelTrainLunar});
-      monthly[m].total += gelTrainLunar;
-    }
+    if (suplLunar > 0) { monthly[m].items.push({lbl:'💊 Suplimente', v:suplLunar}); monthly[m].total += suplLunar; }
+    if (gelTrainLunar > 0) { monthly[m].items.push({lbl:'🍯 Geluri training', v:gelTrainLunar}); monthly[m].total += gelTrainLunar; }
   }
 
-  // Curse (luna plecării sau cursei)
+  // Echipament — distribuit în luna 1 (Ianuarie) ca investiție inițială
+  if (echipTotal > 0) {
+    monthly[0].items.push({lbl:`👟 Echipament (${(D.echipament||[]).length} item)`, v:echipTotal, sub:(D.echipament||[]).map(e=>e.denumire).join(', ')});
+    monthly[0].total += echipTotal;
+  }
+
   c.forEach(x => {
     const dataPlecare = x.data_plecare || x.data_cursa;
     const m = new Date(dataPlecare).getMonth();
     if (m < 0 || m > 11) return;
     const gelCost = Math.round((x.geluri||0)*gpp);
     const cursaTot = (x.plata_concurs||0) + (x.cazare||0) + gelCost;
-    monthly[m].items.push({lbl:`🏁 ${x.denumire}`, v: cursaTot, sub:`Inscr. ${x.plata_concurs||0} + Caz. ${x.cazare||0} + Gel. ${gelCost}`});
+    monthly[m].items.push({lbl:`🏁 ${x.denumire}`, v:cursaTot, sub:`Inscr. ${x.plata_concurs||0} + Caz. ${x.cazare||0} + Gel. ${gelCost}`});
     monthly[m].total += cursaTot;
   });
 
@@ -2227,9 +2346,398 @@ function toast(msg, type='ok') {
 });
 
 // Keyboard: Escape
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeRC(); closeEQ(); closeSP(); closeSupl(); closeTr(); }
-});
+
+// ══════════════════════════════════════════════════════
+//  STATISTICS — ACTIVITIES ENGINE
+// ══════════════════════════════════════════════════════
+
+// Activities stored in D.activities = [{id, date, name, type, km, elev, duration, source}]
+function getActivities() {
+  if (!D.activities) D.activities = [];
+  return D.activities;
+}
+
+// ── IMPORT ────────────────────────────────────────────
+async function importActivities(files) {
+  if (!files || !files.length) return;
+  let imported = 0, errors = 0;
+  const acts = getActivities();
+
+  for (const file of files) {
+    try {
+      const text = await file.text();
+      const ext = file.name.split('.').pop().toLowerCase();
+      let parsed = [];
+
+      if (ext === 'csv') parsed = parseCSV(text, file.name);
+      else if (ext === 'gpx') parsed = parseGPX(text, file.name);
+      else if (ext === 'tcx') parsed = parseTCX(text, file.name);
+      else { errors++; continue; }
+
+      // Deduplicate by date+km
+      parsed.forEach(a => {
+        const dup = acts.find(x => x.date === a.date && Math.abs((x.km||0)-(a.km||0)) < 0.5);
+        if (!dup) { acts.push(a); imported++; }
+      });
+    } catch(e) {
+      console.error('Import error:', file.name, e);
+      errors++;
+    }
+  }
+
+  // Sort by date desc
+  acts.sort((a,b) => b.date.localeCompare(a.date));
+  D.activities = acts;
+  scheduleAutoSave();
+  renderStats();
+  toast(`✅ ${imported} activități importate${errors?` · ${errors} erori`:''}`, imported ? 'ok' : 'err');
+}
+
+function parseCSV(text, filename) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(',').map(h => h.replace(/"/g,'').trim().toLowerCase());
+  const results = [];
+
+  // Detect Strava format
+  const isStrava = headers.includes('activity type') || headers.includes('activity id');
+
+  lines.slice(1).forEach((line, i) => {
+    // Handle quoted CSV fields
+    const cols = [];
+    let cur = '', inQ = false;
+    for (let c of line) {
+      if (c === '"') inQ = !inQ;
+      else if (c === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+      else cur += c;
+    }
+    cols.push(cur.trim());
+
+    const get = (...keys) => {
+      for (const k of keys) {
+        const idx = headers.indexOf(k);
+        if (idx >= 0 && cols[idx]) return cols[idx].replace(/"/g,'').trim();
+      }
+      return '';
+    };
+
+    // Date
+    let dateRaw = get('date','activity date','start date','datum');
+    if (!dateRaw) return;
+    const date = normalizeDate(dateRaw);
+    if (!date) return;
+
+    // Distance km
+    let kmRaw = get('distance','distance (km)','distanz (km)','distanța (km)','distance_km','moving time');
+    // Strava might be in meters
+    let km = parseFloat(kmRaw.replace(',','.')) || 0;
+    if (isStrava && headers.includes('distance') && km > 500) km /= 1000; // meters → km
+
+    // Elevation
+    let elevRaw = get('elevation gain','elev gain','total ascent','ascent','denivelare','elevation_gain','total elevation gain');
+    const elev = parseInt(elevRaw.replace(',','.')) || 0;
+
+    // Duration (seconds)
+    let durRaw = get('moving time','elapsed time','duration','zeit','time');
+    const dur = parseDuration(durRaw);
+
+    // Name
+    const name = get('activity name','name','title','bezeichnung','denumire') || `Alergare ${date}`;
+
+    // Type
+    let typeRaw = (get('activity type','type','sport','sport type') || '').toLowerCase();
+    const type = typeRaw.includes('trail') ? 'trail' : typeRaw.includes('road') || typeRaw.includes('run') ? 'road' : typeRaw.includes('track') ? 'track' : 'road';
+
+    if (km > 0 || elev > 0) {
+      results.push({ id: Date.now() + i, date, name, type, km: Math.round(km*10)/10, elev, dur, source: 'csv' });
+    }
+  });
+
+  return results;
+}
+
+function parseGPX(text, filename) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(text, 'text/xml');
+  const results = [];
+
+  const tracks = doc.querySelectorAll('trk');
+  tracks.forEach((trk, i) => {
+    const name = trk.querySelector('name')?.textContent || filename.replace('.gpx','');
+    const typeEl = trk.querySelector('type')?.textContent?.toLowerCase() || 'road';
+    const type = typeEl.includes('trail') ? 'trail' : 'road';
+
+    const points = [...trk.querySelectorAll('trkpt')];
+    if (!points.length) return;
+
+    // Date from first point
+    const timeEl = points[0].querySelector('time')?.textContent;
+    const date = timeEl ? normalizeDate(timeEl) : normalizeDate(new Date().toISOString());
+
+    // Calculate distance + elevation
+    let km = 0, elev = 0, prevLat, prevLon, prevEle;
+    points.forEach(pt => {
+      const lat = parseFloat(pt.getAttribute('lat'));
+      const lon = parseFloat(pt.getAttribute('lon'));
+      const ele = parseFloat(pt.querySelector('ele')?.textContent || 0);
+
+      if (prevLat !== undefined) {
+        km += haversine(prevLat, prevLon, lat, lon);
+        if (ele > prevEle + 1) elev += (ele - prevEle);
+      }
+      prevLat = lat; prevLon = lon; prevEle = ele;
+    });
+
+    results.push({ id: Date.now() + i, date, name, type, km: Math.round(km*10)/10, elev: Math.round(elev), dur: 0, source: 'gpx' });
+  });
+
+  return results;
+}
+
+function parseTCX(text, filename) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(text, 'text/xml');
+  const results = [];
+
+  const activities = doc.querySelectorAll('Activity');
+  activities.forEach((act, i) => {
+    const sport = (act.getAttribute('Sport') || 'Running').toLowerCase();
+    const type = sport.includes('trail') ? 'trail' : 'road';
+
+    const timeEl = act.querySelector('Id')?.textContent || act.querySelector('StartTime')?.textContent;
+    const date = timeEl ? normalizeDate(timeEl) : normalizeDate(new Date().toISOString());
+
+    const name = act.querySelector('Notes')?.textContent || filename.replace('.tcx','');
+
+    // DistanceMeters from last trackpoint or TotalTimeSeconds
+    const distEls = [...act.querySelectorAll('DistanceMeters')];
+    const lastDist = distEls.length ? parseFloat(distEls[distEls.length-1].textContent) : 0;
+    const km = Math.round(lastDist/100)/10;
+
+    // Elevation from trackpoints
+    let elev = 0, prevEle;
+    act.querySelectorAll('AltitudeMeters').forEach(el => {
+      const e = parseFloat(el.textContent);
+      if (prevEle !== undefined && e > prevEle + 1) elev += (e - prevEle);
+      prevEle = e;
+    });
+
+    const durEl = act.querySelector('TotalTimeSeconds');
+    const dur = durEl ? parseInt(durEl.textContent) : 0;
+
+    if (km > 0) {
+      results.push({ id: Date.now() + i, date, name, type, km, elev: Math.round(elev), dur, source: 'tcx' });
+    }
+  });
+
+  return results;
+}
+
+function haversine(lat1, lon1, lat2, lon2) {
+  const R = 6371, dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function normalizeDate(raw) {
+  if (!raw) return null;
+  // ISO format
+  const m1 = raw.match(/(\d{4})-(\d{2})-(\d{2})/);
+  if (m1) return `${m1[1]}-${m1[2]}-${m1[3]}`;
+  // DD.MM.YYYY
+  const m2 = raw.match(/(\d{2})\.(\d{2})\.(\d{4})/);
+  if (m2) return `${m2[3]}-${m2[2]}-${m2[1]}`;
+  // MM/DD/YYYY
+  const m3 = raw.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (m3) return `${m3[3]}-${m3[1].padStart(2,'0')}-${m3[2].padStart(2,'0')}`;
+  return null;
+}
+
+function parseDuration(raw) {
+  if (!raw) return 0;
+  // HH:MM:SS
+  const m = raw.match(/(\d+):(\d+):(\d+)/);
+  if (m) return parseInt(m[1])*3600 + parseInt(m[2])*60 + parseInt(m[3]);
+  // MM:SS
+  const m2 = raw.match(/(\d+):(\d+)/);
+  if (m2) return parseInt(m2[1])*60 + parseInt(m2[2]);
+  return parseInt(raw) || 0;
+}
+
+function fmtDur(secs) {
+  if (!secs) return '—';
+  const h = Math.floor(secs/3600), m = Math.floor((secs%3600)/60);
+  return h ? `${h}h${m.toString().padStart(2,'0')}` : `${m}min`;
+}
+
+function clearActivities() {
+  if (!confirm('Șterge toate activitățile importate?')) return;
+  D.activities = [];
+  scheduleAutoSave();
+  renderStats();
+  toast('🗑 Activități șterse', 'info');
+}
+
+// ── RENDER STATS ──────────────────────────────────────
+function renderStats() {
+  const all = getActivities();
+  const yearSel = document.getElementById('st-filter-year')?.value || '';
+  const typeSel = document.getElementById('st-filter-type')?.value || '';
+
+  // Populate year filter
+  const years = [...new Set(all.map(a => a.date?.substring(0,4)).filter(Boolean))].sort().reverse();
+  const yearEl = document.getElementById('st-filter-year');
+  if (yearEl) {
+    const cur = yearEl.value;
+    yearEl.innerHTML = '<option value="">Toți anii</option>' + years.map(y=>`<option value="${y}" ${y===cur?'selected':''}>${y}</option>`).join('');
+  }
+
+  // Filter
+  let acts = all.filter(a => {
+    if (yearSel && !a.date?.startsWith(yearSel)) return false;
+    if (typeSel && a.type !== typeSel) return false;
+    return true;
+  });
+
+  const empty = document.getElementById('st-empty');
+  const content = document.getElementById('st-tiles');
+
+  if (all.length === 0) {
+    empty.style.display = 'block';
+    content.style.display = 'none';
+    document.getElementById('st-charts-row').style.display = 'none';
+    document.getElementById('chart-km-year').parentElement.style.display = 'none';
+    document.getElementById('chart-cumulative').parentElement.style.display = 'none';
+    document.getElementById('st-activity-list').innerHTML = '';
+    return;
+  }
+
+  empty.style.display = 'none';
+  content.style.display = 'grid';
+  document.getElementById('st-charts-row').style.display = 'grid';
+
+  const totalKm = acts.reduce((s,a)=>s+(a.km||0),0);
+  const totalElev = acts.reduce((s,a)=>s+(a.elev||0),0);
+  const totalDur = acts.reduce((s,a)=>s+(a.dur||0),0);
+  const avgKm = acts.length ? Math.round(totalKm/acts.length*10)/10 : 0;
+  const longest = acts.reduce((mx,a)=>a.km>mx?a.km:mx, 0);
+
+  // KPI tiles
+  document.getElementById('st-tiles').innerHTML = `
+    <div class="tile"><lbl>Total km</lbl><div class="tv accent">${Math.round(totalKm).toLocaleString('ro')}</div><div class="ts">km alergați · ${acts.length} activități</div></div>
+    <div class="tile"><lbl>Total D+</lbl><div class="tv green">${Math.round(totalElev).toLocaleString('ro')} m</div><div class="ts">elevație acumulată</div></div>
+    <div class="tile"><lbl>Timp total</lbl><div class="tv yellow">${fmtDur(totalDur)}</div><div class="ts">pe picioare</div></div>
+    <div class="tile"><lbl>Media / alergare</lbl><div class="tv">${avgKm} km</div><div class="ts">· Cel mai lung: ${longest} km</div></div>
+  `;
+
+  // ── Build monthly data (current filter year or all)
+  const monthlyKm = Array(12).fill(0), monthlyElev = Array(12).fill(0);
+  acts.forEach(a => {
+    const m = parseInt(a.date?.substring(5,7)) - 1;
+    if (m >= 0 && m < 12) { monthlyKm[m] += a.km||0; monthlyElev[m] += a.elev||0; }
+  });
+
+  const mLabels = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
+  drawBarChart('chart-km-month', mLabels, monthlyKm.map(v=>Math.round(v)), 'var(--accent)', v=>v+' km');
+  drawBarChart('chart-elev-month', mLabels, monthlyElev.map(v=>Math.round(v)), 'var(--green)', v=>v+' m');
+
+  // ── Km per year
+  const byYear = {};
+  all.forEach(a => { const y=a.date?.substring(0,4)||'?'; byYear[y]=(byYear[y]||0)+(a.km||0); });
+  const sortedYears = Object.keys(byYear).sort();
+  drawBarChart('chart-km-year', sortedYears, sortedYears.map(y=>Math.round(byYear[y])), 'var(--yellow)', v=>v+' km');
+
+  // ── Cumulative line chart
+  const sorted = [...all].sort((a,b)=>a.date.localeCompare(b.date));
+  let cumKm = 0;
+  const cumPoints = sorted.map(a => { cumKm += a.km||0; return {date: a.date, km: Math.round(cumKm)}; });
+  drawLineChart('chart-cumulative', cumPoints);
+
+  // ── Activity list
+  const monthNames = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('st-activity-list').innerHTML = `
+    <div class="act-row-head"><span>Data</span><span>Activitate</span><span>KM</span><span>D+</span><span>Timp</span><span>Tip</span></div>
+    ${acts.slice(0,200).map(a => {
+      const d = new Date(a.date+'T00:00:00');
+      const dateStr = `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+      return `<div class="act-row">
+        <span style="color:var(--t3);font-size:11px">${dateStr}</span>
+        <span class="act-name">${a.name}</span>
+        <span style="font-weight:600;color:var(--accent)">${a.km} km</span>
+        <span style="color:var(--green)">${a.elev ? a.elev+'m' : '—'}</span>
+        <span style="color:var(--t2)">${fmtDur(a.dur)}</span>
+        <span><span class="act-tag ${a.type}">${a.type||'road'}</span></span>
+      </div>`;
+    }).join('')}
+    ${acts.length > 200 ? `<div style="text-align:center;padding:12px;color:var(--t3);font-size:12px">+ ${acts.length-200} activități mai vechi</div>` : ''}
+  `;
+}
+
+// ── CHART HELPERS ─────────────────────────────────────
+function drawBarChart(containerId, labels, values, color, tipFn) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const max = Math.max(...values, 1);
+  el.innerHTML = `
+    <div class="st-bar-wrap">
+      ${labels.map((lbl, i) => {
+        const h = Math.round((values[i]/max)*100);
+        const tip = tipFn ? tipFn(values[i]) : values[i];
+        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end">
+          <div class="st-bar" style="width:100%;height:${h}%;background:${color};opacity:${values[i]?0.85:0.15}" data-tip="${lbl}: ${tip}"></div>
+          <div style="font-size:9px;color:var(--t4);text-align:center;line-height:1;padding-top:3px">${lbl}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+function drawLineChart(containerId, points) {
+  const el = document.getElementById(containerId);
+  if (!el || points.length < 2) return;
+  const W = el.offsetWidth || 600, H = el.offsetHeight || 180;
+  const pad = {t:10, r:10, b:25, l:50};
+  const maxKm = Math.max(...points.map(p=>p.km), 1);
+
+  const px = i => pad.l + (i/(points.length-1))*(W-pad.l-pad.r);
+  const py = v => pad.t + (1 - v/maxKm)*(H-pad.t-pad.b);
+
+  const pathD = points.map((p,i) => `${i===0?'M':'L'}${px(i).toFixed(1)},${py(p.km).toFixed(1)}`).join(' ');
+  const areaD = pathD + ` L${px(points.length-1)},${H-pad.b} L${px(0)},${H-pad.b} Z`;
+
+  // Y axis ticks
+  const ticks = [0, Math.round(maxKm/2), maxKm];
+
+  // X axis — show year labels at year boundaries
+  const xLabels = [];
+  let lastYear = '';
+  points.forEach((p,i) => {
+    const y = p.date?.substring(0,4);
+    if (y !== lastYear) { xLabels.push({i, y}); lastYear = y; }
+  });
+
+  el.innerHTML = `<svg class="st-line-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="lg-cum" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.3"/>
+        <stop offset="100%" stop-color="var(--accent)" stop-opacity="0.02"/>
+      </linearGradient>
+    </defs>
+    ${ticks.map(v=>`
+      <line x1="${pad.l}" y1="${py(v)}" x2="${W-pad.r}" y2="${py(v)}" stroke="var(--border)" stroke-width="1"/>
+      <text x="${pad.l-6}" y="${py(v)+3}" text-anchor="end" class="st-axis">${v.toLocaleString('ro')}</text>
+    `).join('')}
+    ${xLabels.map(({i,y})=>`
+      <line x1="${px(i)}" y1="${pad.t}" x2="${px(i)}" y2="${H-pad.b}" stroke="var(--border2)" stroke-width="1" stroke-dasharray="3,3"/>
+      <text x="${px(i)}" y="${H-5}" text-anchor="middle" class="st-axis">${y}</text>
+    `).join('')}
+    <path d="${areaD}" fill="url(#lg-cum)"/>
+    <path d="${pathD}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${px(points.length-1)}" cy="${py(points[points.length-1].km)}" r="4" fill="var(--accent)"/>
+    <text x="${px(points.length-1)+6}" y="${py(points[points.length-1].km)+4}" class="st-axis" fill="var(--accent)">${points[points.length-1].km.toLocaleString('ro')} km</text>
+  </svg>`;
+}
+
 
 // ── AUTO-SAVE hint: Ctrl+S
 document.addEventListener('keydown', e => {
