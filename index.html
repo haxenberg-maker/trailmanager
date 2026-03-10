@@ -2394,16 +2394,11 @@ async function importActivities(files) {
 }
 
 function parseCSV(text, filename) {
-  const lines = text.trim().split('\n');
+  const lines = text.trim().split(/\r?\n/);
   if (lines.length < 2) return [];
-  const headers = lines[0].split(',').map(h => h.replace(/"/g,'').trim().toLowerCase());
-  const results = [];
 
-  // Detect Strava format
-  const isStrava = headers.includes('activity type') || headers.includes('activity id');
-
-  lines.slice(1).forEach((line, i) => {
-    // Handle quoted CSV fields
+  // Parse quoted CSV properly
+  function splitCSVLine(line) {
     const cols = [];
     let cur = '', inQ = false;
     for (let c of line) {
@@ -2412,44 +2407,77 @@ function parseCSV(text, filename) {
       else cur += c;
     }
     cols.push(cur.trim());
+    return cols;
+  }
 
-    const get = (...keys) => {
-      for (const k of keys) {
-        const idx = headers.indexOf(k);
-        if (idx >= 0 && cols[idx]) return cols[idx].replace(/"/g,'').trim();
-      }
-      return '';
-    };
+  const headers = splitCSVLine(lines[0]).map(h => h.replace(/"/g,'').trim().toLowerCase());
+  const results = [];
 
-    // Date
-    let dateRaw = get('date','activity date','start date','datum');
+  // Column name mapping — supports Romanian (Garmin RO) + English (Strava/Garmin EN)
+  const colMap = {
+    date:     ['dată','date','activity date','start date','datum'],
+    name:     ['titlu','activity name','name','title','bezeichnung'],
+    type:     ['tip activitate','activity type','type','sport','sport type'],
+    km:       ['distanță','distance','distanz (km)','distance (km)'],
+    elev:     ['ascensiune totală','elevation gain','total ascent','elev gain','ascent','total elevation gain'],
+    dur:      ['timp','moving time','elapsed time','duration','time','timp deplasare'],
+  };
+
+  function getCol(...keys) {
+    for (const k of keys) {
+      const idx = headers.indexOf(k);
+      if (idx >= 0) return idx;
+    }
+    return -1;
+  }
+
+  const idxDate = getCol(...colMap.date);
+  const idxName = getCol(...colMap.name);
+  const idxType = getCol(...colMap.type);
+  const idxKm   = getCol(...colMap.km);
+  const idxElev = getCol(...colMap.elev);
+  const idxDur  = getCol(...colMap.dur);
+
+  lines.slice(1).forEach((line, i) => {
+    if (!line.trim()) return;
+    const cols = splitCSVLine(line);
+    const get = idx => idx >= 0 ? (cols[idx]||'').replace(/"/g,'').trim() : '';
+
+    const dateRaw = get(idxDate);
     if (!dateRaw) return;
     const date = normalizeDate(dateRaw);
     if (!date) return;
 
-    // Distance km
-    let kmRaw = get('distance','distance (km)','distanz (km)','distanța (km)','distance_km','moving time');
-    // Strava might be in meters
-    let km = parseFloat(kmRaw.replace(',','.')) || 0;
-    if (isStrava && headers.includes('distance') && km > 500) km /= 1000; // meters → km
+    // Distance — remove spaces and thousands separators, replace comma decimal
+    let kmRaw = get(idxKm).replace(/\s/g,'').replace(/\.(?=\d{3})/g,'').replace(',','.');
+    let km = parseFloat(kmRaw) || 0;
+    // If in meters (very large number), convert
+    if (km > 1000) km = km / 1000;
+    km = Math.round(km * 10) / 10;
 
-    // Elevation
-    let elevRaw = get('elevation gain','elev gain','total ascent','ascent','denivelare','elevation_gain','total elevation gain');
-    const elev = parseInt(elevRaw.replace(',','.')) || 0;
+    // Elevation — same cleaning
+    let elevRaw = get(idxElev).replace(/\s/g,'').replace(/\.(?=\d{3})/g,'').replace(',','.');
+    const elev = parseInt(elevRaw) || 0;
 
-    // Duration (seconds)
-    let durRaw = get('moving time','elapsed time','duration','zeit','time');
-    const dur = parseDuration(durRaw);
+    // Duration
+    const dur = parseDuration(get(idxDur));
 
     // Name
-    const name = get('activity name','name','title','bezeichnung','denumire') || `Alergare ${date}`;
+    const name = get(idxName) || `Alergare ${date}`;
 
-    // Type
-    let typeRaw = (get('activity type','type','sport','sport type') || '').toLowerCase();
-    const type = typeRaw.includes('trail') ? 'trail' : typeRaw.includes('road') || typeRaw.includes('run') ? 'road' : typeRaw.includes('track') ? 'track' : 'road';
+    // Type detection
+    const typeRaw = get(idxType).toLowerCase();
+    let type = 'road';
+    if (typeRaw.includes('montană') || typeRaw.includes('montana') || typeRaw.includes('trail') || typeRaw.includes('mountain')) type = 'trail';
+    else if (typeRaw.includes('bandă') || typeRaw.includes('banda') || typeRaw.includes('track') || typeRaw.includes('pistă')) type = 'track';
 
-    if (km > 0 || elev > 0) {
-      results.push({ id: Date.now() + i, date, name, type, km: Math.round(km*10)/10, elev, dur, source: 'csv' });
+    // Skip non-running activities — keep all running variants
+    const runKeywords = ['alergare','alergat','run','trail','jogging','montană','bandă','urbană'];
+    const isRun = !typeRaw || runKeywords.some(k => typeRaw.includes(k));
+    if (!isRun) return;
+
+    if (km > 0) {
+      results.push({ id: Date.now() + i, date, name, type, km, elev, dur, source: 'csv' });
     }
   });
 
