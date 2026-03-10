@@ -316,7 +316,41 @@ select option{background:var(--s2)}
 .tl-item-lbl{color:var(--t2)}
 .tl-item-val{font-weight:600}
 
-/* ── MOBILE TOP BAR ── */
+/* ── LOGIN SCREEN ── */
+.login-screen{
+  position:fixed;inset:0;z-index:200;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+}
+.login-box{
+  width:100%;max-width:400px;
+  background:var(--s1);border:1px solid var(--border2);
+  border-radius:18px;padding:36px 32px;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+.login-logo{text-align:center;margin-bottom:28px}
+.login-logo-mark{font-family:var(--display);font-size:42px;letter-spacing:4px;color:var(--accent);line-height:1}
+.login-logo-sub{font-size:11px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-top:6px}
+.login-tabs{display:flex;background:var(--s2);border-radius:9px;padding:4px;gap:3px;margin-bottom:24px;border:1px solid var(--border)}
+.login-tab{flex:1;padding:8px;border-radius:6px;border:none;background:none;color:var(--t2);font-family:var(--body);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.login-tab.on{background:var(--s1);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.login-fields{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.login-btn{
+  width:100%;padding:13px;border-radius:9px;
+  background:var(--accent);color:#0c0e0d;
+  font-family:var(--body);font-size:14px;font-weight:700;
+  border:none;cursor:pointer;transition:all .15s;letter-spacing:.3px;
+}
+.login-btn:hover{background:#caff6b;transform:translateY(-1px);box-shadow:0 4px 20px rgba(184,255,79,.3)}
+.login-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.login-err{font-size:12px;color:var(--red);text-align:center;min-height:18px;margin-top:-4px}
+.login-sep{text-align:center;font-size:12px;color:var(--t3);margin:8px 0}
+
+@media(max-width:800px){
+  .login-box{padding:28px 22px}
+  .login-logo-mark{font-size:34px}
+}
 .mobile-topbar{
   display:none;position:fixed;top:0;left:0;right:0;z-index:90;
   background:var(--s1);border-bottom:1px solid var(--border);
@@ -421,6 +455,41 @@ select option{background:var(--s2)}
 </head>
 <body>
 
+<!-- ── LOGIN SCREEN ── -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-mark">⛰️ TRAIL</div>
+      <div class="login-logo-sub">Running Manager 2026</div>
+    </div>
+    <div class="login-tabs">
+      <button class="login-tab on" onclick="switchLoginTab('login',this)">Intră în cont</button>
+      <button class="login-tab" onclick="switchLoginTab('signup',this)">Cont nou</button>
+    </div>
+    <div class="login-fields">
+      <div class="fi">
+        <lbl style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Email</lbl>
+        <input type="email" id="auth-email" placeholder="email@exemplu.com" autocomplete="email">
+      </div>
+      <div class="fi">
+        <lbl style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Parolă</lbl>
+        <input type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter') doAuth()">
+      </div>
+      <div class="fi" id="auth-pass2-wrap" style="display:none">
+        <lbl style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Confirmă parola</lbl>
+        <input type="password" id="auth-pass2" placeholder="••••••••" autocomplete="new-password"
+          onkeydown="if(event.key==='Enter') doAuth()">
+      </div>
+    </div>
+    <div class="login-err" id="auth-err"></div>
+    <button class="login-btn" id="auth-btn" onclick="doAuth()">Intră în cont</button>
+    <div class="login-sep" id="auth-reset-wrap">
+      <a href="#" onclick="resetPassword()" style="color:var(--t3);text-decoration:none;font-size:12px">Am uitat parola</a>
+    </div>
+  </div>
+</div>
+
 <!-- ── MOBILE TOP BAR ── -->
 <div class="mobile-topbar">
   <div class="mobile-logo"><span>⛰️</span>TRAIL MANAGER</div>
@@ -506,37 +575,16 @@ select option{background:var(--s2)}
       <span id="sync-dot" style="width:7px;height:7px;border-radius:50%;background:var(--t4);display:inline-block"></span>
       <span id="sync-status">Neconectat</span>
     </div>
+    <div style="font-size:11px;color:var(--t3);margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="user-email-display"></div>
     <button class="save-btn" id="save-btn" onclick="saveData()">☁️ Salvează</button>
     <button class="save-btn" id="export-btn" onclick="exportJSON()" style="margin-top:6px;color:var(--t2);border-color:var(--border)">💾 Export JSON</button>
+    <button class="save-btn" onclick="doLogout()" style="margin-top:6px;color:var(--red);border-color:rgba(255,79,79,.2);background:rgba(255,79,79,.05)">🚪 Deconectare</button>
   </div>
 </aside>
 
 <!-- ── MAIN ── -->
 <main class="main">
-
-<!-- CLOUD BANNER -->
-<div style="padding:20px 36px 0" id="filebanner-wrap">
-  <div class="filebanner">
-    <div style="flex:1">
-      <p><strong>☁️ Conectare Supabase</strong> — datele se salvează automat în cloud, accesibile de pe orice dispozitiv.</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-        <div class="fi"><lbl style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Project URL</lbl>
-          <input id="sb-url" placeholder="https://xxxx.supabase.co" style="font-size:12px;padding:7px 10px">
-        </div>
-        <div class="fi"><lbl style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Anon Key</lbl>
-          <input id="sb-key" placeholder="eyJhbGciOiJIUzI1NiIs..." style="font-size:12px;padding:7px 10px">
-        </div>
-      </div>
-      <div style="margin-top:8px;font-size:11px;color:var(--t3)">
-        📖 <a href="https://supabase.com" target="_blank" style="color:var(--accent)">supabase.com</a> → New Project → Settings → API → copiază URL și anon key
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;margin-left:16px">
-      <button class="btn btn-primary btn-sm" onclick="connectSupabase()">☁️ Conectează</button>
-      <button class="btn btn-ghost btn-sm" onclick="newFileLocal()">💾 Local (fără cloud)</button>
-    </div>
-  </div>
-</div>
+<div id="filebanner-wrap" style="display:none"></div>
 
 <!-- DASHBOARD -->
 <div class="page on" id="pg-dash">
@@ -815,14 +863,15 @@ select option{background:var(--s2)}
         <div style="font-weight:600;color:var(--text);margin-bottom:8px">2. Creează tabelul</div>
         <div>În proiect → <strong>SQL Editor</strong> → New Query → Rulează:</div>
         <pre style="background:var(--bg);border-radius:6px;padding:10px;margin-top:8px;font-size:12px;color:var(--accent);overflow-x:auto">create table trail_data (
-  id integer primary key,
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade,
   data jsonb
 );
 
--- Permite acces fără autentificare
 alter table trail_data enable row level security;
-create policy "Allow all" on trail_data
-  for all using (true) with check (true);</pre>
+create policy "Users see own data" on trail_data
+  for all using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);</pre>
       </div>
 
       <div style="background:var(--s2);border-radius:8px;padding:14px 16px;margin-bottom:10px">
@@ -898,95 +947,227 @@ const DEFAULT = {
 };
 
 // ══════════════════════════════════════════════════════
-//  SUPABASE CONFIG
+//  SUPABASE — HARDCODED CONFIG
 // ══════════════════════════════════════════════════════
-let SB_URL = localStorage.getItem('sb_url') || '';
-let SB_KEY = localStorage.getItem('sb_key') || '';
-let isCloud = false;
+const SB_URL = 'https://jqhtistewpmiphuoxfmp.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxaHRpc3Rld3BtaXBodW94Zm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMzkwOTUsImV4cCI6MjA4ODcxNTA5NX0.NWG60gy3twOCAjVlHuuIB1eTXum5rJVKN4L2EqgPa7I';
 const SB_TABLE = 'trail_data';
-const SB_ROW_ID = 1; // single-row storage
 
-function sbHeaders() {
+let isCloud = false;
+let currentUser = null; // { id, email }
+let authToken = null;   // JWT from Supabase Auth
+
+function sbHeaders(useAuth = false) {
   return {
     'Content-Type': 'application/json',
     'apikey': SB_KEY,
-    'Authorization': 'Bearer ' + SB_KEY,
-    'Prefer': 'return=minimal'
+    'Authorization': 'Bearer ' + (useAuth && authToken ? authToken : SB_KEY),
   };
 }
 
+// ── SYNC STATUS ───────────────────────────────────────
 function setSyncStatus(status, color) {
-  document.getElementById('sync-status').textContent = status;
-  document.getElementById('sync-dot').style.background = color;
+  ['sync-dot','m-sync-dot'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.background = color;
+  });
+  ['sync-status','m-sync-status'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = status;
+  });
 }
 
-async function connectSupabase() {
-  const url = document.getElementById('sb-url').value.trim().replace(/\/$/, '');
-  const key = document.getElementById('sb-key').value.trim();
-  if (!url || !key) { toast('⚠️ Completează URL și Key!', 'err'); return; }
+// ══════════════════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════════════════
+let loginMode = 'login';
 
-  SB_URL = url;
-  SB_KEY = key;
-  localStorage.setItem('sb_url', SB_URL);
-  localStorage.setItem('sb_key', SB_KEY);
+function switchLoginTab(mode, el) {
+  loginMode = mode;
+  document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('auth-pass2-wrap').style.display = mode === 'signup' ? 'block' : 'none';
+  document.getElementById('auth-btn').textContent = mode === 'signup' ? 'Creează cont' : 'Intră în cont';
+  document.getElementById('auth-reset-wrap').style.display = mode === 'signup' ? 'none' : 'block';
+  document.getElementById('auth-err').textContent = '';
+}
 
-  toast('🔄 Conectare...', 'info');
-  setSyncStatus('Se conectează...', 'var(--yellow)');
+async function doAuth() {
+  const email = document.getElementById('auth-email').value.trim();
+  const pass  = document.getElementById('auth-pass').value;
+  const pass2 = document.getElementById('auth-pass2').value;
+  const errEl = document.getElementById('auth-err');
+  const btn   = document.getElementById('auth-btn');
+
+  errEl.textContent = '';
+  if (!email || !pass) { errEl.textContent = 'Completează email și parolă.'; return; }
+  if (loginMode === 'signup') {
+    if (pass.length < 6) { errEl.textContent = 'Parola trebuie să aibă minim 6 caractere.'; return; }
+    if (pass !== pass2)  { errEl.textContent = 'Parolele nu coincid.'; return; }
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Se procesează...';
+
+  const endpoint = loginMode === 'signup'
+    ? `${SB_URL}/auth/v1/signup`
+    : `${SB_URL}/auth/v1/token?grant_type=password`;
 
   try {
-    // Try to fetch existing data
-    const res = await fetch(`${SB_URL}/rest/v1/${SB_TABLE}?id=eq.${SB_ROW_ID}&select=data`, {
-      headers: sbHeaders()
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY },
+      body: JSON.stringify({ email, password: pass })
     });
+    const data = await res.json();
 
     if (!res.ok) {
-      const err = await res.json();
-      // Table might not exist yet
-      if (res.status === 404 || (err.message && err.message.includes('does not exist'))) {
-        toast('❌ Tabelul "trail_data" nu există. Vezi ghidul de setup!', 'err');
-        setSyncStatus('Eroare tabel', 'var(--red)');
-        showSetupGuide();
-        return;
-      }
-      throw new Error(err.message || res.status);
+      errEl.textContent = translateAuthError(data.error_description || data.msg || data.message || 'Eroare necunoscută');
+      btn.disabled = false;
+      btn.textContent = loginMode === 'signup' ? 'Creează cont' : 'Intră în cont';
+      return;
     }
 
+    if (loginMode === 'signup' && !data.access_token) {
+      // Email confirmation required
+      errEl.style.color = 'var(--green)';
+      errEl.textContent = '✅ Cont creat! Verifică emailul pentru confirmare.';
+      btn.disabled = false;
+      btn.textContent = 'Creează cont';
+      return;
+    }
+
+    // Successful login
+    authToken = data.access_token;
+    currentUser = { id: data.user.id, email: data.user.email };
+    await onLoggedIn();
+
+  } catch(e) {
+    errEl.textContent = 'Eroare de rețea. Încearcă din nou.';
+    btn.disabled = false;
+    btn.textContent = loginMode === 'signup' ? 'Creează cont' : 'Intră în cont';
+  }
+}
+
+async function resetPassword() {
+  const email = document.getElementById('auth-email').value.trim();
+  if (!email) { document.getElementById('auth-err').textContent = 'Introdu emailul mai întâi.'; return; }
+  try {
+    await fetch(`${SB_URL}/auth/v1/recover`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY },
+      body: JSON.stringify({ email })
+    });
+    const errEl = document.getElementById('auth-err');
+    errEl.style.color = 'var(--green)';
+    errEl.textContent = '✅ Email de resetare trimis!';
+  } catch(e) {}
+}
+
+function translateAuthError(msg) {
+  if (!msg) return 'Eroare necunoscută';
+  if (msg.includes('Invalid login') || msg.includes('invalid_credentials')) return 'Email sau parolă incorectă.';
+  if (msg.includes('already registered') || msg.includes('already exists')) return 'Acest email este deja înregistrat.';
+  if (msg.includes('Email not confirmed')) return 'Confirmă emailul înainte de a te loga.';
+  if (msg.includes('Password should be')) return 'Parola trebuie să aibă minim 6 caractere.';
+  return msg;
+}
+
+async function doLogout() {
+  if (!confirm('Ești sigur că vrei să te deconectezi?')) return;
+  try {
+    await fetch(`${SB_URL}/auth/v1/logout`, {
+      method: 'POST',
+      headers: sbHeaders(true)
+    });
+  } catch(e) {}
+  authToken = null;
+  currentUser = null;
+  isCloud = false;
+  D = null;
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('auth-email').value = '';
+  document.getElementById('auth-pass').value = '';
+  document.getElementById('auth-err').textContent = '';
+  document.getElementById('auth-btn').disabled = false;
+  document.getElementById('auth-btn').textContent = 'Intră în cont';
+  setSyncStatus('Deconectat', 'var(--t4)');
+  toast('👋 Deconectat!', 'info');
+}
+
+// ══════════════════════════════════════════════════════
+//  POST-LOGIN: LOAD DATA
+// ══════════════════════════════════════════════════════
+async function onLoggedIn() {
+  // Persist session
+  localStorage.setItem('sb_session', JSON.stringify({
+    access_token: authToken,
+    user: currentUser
+  }));
+
+  // Hide login screen
+  document.getElementById('login-screen').style.display = 'none';
+
+  // Show user email
+  const emailEl = document.getElementById('user-email-display');
+  if (emailEl) emailEl.textContent = '👤 ' + currentUser.email;
+
+  isCloud = true;
+  setSyncStatus('Se încarcă...', 'var(--yellow)');
+
+  try {
+    const res = await fetch(
+      `${SB_URL}/rest/v1/${SB_TABLE}?user_id=eq.${currentUser.id}&select=data&limit=1`,
+      { headers: sbHeaders(true) }
+    );
+
+    if (!res.ok) throw new Error('Eroare citire date');
+
     const rows = await res.json();
-    isCloud = true;
-    hideBanner();
-    setSyncStatus('Conectat ☁️', 'var(--green)');
 
     if (rows.length > 0 && rows[0].data) {
       D = rows[0].data;
       if (!D.sponsori) D.sponsori = [];
       renderAll();
-      toast('☁️ Date încărcate din cloud!', 'ok');
+      setSyncStatus('Sincronizat ☁️', 'var(--green)');
+      toast('☁️ Bine ai revenit, ' + currentUser.email.split('@')[0] + '!', 'ok');
     } else {
-      // First time — push default data
+      // First login — create row with default data
       D = JSON.parse(JSON.stringify(DEFAULT));
-      await pushToSupabase(true);
+      const ins = await fetch(`${SB_URL}/rest/v1/${SB_TABLE}`, {
+        method: 'POST',
+        headers: { ...sbHeaders(true), 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ user_id: currentUser.id, data: D })
+      });
+      if (!ins.ok) throw new Error('Nu s-a putut crea profilul');
       renderAll();
-      toast('✨ Cont nou — date inițiale salvate în cloud!', 'ok');
+      setSyncStatus('Sincronizat ☁️', 'var(--green)');
+      toast('✨ Bine ai venit! Datele tale sunt gata.', 'ok');
     }
   } catch(e) {
     setSyncStatus('Eroare', 'var(--red)');
-    toast('❌ ' + (e.message || 'Eroare conexiune'), 'err');
+    toast('❌ ' + e.message, 'err');
     console.error(e);
   }
 }
 
-async function pushToSupabase(isInsert = false) {
-  if (!isCloud || !SB_URL || !SB_KEY) return false;
+// ══════════════════════════════════════════════════════
+//  CLOUD SAVE
+// ══════════════════════════════════════════════════════
+async function pushToSupabase() {
+  if (!isCloud || !currentUser) return false;
   try {
-    const body = JSON.stringify(isInsert ? {id: SB_ROW_ID, data: D} : {data: D});
-    const url = isInsert
-      ? `${SB_URL}/rest/v1/${SB_TABLE}`
-      : `${SB_URL}/rest/v1/${SB_TABLE}?id=eq.${SB_ROW_ID}`;
-    const method = isInsert ? 'POST' : 'PATCH';
-    const res = await fetch(url, { method, headers: {...sbHeaders(), 'Prefer': isInsert ? 'return=minimal' : 'return=minimal'}, body });
+    const res = await fetch(
+      `${SB_URL}/rest/v1/${SB_TABLE}?user_id=eq.${currentUser.id}`,
+      {
+        method: 'PATCH',
+        headers: { ...sbHeaders(true), 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ data: D })
+      }
+    );
     return res.ok;
   } catch(e) {
-    console.error('Supabase push error:', e);
+    console.error('Push error:', e);
     return false;
   }
 }
@@ -994,90 +1175,32 @@ async function pushToSupabase(isInsert = false) {
 async function saveData() {
   if (!D) { toast('⚠️ Nu există date de salvat', 'err'); return; }
   const btn = document.getElementById('save-btn');
-
-  if (isCloud) {
-    btn.textContent = '🔄 Se salvează...';
-    setSyncStatus('Se salvează...', 'var(--yellow)');
-    const ok = await pushToSupabase(false);
-    if (ok) {
-      btn.textContent = '✅ Salvat!';
-      btn.classList.add('saved');
-      setSyncStatus('Salvat ☁️', 'var(--green)');
-      toast('☁️ Salvat în cloud!', 'ok');
-    } else {
-      btn.textContent = '❌ Eroare';
-      setSyncStatus('Eroare sync', 'var(--red)');
-      toast('❌ Eroare la salvare cloud', 'err');
-    }
-    setTimeout(() => { btn.textContent = '☁️ Salvează'; btn.classList.remove('saved'); }, 2000);
-  } else {
-    // Fallback to local file
-    await saveFile();
-  }
+  btn.textContent = '🔄 Se salvează...';
+  setSyncStatus('Se salvează...', 'var(--yellow)');
+  const ok = await pushToSupabase();
+  btn.classList.toggle('saved', ok);
+  btn.textContent = ok ? '✅ Salvat!' : '❌ Eroare';
+  setSyncStatus(ok ? 'Salvat ☁️' : 'Eroare sync', ok ? 'var(--green)' : 'var(--red)');
+  if (ok) toast('☁️ Salvat în cloud!', 'ok');
+  else toast('❌ Eroare la salvare', 'err');
+  setTimeout(() => { btn.textContent = '☁️ Salvează'; btn.classList.remove('saved'); }, 2000);
 }
 
-// ── Auto-save after every change ─────────────────────
 let autoSaveTimer = null;
 function scheduleAutoSave() {
   if (!isCloud) return;
   clearTimeout(autoSaveTimer);
+  setSyncStatus('Modificat...', 'var(--yellow)');
   autoSaveTimer = setTimeout(async () => {
     setSyncStatus('Se sincronizează...', 'var(--yellow)');
-    const ok = await pushToSupabase(false);
+    const ok = await pushToSupabase();
     setSyncStatus(ok ? 'Sincronizat ☁️' : 'Eroare sync', ok ? 'var(--green)' : 'var(--red)');
   }, 1500);
 }
 
-// ── Local file fallback ───────────────────────────────
-async function newFileLocal() {
-  D = JSON.parse(JSON.stringify(DEFAULT));
-  fileHandle = null;
-  isCloud = false;
-  setSyncStatus('Local (fără cloud)', 'var(--yellow)');
-  renderAll();
-  toast('💾 Mod local — nu uita să exportezi!', 'info');
-  hideBanner();
-}
-
-async function loadFile() {
-  try {
-    const [fh] = await window.showOpenFilePicker({
-      types:[{description:'JSON',accept:{'application/json':['.json']}}]
-    });
-    fileHandle = fh;
-    const file = await fh.getFile();
-    const text = await file.text();
-    D = JSON.parse(text);
-    if (!D.sponsori) D.sponsori = [];
-    isCloud = false;
-    setSyncStatus('Local', 'var(--yellow)');
-    renderAll();
-    toast('📂 Fișier încărcat!', 'ok');
-    hideBanner();
-  } catch(e) {
-    if (e.name !== 'AbortError') toast('❌ Eroare la deschidere fișier', 'err');
-  }
-}
-
-async function saveFile() {
-  if (!D) return;
-  const json = JSON.stringify(D, null, 2);
-  try {
-    if (!fileHandle) {
-      fileHandle = await window.showSaveFilePicker({
-        suggestedName:'trail_data.json',
-        types:[{description:'JSON',accept:{'application/json':['.json']}}]
-      });
-    }
-    const writable = await fileHandle.createWritable();
-    await writable.write(json);
-    await writable.close();
-    toast('💾 Salvat local!', 'ok');
-  } catch(e) {
-    if (e.name !== 'AbortError') toast('❌ Eroare salvare', 'err');
-  }
-}
-
+// ══════════════════════════════════════════════════════
+//  LOCAL EXPORT (backup)
+// ══════════════════════════════════════════════════════
 function exportJSON() {
   if (!D) { toast('⚠️ Nu există date', 'err'); return; }
   const blob = new Blob([JSON.stringify(D, null, 2)], {type:'application/json'});
@@ -1089,22 +1212,33 @@ function exportJSON() {
 }
 
 function hideBanner() {
-  document.getElementById('filebanner-wrap').style.display = 'none';
+  const el = document.getElementById('filebanner-wrap');
+  if(el) el.style.display = 'none';
 }
 
-// ── Setup guide modal ─────────────────────────────────
-function showSetupGuide() {
-  document.getElementById('ov-setup').classList.add('on');
-}
-
-// ── Auto-restore saved credentials ───────────────────
-window.addEventListener('load', () => {
-  if (SB_URL && SB_KEY) {
-    document.getElementById('sb-url').value = SB_URL;
-    document.getElementById('sb-key').value = SB_KEY;
-    // Auto-connect
-    connectSupabase();
+// ── Auto-login if session exists in localStorage ─────
+window.addEventListener('load', async () => {
+  const saved = localStorage.getItem('sb_session');
+  if (saved) {
+    try {
+      const session = JSON.parse(saved);
+      if (session.access_token && session.user) {
+        // Verify token is still valid
+        const res = await fetch(`${SB_URL}/auth/v1/user`, {
+          headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + session.access_token }
+        });
+        if (res.ok) {
+          authToken = session.access_token;
+          currentUser = { id: session.user.id, email: session.user.email };
+          await onLoggedIn();
+          return;
+        }
+      }
+    } catch(e) {}
+    localStorage.removeItem('sb_session');
   }
+  // Show login screen
+  document.getElementById('login-screen').style.display = 'flex';
 });
 
 // ══════════════════════════════════════════════════════
