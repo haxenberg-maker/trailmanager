@@ -5,6 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trail Running Manager 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0c0e0d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Trail Manager">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230c0e0d'/><text y='.9em' font-size='80'>⛰️</text></svg>">
+<script>
+// PWA manifest inline
+const manifestData = {
+  name: "Trail Running Manager 2026",
+  short_name: "Trail Manager",
+  description: "Sezonul de alergare 2026 — Balan Gabriel",
+  start_url: "/",
+  display: "standalone",
+  background_color: "#0c0e0d",
+  theme_color: "#0c0e0d",
+  orientation: "portrait-primary",
+  icons: [
+    { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%230c0e0d'/><text y='.85em' font-size='400' x='56'>⛰️</text></svg>", sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
+  ]
+};
+const blob = new Blob([JSON.stringify(manifestData)], {type:'application/json'});
+const link = document.createElement('link');
+link.rel = 'manifest';
+link.href = URL.createObjectURL(blob);
+document.currentScript.parentNode.appendChild(link);
+</script>
 <style>
 :root {
   --bg: #0c0e0d;
@@ -316,6 +342,24 @@ select option{background:var(--s2)}
 .tl-item-lbl{color:var(--t2)}
 .tl-item-val{font-weight:600}
 
+/* ── READ-ONLY (guest) MODE ── */
+body.readonly .btn-primary:not(.allow-guest),
+body.readonly button[onclick*="open"],
+body.readonly button[onclick*="save"],
+body.readonly button[onclick*="delete"],
+body.readonly button[onclick*="clear"],
+body.readonly #save-btn,
+body.readonly #export-btn,
+body.readonly .ph-right .btn,
+body.readonly label.btn { display:none !important }
+.guest-banner{
+  position:fixed;bottom:0;left:0;right:0;z-index:80;
+  background:rgba(255,200,79,.12);border-top:1px solid rgba(255,200,79,.3);
+  padding:8px 20px;display:flex;align-items:center;gap:10px;
+  font-size:12px;color:var(--yellow);
+}
+@media(max-width:800px){.guest-banner{bottom:64px}}
+
 /* ── STATS PAGE ── */
 .act-row{
   display:grid;grid-template-columns:80px 1fr 70px 70px 60px 80px;
@@ -348,6 +392,53 @@ select option{background:var(--s2)}
   .act-row-head > *:nth-child(5),.act-row-head > *:nth-child(6){display:none}
   #st-charts-row{grid-template-columns:1fr}
 }
+
+/* ── DASHBOARD HERO ── */
+.dash-hero{
+  background:linear-gradient(135deg,var(--s2) 0%,rgba(184,255,79,.06) 100%);
+  border:1px solid var(--border2);border-radius:14px;
+  padding:32px 32px 28px;margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.dash-hero::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(184,255,79,.08) 0%,transparent 70%);
+}
+.dash-hero-eyebrow{font-size:10px;color:var(--t3);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
+.dash-hero-title{font-family:var(--display);font-size:52px;letter-spacing:4px;color:var(--text);line-height:1;margin-bottom:4px}
+.dash-hero-aka{font-family:var(--display);font-size:18px;color:var(--accent);letter-spacing:3px;margin-bottom:22px}
+.dash-hero-stats{display:flex;align-items:center;gap:0;flex-wrap:wrap;gap:4px}
+.dhs{display:flex;flex-direction:column;align-items:center;padding:0 20px}
+.dhs:first-child{padding-left:0}
+.dhs span{font-family:var(--display);font-size:28px;color:var(--accent);letter-spacing:1px;line-height:1}
+.dhs small{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+.dhs-sep{width:1px;height:36px;background:var(--border2)}
+@media(max-width:600px){
+  .dash-hero{padding:20px}
+  .dash-hero-title{font-size:36px}
+  .dhs span{font-size:22px}
+  .dhs{padding:0 12px}
+}
+
+/* ── BIO CARD ── */
+.bio-card{
+  background:var(--s1);border:1px solid var(--border);border-radius:12px;
+  padding:20px 22px;margin-bottom:24px;
+}
+.bio-head{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.bio-icon{font-size:28px;flex-shrink:0}
+.bio-name{font-weight:700;font-size:15px;color:var(--text);display:flex;align-items:center;gap:8px}
+.bio-tag{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:1px}
+.bio-sub{font-size:11px;color:var(--t3);margin-top:2px}
+.bio-toggle{margin-left:auto;background:none;border:1px solid var(--border);color:var(--t2);font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:var(--body);white-space:nowrap;transition:all .15s}
+.bio-toggle:hover{background:var(--s2);color:var(--text)}
+.bio-preview{font-size:13px;color:var(--t2);line-height:1.7;border-top:1px solid var(--border);padding-top:12px}
+.bio-full{font-size:13px;color:var(--t2);line-height:1.8;border-top:1px solid var(--border);padding-top:12px}
+.bio-full p{margin-bottom:12px}
+.bio-full p:last-child{margin-bottom:0}
+.bio-full strong{color:var(--text)}
+.bio-full em{color:var(--accent);font-style:normal;font-weight:600}
 
 /* ── LOGIN SCREEN ── */
 .login-screen{
@@ -575,6 +666,11 @@ select option{background:var(--s2)}
   <button class="bn" onclick="goBN('nutri',this)"><span class="bn-ico">🍌</span>Nutriție</button>
 </nav>
 
+<!-- GUEST BANNER -->
+<div class="guest-banner" id="guest-banner" style="display:none">
+  👁️ <strong>Mod vizualizare</strong> — ești logat ca vizitator. Doar Balan Gabriel poate edita datele.
+</div>
+
 <div class="shell">
 
 <!-- ── SIDEBAR ── -->
@@ -625,7 +721,47 @@ select option{background:var(--s2)}
 
 <!-- DASHBOARD -->
 <div class="page on" id="pg-dash">
-  <div class="ph"><div class="ph-left"><h2>DASHBOARD</h2><p id="db-sub">Sezon 2026 · încarcă sau creează un fișier de date</p></div></div>
+
+  <!-- HERO SEZON -->
+  <div class="dash-hero">
+    <div class="dash-hero-eyebrow">⛰️ SEZON DE ALERGARE</div>
+    <div class="dash-hero-title">BALAN GABRIEL</div>
+    <div class="dash-hero-aka">HAX · 2026</div>
+    <div class="dash-hero-stats" id="dash-hero-stats">
+      <div class="dhs"><span id="dhs-curse">—</span><small>curse</small></div>
+      <div class="dhs-sep"></div>
+      <div class="dhs"><span id="dhs-km">—</span><small>km planificați</small></div>
+      <div class="dhs-sep"></div>
+      <div class="dhs"><span id="dhs-dplus">—</span><small>m D+</small></div>
+      <div class="dhs-sep"></div>
+      <div class="dhs"><span id="dhs-next">—</span><small>zile până la start</small></div>
+    </div>
+  </div>
+
+  <!-- BIO CARD -->
+  <div class="bio-card" id="bio-card">
+    <div class="bio-head">
+      <div class="bio-icon">🏃</div>
+      <div>
+        <div class="bio-name">Balan Gabriel <span class="bio-tag">HAX</span></div>
+        <div class="bio-sub">Alergător · Bârlad · Din mai 2024</div>
+      </div>
+      <button class="bio-toggle" id="bio-toggle" onclick="toggleBio()">Vezi mai mult ▾</button>
+    </div>
+    <div class="bio-preview">
+      Totul a început cu o simplă întrebare, în mai 2024 — de la primele alergări pe străzile Bârladului, la <strong>Bucharest 10K</strong> terminat în pragul de a vomita cu spargere de PR, și de acolo... n-am mai oprit.
+    </div>
+    <div class="bio-full" id="bio-full" style="display:none">
+      <p>Primul contact cu <strong>trail-ul</strong> a venit printr-un challenge: <em>Triple Crown Challenge</em> — 5K, 21K și 15K în zile diferite. La prima cursă, pe urcare, am realizat la ce m-am înhamat. Am terminat totuși toate probele, cu febra de „mentenanță", și de acolo m-am îndrăgostit de alergările montane.</p>
+      <p><strong>2025</strong> a început cu un challenge zilnic: alerg în fiecare zi numărul zilei în km — 1 ianuarie = 1km, 30 ianuarie = 30km... peste <strong>500km</strong> strânși. Am dat totul, zi de zi, după muncă. Apoi a venit prăbușirea din februarie, iar din aprilie am dat din nou bice.</p>
+      <p>Am făcut prima alergare de <strong>peste 100km</strong> — local, la Bârlad — ca să mă calific la <em>Transylvania 100K</em>, care era cerință pentru marele obiectiv: <strong>BUCOVINA ULTRA ROCKS, 100 MILE — THE BEAST</strong>.</p>
+      <p>Am ajuns la start, pulsul creștea, respirațiile înlemneau. Am plecat. Am trecut prin 3 deshidratări, insolații, depresii, noroc de prieteni care m-au ținut pe drumul cel bun. Am dormit o oră. La <strong>km 130</strong>, ultimul checkpoint înainte de Giumalău — furtună îngrozitoare, copacii se rupeau, totul era vraiște. Cursa s-a oprit acolo.</p>
+      <p><em>Dar nu am renunțat.</em> Asta a fost lecția — să mă pregătesc mai bine.</p>
+      <p>Am terminat 2025 cu <strong>3.000 km</strong>. Și decembrie cu <strong>600km</strong> — un challenge nebun, 20km pe zi dimineața și seara, pe lângă muncă. Acum e 2026 și în câteva zile fac deja <strong>1.000km pe an</strong>. Cursele din 2026 sunt imposibile pentru un începător. Dar eu nu mai sunt începător.</p>
+    </div>
+  </div>
+
+  <div class="ph" style="margin-top:0"><div class="ph-left"><h2>DASHBOARD</h2><p id="db-sub">Sezon 2026</p></div></div>
 
   <!-- KPI tiles row -->
   <div class="tiles" id="db-tiles"></div>
@@ -640,6 +776,7 @@ select option{background:var(--s2)}
   <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin:24px 0 12px">Urmează curând</div>
   <div class="cg" id="db-upcoming"></div>
 </div>
+
 
 <!-- CURSE -->
 <div class="page" id="pg-curse">
@@ -1083,6 +1220,7 @@ const DEFAULT = {
 const SB_URL = 'https://jqhtistewpmiphuoxfmp.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxaHRpc3Rld3BtaXBodW94Zm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMzkwOTUsImV4cCI6MjA4ODcxNTA5NX0.NWG60gy3twOCAjVlHuuIB1eTXum5rJVKN4L2EqgPa7I';
 const SB_TABLE = 'trail_data';
+const OWNER_EMAIL = 'evoluttionofall@gmail.com'; // doar acest cont poate edita
 
 let isCloud = false;
 let currentUser = null; // { id, email }
@@ -1243,12 +1381,40 @@ async function onLoggedIn() {
   const emailEl = document.getElementById('user-email-display');
   if (emailEl) emailEl.textContent = '👤 ' + currentUser.email;
 
+  // ── OWNER CHECK ──────────────────────────────────────
+  const isOwner = currentUser.email.toLowerCase() === OWNER_EMAIL.toLowerCase();
+  if (!isOwner) {
+    document.body.classList.add('readonly');
+    document.getElementById('guest-banner').style.display = 'flex';
+    // Hide logout from sidebar for cleaner guest UX (keep it in drawer)
+  }
+
   isCloud = true;
   setSyncStatus('Se încarcă...', 'var(--yellow)');
 
   try {
+    // Guests always load OWNER's data — find owner's user_id first
+    let targetUserId = currentUser.id;
+
+    if (!isOwner) {
+      // Fetch owner's row directly — owner data is public to read via RLS (we'll add a guest policy)
+      const allRows = await fetch(
+        `${SB_URL}/rest/v1/${SB_TABLE}?select=user_id,data&limit=1`,
+        { headers: sbHeaders(true) }
+      ).then(r => r.json());
+
+      if (allRows.length > 0 && allRows[0].data) {
+        D = allRows[0].data;
+        if (!D.sponsori) D.sponsori = [];
+        renderAll();
+        setSyncStatus('Vizualizare ☁️', 'var(--yellow)');
+        toast('👁️ Mod vizualizare — datele lui Balan Gabriel', 'info');
+        return;
+      }
+    }
+
     const res = await fetch(
-      `${SB_URL}/rest/v1/${SB_TABLE}?user_id=eq.${currentUser.id}&select=data&limit=1`,
+      `${SB_URL}/rest/v1/${SB_TABLE}?user_id=eq.${targetUserId}&select=data&limit=1`,
       { headers: sbHeaders(true) }
     );
 
@@ -1261,9 +1427,12 @@ async function onLoggedIn() {
       if (!D.sponsori) D.sponsori = [];
       renderAll();
       setSyncStatus('Sincronizat ☁️', 'var(--green)');
-      toast('☁️ Bine ai revenit, ' + currentUser.email.split('@')[0] + '!', 'ok');
+      toast(isOwner ? '☁️ Bine ai revenit, ' + currentUser.email.split('@')[0] + '!' : '👁️ Mod vizualizare activ', isOwner ? 'ok' : 'info');
     } else {
-      // First login — create row with default data
+      if (!isOwner) {
+        toast('⚠️ Nu s-au găsit date de vizualizat', 'err');
+        return;
+      }
       D = JSON.parse(JSON.stringify(DEFAULT));
       const ins = await fetch(`${SB_URL}/rest/v1/${SB_TABLE}`, {
         method: 'POST',
@@ -1320,6 +1489,7 @@ async function saveData() {
 let autoSaveTimer = null;
 function scheduleAutoSave() {
   if (!isCloud) return;
+  if (document.body.classList.contains('readonly')) return; // guests can't save
   clearTimeout(autoSaveTimer);
   setSyncStatus('Modificat...', 'var(--yellow)');
   autoSaveTimer = setTimeout(async () => {
@@ -1404,6 +1574,21 @@ document.addEventListener('touchend', e => {
   const dx = touchStartX - e.changedTouches[0].clientX;
   if (dx > 60 && document.getElementById('drawer').classList.contains('on')) closeDrawer();
 }, {passive:true});
+function toggleBio() {
+  const full = document.getElementById('bio-full');
+  const btn  = document.getElementById('bio-toggle');
+  const prev = document.querySelector('.bio-preview');
+  if (full.style.display === 'none') {
+    full.style.display = 'block';
+    if(prev) prev.style.display = 'none';
+    btn.textContent = 'Restrânge ▴';
+  } else {
+    full.style.display = 'none';
+    if(prev) prev.style.display = 'block';
+    btn.textContent = 'Vezi mai mult ▾';
+  }
+}
+
 function go(id, el) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
@@ -1467,6 +1652,19 @@ function renderDash() {
   const today = new Date(); today.setHours(0,0,0,0);
   const km = c.reduce((s,x)=>s+(x.distanta||0),0);
   const gpp = D.nutritie.gel_pret_set24 / 24;
+
+  // ── Hero stats ─────────────────────────────────────
+  const totalDplus = c.reduce((s,x)=>s+(x.denivelare||0),0);
+  const upcoming = [...c].filter(x=>new Date(x.data_cursa)>=today).sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+  const daysToNext = upcoming.length ? Math.ceil((new Date(upcoming[0].data_cursa)-today)/86400000) : null;
+  const dhsCurse = document.getElementById('dhs-curse');
+  const dhsKm    = document.getElementById('dhs-km');
+  const dhsDplus = document.getElementById('dhs-dplus');
+  const dhsNext  = document.getElementById('dhs-next');
+  if(dhsCurse) dhsCurse.textContent = c.length;
+  if(dhsKm)    dhsKm.textContent    = km.toLocaleString('ro');
+  if(dhsDplus) dhsDplus.textContent = totalDplus.toLocaleString('ro');
+  if(dhsNext)  dhsNext.textContent  = daysToNext !== null ? daysToNext : '—';
 
   // Cost curse
   const tIns = c.reduce((s,x)=>s+(x.plata_concurs||0),0);
@@ -1591,8 +1789,8 @@ function renderDash() {
     document.getElementById('db-unpaid-list').innerHTML = '';
   }
 
-  const upcoming = [...c].filter(x=>new Date(x.data_cursa)>=today).sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa)).slice(0,3);
-  document.getElementById('db-upcoming').innerHTML = upcoming.map(rcCard).join('') || '<p style="color:var(--t3)">Nicio cursă viitoare înregistrată.</p>';
+  const upcomingCards = [...c].filter(x=>new Date(x.data_cursa)>=today).sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa)).slice(0,3);
+  document.getElementById('db-upcoming').innerHTML = upcomingCards.map(rcCard).join('') || '<p style="color:var(--t3)">Nicio cursă viitoare înregistrată.</p>';
 }
 
 // ══════════════════════════════════════════════════════
