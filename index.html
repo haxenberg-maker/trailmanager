@@ -3824,6 +3824,15 @@ async function generateRaceStory(rJSON, btnEl) {
   }
 }
 
+function toggleSplits(safeId) {
+  const body = document.getElementById('splits-body-' + safeId);
+  const chev = document.getElementById('splits-chev-' + safeId);
+  if (!body) return;
+  const open = body.style.display === 'none';
+  body.style.display = open ? 'block' : 'none';
+  if (chev) chev.style.transform = open ? 'rotate(180deg)' : '';
+}
+
 function toggleRaceCard(safeId) {
   const card = document.getElementById('race-' + safeId);
   if (card) card.classList.toggle('open');
@@ -3898,9 +3907,13 @@ function renderRaceHistory() {
           ${drawHRSVG(r.hr_stream)}
         </div>` : ''}
         ${r.splits?.length > 0 ? `
-        <div style="margin-top:14px">
-          <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">⏱ Splits per km</div>
-          <div style="overflow-x:auto">
+        <div style="margin-top:14px" id="splits-wrap-${safeId}">
+          <button onclick="toggleSplits('${safeId}')"
+            style="display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:1px solid var(--border);border-radius:8px;padding:8px 14px;cursor:pointer;font-family:var(--body);color:var(--t2);font-size:12px">
+            <span>⏱ Splits per km <span style="color:var(--t3)">(${r.splits.length})</span></span>
+            <span id="splits-chev-${safeId}" style="transition:transform .2s">▼</span>
+          </button>
+          <div id="splits-body-${safeId}" style="display:none;margin-top:8px;overflow-x:auto">
             <table style="width:100%;border-collapse:collapse;font-size:12px">
               <thead><tr style="color:var(--t3)">
                 <th style="text-align:left;padding:4px 8px;border-bottom:1px solid var(--border)">Km</th>
@@ -3924,7 +3937,10 @@ function renderRaceHistory() {
             </table>
           </div>
         </div>` : ''}
-        ${r.strava_id ? `<a href="https://www.strava.com/activities/${r.strava_id}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:11px;color:#fc5200;text-decoration:none"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>Vezi pe Strava</a>` : ''}
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px">
+          ${r.strava_id ? `<a href="https://www.strava.com/activities/${r.strava_id}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#fc5200;text-decoration:none"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>Strava</a>` : '<span></span>'}
+          <button onclick="toggleRaceCard('${safeId}')" style="background:none;border:none;color:var(--t3);font-size:11px;cursor:pointer;font-family:var(--body);padding:4px 8px">▲ Restrânge</button>
+        </div>
       </div>
     </div>`;
   }).join('');
