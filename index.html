@@ -740,11 +740,11 @@ body.readonly label.btn { display:none !important }
     <div class="dash-hero-title">BALAN GABRIEL</div>
     <div class="dash-hero-aka">HAX · 2026</div>
     <div class="dash-hero-stats" id="dash-hero-stats">
-      <div class="dhs"><span id="dhs-curse">—</span><small>curse</small></div>
+      <div class="dhs"><span id="dhs-km-real" style="color:var(--accent)">—</span><small>km alergați 2026</small></div>
       <div class="dhs-sep"></div>
-      <div class="dhs"><span id="dhs-km">—</span><small>km planificați</small></div>
+      <div class="dhs"><span id="dhs-curse">—</span><small>curse planificate</small></div>
       <div class="dhs-sep"></div>
-      <div class="dhs"><span id="dhs-dplus">—</span><small>m D+</small></div>
+      <div class="dhs"><span id="dhs-km">—</span><small>km curse</small></div>
       <div class="dhs-sep"></div>
       <div class="dhs"><span id="dhs-next">—</span><small>zile până la start</small></div>
       <div class="dhs-sep"></div>
@@ -786,8 +786,30 @@ body.readonly label.btn { display:none !important }
   <!-- KPI tiles row -->
   <div class="tiles" id="db-tiles"></div>
 
-  <!-- Sponsor progress -->
-  <div id="db-sponsor-bar"></div>
+  <!-- SPONSORI DONUT + LIST -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px" id="db-sp-row">
+
+    <!-- Donut chart sponsorizare vs necesar -->
+    <div class="bk-card" style="padding:20px">
+      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">💰 Sponsorizare vs Necesar</div>
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+        <div id="db-donut" style="flex-shrink:0"></div>
+        <div id="db-donut-legend" style="display:flex;flex-direction:column;gap:10px;flex:1;min-width:120px"></div>
+      </div>
+      <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px" id="db-donut-breakdown"></div>
+    </div>
+
+    <!-- Top sponsori -->
+    <div class="bk-card" style="padding:20px">
+      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px">🤝 Sponsori</div>
+      <div id="db-sp-list"></div>
+      <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:10px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:11px;color:var(--t3)">Total angajat</span>
+        <span style="font-family:var(--display);font-size:18px;color:var(--green)" id="db-sp-total">—</span>
+      </div>
+    </div>
+
+  </div>
 
   <!-- Plăți restante curse -->
   <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin:24px 0 12px" id="db-unpaid-label"></div>
@@ -964,6 +986,7 @@ body.readonly label.btn { display:none !important }
         Sync Strava
       </button>
       <button class="btn btn-ghost btn-sm" onclick="clearActivities()" title="Șterge toate">🗑</button>
+      <button class="btn btn-ghost btn-sm" onclick="deduplicateActivities()" title="Elimină duplicate" style="color:var(--yellow);border-color:rgba(255,200,79,.3)">🧹 Deduplică</button>
     </div>
   </div>
 
@@ -1752,17 +1775,22 @@ function renderDash() {
   const totalDplus = c.reduce((s,x)=>s+(x.denivelare||0),0);
   const upcoming = [...c].filter(x=>new Date(x.data_cursa)>=today).sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
   const daysToNext = upcoming.length ? Math.ceil((new Date(upcoming[0].data_cursa)-today)/86400000) : null;
-  const dhsCurse = document.getElementById('dhs-curse');
-  const dhsKm    = document.getElementById('dhs-km');
-  const dhsDplus = document.getElementById('dhs-dplus');
-  const dhsNext  = document.getElementById('dhs-next');
-  if(dhsCurse) dhsCurse.textContent = c.length;
-  if(dhsKm)    dhsKm.textContent    = km.toLocaleString('ro');
-  if(dhsDplus) dhsDplus.textContent = totalDplus.toLocaleString('ro');
-  if(dhsNext)  dhsNext.textContent  = daysToNext !== null ? daysToNext : '—';
+
+  // KM alergați real din activități 2026
+  const allActsHero = getActivities().sort((a,b)=>a.date.localeCompare(b.date));
+  const curYear2 = new Date().getFullYear().toString();
+  const kmReal2026 = Math.round(allActsHero.filter(a=>a.date?.startsWith(curYear2)).reduce((s,a)=>s+(a.km||0),0));
+
+  const dhsKmReal = document.getElementById('dhs-km-real');
+  const dhsCurse  = document.getElementById('dhs-curse');
+  const dhsKm     = document.getElementById('dhs-km');
+  const dhsNext   = document.getElementById('dhs-next');
+  if(dhsKmReal) dhsKmReal.textContent = kmReal2026.toLocaleString('ro');
+  if(dhsCurse)  dhsCurse.textContent  = c.length;
+  if(dhsKm)     dhsKm.textContent     = km.toLocaleString('ro');
+  if(dhsNext)   dhsNext.textContent   = daysToNext !== null ? daysToNext : '—';
 
   // Streak live
-  const allActsHero = getActivities().sort((a,b)=>a.date.localeCompare(b.date));
   const curStreak = calcCurrentStreak(allActsHero);
   const dhsStreak = document.getElementById('dhs-streak');
   if (dhsStreak) dhsStreak.textContent = curStreak;
@@ -1825,28 +1853,67 @@ function renderDash() {
     </div>
   `;
 
-  // Sponsor progress bar detaliat
-  document.getElementById('db-sponsor-bar').innerHTML = `
-    <div class="sp-progress-wrap">
-      <div class="sp-progress-header">
-        <div>
-          <h3>💼 SPONSORIZARE vs NECESAR</h3>
-          <div style="font-size:12px;color:var(--t3);margin-top:4px">Curse (${fmt(totCurse)} RON) + Suplimente (${fmt(totalSuplAnual)} RON) + Geluri training (${fmt(gelTrainingAnual)} RON)</div>
+  // ── DONUT CHART sponsorizare vs necesar ──────────────
+  const spNeacoperit = Math.max(0, totalAn - spTotal);
+  const spNeprimit   = Math.max(0, spTotal - spPrimit);
+
+  const donutSegs = [
+    { label: 'Primit confirmat', value: spPrimit,     color: 'var(--green)' },
+    { label: 'Angajat (neprimitt)', value: spNeprimit, color: 'var(--yellow)' },
+    { label: 'Deficit rămas',     value: spNeacoperit, color: 'var(--red)' },
+  ].filter(s => s.value > 0);
+
+  drawDonutChart('db-donut', donutSegs, totalAn);
+
+  // Legend
+  document.getElementById('db-donut-legend').innerHTML = donutSegs.map(s => `
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="width:10px;height:10px;border-radius:50%;background:${s.color};flex-shrink:0"></div>
+      <div>
+        <div style="font-size:11px;color:var(--t2)">${s.label}</div>
+        <div style="font-family:var(--display);font-size:16px;color:${s.color}">${fmt(s.value)} <span style="font-size:10px;font-family:var(--body);color:var(--t3)">RON</span></div>
+      </div>
+    </div>`).join('');
+
+  // Breakdown pe categorii
+  document.getElementById('db-donut-breakdown').innerHTML = `
+    <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Defalcare necesar</div>
+    ${[
+      { lbl: '🏁 Curse', v: totCurse },
+      { lbl: '💊 Recurente', v: totRecurente },
+      { lbl: '👟 Echipament', v: echipTotal },
+    ].map(r => `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-size:12px;color:var(--t2)">${r.lbl}</span>
+        <div style="flex:1;margin:0 10px;height:3px;background:var(--s3);border-radius:2px;overflow:hidden">
+          <div style="height:100%;width:${totalAn>0?Math.round(r.v/totalAn*100):0}%;background:var(--accent);border-radius:2px"></div>
         </div>
-        <div class="sp-nums">
-          <div class="sp-need">${fmt(totalAn)} RON <span style="font-size:14px;font-family:var(--body);color:var(--t3)">necesar</span></div>
-          <div class="sp-have"><span style="color:var(--green);font-weight:700">${fmt(spTotal)} RON</span> angajat · <span style="color:var(--accent)">${fmt(spPrimit)} RON</span> primit</div>
-        </div>
-      </div>
-      <div class="sp-bar-track">
-        <div class="sp-bar-fill ${spPct>=100?'over':spPct>=60?'close':'low'}" style="width:${spPct}%"></div>
-      </div>
-      <div class="sp-bar-labels">
-        <span class="have">✓ ${fmt(spTotal)} RON acoperit (${spPct}%)</span>
-        <span>${deficit>0?'— lipsesc '+fmt(deficit)+' RON':'✓ acoperit complet'}</span>
-      </div>
-    </div>
-  `;
+        <span style="font-size:12px;font-weight:600;color:var(--text)">${fmt(r.v)} RON</span>
+      </div>`).join('')}
+    <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:1px solid var(--border)">
+      <span style="font-size:12px;font-weight:700;color:var(--text)">TOTAL</span>
+      <span style="font-family:var(--display);font-size:16px;color:var(--red)">${fmt(totalAn)} RON</span>
+    </div>`;
+
+  // ── LISTA SPONSORI ────────────────────────────────────
+  const sponsoriSorted = [...(D.sponsori||[])].sort((a,b) => (b.suma||0)-(a.suma||0));
+  document.getElementById('db-sp-list').innerHTML = sponsoriSorted.length
+    ? sponsoriSorted.map(s => `
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.denumire}</div>
+            <div style="font-size:10px;color:var(--t3)">${s.tip||'general'}${s.contact?' · '+s.contact:''}</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div style="font-family:var(--display);font-size:16px;color:var(--green)">${fmt(s.suma||0)}</div>
+            <div style="font-size:9px;color:var(--t3)">RON</div>
+          </div>
+          <div style="width:8px;height:8px;border-radius:50%;background:${s.primit?'var(--green)':'var(--yellow)'};flex-shrink:0" title="${s.primit?'Primit':'Angajat'}"></div>
+        </div>`).join('')
+    : '<div style="color:var(--t3);font-size:12px;text-align:center;padding:20px">Niciun sponsor adăugat</div>';
+
+  document.getElementById('db-sp-total').textContent = fmt(spTotal) + ' RON';
+
 
   // Plăți restante curse
   const unpaid = [...c]
@@ -3482,6 +3549,60 @@ function drawLineChart(containerId, points) {
     <circle cx="${px(points.length-1)}" cy="${py(points[points.length-1].km)}" r="4" fill="var(--accent)"/>
     <text x="${px(points.length-1)+6}" y="${py(points[points.length-1].km)+4}" class="st-axis" fill="var(--accent)">${points[points.length-1].km.toLocaleString('ro')} km</text>
   </svg>`;
+}
+
+function drawDonutChart(containerId, segments, total) {
+  const el = document.getElementById(containerId);
+  if (!el || !segments.length) return;
+  const size = 120, cx = size/2, cy = size/2, r = 46, inner = 28;
+  let angle = -Math.PI/2, paths = '';
+
+  segments.forEach(s => {
+    const pct = s.value / total;
+    if (pct <= 0) return;
+    const a1 = angle, a2 = angle + pct * Math.PI * 2;
+    const x1 = cx+r*Math.cos(a1), y1 = cy+r*Math.sin(a1);
+    const x2 = cx+r*Math.cos(a2), y2 = cy+r*Math.sin(a2);
+    const ix1 = cx+inner*Math.cos(a1), iy1 = cy+inner*Math.sin(a1);
+    const ix2 = cx+inner*Math.cos(a2), iy2 = cy+inner*Math.sin(a2);
+    const large = pct > 0.5 ? 1 : 0;
+    paths += `<path d="M${ix1.toFixed(1)},${iy1.toFixed(1)} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${large} 1 ${x2.toFixed(1)},${y2.toFixed(1)} L${ix2.toFixed(1)},${iy2.toFixed(1)} A${inner},${inner} 0 ${large} 0 ${ix1.toFixed(1)},${iy1.toFixed(1)}" fill="${s.color}" opacity="0.9"><title>${s.label}: ${s.value.toLocaleString('ro')} RON</title></path>`;
+    angle = a2;
+  });
+
+  const covPct = total > 0 ? Math.round(segments.filter(s=>s.label!=='Deficit rămas').reduce((a,s)=>a+s.value,0)/total*100) : 0;
+  paths += `<text x="${cx}" y="${cy-4}" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="20" fill="var(--text)">${covPct}%</text>
+    <text x="${cx}" y="${cy+12}" text-anchor="middle" font-size="8" fill="var(--t3)">acoperit</text>`;
+
+  el.innerHTML = `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">${paths}</svg>`;
+}
+
+function deduplicateActivities() {
+  const acts = getActivities();
+  const before = acts.length;
+  const sorted = [...acts].sort((a,b) => {
+    if (a.source==='strava' && b.source!=='strava') return -1;
+    if (b.source==='strava' && a.source!=='strava') return 1;
+    return 0;
+  });
+  const seen = new Map();
+  const deduped = [];
+  for (const act of sorted) {
+    const dateKey = act.date?.substring(0,10);
+    if (!dateKey) { deduped.push(act); continue; }
+    let isDupe = false;
+    for (const [key, existing] of seen) {
+      const eDate = key.split('_')[0];
+      if (eDate === dateKey && Math.abs((act.km||0)-(existing.km||0)) <= 1.0) { isDupe = true; break; }
+    }
+    if (!isDupe) { seen.set(`${dateKey}_${act.km}`, act); deduped.push(act); }
+  }
+  const removed = before - deduped.length;
+  if (removed === 0) { toast('✅ Niciun duplicat găsit!', 'ok'); return; }
+  D.activities = deduped;
+  scheduleAutoSave();
+  renderAll();
+  toast(`🧹 ${removed} duplicate eliminate · ${deduped.length} activități rămase`, 'ok');
 }
 
 function drawPieChart(containerId, segments, total) {
