@@ -760,7 +760,7 @@ body.readonly label.btn { display:none !important }
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="display:block"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
           </a>
           <a href="https://itra.run/page/runner/5688809" target="_blank" class="bio-link itra-link" title="ITRA Profile">ITRA</a>
-          <span class="bio-itra-pi" title="ITRA Performance Index">PI <span id="itra-pi-val">—</span></span>
+          <span class="bio-itra-pi" title="ITRA Performance Index">PI <span id="itra-pi-val">—</span> <span id="itra-rank" style="font-size:10px;color:var(--t3);font-family:var(--body);font-weight:400"></span></span>
         </div>
         <div class="bio-sub">Alergător · Bârlad · Din mai 2024</div>
       </div>
@@ -1609,20 +1609,11 @@ function toggleBio() {
 }
 
 async function fetchITRA() {
-  try {
-    const res = await fetch('https://itra.run/api/IAUCalc/GetRunnerDetail?runnerId=5688809', {
-      headers: { 'Accept': 'application/json' }
-    });
-    if (!res.ok) return;
-    const data = await res.json();
-    const pi = data?.performanceIndex ?? data?.PerformanceIndex ?? data?.pi ?? data?.PI;
-    if (pi !== undefined && pi !== null) {
-      const el = document.getElementById('itra-pi-val');
-      if (el) el.textContent = pi;
-    }
-  } catch(e) {
-    // ITRA API unavailable — silently ignore
-  }
+  // ITRA Performance Index hardcodat (actualizat manual)
+  const el = document.getElementById('itra-pi-val');
+  if (el) el.textContent = '536';
+  const rank = document.getElementById('itra-rank');
+  if (rank) rank.textContent = 'Intermediate 1';
 }
 
 function go(id, el) {
