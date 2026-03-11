@@ -3876,25 +3876,105 @@ function renderRaceHistory() {
         <div class="race-chevron">▼</div>
       </div>
       <div class="race-expand">
-        <div class="race-extra-stats">
+        <div class="race-extra-stats" style="grid-template-columns:repeat(auto-fit,minmax(80px,1fr))">
           <div class="race-extra-stat"><div class="race-extra-stat-val">${r.km}</div><div class="race-extra-stat-lbl">km</div></div>
           <div class="race-extra-stat"><div class="race-extra-stat-val">${r.elev||'—'}</div><div class="race-extra-stat-lbl">m D+</div></div>
           <div class="race-extra-stat"><div class="race-extra-stat-val">${fmtPace(r.dur,r.km)}</div><div class="race-extra-stat-lbl">pace</div></div>
+          ${r.hr_avg ? `<div class="race-extra-stat"><div class="race-extra-stat-val" style="color:#ff4f4f">❤ ${r.hr_avg}</div><div class="race-extra-stat-lbl">bpm avg</div></div>` : ''}
+          ${r.hr_max ? `<div class="race-extra-stat"><div class="race-extra-stat-val" style="color:#ff7c3b">▲ ${r.hr_max}</div><div class="race-extra-stat-lbl">bpm max</div></div>` : ''}
+          ${r.cadence ? `<div class="race-extra-stat"><div class="race-extra-stat-val" style="color:var(--yellow)">${r.cadence}</div><div class="race-extra-stat-lbl">spm</div></div>` : ''}
         </div>
         <div class="race-map-wrap" style="min-height:140px">
           ${r.polyline ? polylineToSVG(r.polyline,400,160) : '<div style="color:var(--t3);font-size:12px;padding:24px;text-align:center">Fără traseu — apasă Sync Strava</div>'}
         </div>
-        <div id="story-${safeId}" style="margin-top:12px">
-          <button onclick="generateRaceStory('${rJSON}',this)"
-            style="background:none;border:1px solid var(--accent-border);color:var(--accent);border-radius:8px;padding:9px 16px;font-size:12px;cursor:pointer;font-family:var(--body);width:100%">
-            ✨ Generează povestea acestei curse
-          </button>
-        </div>
-        ${r.strava_id ? `<a href="https://www.strava.com/activities/${r.strava_id}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;color:#fc5200;text-decoration:none"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>Vezi pe Strava</a>` : ''}
+        ${r.elev_profile?.length > 1 ? `
+        <div style="margin-top:12px">
+          <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">📈 Profil altitudine</div>
+          ${drawElevationSVG(r.elev_profile)}
+        </div>` : ''}
+        ${r.hr_stream?.length > 1 ? `
+        <div style="margin-top:12px">
+          <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">❤️ Heart Rate</div>
+          ${drawHRSVG(r.hr_stream)}
+        </div>` : ''}
+        ${r.splits?.length > 0 ? `
+        <div style="margin-top:14px">
+          <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">⏱ Splits per km</div>
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:12px">
+              <thead><tr style="color:var(--t3)">
+                <th style="text-align:left;padding:4px 8px;border-bottom:1px solid var(--border)">Km</th>
+                <th style="text-align:center;padding:4px 8px;border-bottom:1px solid var(--border)">Pace</th>
+                <th style="text-align:center;padding:4px 8px;border-bottom:1px solid var(--border)">HR</th>
+                <th style="text-align:center;padding:4px 8px;border-bottom:1px solid var(--border)">D+</th>
+              </tr></thead>
+              <tbody>${r.splits.map((s,i) => {
+                const pm = s.pace ? Math.floor(s.pace/60) : null;
+                const ps = s.pace ? s.pace%60 : null;
+                const pStr = pm !== null ? pm+':'+(ps.toString().padStart(2,'0')) : '—';
+                const avg = r.dur && r.km ? r.dur/r.km : null;
+                const col = s.pace && avg ? (s.pace < avg*0.97 ? 'var(--green)' : s.pace > avg*1.03 ? 'var(--red)' : 'var(--text)') : 'var(--text)';
+                return `<tr style="border-bottom:1px solid var(--border);${i%2?'background:var(--s2)':''}" >
+                  <td style="padding:5px 8px;color:var(--t3)">${i+1}</td>
+                  <td style="padding:5px 8px;text-align:center;font-weight:600;color:${col}">${pStr}</td>
+                  <td style="padding:5px 8px;text-align:center;color:#ff7c3b">${s.hr||'—'}</td>
+                  <td style="padding:5px 8px;text-align:center;color:var(--t2)">${s.elev||0}m</td>
+                </tr>`;
+              }).join('')}</tbody>
+            </table>
+          </div>
+        </div>` : ''}
+        ${r.strava_id ? `<a href="https://www.strava.com/activities/${r.strava_id}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:11px;color:#fc5200;text-decoration:none"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>Vezi pe Strava</a>` : ''}
       </div>
     </div>`;
   }).join('');
 }
+function drawElevationSVG(altArr) {
+  if (!altArr || altArr.length < 2) return '';
+  const w = 400, h = 80, pad = {t:8, b:20, l:32, r:8};
+  const minA = Math.min(...altArr), maxA = Math.max(...altArr);
+  const range = maxA - minA || 1;
+  const toX = i => pad.l + (i / (altArr.length-1)) * (w - pad.l - pad.r);
+  const toY = a => pad.t + (1 - (a - minA) / range) * (h - pad.t - pad.b);
+  const pts = altArr.map((a,i) => `${toX(i).toFixed(1)},${toY(a).toFixed(1)}`).join(' ');
+  const area = `${pad.l},${h-pad.b} ` + pts + ` ${toX(altArr.length-1).toFixed(1)},${h-pad.b}`;
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" style="width:100%;height:auto;display:block">
+    <defs><linearGradient id="eg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#b8ff4f" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#b8ff4f" stop-opacity="0.02"/>
+    </linearGradient></defs>
+    <polygon points="${area}" fill="url(#eg)"/>
+    <polyline points="${pts}" fill="none" stroke="#b8ff4f" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <text x="${pad.l-2}" y="${pad.t+4}" fill="var(--t3)" font-size="9" text-anchor="end">${Math.round(maxA)}m</text>
+    <text x="${pad.l-2}" y="${h-pad.b}" fill="var(--t3)" font-size="9" text-anchor="end">${Math.round(minA)}m</text>
+  </svg>`;
+}
+
+function drawHRSVG(hrArr) {
+  if (!hrArr || hrArr.length < 2) return '';
+  const w = 400, h = 70, pad = {t:8, b:16, l:32, r:8};
+  const minH = Math.min(...hrArr), maxH = Math.max(...hrArr);
+  const range = maxH - minH || 1;
+  const toX = i => pad.l + (i / (hrArr.length-1)) * (w - pad.l - pad.r);
+  const toY = v => pad.t + (1 - (v - minH) / range) * (h - pad.t - pad.b);
+  const pts = hrArr.map((v,i) => `${toX(i).toFixed(1)},${toY(v).toFixed(1)}`).join(' ');
+  const area = `${pad.l},${h-pad.b} ` + pts + ` ${toX(hrArr.length-1).toFixed(1)},${h-pad.b}`;
+  // HR zones color gradient: green→yellow→red
+  const avgHR = Math.round(hrArr.reduce((s,v)=>s+v,0)/hrArr.length);
+  const zoneColor = avgHR < 130 ? '#4fff9b' : avgHR < 155 ? '#ffcb4f' : '#ff4f4f';
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" style="width:100%;height:auto;display:block">
+    <defs><linearGradient id="hrg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${zoneColor}" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="${zoneColor}" stop-opacity="0.02"/>
+    </linearGradient></defs>
+    <polygon points="${area}" fill="url(#hrg)"/>
+    <polyline points="${pts}" fill="none" stroke="${zoneColor}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <text x="${pad.l-2}" y="${pad.t+4}" fill="var(--t3)" font-size="9" text-anchor="end">${maxH}</text>
+    <text x="${pad.l-2}" y="${h-pad.b}" fill="var(--t3)" font-size="9" text-anchor="end">${minH}</text>
+    <text x="${w-pad.r}" y="${h-2}" fill="var(--t3)" font-size="9" text-anchor="end">avg ${avgHR} bpm</text>
+  </svg>`;
+}
+
 function drawPieChart(containerId, segments, total) {
   const el = document.getElementById(containerId);
   if (!el || !segments.length || !total) return;
