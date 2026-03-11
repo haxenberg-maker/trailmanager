@@ -810,6 +810,23 @@ body.readonly label.btn { display:none !important }
     </div>
   </div>
 
+  <!-- RACE HISTORY — imediat sub bio -->
+  <div class="bk-card" id="db-race-card" style="padding:20px;margin-bottom:0">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div>
+        <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">🏁 Race History</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:3px" id="db-race-subtitle">sortate după dificultate</div>
+      </div>
+      <span id="db-race-count" style="font-family:var(--display);font-size:22px;color:var(--accent)"></span>
+    </div>
+    <div id="db-race-list"></div>
+    <div id="db-race-more-wrap" style="display:none;margin-top:12px;text-align:center">
+      <button onclick="showAllRaces()" style="background:none;border:1px solid var(--border);color:var(--t2);border-radius:8px;padding:8px 20px;font-size:12px;cursor:pointer;font-family:var(--body)">
+        ▼ Vezi toate cursele (<span id="db-race-hidden-count">0</span> ascunse)
+      </button>
+    </div>
+  </div>
+
   <div class="ph" style="margin-top:0"><div class="ph-left"><h2>DASHBOARD</h2><p id="db-sub">Sezon 2026</p></div></div>
 
   <!-- KPI tiles row -->
@@ -891,15 +908,6 @@ body.readonly label.btn { display:none !important }
       <div style="font-size:11px;color:var(--t3)" id="db-heatmap-year">2026</div>
     </div>
     <div id="db-heatmap" style="overflow-x:auto"></div>
-  </div>
-
-  <!-- RACE HISTORY -->
-  <div class="bk-card" style="padding:20px;margin-top:16px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">🏁 Race History — Strava</div>
-      <span id="db-race-count" style="font-size:11px;color:var(--t3)"></span>
-    </div>
-    <div id="db-race-list"></div>
   </div>
 
 </div>
@@ -3741,7 +3749,6 @@ function deduplicateActivities() {
 //  RACE HISTORY
 // ══════════════════════════════════════════════════════
 
-// Decode Google Encoded Polyline → array of [lat, lng]
 function decodePolyline(encoded) {
   if (!encoded) return [];
   const points = [];
@@ -3758,119 +3765,136 @@ function decodePolyline(encoded) {
   return points;
 }
 
-// Draw route as SVG from polyline
-function polylineToSVG(encoded, w = 340, h = 160) {
+function polylineToSVG(encoded, w, h) {
+  w = w||400; h = h||160;
   const pts = decodePolyline(encoded);
   if (pts.length < 2) return '<div style="color:var(--t3);font-size:12px;padding:20px;text-align:center">Fără traseu disponibil</div>';
-
-  const lats = pts.map(p => p[0]), lngs = pts.map(p => p[1]);
-  const minLat = Math.min(...lats), maxLat = Math.max(...lats);
-  const minLng = Math.min(...lngs), maxLng = Math.max(...lngs);
-  const pad = 16;
-
-  const toX = lng => pad + (lng - minLng) / (maxLng - minLng || 1) * (w - pad*2);
-  const toY = lat => pad + (maxLat - lat) / (maxLat - minLat || 1) * (h - pad*2);
-
-  const pathD = pts.map((p, i) => `${i===0?'M':'L'}${toX(p[1]).toFixed(1)},${toY(p[0]).toFixed(1)}`).join(' ');
-  const startPt = pts[0], endPt = pts[pts.length-1];
-
-  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" style="display:block">
-    <defs>
-      <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#b8ff4f"/>
-        <stop offset="100%" stop-color="#4fff9b"/>
-      </linearGradient>
-    </defs>
-    <path d="${pathD}" fill="none" stroke="rgba(184,255,79,0.2)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="${pathD}" fill="none" stroke="url(#rg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="${toX(startPt[1]).toFixed(1)}" cy="${toY(startPt[0]).toFixed(1)}" r="4" fill="var(--accent)"/>
-    <circle cx="${toX(endPt[1]).toFixed(1)}" cy="${toY(endPt[0]).toFixed(1)}" r="4" fill="var(--green)"/>
+  const lats = pts.map(p=>p[0]), lngs = pts.map(p=>p[1]);
+  const minLat=Math.min(...lats), maxLat=Math.max(...lats);
+  const minLng=Math.min(...lngs), maxLng=Math.max(...lngs);
+  const pad=16;
+  const toX = l => pad + (l-minLng)/(maxLng-minLng||1)*(w-pad*2);
+  const toY = l => pad + (maxLat-l)/(maxLat-minLat||1)*(h-pad*2);
+  const pathD = pts.map((p,i) => `${i===0?'M':'L'}${toX(p[1]).toFixed(1)},${toY(p[0]).toFixed(1)}`).join(' ');
+  const s=pts[0], e=pts[pts.length-1];
+  const gid = 'rg'+Math.random().toString(36).slice(2,7);
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" style="display:block;width:100%;height:auto">
+    <defs><linearGradient id="${gid}" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#b8ff4f"/><stop offset="100%" stop-color="#4fff9b"/>
+    </linearGradient></defs>
+    <path d="${pathD}" fill="none" stroke="rgba(184,255,79,0.15)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="${pathD}" fill="none" stroke="url(#${gid})" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${toX(s[1]).toFixed(1)}" cy="${toY(s[0]).toFixed(1)}" r="5" fill="var(--accent)" stroke="var(--bg)" stroke-width="1.5"/>
+    <circle cx="${toX(e[1]).toFixed(1)}" cy="${toY(e[0]).toFixed(1)}" r="5" fill="var(--green)" stroke="var(--bg)" stroke-width="1.5"/>
   </svg>`;
 }
 
 function fmtPace(sec, km) {
   if (!sec || !km) return '—';
-  const paceSecPerKm = sec / km;
-  const m = Math.floor(paceSecPerKm / 60), s = Math.round(paceSecPerKm % 60);
+  const p = sec/km, m = Math.floor(p/60), s = Math.round(p%60);
   return `${m}:${s.toString().padStart(2,'0')}/km`;
 }
 
-function toggleRaceCard(id) {
-  const card = document.getElementById('race-' + id);
+function raceDifficulty(r) { return (r.km||0) + (r.elev||0)/100; }
+
+let _racesAllShown = false;
+function showAllRaces() { _racesAllShown = true; renderRaceHistory(); }
+
+async function generateRaceStory(rJSON, btnEl) {
+  const r = typeof rJSON === 'string' ? JSON.parse(rJSON) : rJSON;
+  if (!btnEl) return;
+  const wrap = btnEl.parentElement;
+  wrap.innerHTML = '<div style="padding:12px;color:var(--t3);font-size:12px;font-style:italic;text-align:center">✨ Se generează povestea...</div>';
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: 'Ești un narator epic pentru trail running. Scrie în română, la persoana a 3-a, despre Balan Gabriel (HAX) — un alergător de trail din Bârlad, România. Stil: dramatic, poetic, puternic — ca un comentator de cursă legendară. Exact 3-4 fraze. Fără introducere, direct în acțiune.',
+        messages: [{ role: 'user', content: `Povestea acestei curse:\nNume: ${r.name}\nData: ${r.date}\nDistanță: ${r.km} km\nDenivelare: ${r.elev} m D+\nTimp finish: ${fmtDur(r.dur)}\nPace: ${fmtPace(r.dur, r.km)}\nTip: ${r.type}` }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.[0]?.text || 'Povestea nu a putut fi generată.';
+    wrap.innerHTML = `<div style="padding:14px;background:var(--s2);border-radius:8px;border-left:3px solid var(--accent);font-size:13px;line-height:1.8;color:var(--t2);font-style:italic;margin-top:4px">${text}</div>`;
+  } catch(e) {
+    wrap.innerHTML = '<div style="padding:12px;color:var(--red);font-size:12px">Eroare la generare poveste.</div>';
+  }
+}
+
+function toggleRaceCard(safeId) {
+  const card = document.getElementById('race-' + safeId);
   if (card) card.classList.toggle('open');
 }
 
 function renderRaceHistory() {
   const el = document.getElementById('db-race-list');
   const countEl = document.getElementById('db-race-count');
+  const moreWrap = document.getElementById('db-race-more-wrap');
+  const hiddenEl = document.getElementById('db-race-hidden-count');
   if (!el) return;
 
-  const races = getActivities()
-    .filter(a => a.is_race)
-    .sort((a, b) => b.date.localeCompare(a.date));
+  const allRaces = getActivities().filter(a=>a.is_race).sort((a,b)=>raceDifficulty(b)-raceDifficulty(a));
+  if (countEl) countEl.textContent = allRaces.length;
 
-  if (countEl) countEl.textContent = races.length + ' curse';
-
-  if (!races.length) {
-    el.innerHTML = `<div style="color:var(--t3);font-size:13px;text-align:center;padding:20px">
-      Nicio cursă marcată ca Race pe Strava.<br>
-      <span style="font-size:11px">Apasă Sync Strava după ce marchezi cursele pe Strava.</span>
-    </div>`;
+  if (!allRaces.length) {
+    el.innerHTML = '<div style="color:var(--t3);font-size:13px;text-align:center;padding:20px 0">Nicio cursă marcată ca Race pe Strava.<br><span style="font-size:11px">Marchează cursele pe Strava ca Race și apasă Sync.</span></div>';
+    if (moreWrap) moreWrap.style.display='none';
     return;
   }
 
+  const TOP = 3;
+  const visible = _racesAllShown ? allRaces : allRaces.slice(0, TOP);
+  const hidden = allRaces.length - TOP;
+  if (moreWrap) moreWrap.style.display = (!_racesAllShown && hidden > 0) ? 'block' : 'none';
+  if (hiddenEl) hiddenEl.textContent = hidden;
+
   const medals = ['🥇','🥈','🥉'];
-  el.innerHTML = races.map((r, i) => {
-    const medal = i < 3 ? medals[i] : '🏅';
-    const pace = fmtPace(r.dur, r.km);
-    const safeId = r.id.replace(/[^a-zA-Z0-9]/g, '_');
-    return `
-    <div class="race-card" id="race-${safeId}">
+  const diffMap = [[120,'LEGENDARY','#ff4f4f'],[60,'EPIC','#ff7c3b'],[30,'HARD','#ffcb4f'],[15,'MEDIUM','#b8ff4f'],[0,'EASY','#4fff9b']];
+  function getDiff(r) { const d=raceDifficulty(r); for(const [t,l,c] of diffMap) if(d>=t) return [l,c]; return ['EASY','#4fff9b']; }
+
+  el.innerHTML = visible.map((r,i) => {
+    const safeId = r.id.replace(/[^a-zA-Z0-9]/g,'_');
+    const medal = i<3 ? medals[i] : '🏅';
+    const [diffLbl,diffColor] = getDiff(r);
+    const rJSON = JSON.stringify(r).replace(/'/g,"\'").replace(/</g,'&lt;');
+    return `<div class="race-card" id="race-${safeId}">
       <div class="race-card-head" onclick="toggleRaceCard('${safeId}')">
         <div class="race-medal">${medal}</div>
         <div class="race-info">
-          <div class="race-name">${r.name}</div>
-          <div class="race-date">${fd(r.date)} · ${r.type}</div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <div class="race-name">${r.name}</div>
+            <span style="font-size:9px;font-weight:700;letter-spacing:1px;color:${diffColor};background:${diffColor}22;border-radius:4px;padding:2px 7px;flex-shrink:0">${diffLbl}</span>
+          </div>
+          <div class="race-date">${fd(r.date)} · ${r.km} km · ${r.elev||0}m D+</div>
         </div>
         <div class="race-stats">
-          <div class="race-stat">
-            <div class="race-stat-val">${r.km}</div>
-            <div class="race-stat-lbl">km</div>
-          </div>
-          <div class="race-stat">
-            <div class="race-stat-val">${fmtDur(r.dur)}</div>
-            <div class="race-stat-lbl">timp</div>
-          </div>
+          <div class="race-stat"><div class="race-stat-val">${fmtDur(r.dur)}</div><div class="race-stat-lbl">finish</div></div>
         </div>
         <div class="race-chevron">▼</div>
       </div>
       <div class="race-expand">
         <div class="race-extra-stats">
-          <div class="race-extra-stat">
-            <div class="race-extra-stat-val">${r.elev || '—'}</div>
-            <div class="race-extra-stat-lbl">m D+</div>
-          </div>
-          <div class="race-extra-stat">
-            <div class="race-extra-stat-val">${pace}</div>
-            <div class="race-extra-stat-lbl">pace mediu</div>
-          </div>
-          <div class="race-extra-stat">
-            <div class="race-extra-stat-val">${r.km}</div>
-            <div class="race-extra-stat-lbl">km totali</div>
-          </div>
+          <div class="race-extra-stat"><div class="race-extra-stat-val">${r.km}</div><div class="race-extra-stat-lbl">km</div></div>
+          <div class="race-extra-stat"><div class="race-extra-stat-val">${r.elev||'—'}</div><div class="race-extra-stat-lbl">m D+</div></div>
+          <div class="race-extra-stat"><div class="race-extra-stat-val">${fmtPace(r.dur,r.km)}</div><div class="race-extra-stat-lbl">pace</div></div>
         </div>
-        <div class="race-map-wrap">
-          ${r.polyline ? polylineToSVG(r.polyline) : '<div style="color:var(--t3);font-size:12px;padding:24px;text-align:center">Fără traseu — apasă Sync Strava</div>'}
+        <div class="race-map-wrap" style="min-height:140px">
+          ${r.polyline ? polylineToSVG(r.polyline,400,160) : '<div style="color:var(--t3);font-size:12px;padding:24px;text-align:center">Fără traseu — apasă Sync Strava</div>'}
         </div>
-        ${r.strava_id ? `<a href="https://www.strava.com/activities/${r.strava_id}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;color:#fc5200;text-decoration:none">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
-          Vezi pe Strava
-        </a>` : ''}
+        <div id="story-${safeId}" style="margin-top:12px">
+          <button onclick="generateRaceStory('${rJSON}',this)"
+            style="background:none;border:1px solid var(--accent-border);color:var(--accent);border-radius:8px;padding:9px 16px;font-size:12px;cursor:pointer;font-family:var(--body);width:100%">
+            ✨ Generează povestea acestei curse
+          </button>
+        </div>
+        ${r.strava_id ? `<a href="https://www.strava.com/activities/${r.strava_id}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;color:#fc5200;text-decoration:none"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>Vezi pe Strava</a>` : ''}
       </div>
     </div>`;
   }).join('');
 }
-
 function drawPieChart(containerId, segments, total) {
   const el = document.getElementById(containerId);
   if (!el || !segments.length || !total) return;
