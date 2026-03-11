@@ -360,6 +360,30 @@ body.readonly label.btn { display:none !important }
 }
 @media(max-width:800px){.guest-banner{bottom:64px}}
 
+/* ── RACE HISTORY CARDS ── */
+.race-card{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:10px;transition:border-color .2s}
+.race-card:hover{border-color:var(--border2)}
+.race-card-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;user-select:none}
+.race-card-head:hover{background:var(--s2)}
+.race-medal{font-size:22px;flex-shrink:0}
+.race-info{flex:1;min-width:0}
+.race-name{font-family:var(--display);font-size:17px;letter-spacing:.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.race-date{font-size:11px;color:var(--t3);margin-top:2px}
+.race-stats{display:flex;gap:14px;flex-shrink:0;align-items:center}
+.race-stat{text-align:center}
+.race-stat-val{font-family:var(--display);font-size:15px;color:var(--accent)}
+.race-stat-lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+.race-chevron{color:var(--t3);font-size:14px;transition:transform .25s;flex-shrink:0}
+.race-card.open .race-chevron{transform:rotate(180deg)}
+.race-expand{display:none;padding:0 16px 16px;border-top:1px solid var(--border)}
+.race-card.open .race-expand{display:block}
+.race-map-wrap{background:var(--s2);border-radius:8px;overflow:hidden;margin-top:12px;display:flex;align-items:center;justify-content:center;min-height:120px}
+.race-map-wrap svg{display:block;width:100%;height:auto}
+.race-extra-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.race-extra-stat{background:var(--s2);border-radius:8px;padding:10px;text-align:center}
+.race-extra-stat-val{font-family:var(--display);font-size:20px;color:var(--text)}
+.race-extra-stat-lbl{font-size:10px;color:var(--t3);margin-top:2px}
+
 /* ── STATS PAGE ── */
 .act-row{
   display:grid;grid-template-columns:80px 1fr 70px 70px 60px 80px;
@@ -867,6 +891,15 @@ body.readonly label.btn { display:none !important }
       <div style="font-size:11px;color:var(--t3)" id="db-heatmap-year">2026</div>
     </div>
     <div id="db-heatmap" style="overflow-x:auto"></div>
+  </div>
+
+  <!-- RACE HISTORY -->
+  <div class="bk-card" style="padding:20px;margin-top:16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">🏁 Race History — Strava</div>
+      <span id="db-race-count" style="font-size:11px;color:var(--t3)"></span>
+    </div>
+    <div id="db-race-list"></div>
   </div>
 
 </div>
@@ -2078,6 +2111,7 @@ function renderDash() {
   // ── HEATMAP ────────────────────────────────────────────
   if (setEl('db-heatmap-year')) setEl('db-heatmap-year').textContent = curYear;
   drawHeatmap('db-heatmap', allActs, curYear);
+  renderRaceHistory();
 }
 
 // ══════════════════════════════════════════════════════
@@ -3701,6 +3735,140 @@ function deduplicateActivities() {
   scheduleAutoSave();
   renderAll();
   toast(`🧹 ${removed} duplicate eliminate · ${deduped.length} activități rămase`, 'ok');
+}
+
+// ══════════════════════════════════════════════════════
+//  RACE HISTORY
+// ══════════════════════════════════════════════════════
+
+// Decode Google Encoded Polyline → array of [lat, lng]
+function decodePolyline(encoded) {
+  if (!encoded) return [];
+  const points = [];
+  let idx = 0, lat = 0, lng = 0;
+  while (idx < encoded.length) {
+    let shift = 0, result = 0, byte;
+    do { byte = encoded.charCodeAt(idx++) - 63; result |= (byte & 0x1f) << shift; shift += 5; } while (byte >= 0x20);
+    lat += (result & 1) ? ~(result >> 1) : result >> 1;
+    shift = 0; result = 0;
+    do { byte = encoded.charCodeAt(idx++) - 63; result |= (byte & 0x1f) << shift; shift += 5; } while (byte >= 0x20);
+    lng += (result & 1) ? ~(result >> 1) : result >> 1;
+    points.push([lat / 1e5, lng / 1e5]);
+  }
+  return points;
+}
+
+// Draw route as SVG from polyline
+function polylineToSVG(encoded, w = 340, h = 160) {
+  const pts = decodePolyline(encoded);
+  if (pts.length < 2) return '<div style="color:var(--t3);font-size:12px;padding:20px;text-align:center">Fără traseu disponibil</div>';
+
+  const lats = pts.map(p => p[0]), lngs = pts.map(p => p[1]);
+  const minLat = Math.min(...lats), maxLat = Math.max(...lats);
+  const minLng = Math.min(...lngs), maxLng = Math.max(...lngs);
+  const pad = 16;
+
+  const toX = lng => pad + (lng - minLng) / (maxLng - minLng || 1) * (w - pad*2);
+  const toY = lat => pad + (maxLat - lat) / (maxLat - minLat || 1) * (h - pad*2);
+
+  const pathD = pts.map((p, i) => `${i===0?'M':'L'}${toX(p[1]).toFixed(1)},${toY(p[0]).toFixed(1)}`).join(' ');
+  const startPt = pts[0], endPt = pts[pts.length-1];
+
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" style="display:block">
+    <defs>
+      <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#b8ff4f"/>
+        <stop offset="100%" stop-color="#4fff9b"/>
+      </linearGradient>
+    </defs>
+    <path d="${pathD}" fill="none" stroke="rgba(184,255,79,0.2)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="${pathD}" fill="none" stroke="url(#rg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${toX(startPt[1]).toFixed(1)}" cy="${toY(startPt[0]).toFixed(1)}" r="4" fill="var(--accent)"/>
+    <circle cx="${toX(endPt[1]).toFixed(1)}" cy="${toY(endPt[0]).toFixed(1)}" r="4" fill="var(--green)"/>
+  </svg>`;
+}
+
+function fmtPace(sec, km) {
+  if (!sec || !km) return '—';
+  const paceSecPerKm = sec / km;
+  const m = Math.floor(paceSecPerKm / 60), s = Math.round(paceSecPerKm % 60);
+  return `${m}:${s.toString().padStart(2,'0')}/km`;
+}
+
+function toggleRaceCard(id) {
+  const card = document.getElementById('race-' + id);
+  if (card) card.classList.toggle('open');
+}
+
+function renderRaceHistory() {
+  const el = document.getElementById('db-race-list');
+  const countEl = document.getElementById('db-race-count');
+  if (!el) return;
+
+  const races = getActivities()
+    .filter(a => a.is_race)
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  if (countEl) countEl.textContent = races.length + ' curse';
+
+  if (!races.length) {
+    el.innerHTML = `<div style="color:var(--t3);font-size:13px;text-align:center;padding:20px">
+      Nicio cursă marcată ca Race pe Strava.<br>
+      <span style="font-size:11px">Apasă Sync Strava după ce marchezi cursele pe Strava.</span>
+    </div>`;
+    return;
+  }
+
+  const medals = ['🥇','🥈','🥉'];
+  el.innerHTML = races.map((r, i) => {
+    const medal = i < 3 ? medals[i] : '🏅';
+    const pace = fmtPace(r.dur, r.km);
+    const safeId = r.id.replace(/[^a-zA-Z0-9]/g, '_');
+    return `
+    <div class="race-card" id="race-${safeId}">
+      <div class="race-card-head" onclick="toggleRaceCard('${safeId}')">
+        <div class="race-medal">${medal}</div>
+        <div class="race-info">
+          <div class="race-name">${r.name}</div>
+          <div class="race-date">${fd(r.date)} · ${r.type}</div>
+        </div>
+        <div class="race-stats">
+          <div class="race-stat">
+            <div class="race-stat-val">${r.km}</div>
+            <div class="race-stat-lbl">km</div>
+          </div>
+          <div class="race-stat">
+            <div class="race-stat-val">${fmtDur(r.dur)}</div>
+            <div class="race-stat-lbl">timp</div>
+          </div>
+        </div>
+        <div class="race-chevron">▼</div>
+      </div>
+      <div class="race-expand">
+        <div class="race-extra-stats">
+          <div class="race-extra-stat">
+            <div class="race-extra-stat-val">${r.elev || '—'}</div>
+            <div class="race-extra-stat-lbl">m D+</div>
+          </div>
+          <div class="race-extra-stat">
+            <div class="race-extra-stat-val">${pace}</div>
+            <div class="race-extra-stat-lbl">pace mediu</div>
+          </div>
+          <div class="race-extra-stat">
+            <div class="race-extra-stat-val">${r.km}</div>
+            <div class="race-extra-stat-lbl">km totali</div>
+          </div>
+        </div>
+        <div class="race-map-wrap">
+          ${r.polyline ? polylineToSVG(r.polyline) : '<div style="color:var(--t3);font-size:12px;padding:24px;text-align:center">Fără traseu — apasă Sync Strava</div>'}
+        </div>
+        ${r.strava_id ? `<a href="https://www.strava.com/activities/${r.strava_id}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;color:#fc5200;text-decoration:none">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
+          Vezi pe Strava
+        </a>` : ''}
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function drawPieChart(containerId, segments, total) {
