@@ -452,12 +452,12 @@ body.readonly label.btn { display:none !important }
 .dash-hero-eyebrow{font-size:10px;color:var(--t3);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
 .dash-hero-title{font-family:var(--display);font-size:52px;letter-spacing:4px;color:var(--text);line-height:1;margin-bottom:4px}
 .dash-hero-aka{font-family:var(--display);font-size:18px;color:var(--accent);letter-spacing:3px;margin-bottom:22px}
-.dash-hero-stats{display:flex;align-items:center;gap:0;flex-wrap:wrap;gap:4px}
-.dhs{display:flex;flex-direction:column;align-items:center;padding:0 20px}
+.dash-hero-stats{display:flex;align-items:center;flex-wrap:wrap;gap:4px}
+.dhs{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
 .dhs:first-child{padding-left:0}
 .dhs span{font-family:var(--display);font-size:28px;color:var(--accent);letter-spacing:1px;line-height:1}
-.dhs small{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
-.dhs-sep{width:1px;height:36px;background:var(--border2)}
+.dhs small{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:3px;text-align:center;display:block}
+.dhs-sep{width:1px;height:36px;background:var(--border2);flex-shrink:0}
 @media(max-width:600px){
   .dash-hero{padding:20px}
   .dash-hero-title{font-size:36px}
@@ -470,27 +470,29 @@ body.readonly label.btn { display:none !important }
   background:var(--s1);border:1px solid var(--border);border-radius:12px;
   padding:20px 22px;margin-bottom:24px;
 }
-.bio-head{display:flex;align-items:center;gap:14px;margin-bottom:12px}
-.bio-icon{font-size:28px;flex-shrink:0}
-.bio-name{font-weight:700;font-size:15px;color:var(--text);display:flex;align-items:center;gap:8px}
-.bio-tag{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:1px}
-.bio-sub{font-size:11px;color:var(--t3);margin-top:2px}
-.bio-toggle{margin-left:auto;background:none;border:1px solid var(--border);color:var(--t2);font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:var(--body);white-space:nowrap;transition:all .15s}
+.bio-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+.bio-head-info{flex:1;min-width:0}
+.bio-icon{font-size:28px;flex-shrink:0;margin-top:2px}
+.bio-name{font-weight:700;font-size:15px;color:var(--text);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.bio-tag{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:1px;flex-shrink:0}
+.bio-sub{font-size:11px;color:var(--t3);margin-top:4px}
+.bio-badges{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px}
+.bio-toggle{background:none;border:1px solid var(--border);color:var(--t2);font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:var(--body);white-space:nowrap;transition:all .15s;margin-top:10px;align-self:flex-start}
 .bio-toggle:hover{background:var(--s2);color:var(--text)}
 .bio-link{
   display:inline-flex;align-items:center;justify-content:center;
   padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700;
   text-decoration:none;letter-spacing:.5px;transition:all .15s;
-  border:1px solid transparent;
+  border:1px solid transparent;flex-shrink:0;
 }
 .strava-link{background:rgba(252,82,0,.12);color:#fc5200;border-color:rgba(252,82,0,.25)}
 .strava-link:hover{background:rgba(252,82,0,.22)}
 .itra-link{background:rgba(79,200,255,.1);color:#4fc8ff;border-color:rgba(79,200,255,.2);font-family:var(--display);font-size:12px;letter-spacing:1px}
 .itra-link:hover{background:rgba(79,200,255,.2)}
-.bio-itra-pi{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--t3);padding:3px 8px;border:1px solid var(--border);border-radius:5px}
+.bio-itra-pi{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--t3);padding:3px 8px;border:1px solid var(--border);border-radius:5px;flex-shrink:0}
 .bio-itra-pi #itra-pi-val{font-family:var(--display);font-size:14px;color:var(--accent)}
 .bio-preview{font-size:13px;color:var(--t2);line-height:1.7;border-top:1px solid var(--border);padding-top:12px}
-.bio-full{font-size:13px;color:var(--t2);line-height:1.8;border-top:1px solid var(--border);padding-top:12px}
+.bio-full{font-size:13px;color:var(--t2);line-height:1.8;padding-top:12px}
 .bio-full p{margin-bottom:12px}
 .bio-full p:last-child{margin-bottom:0}
 .bio-full strong{color:var(--text)}
@@ -638,9 +640,6 @@ body.readonly label.btn { display:none !important }
   .pay-rows{gap:5px}
   /* Sponsor grid single col on mobile */
   #db-sp-row{grid-template-columns:1fr!important}
-  /* Bio card compact */
-  .bio-head{gap:10px}
-  .bio-toggle{font-size:10px;padding:4px 9px}
   /* bk-card padding tighter */
   .bk-card{border-radius:10px}
   /* Prevent horizontal scroll on tables */
@@ -824,15 +823,16 @@ body.readonly label.btn { display:none !important }
   <div class="bio-card" id="bio-card">
     <div class="bio-head">
       <div class="bio-icon">🏃</div>
-      <div>
-        <div class="bio-name">Balan Gabriel <span class="bio-tag">HAX</span>
+      <div class="bio-head-info">
+        <div class="bio-name">Balan Gabriel <span class="bio-tag">HAX</span></div>
+        <div class="bio-sub">Alergător · Bârlad · Din mai 2024</div>
+        <div class="bio-badges">
           <a href="https://www.strava.com/athletes/136130375" target="_blank" class="bio-link strava-link" title="Strava">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="display:block"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="display:block"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>&nbsp;Strava
           </a>
           <a href="https://itra.run/RunnerSpace/BALAN.Gabriel%20Zaharia/5688809" target="_blank" class="bio-link itra-link" title="ITRA Profile">ITRA</a>
-          <span class="bio-itra-pi" title="ITRA Performance Index">PI <span id="itra-pi-val">—</span> <span id="itra-rank" style="font-size:10px;color:var(--t3);font-family:var(--body);font-weight:400"></span></span>
+          <span class="bio-itra-pi" title="ITRA Performance Index">PI <span id="itra-pi-val">—</span>&nbsp;<span id="itra-rank" style="font-size:10px;color:var(--t3);font-family:var(--body);font-weight:400"></span></span>
         </div>
-        <div class="bio-sub">Alergător · Bârlad · Din mai 2024</div>
       </div>
       <button class="bio-toggle" id="bio-toggle" onclick="toggleBio()">Vezi mai mult ▾</button>
     </div>
@@ -1851,14 +1851,11 @@ document.addEventListener('touchend', e => {
 function toggleBio() {
   const full = document.getElementById('bio-full');
   const btn  = document.getElementById('bio-toggle');
-  const prev = document.querySelector('.bio-preview');
   if (full.style.display === 'none') {
     full.style.display = 'block';
-    if(prev) prev.style.display = 'none';
     btn.textContent = 'Restrânge ▴';
   } else {
     full.style.display = 'none';
-    if(prev) prev.style.display = 'block';
     btn.textContent = 'Vezi mai mult ▾';
   }
 }
