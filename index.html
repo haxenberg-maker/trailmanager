@@ -1595,6 +1595,15 @@ async function saveData() {
 }
 
 let autoSaveTimer = null;
+function isOwnerLoggedIn() {
+  if (document.body.classList.contains('readonly')) {
+    toast('🔒 Trebuie să fii logat ca owner pentru a modifica datele.', 'err');
+    showLoginModal();
+    return false;
+  }
+  return true;
+}
+
 function scheduleAutoSave() {
   if (!isCloud) return;
   if (document.body.classList.contains('readonly')) return; // guests can't save
@@ -1625,6 +1634,67 @@ function hideBanner() {
   if(el) el.style.display = 'none';
 }
 
+<<<<<<< Updated upstream
+=======
+// ── Helper: show/hide login modal ────────────────────
+function showLoginModal() {
+  document.getElementById('login-screen').style.display = 'flex';
+  setTimeout(() => document.getElementById('auth-email')?.focus(), 100);
+}
+function hideLoginModal() {
+  document.getElementById('login-screen').style.display = 'none';
+}
+
+// ── Update login/logout button visibility ────────────
+function updateAuthButtons() {
+  const loggedIn = !!currentUser;
+  const isOwner = loggedIn && currentUser.email.toLowerCase() === OWNER_EMAIL.toLowerCase();
+  // Sidebar
+  const loginBtn  = document.getElementById('login-btn');
+  const logoutBtn = document.getElementById('logout-btn');
+  const saveBtn   = document.getElementById('save-btn');
+  const exportBtn = document.getElementById('export-btn');
+  if (loginBtn)  loginBtn.style.display  = loggedIn ? 'none' : 'block';
+  if (logoutBtn) logoutBtn.style.display = loggedIn ? 'block' : 'none';
+  if (saveBtn)   saveBtn.style.display   = isOwner ? 'block' : 'none';
+  if (exportBtn) exportBtn.style.display = isOwner ? 'block' : 'none';
+  // Mobile
+  const mLogin  = document.getElementById('m-login-btn');
+  const mLogout = document.getElementById('m-logout-btn');
+  if (mLogin)  mLogin.style.display  = loggedIn ? 'none' : 'flex';
+  if (mLogout) mLogout.style.display = loggedIn ? 'flex' : 'none';
+}
+
+// ── Load owner data anonymously (no login required) ──
+async function loadOwnerDataAnonymously() {
+  setSyncStatus('Se încarcă...', 'var(--yellow)');
+  document.body.classList.add('readonly'); // always readonly until owner logs in
+  try {
+    const res = await fetch(
+      `${SB_URL}/rest/v1/${SB_TABLE}?select=data&limit=1`,
+      { headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY } }
+    );
+    const rows = await res.json();
+    if (rows?.[0]?.data) {
+      D = rows[0].data;
+      if (!D.curse)      D.curse      = [];
+      if (!D.sponsori)   D.sponsori   = [];
+      if (!D.echipament) D.echipament = [];
+      if (!D.nutritie)   D.nutritie   = { gel_pret_set24:0, gel_training_lunar:0, suplimente:[] };
+      if (!D.transport)  D.transport  = [];
+      if (!D.activities) D.activities = [];
+      if (!D.target_km)  D.target_km  = 5000;
+      document.body.classList.add('readonly');
+      renderAll();
+      setSyncStatus('Public ☁️', 'var(--t3)');
+    }
+  } catch(e) {
+    setSyncStatus('Eroare', 'var(--red)');
+    console.error(e);
+  }
+}
+
+>>>>>>> Stashed changes
 // ── Auto-login if session exists in localStorage ─────
 window.addEventListener('load', async () => {
   const saved = localStorage.getItem('sb_session');
@@ -2435,6 +2505,7 @@ function openSP(id) {
 }
 function closeSP() { document.getElementById('ov-sp').classList.remove('on'); editSPid=null; }
 function saveSP() {
+  if (!isOwnerLoggedIn()) return;
   const den = document.getElementById('sp-den').value.trim();
   if (!den) { toast('⚠️ Introduceți numele sponsorului!','err'); return; }
   const payload = {
@@ -2460,6 +2531,7 @@ function saveSP() {
   renderAll();
 }
 function delSP(id) {
+  if (!isOwnerLoggedIn()) return;
   const s = D.sponsori.find(x=>x.id===id);
   if (!confirm(`Ștergi sponsorul "${s?.denumire}"?`)) return;
   D.sponsori = D.sponsori.filter(x=>x.id!==id);
@@ -2528,6 +2600,7 @@ function renderNutri() {
 }
 
 function saveGelSettings() {
+  if (!isOwnerLoggedIn()) return;
   D.nutritie.gel_pret_set24 = +document.getElementById('gel-pret').value||200;
   D.nutritie.gel_training_lunar = +document.getElementById('gel-training').value||8;
   renderNutri();
@@ -2547,6 +2620,7 @@ function openSupl(id) {
 }
 function closeSupl() { document.getElementById('ov-supl').classList.remove('on'); editSuplId=null; }
 function saveSupl() {
+  if (!isOwnerLoggedIn()) return;
   const den = document.getElementById('supl-den').value.trim();
   if (!den) { toast('⚠️ Introduceți denumirea!','err'); return; }
   const payload = { denumire:den, cantitate:document.getElementById('supl-cant').value.trim(), pret_lunar:+document.getElementById('supl-pret').value||0, note:document.getElementById('supl-note').value.trim() };
@@ -2561,6 +2635,7 @@ function saveSupl() {
   closeSupl(); renderNutri(); toast('✅ Supliment salvat!','ok'); scheduleAutoSave();
 }
 function delSupl(id) {
+  if (!isOwnerLoggedIn()) return;
   const s = D.nutritie.suplimente.find(x=>x.id===id);
   if (!confirm(`Ștergi "${s?.denumire}"?`)) return;
   D.nutritie.suplimente = D.nutritie.suplimente.filter(x=>x.id!==id);
@@ -2579,6 +2654,7 @@ function openTr(id) {
 }
 function closeTr() { document.getElementById('ov-tr').classList.remove('on'); editTrId=null; }
 function saveTr() {
+  if (!isOwnerLoggedIn()) return;
   const dest = document.getElementById('tr-dest').value.trim();
   if (!dest) { toast('⚠️ Introduceți destinația!','err'); return; }
   const payload = { dest, km:+document.getElementById('tr-km').value||0, pret:+document.getElementById('tr-pret').value||0 };
@@ -2593,6 +2669,7 @@ function saveTr() {
   closeTr(); renderNutri(); toast('✅ Destinație salvată!','ok'); scheduleAutoSave();
 }
 function delTr(id) {
+  if (!isOwnerLoggedIn()) return;
   const t = D.transport.find(x=>x.id===id);
   if (!confirm(`Ștergi destinația "${t?.dest}"?`)) return;
   D.transport = D.transport.filter(x=>x.id!==id);
@@ -2622,6 +2699,7 @@ function openRC(id) {
 function closeRC() { document.getElementById('ov-rc').classList.remove('on'); editRCid=null; }
 
 function saveRC() {
+  if (!isOwnerLoggedIn()) return;
   const den = document.getElementById('f-den').value.trim();
   if (!den) { toast('⚠️ Introduceți denumirea cursei!','err'); return; }
   if (!D) { toast('⚠️ Creați sau deschideți un fișier mai întâi!','err'); return; }
@@ -2658,6 +2736,7 @@ function saveRC() {
 }
 
 function delRC(id) {
+  if (!isOwnerLoggedIn()) return;
   const c = D.curse.find(x=>x.id===id);
   if (!confirm(`Ștergi "${c?.denumire}"?`)) return;
   D.curse = D.curse.filter(x=>x.id!==id);
@@ -2684,6 +2763,7 @@ function openEQ(id) {
 function closeEQ() { document.getElementById('ov-eq').classList.remove('on'); editEQid=null; }
 
 function saveEQ() {
+  if (!isOwnerLoggedIn()) return;
   const den = document.getElementById('eq-den').value.trim();
   if (!den) { toast('⚠️ Introduceți denumirea!','err'); return; }
   const payload = {
@@ -2707,6 +2787,7 @@ function saveEQ() {
 }
 
 function delEQ(id) {
+  if (!isOwnerLoggedIn()) return;
   const e = D.echipament.find(x=>x.id===id);
   if (!confirm(`Ștergi "${e?.denumire}"?`)) return;
   D.echipament = D.echipament.filter(x=>x.id!==id);
@@ -2752,6 +2833,7 @@ function getActivities() {
 
 // ── IMPORT ────────────────────────────────────────────
 async function importActivities(files) {
+  if (!isOwnerLoggedIn()) return;
   if (!files || !files.length) return;
   let imported = 0, errors = 0;
   const acts = getActivities();
@@ -2992,6 +3074,7 @@ function fmtDur(secs) {
 }
 
 async function syncStrava() {
+  if (!isOwnerLoggedIn()) return;
   const SB_FUNC_URL = `${SB_URL}/functions/v1/strava-webhook/sync`;
   toast('🟠 Se sincronizează cu Strava...', 'info');
   setSyncStatus('Strava sync...', '#fc5200');
@@ -3021,6 +3104,7 @@ async function syncStrava() {
 }
 
 function clearActivities() {
+  if (!isOwnerLoggedIn()) return;
   if (!confirm('Șterge toate activitățile importate?')) return;
   D.activities = [];
   scheduleAutoSave();
@@ -3361,6 +3445,7 @@ function calcCurrentStreak(sortedActs) {
 }
 
 function saveTarget(val) {
+  if (!isOwnerLoggedIn()) return;
   const v = parseInt(val);
   if (isNaN(v) || v < 1) return;
   D.target_km = v;
@@ -3578,6 +3663,7 @@ function drawDonutChart(containerId, segments, total) {
 }
 
 function deduplicateActivities() {
+  if (!isOwnerLoggedIn()) return;
   const acts = getActivities();
   const before = acts.length;
   const sorted = [...acts].sort((a,b) => {
