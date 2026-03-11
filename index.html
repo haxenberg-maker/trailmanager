@@ -959,6 +959,10 @@ body.readonly label.btn { display:none !important }
         ＋ Import
         <input type="file" id="stats-file-input" accept=".csv,.gpx,.tcx,.fit" multiple style="display:none" onchange="importActivities(this.files)">
       </label>
+      <button class="btn btn-ghost btn-sm" onclick="syncStrava()" title="Sync Strava" style="color:#fc5200;border-color:rgba(252,82,0,.3)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-right:4px"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
+        Sync Strava
+      </button>
       <button class="btn btn-ghost btn-sm" onclick="clearActivities()" title="Șterge toate">🗑</button>
     </div>
   </div>
@@ -2918,6 +2922,35 @@ function fmtDur(secs) {
   if (!secs) return '—';
   const h = Math.floor(secs/3600), m = Math.floor((secs%3600)/60);
   return h ? `${h}h${m.toString().padStart(2,'0')}` : `${m}min`;
+}
+
+async function syncStrava() {
+  const SB_FUNC_URL = `${SB_URL}/functions/v1/strava-webhook/sync`;
+  toast('🟠 Se sincronizează cu Strava...', 'info');
+  setSyncStatus('Strava sync...', '#fc5200');
+  try {
+    const res = await fetch(SB_FUNC_URL, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${SB_KEY}` },
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Eroare sync');
+    // Reload data from Supabase
+    const dbRes = await fetch(
+      `${SB_URL}/rest/v1/${SB_TABLE}?user_id=eq.${currentUser.id}&select=data&limit=1`,
+      { headers: sbHeaders(true) }
+    );
+    const rows = await dbRes.json();
+    if (rows[0]?.data) {
+      D = rows[0].data;
+      renderAll();
+    }
+    setSyncStatus('Sincronizat ☁️', 'var(--green)');
+    toast(`✅ Strava sync: ${data.added} activități noi din ${data.fetched} totale`, 'ok');
+  } catch(e) {
+    setSyncStatus('Eroare sync', 'var(--red)');
+    toast('❌ Strava sync eșuat: ' + e.message, 'err');
+  }
 }
 
 function clearActivities() {
