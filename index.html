@@ -747,6 +747,8 @@ body.readonly label.btn { display:none !important }
       <div class="dhs"><span id="dhs-dplus">—</span><small>m D+</small></div>
       <div class="dhs-sep"></div>
       <div class="dhs"><span id="dhs-next">—</span><small>zile până la start</small></div>
+      <div class="dhs-sep"></div>
+      <div class="dhs"><span id="dhs-streak" style="color:var(--orange)">—</span><small>🔥 streak</small></div>
     </div>
   </div>
 
@@ -793,8 +795,56 @@ body.readonly label.btn { display:none !important }
 
   <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin:24px 0 12px">Urmează curând</div>
   <div class="cg" id="db-upcoming"></div>
-</div>
 
+  <!-- TARGET KM PROGRESS -->
+  <div class="bk-card" style="padding:20px;margin-top:28px" id="db-target-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <div>
+        <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">🎯 Target anual km</div>
+        <div style="display:flex;align-items:baseline;gap:8px">
+          <span style="font-family:var(--display);font-size:36px;color:var(--accent)" id="db-km-actual">0</span>
+          <span style="color:var(--t3);font-size:14px">/ <input type="number" id="db-target-input" style="background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text);font-size:14px;width:60px;text-align:center;font-family:var(--body)" value="5000" onchange="saveTarget(this.value)"> km</span>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:11px;color:var(--t3)">La ritmul actual</div>
+        <div style="font-family:var(--display);font-size:20px;color:var(--yellow)" id="db-km-pred">—</div>
+        <div style="font-size:10px;color:var(--t3)">km estimat dec 2026</div>
+      </div>
+    </div>
+    <div style="background:var(--s3);border-radius:6px;height:10px;overflow:hidden;margin-bottom:8px">
+      <div id="db-target-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:6px;transition:width .5s"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t3)">
+      <span id="db-target-pct">0% din target</span>
+      <span id="db-target-rem">5000 km rămași</span>
+    </div>
+  </div>
+
+  <!-- STREAK -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px" id="db-streak-row">
+    <div class="bk-card" style="padding:16px;text-align:center">
+      <div style="font-size:24px;margin-bottom:4px">🔥</div>
+      <div style="font-family:var(--display);font-size:32px;color:var(--orange)" id="db-streak-cur">—</div>
+      <div style="font-size:11px;color:var(--t3)">zile consecutive acum</div>
+    </div>
+    <div class="bk-card" style="padding:16px;text-align:center">
+      <div style="font-size:24px;margin-bottom:4px">⚡</div>
+      <div style="font-family:var(--display);font-size:32px;color:var(--yellow)" id="db-streak-best">—</div>
+      <div style="font-size:11px;color:var(--t3)">zile — best streak ever</div>
+    </div>
+  </div>
+
+  <!-- HEATMAP -->
+  <div class="bk-card" style="padding:20px;margin-top:16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">🗓️ Heatmap activitate</div>
+      <div style="font-size:11px;color:var(--t3)" id="db-heatmap-year">2026</div>
+    </div>
+    <div id="db-heatmap" style="overflow-x:auto"></div>
+  </div>
+
+</div>
 
 <!-- CURSE -->
 <div class="page" id="pg-curse">
@@ -919,6 +969,9 @@ body.readonly label.btn { display:none !important }
   <!-- AN SELECTOR -->
   <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap" id="st-year-tabs"></div>
 
+  <!-- TARGET BLOCK -->
+  <div id="st-target-block"></div>
+
   <!-- YEARLY COMPARISON CARDS -->
   <div id="st-year-cards" style="margin-bottom:28px"></div>
 
@@ -960,6 +1013,13 @@ body.readonly label.btn { display:none !important }
 
   <!-- Personal records -->
   <div id="st-records" style="margin-bottom:28px"></div>
+
+  <!-- HEATMAP -->
+  <div class="bk-card" style="padding:20px;margin-bottom:28px">
+    <h4 style="margin-bottom:4px">🗓️ Heatmap activitate</h4>
+    <div style="font-size:11px;color:var(--t3);margin-bottom:14px" id="st-heatmap-sub">zile cu alergare</div>
+    <div id="st-heatmap" style="overflow-x:auto"></div>
+  </div>
 
   <!-- Filter + list -->
   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
@@ -1229,7 +1289,9 @@ const DEFAULT = {
     {id:5,dest:"Cumpăna (CT)",km:612,pret:350},
     {id:6,dest:"Predeal",km:672,pret:388},
     {id:7,dest:"Lupeni (HD)",km:1368,pret:790}
-  ]
+  ],
+  target_km: 5000,
+  activities: []
 };
 
 // ══════════════════════════════════════════════════════
@@ -1625,6 +1687,8 @@ function go(id, el) {
   document.querySelectorAll('.bn').forEach(b=>b.classList.remove('on'));
   const bnMap = {dash:0,curse:1,stats:2,buget:3,nutri:4};
   if(bnMap[id]!==undefined) document.querySelectorAll('.bn')[bnMap[id]]?.classList.add('on');
+  // Re-render charts after page visible (offsetWidth is real only when visible)
+  if (id === 'stats') setTimeout(() => renderStats(), 40);
 }
 
 // ══════════════════════════════════════════════════════
@@ -1692,6 +1756,12 @@ function renderDash() {
   if(dhsKm)    dhsKm.textContent    = km.toLocaleString('ro');
   if(dhsDplus) dhsDplus.textContent = totalDplus.toLocaleString('ro');
   if(dhsNext)  dhsNext.textContent  = daysToNext !== null ? daysToNext : '—';
+
+  // Streak live
+  const allActsHero = getActivities().sort((a,b)=>a.date.localeCompare(b.date));
+  const curStreak = calcCurrentStreak(allActsHero);
+  const dhsStreak = document.getElementById('dhs-streak');
+  if (dhsStreak) dhsStreak.textContent = curStreak;
 
   // Cost curse
   const tIns = c.reduce((s,x)=>s+(x.plata_concurs||0),0);
@@ -1821,6 +1891,40 @@ function renderDash() {
 
   const upcomingCards = [...c].filter(x=>new Date(x.data_cursa)>=today).sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa)).slice(0,3);
   document.getElementById('db-upcoming').innerHTML = upcomingCards.map(rcCard).join('') || '<p style="color:var(--t3)">Nicio cursă viitoare înregistrată.</p>';
+
+  // ── TARGET KM ──────────────────────────────────────────
+  const allActs = getActivities();
+  const curYear = new Date().getFullYear().toString();
+  const actsThisYear = allActs.filter(a => a.date?.startsWith(curYear));
+  const kmActual = Math.round(actsThisYear.reduce((s,a) => s+(a.km||0), 0));
+  const targetKm = D.target_km || 5000;
+
+  // Prediction: pace km/day so far this year → projected end of year
+  const dayOfYear = Math.ceil((today - new Date(`${curYear}-01-01`)) / 86400000) || 1;
+  const daysInYear = 365;
+  const pacePerDay = kmActual / dayOfYear;
+  const predicted = Math.round(pacePerDay * daysInYear);
+  const pct = Math.min(100, Math.round(kmActual / targetKm * 100));
+
+  const tiEl = document.getElementById('db-target-input');
+  if (tiEl && tiEl.value != targetKm) tiEl.value = targetKm;
+  const setEl = id => document.getElementById(id);
+  if (setEl('db-km-actual'))  setEl('db-km-actual').textContent  = kmActual.toLocaleString('ro');
+  if (setEl('db-km-pred'))    setEl('db-km-pred').textContent    = predicted > 0 ? predicted.toLocaleString('ro') : '—';
+  if (setEl('db-target-bar')) setEl('db-target-bar').style.width = pct + '%';
+  if (setEl('db-target-pct')) setEl('db-target-pct').textContent = pct + '% din target';
+  if (setEl('db-target-rem')) setEl('db-target-rem').textContent = Math.max(0, targetKm - kmActual).toLocaleString('ro') + ' km rămași';
+
+  // ── STREAK ─────────────────────────────────────────────
+  const sortedActs = [...allActs].sort((a,b) => a.date.localeCompare(b.date));
+  const curStreakVal  = calcCurrentStreak(sortedActs);
+  const bestStreakVal = calcBestStreak(sortedActs);
+  if (setEl('db-streak-cur'))  setEl('db-streak-cur').textContent  = curStreakVal;
+  if (setEl('db-streak-best')) setEl('db-streak-best').textContent = bestStreakVal;
+
+  // ── HEATMAP ────────────────────────────────────────────
+  if (setEl('db-heatmap-year')) setEl('db-heatmap-year').textContent = curYear;
+  drawHeatmap('db-heatmap', allActs, curYear);
 }
 
 // ══════════════════════════════════════════════════════
@@ -2964,11 +3068,67 @@ function renderStats() {
     if (m>=0&&m<12) { monthlyKm[m]+=a.km||0; monthlyElev[m]+=a.elev||0; monthlyDur[m]+=a.dur||0; }
   });
 
+  // ── TARGET + PREDICȚIE ─────────────────────────────
+  const annualTarget = D.annualKmTarget || 5000;
+  const monthlyTarget = Math.round(annualTarget / 12);
+  const curYear = new Date().getFullYear().toString();
+  const isCurrentYear = !yearSel || yearSel === curYear;
+
+  // Progress față de target (doar pentru anul curent)
+  const thisYearKm = all.filter(a => a.date?.startsWith(curYear)).reduce((s,a)=>s+(a.km||0),0);
+  const todayDOY = Math.ceil((new Date() - new Date(curYear+'-01-01')) / 86400000);
+  const yearDays = 365;
+  const expectedByNow = Math.round(annualTarget * todayDOY / yearDays);
+  const predictedEOY  = todayDOY > 0 ? Math.round(thisYearKm / todayDOY * yearDays) : 0;
+  const progressPct   = Math.min(100, Math.round(thisYearKm / annualTarget * 100));
+  const aheadBehind   = thisYearKm - expectedByNow;
+
+  // Show target progress block only when viewing current year or all years
+  const tgtEl = document.getElementById('st-target-block');
+  if (tgtEl) {
+    tgtEl.innerHTML = `
+      <div class="bk-card" style="padding:18px;margin-bottom:20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+          <div>
+            <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">🎯 Target ${curYear}</div>
+            <div style="display:flex;align-items:baseline;gap:8px">
+              <span style="font-family:var(--display);font-size:36px;color:var(--accent)">${Math.round(thisYearKm).toLocaleString('ro')}</span>
+              <span style="color:var(--t3);font-size:14px">/ ${annualTarget.toLocaleString('ro')} km</span>
+              <span style="font-family:var(--display);font-size:20px;color:${progressPct>=100?'var(--green)':'var(--t2)'}">${progressPct}%</span>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:11px;color:var(--t3);margin-bottom:4px">Predicție decembrie</div>
+            <div style="font-family:var(--display);font-size:28px;color:${predictedEOY>=annualTarget?'var(--green)':'var(--yellow)'}">${predictedEOY.toLocaleString('ro')} km</div>
+            <div style="font-size:10px;color:${aheadBehind>=0?'var(--green)':'var(--red)'};margin-top:2px">
+              ${aheadBehind>=0?'▲ +':'▽ '}${Math.abs(aheadBehind).toLocaleString('ro')} km față de ritmul necesar
+            </div>
+          </div>
+          ${document.body.classList.contains('readonly') ? '' : `
+          <div style="display:flex;align-items:center;gap:8px">
+            <input type="number" id="target-km-input" value="${annualTarget}" min="100" max="20000" step="100"
+              style="width:90px;padding:6px 8px;font-size:13px;background:var(--s2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--body)">
+            <button class="btn btn-ghost btn-sm" onclick="saveTargetKm()">Setează</button>
+          </div>`}
+        </div>
+        <div style="background:var(--s3);border-radius:6px;height:8px;overflow:hidden;position:relative">
+          <div style="position:absolute;height:100%;background:var(--border2);width:${Math.min(100,Math.round(todayDOY/yearDays*100))}%;border-radius:6px"></div>
+          <div style="position:absolute;height:100%;background:${progressPct>=100?'var(--green)':progressPct>=80?'var(--yellow)':'var(--accent)'};width:${progressPct}%;border-radius:6px;transition:width .5s"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--t4)">
+          <span>0</span><span>Azi — zi ${todayDOY}</span><span>${annualTarget.toLocaleString('ro')} km</span>
+        </div>
+      </div>
+    `;
+  }
+
   const label = yearSel ? `An ${yearSel}` : 'Toți anii cumulat';
   document.getElementById('chart-km-month-sub').textContent = label;
   document.getElementById('chart-cum-sub').textContent = `${Math.round(totalKm).toLocaleString('ro')} km total · ${acts.length} activități`;
 
-  drawBarChart('chart-km-month',   mLabels, monthlyKm.map(v=>Math.round(v)),   'var(--accent)', v=>v+' km');
+  // Pass monthly target line only when showing current year
+  const monthTarget = (isCurrentYear && !yearSel) ? null : (yearSel === curYear ? monthlyTarget : null);
+  drawBarChart('chart-km-month',   mLabels, monthlyKm.map(v=>Math.round(v)),   'var(--accent)', v=>v+' km', yearSel === curYear ? monthlyTarget : null);
   drawBarChart('chart-elev-month', mLabels, monthlyElev.map(v=>Math.round(v)), 'var(--green)',  v=>v+' m');
   drawBarChart('chart-dur-month',  mLabels, monthlyDur.map(v=>Math.round(v/3600*10)/10), 'var(--yellow)', v=>v+'h');
 
@@ -3001,6 +3161,7 @@ function renderStats() {
   const bestMonthElev = Object.entries(byMonth).sort((a,b)=>b[1].elev-a[1].elev)[0];
 
   const bestStreak = calcBestStreak(sortedAll);
+  const currentStreak = calcCurrentStreak(sortedAll);
 
   document.getElementById('st-records').innerHTML = `
     <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">🏆 Recorduri personale</div>
@@ -3028,7 +3189,12 @@ function renderStats() {
       <div class="bk-card" style="padding:14px;text-align:center">
         <div style="font-size:20px;margin-bottom:6px">🔥</div>
         <div style="font-family:var(--display);font-size:24px;color:var(--orange)">${bestStreak}</div>
-        <div style="font-size:11px;color:var(--t3);margin-top:4px">Zile consecutive (streak)</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:4px">Zile consecutive (best streak)</div>
+      </div>
+      <div class="bk-card" style="padding:14px;text-align:center;border-color:${currentStreak>0?'var(--accent-border)':'var(--border)'}">
+        <div style="font-size:20px;margin-bottom:6px">⚡</div>
+        <div style="font-family:var(--display);font-size:24px;color:${currentStreak>0?'var(--accent)':'var(--t3)'}">${currentStreak}</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:4px">Streak curent azi</div>
       </div>
       <div class="bk-card" style="padding:14px;text-align:center">
         <div style="font-size:20px;margin-bottom:6px">📆</div>
@@ -3037,6 +3203,9 @@ function renderStats() {
       </div>
     </div>
   `;
+
+  // ── HEATMAP ───────────────────────────────────────────
+  drawHeatmap('st-heatmap', all, yearSel || curYear);
 
   // ── ACTIVITY LIST ─────────────────────────────────────
   const monthNames = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
@@ -3076,23 +3245,164 @@ function calcBestStreak(sortedActs) {
   return best;
 }
 
-// ── CHART HELPERS ─────────────────────────────────────
-function drawBarChart(containerId, labels, values, color, tipFn) {
+function calcCurrentStreak(sortedActs) {
+  if (!sortedActs.length) return 0;
+  const today = new Date(); today.setHours(0,0,0,0);
+  let streak = 0;
+  let check = new Date(today);
+  const dateSet = new Set(sortedActs.map(a => a.date?.substring(0,10)));
+  for (let i = 0; i < 1000; i++) {
+    const ds = check.toISOString().substring(0,10);
+    if (dateSet.has(ds)) { streak++; }
+    else if (streak > 0) break;
+    check.setDate(check.getDate() - 1);
+  }
+  return streak;
+}
+
+function saveTarget(val) {
+  const v = parseInt(val);
+  if (isNaN(v) || v < 1) return;
+  D.target_km = v;
+  scheduleAutoSave();
+  renderDash();
+}
+
+function drawHeatmap(containerId, activities, year) {
   const el = document.getElementById(containerId);
   if (!el) return;
-  const max = Math.max(...values, 1);
-  el.innerHTML = `
-    <div class="st-bar-wrap">
-      ${labels.map((lbl, i) => {
-        const h = Math.round((values[i]/max)*100);
-        const tip = tipFn ? tipFn(values[i]) : values[i];
-        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end">
-          <div class="st-bar" style="width:100%;height:${h}%;background:${color};opacity:${values[i]?0.85:0.15}" data-tip="${lbl}: ${tip}"></div>
-          <div style="font-size:9px;color:var(--t4);text-align:center;line-height:1;padding-top:3px">${lbl}</div>
-        </div>`;
-      }).join('')}
-    </div>
-  `;
+
+  // Build day→km map for the year
+  const dayMap = {};
+  activities.forEach(a => {
+    if (!a.date?.startsWith(year)) return;
+    dayMap[a.date] = (dayMap[a.date] || 0) + (a.km || 0);
+  });
+
+  const start = new Date(`${year}-01-01`);
+  const end   = new Date(`${year}-12-31`);
+  const startDow = start.getDay(); // 0=Sun
+
+  const cellSize = 13, gap = 2;
+  const cols = Math.ceil((366 + startDow) / 7);
+  const W = cols * (cellSize + gap);
+  const H = 7 * (cellSize + gap) + 24;
+
+  const monthLabels = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
+  let monthLabelSvg = '';
+  let lastMonth = -1;
+
+  let cells = '';
+  let d = new Date(start);
+  let col = 0, row = startDow;
+
+  while (d <= end) {
+    const dateStr = d.toISOString().substring(0, 10);
+    const km = dayMap[dateStr] || 0;
+    const month = d.getMonth();
+    const x = col * (cellSize + gap);
+    const y = row * (cellSize + gap) + 20;
+
+    // Month label at first day of month
+    if (month !== lastMonth) {
+      monthLabelSvg += `<text x="${x}" y="12" font-size="9" fill="var(--t4)">${monthLabels[month]}</text>`;
+      lastMonth = month;
+    }
+
+    let fill, opacity;
+    if (km === 0) { fill = 'var(--s3)'; opacity = 1; }
+    else if (km < 10) { fill = 'var(--accent)'; opacity = 0.3; }
+    else if (km < 20) { fill = 'var(--accent)'; opacity = 0.55; }
+    else if (km < 35) { fill = 'var(--accent)'; opacity = 0.75; }
+    else { fill = 'var(--accent)'; opacity = 1; }
+
+    const today = new Date(); today.setHours(0,0,0,0);
+    const isFuture = d > today;
+
+    cells += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" rx="2"
+      fill="${isFuture ? 'transparent' : fill}" opacity="${isFuture ? 0.08 : opacity}"
+      stroke="${isFuture ? 'var(--border)' : 'none'}" stroke-width="1">
+      <title>${dateStr}${km ? ': ' + Math.round(km) + ' km' : ''}</title>
+    </rect>`;
+
+    row++;
+    if (row === 7) { row = 0; col++; }
+    d.setDate(d.getDate() + 1);
+  }
+
+  // Day labels (Mon, Wed, Fri)
+  const dowLabels = ['D','L','M','M','J','V','S'];
+  let dowSvg = dowLabels.map((l,i) => i % 2 === 1
+    ? `<text x="${-12}" y="${i*(cellSize+gap)+20+10}" font-size="8" fill="var(--t4)" text-anchor="end">${l}</text>`
+    : '').join('');
+
+  // Legend
+  const legX = W - 80;
+  const legend = `<text x="${legX}" y="${H}" font-size="8" fill="var(--t4)">mai puțin</text>
+    ${[0.2,0.4,0.65,0.85,1].map((o,i) =>
+      `<rect x="${legX+46+(i*14)}" y="${H-9}" width="${cellSize-1}" height="${cellSize-1}" rx="2" fill="var(--accent)" opacity="${o}"/>`
+    ).join('')}
+    <text x="${legX+122}" y="${H}" font-size="8" fill="var(--t4)">mai mult</text>`;
+
+  el.innerHTML = `<svg viewBox="-16 0 ${W+16+80} ${H+4}" width="100%" style="min-width:${Math.min(W,300)}px">
+    ${dowSvg}${monthLabelSvg}${cells}${legend}
+  </svg>`;
+}
+
+// ── CHART HELPERS ─────────────────────────────────────
+function drawBarChart(containerId, labels, values, color, tipFn, targetValue) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  // Force a real width — use parent if el has no width yet
+  const W = el.offsetWidth || el.parentElement?.offsetWidth || 400;
+  const H = el.offsetHeight || 160;
+  if (W < 10) { setTimeout(() => drawBarChart(containerId, labels, values, color, tipFn, targetValue), 80); return; }
+  const pad = {t: 18, r: 8, b: 22, l: 42};
+  const max = Math.max(...values, targetValue || 0, 1);
+  const slotW = (W - pad.l - pad.r) / labels.length;
+  const bw = Math.max(4, Math.floor(slotW * 0.6));
+  const bx = i => pad.l + i * slotW + (slotW - bw) / 2;
+  const by = v => pad.t + (1 - v / max) * (H - pad.t - pad.b);
+
+  const tickCount = 4;
+  const ticks = Array.from({length: tickCount + 1}, (_, i) => Math.round(max * i / tickCount));
+
+  let bars = labels.map((lbl, i) => {
+    const v = values[i] || 0;
+    const barH = Math.max(v > 0 ? 2 : 0, (v / max) * (H - pad.t - pad.b));
+    const tip = tipFn ? tipFn(v) : v;
+    return `<g class="bar-g">
+      <rect x="${bx(i).toFixed(1)}" y="${(H - pad.b - barH).toFixed(1)}" width="${bw}" height="${Math.max(0, barH).toFixed(1)}"
+        rx="3" fill="${color}" opacity="${v ? 0.85 : 0.12}">
+        <title>${lbl}: ${tip}</title>
+      </rect>
+      ${v > 0 ? `<text x="${(bx(i)+bw/2).toFixed(1)}" y="${(H-pad.b-barH-4).toFixed(1)}" text-anchor="middle" font-size="8" fill="${color}" opacity="0.8">${v>=1000?(v/1000).toFixed(1)+'k':v}</text>` : ''}
+      <text x="${(bx(i) + bw/2).toFixed(1)}" y="${(H - pad.b + 13).toFixed(1)}"
+        text-anchor="middle" font-size="9" fill="var(--t4)">${lbl}</text>
+    </g>`;
+  }).join('');
+
+  let yAxis = ticks.map(v => `
+    <line x1="${pad.l}" y1="${by(v).toFixed(1)}" x2="${W - pad.r}" y2="${by(v).toFixed(1)}"
+      stroke="var(--border)" stroke-width="1" stroke-dasharray="${v > 0 ? '3,3' : 'none'}"/>
+    <text x="${(pad.l - 5).toFixed(1)}" y="${(by(v) + 3).toFixed(1)}"
+      text-anchor="end" font-size="9" fill="var(--t4)">${v >= 1000 ? (v/1000).toFixed(1)+'k' : v}</text>
+  `).join('');
+
+  let targetLine = '';
+  if (targetValue) {
+    const ty = by(targetValue).toFixed(1);
+    targetLine = `
+      <line x1="${pad.l}" y1="${ty}" x2="${W - pad.r}" y2="${ty}"
+        stroke="var(--red)" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+      <text x="${W - pad.r - 2}" y="${(parseFloat(ty) - 4).toFixed(1)}"
+        text-anchor="end" font-size="9" fill="var(--red)" opacity="0.8">${tipFn ? tipFn(targetValue) : targetValue}</text>
+    `;
+  }
+
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" height="100%" style="overflow:visible">
+    ${yAxis}${bars}${targetLine}
+  </svg>`;
 }
 
 function drawLineChart(containerId, points) {
