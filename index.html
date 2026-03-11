@@ -825,6 +825,11 @@ body.readonly label.btn { display:none !important }
         ▼ Vezi toate cursele (<span id="db-race-hidden-count">0</span> ascunse)
       </button>
     </div>
+    <div id="db-race-collapse-wrap" style="display:none;margin-top:12px;text-align:center">
+      <button onclick="collapseRaces()" style="background:none;border:1px solid var(--border);color:var(--t3);border-radius:8px;padding:8px 20px;font-size:12px;cursor:pointer;font-family:var(--body)">
+        ▲ Restrânge lista
+      </button>
+    </div>
   </div>
 
   <div class="ph" style="margin-top:0"><div class="ph-left"><h2>DASHBOARD</h2><p id="db-sub">Sezon 2026</p></div></div>
@@ -3799,6 +3804,7 @@ function raceDifficulty(r) { return (r.km||0) + (r.elev||0)/100; }
 
 let _racesAllShown = false;
 function showAllRaces() { _racesAllShown = true; renderRaceHistory(); }
+function collapseRaces() { _racesAllShown = false; renderRaceHistory(); }
 
 async function generateRaceStory(rJSON, btnEl) {
   const r = typeof rJSON === 'string' ? JSON.parse(rJSON) : rJSON;
@@ -3859,6 +3865,8 @@ function renderRaceHistory() {
   const hidden = allRaces.length - TOP;
   if (moreWrap) moreWrap.style.display = (!_racesAllShown && hidden > 0) ? 'block' : 'none';
   if (hiddenEl) hiddenEl.textContent = hidden;
+  const collapseWrap = document.getElementById('db-race-collapse-wrap');
+  if (collapseWrap) collapseWrap.style.display = (_racesAllShown && hidden > 0) ? 'block' : 'none';
 
   const medals = ['🥇','🥈','🥉'];
   const diffMap = [[120,'LEGENDARY','#ff4f4f'],[60,'EPIC','#ff7c3b'],[30,'HARD','#ffcb4f'],[15,'MEDIUM','#b8ff4f'],[0,'EASY','#4fff9b']];
