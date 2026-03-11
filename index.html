@@ -363,26 +363,46 @@ body.readonly label.btn { display:none !important }
 /* ── RACE HISTORY CARDS ── */
 .race-card{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:10px;transition:border-color .2s}
 .race-card:hover{border-color:var(--border2)}
-.race-card-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;user-select:none}
+.race-card-head{display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer;user-select:none;min-width:0}
 .race-card-head:hover{background:var(--s2)}
-.race-medal{font-size:22px;flex-shrink:0}
-.race-info{flex:1;min-width:0}
-.race-name{font-family:var(--display);font-size:17px;letter-spacing:.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.race-date{font-size:11px;color:var(--t3);margin-top:2px}
-.race-stats{display:flex;gap:14px;flex-shrink:0;align-items:center}
-.race-stat{text-align:center}
-.race-stat-val{font-family:var(--display);font-size:15px;color:var(--accent)}
+.race-medal{font-size:20px;flex-shrink:0;line-height:1}
+.race-info{flex:1;min-width:0;overflow:hidden}
+.race-name{font-family:var(--display);font-size:16px;letter-spacing:.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.race-date{font-size:10px;color:var(--t3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.race-stats{display:flex;gap:10px;flex-shrink:0;align-items:center}
+.race-stat{text-align:center;flex-shrink:0}
+.race-stat-val{font-family:var(--display);font-size:14px;color:var(--accent);white-space:nowrap}
 .race-stat-lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
-.race-chevron{color:var(--t3);font-size:14px;transition:transform .25s;flex-shrink:0}
+.race-chevron{color:var(--t3);font-size:13px;transition:transform .25s;flex-shrink:0;margin-left:2px}
 .race-card.open .race-chevron{transform:rotate(180deg)}
-.race-expand{display:none;padding:0 16px 16px;border-top:1px solid var(--border)}
+.race-expand{display:none;padding:0 14px 14px;border-top:1px solid var(--border)}
 .race-card.open .race-expand{display:block}
-.race-map-wrap{background:var(--s2);border-radius:8px;overflow:hidden;margin-top:12px;display:flex;align-items:center;justify-content:center;min-height:120px}
+.race-map-wrap{background:var(--s2);border-radius:8px;overflow:hidden;margin-top:12px;display:flex;align-items:center;justify-content:center;min-height:100px}
 .race-map-wrap svg{display:block;width:100%;height:auto}
-.race-extra-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-.race-extra-stat{background:var(--s2);border-radius:8px;padding:10px;text-align:center}
-.race-extra-stat-val{font-family:var(--display);font-size:20px;color:var(--text)}
-.race-extra-stat-lbl{font-size:10px;color:var(--t3);margin-top:2px}
+.race-extra-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:8px;margin-top:12px}
+.race-extra-stat{background:var(--s2);border-radius:8px;padding:8px 6px;text-align:center;min-width:0}
+.race-extra-stat-val{font-family:var(--display);font-size:17px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.race-extra-stat-lbl{font-size:9px;color:var(--t3);margin-top:2px;white-space:nowrap}
+/* Splits table */
+.splits-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+.splits-table th,.splits-table td{padding:5px 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.splits-table th{text-align:left;color:var(--t3);border-bottom:1px solid var(--border);font-weight:500}
+.splits-table th:not(:first-child),.splits-table td:not(:first-child){text-align:center}
+.splits-table td{border-bottom:1px solid var(--border)}
+.splits-table col.c-km{width:40px}
+.splits-table col.c-pace{width:auto}
+.splits-table col.c-hr{width:52px}
+.splits-table col.c-elev{width:44px}
+
+@media(max-width:480px){
+  .race-card-head{padding:11px 12px;gap:8px}
+  .race-name{font-size:14px}
+  .race-stat-val{font-size:13px}
+  .race-stats{gap:6px}
+  .race-expand{padding:0 12px 12px}
+  .race-extra-stat-val{font-size:15px}
+  .race-extra-stats{gap:6px}
+}
 
 /* ── STATS PAGE ── */
 .act-row{
@@ -568,6 +588,16 @@ body.readonly label.btn { display:none !important }
   .sp-progress-header{flex-direction:column;gap:8px}
 }
 
+@media(max-width:400px){
+  .tiles{grid-template-columns:1fr}
+  .cal{grid-template-columns:1fr}
+  .dash-hero-title{font-size:30px;letter-spacing:2px}
+  .dhs span{font-size:19px}
+  .dhs{padding:0 8px}
+  .race-name{font-size:13px}
+  .race-extra-stat-val{font-size:14px}
+}
+
 @media(max-width:800px){
   /* Hide desktop sidebar */
   .sidebar{display:none}
@@ -579,7 +609,7 @@ body.readonly label.btn { display:none !important }
   .shell{grid-template-columns:1fr}
   /* Main content padding adjustments */
   .main{padding-top:54px;padding-bottom:70px}
-  .page{padding:16px 14px}
+  .page{padding:16px 12px}
   /* Page header smaller */
   .ph{margin-bottom:18px;padding-bottom:14px}
   .ph-left h2{font-size:32px}
@@ -606,11 +636,20 @@ body.readonly label.btn { display:none !important }
   .tl-total{min-width:90px;font-size:15px}
   /* Pay card grid */
   .pay-rows{gap:5px}
-}
-
-@media(max-width:400px){
-  .tiles{grid-template-columns:1fr}
-  .cal{grid-template-columns:1fr}
+  /* Sponsor grid single col on mobile */
+  #db-sp-row{grid-template-columns:1fr!important}
+  /* Bio card compact */
+  .bio-head{gap:10px}
+  .bio-toggle{font-size:10px;padding:4px 9px}
+  /* bk-card padding tighter */
+  .bk-card{border-radius:10px}
+  /* Prevent horizontal scroll on tables */
+  table{max-width:100%}
+  /* Stats page activity rows */
+  .act-row,.act-row-head{grid-template-columns:64px 1fr 60px 60px}
+  .act-row > *:nth-child(5),.act-row > *:nth-child(6),
+  .act-row-head > *:nth-child(5),.act-row-head > *:nth-child(6){display:none}
+  #st-charts-row{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -812,7 +851,7 @@ body.readonly label.btn { display:none !important }
 
   <!-- RACE HISTORY — imediat sub bio -->
   <div class="bk-card" id="db-race-card" style="padding:20px;margin-bottom:0">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
       <div>
         <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">🏁 Race History</div>
         <div style="font-size:11px;color:var(--t3);margin-top:3px" id="db-race-subtitle">sortate după dificultate</div>
@@ -820,15 +859,14 @@ body.readonly label.btn { display:none !important }
       <span id="db-race-count" style="font-family:var(--display);font-size:22px;color:var(--accent)"></span>
     </div>
     <div id="db-race-list"></div>
-    <div id="db-race-more-wrap" style="display:none;margin-top:12px;text-align:center">
-      <button onclick="showAllRaces()" style="background:none;border:1px solid var(--border);color:var(--t2);border-radius:8px;padding:8px 20px;font-size:12px;cursor:pointer;font-family:var(--body)">
-        ▼ Vezi toate cursele (<span id="db-race-hidden-count">0</span> ascunse)
-      </button>
-    </div>
-    <div id="db-race-collapse-wrap" style="display:none;margin-top:12px;text-align:center">
-      <button onclick="collapseRaces()" style="background:none;border:1px solid var(--border);color:var(--t3);border-radius:8px;padding:8px 20px;font-size:12px;cursor:pointer;font-family:var(--body)">
-        ▲ Restrânge lista
-      </button>
+    <!-- Pagination -->
+    <div id="db-race-pagination" style="display:none;margin-top:14px">
+      <div style="display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap">
+        <button id="db-race-prev" onclick="racePagePrev()" style="background:none;border:1px solid var(--border);color:var(--t2);border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;font-family:var(--body)">◀ Prev</button>
+        <div id="db-race-page-btns" style="display:flex;gap:4px;flex-wrap:wrap;justify-content:center"></div>
+        <button id="db-race-next" onclick="racePageNext()" style="background:none;border:1px solid var(--border);color:var(--t2);border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;font-family:var(--body)">Next ▶</button>
+      </div>
+      <div style="text-align:center;margin-top:8px;font-size:11px;color:var(--t3)" id="db-race-page-info"></div>
     </div>
   </div>
 
@@ -3802,9 +3840,15 @@ function fmtPace(sec, km) {
 
 function raceDifficulty(r) { return (r.km||0) + (r.elev||0)/100; }
 
-let _racesAllShown = false;
-function showAllRaces() { _racesAllShown = true; renderRaceHistory(); }
-function collapseRaces() { _racesAllShown = false; renderRaceHistory(); }
+let _racePage = 0;
+const RACE_PER_PAGE = 3;
+
+function racePagePrev() { if (_racePage > 0) { _racePage--; renderRaceHistory(); } }
+function racePageNext() {
+  const total = getActivities().filter(a=>a.is_race).length;
+  if ((_racePage+1)*RACE_PER_PAGE < total) { _racePage++; renderRaceHistory(); }
+}
+function raceGoPage(p) { _racePage = p; renderRaceHistory(); }
 
 async function generateRaceStory(rJSON, btnEl) {
   const r = typeof rJSON === 'string' ? JSON.parse(rJSON) : rJSON;
@@ -3847,8 +3891,11 @@ function toggleRaceCard(safeId) {
 function renderRaceHistory() {
   const el = document.getElementById('db-race-list');
   const countEl = document.getElementById('db-race-count');
-  const moreWrap = document.getElementById('db-race-more-wrap');
-  const hiddenEl = document.getElementById('db-race-hidden-count');
+  const paginationEl = document.getElementById('db-race-pagination');
+  const prevBtn = document.getElementById('db-race-prev');
+  const nextBtn = document.getElementById('db-race-next');
+  const pageBtns = document.getElementById('db-race-page-btns');
+  const pageInfo = document.getElementById('db-race-page-info');
   if (!el) return;
 
   const allRaces = getActivities().filter(a=>a.is_race).sort((a,b)=>raceDifficulty(b)-raceDifficulty(a));
@@ -3856,25 +3903,34 @@ function renderRaceHistory() {
 
   if (!allRaces.length) {
     el.innerHTML = '<div style="color:var(--t3);font-size:13px;text-align:center;padding:20px 0">Nicio cursă marcată ca Race pe Strava.<br><span style="font-size:11px">Marchează cursele pe Strava ca Race și apasă Sync.</span></div>';
-    if (moreWrap) moreWrap.style.display='none';
+    if (paginationEl) paginationEl.style.display = 'none';
     return;
   }
 
-  const TOP = 3;
-  const visible = _racesAllShown ? allRaces : allRaces.slice(0, TOP);
-  const hidden = allRaces.length - TOP;
-  if (moreWrap) moreWrap.style.display = (!_racesAllShown && hidden > 0) ? 'block' : 'none';
-  if (hiddenEl) hiddenEl.textContent = hidden;
-  const collapseWrap = document.getElementById('db-race-collapse-wrap');
-  if (collapseWrap) collapseWrap.style.display = (_racesAllShown && hidden > 0) ? 'block' : 'none';
+  const totalPages = Math.ceil(allRaces.length / RACE_PER_PAGE);
+  if (_racePage >= totalPages) _racePage = totalPages - 1;
+  const start = _racePage * RACE_PER_PAGE;
+  const visible = allRaces.slice(start, start + RACE_PER_PAGE);
+
+  // Pagination controls
+  if (paginationEl) paginationEl.style.display = totalPages > 1 ? 'block' : 'none';
+  if (prevBtn) prevBtn.disabled = _racePage === 0;
+  if (nextBtn) nextBtn.disabled = _racePage >= totalPages - 1;
+  if (pageInfo) pageInfo.textContent = `Pagina ${_racePage+1} din ${totalPages} · ${allRaces.length} curse total`;
+  if (pageBtns) {
+    pageBtns.innerHTML = Array.from({length:totalPages},(_,i) =>
+      `<button onclick="raceGoPage(${i})" style="min-width:32px;padding:6px 10px;border-radius:6px;border:1px solid ${i===_racePage?'var(--accent)':'var(--border)'};background:${i===_racePage?'var(--accent-dim)':'none'};color:${i===_racePage?'var(--accent)':'var(--t2)'};font-size:12px;cursor:pointer;font-family:var(--body)">${i+1}</button>`
+    ).join('');
+  }
 
   const medals = ['🥇','🥈','🥉'];
   const diffMap = [[120,'LEGENDARY','#ff4f4f'],[60,'EPIC','#ff7c3b'],[30,'HARD','#ffcb4f'],[15,'MEDIUM','#b8ff4f'],[0,'EASY','#4fff9b']];
   function getDiff(r) { const d=raceDifficulty(r); for(const [t,l,c] of diffMap) if(d>=t) return [l,c]; return ['EASY','#4fff9b']; }
 
   el.innerHTML = visible.map((r,i) => {
+    const globalIdx = start + i;
     const safeId = r.id.replace(/[^a-zA-Z0-9]/g,'_');
-    const medal = i<3 ? medals[i] : '🏅';
+    const medal = globalIdx === 0 ? '🥇' : globalIdx === 1 ? '🥈' : globalIdx === 2 ? '🥉' : '🏅';
     const [diffLbl,diffColor] = getDiff(r);
     const rJSON = JSON.stringify(r).replace(/'/g,"\'").replace(/</g,'&lt;');
     return `<div class="race-card" id="race-${safeId}">
@@ -3922,24 +3978,20 @@ function renderRaceHistory() {
             <span id="splits-chev-${safeId}" style="transition:transform .2s">▼</span>
           </button>
           <div id="splits-body-${safeId}" style="display:none;margin-top:8px;overflow-x:auto">
-            <table style="width:100%;border-collapse:collapse;font-size:12px">
-              <thead><tr style="color:var(--t3)">
-                <th style="text-align:left;padding:4px 8px;border-bottom:1px solid var(--border)">Km</th>
-                <th style="text-align:center;padding:4px 8px;border-bottom:1px solid var(--border)">Pace</th>
-                <th style="text-align:center;padding:4px 8px;border-bottom:1px solid var(--border)">HR</th>
-                <th style="text-align:center;padding:4px 8px;border-bottom:1px solid var(--border)">D+</th>
-              </tr></thead>
+            <table class="splits-table">
+              <colgroup><col class="c-km"><col class="c-pace"><col class="c-hr"><col class="c-elev"></colgroup>
+              <thead><tr><th>#</th><th>Pace</th><th>HR</th><th>D+</th></tr></thead>
               <tbody>${r.splits.map((s,i) => {
                 const pm = s.pace ? Math.floor(s.pace/60) : null;
                 const ps = s.pace ? s.pace%60 : null;
                 const pStr = pm !== null ? pm+':'+(ps.toString().padStart(2,'0')) : '—';
                 const avg = r.dur && r.km ? r.dur/r.km : null;
                 const col = s.pace && avg ? (s.pace < avg*0.97 ? 'var(--green)' : s.pace > avg*1.03 ? 'var(--red)' : 'var(--text)') : 'var(--text)';
-                return `<tr style="border-bottom:1px solid var(--border);${i%2?'background:var(--s2)':''}" >
-                  <td style="padding:5px 8px;color:var(--t3)">${i+1}</td>
-                  <td style="padding:5px 8px;text-align:center;font-weight:600;color:${col}">${pStr}</td>
-                  <td style="padding:5px 8px;text-align:center;color:#ff7c3b">${s.hr||'—'}</td>
-                  <td style="padding:5px 8px;text-align:center;color:var(--t2)">${s.elev||0}m</td>
+                return `<tr style="${i%2?'background:var(--s2)':''}" >
+                  <td style="color:var(--t3)">${i+1}</td>
+                  <td style="font-weight:600;color:${col}">${pStr}</td>
+                  <td style="color:#ff7c3b">${s.hr||'—'}</td>
+                  <td style="color:var(--t2)">${s.elev||0}m</td>
                 </tr>`;
               }).join('')}</tbody>
             </table>
