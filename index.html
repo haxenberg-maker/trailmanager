@@ -42,179 +42,105 @@ document.currentScript.parentNode.appendChild(link);
 <style>
 /* Temele sunt în themes.css — linkuit în <head> */
 /* ═══════════════════════════════════════
-   SPONSOR LANDING PAGE
+   SPONSOR LANDING PAGE v2
    ═══════════════════════════════════════ */
 #sponsor-landing {
   position:fixed;inset:0;z-index:9999;
-  background:var(--bg);
-  overflow-y:auto;
-  display:none;
-  opacity:0;
-  transition:opacity .4s ease;
+  background:var(--bg);overflow-y:auto;
+  display:none;opacity:0;transition:opacity .5s ease;
 }
 #sponsor-landing.on { display:block; }
 #sponsor-landing.visible { opacity:1; }
-
-.sl-wrap {
-  max-width:480px;margin:0 auto;
-  padding:32px 20px 60px;
-  min-height:100vh;
-  display:flex;flex-direction:column;gap:0;
-}
+.sl-wrap { max-width:480px;margin:0 auto;padding:32px 20px 60px;min-height:100vh;display:flex;flex-direction:column;gap:0; }
 
 /* Hero */
-.sl-hero {
-  text-align:center;
-  padding:40px 0 32px;
-  border-bottom:1px solid var(--border);
-  margin-bottom:28px;
-}
-.sl-avatar {
-  width:80px;height:80px;border-radius:50%;
-  background:var(--accent);
-  display:flex;align-items:center;justify-content:center;
-  font-size:36px;margin:0 auto 16px;
-  border:3px solid var(--accent);
-  box-shadow:0 0 0 6px var(--accent-dim);
-}
-.sl-name {
-  font-family:'Bebas Neue',var(--display);
-  font-size:38px;letter-spacing:3px;
-  color:var(--text);line-height:1;
-  margin-bottom:6px;
-}
-.sl-tag {
-  display:inline-block;
-  background:var(--accent);color:#0c0e0d;
-  font-size:10px;font-weight:700;
-  letter-spacing:2px;padding:3px 10px;
-  border-radius:20px;text-transform:uppercase;
-  margin-bottom:12px;
-}
-.sl-sub {
-  font-size:13px;color:var(--t2);line-height:1.5;
-  max-width:320px;margin:0 auto;
-}
+.sl-hero { text-align:center;padding:40px 0 32px;border-bottom:1px solid var(--border);margin-bottom:16px; }
+.sl-avatar { width:80px;height:80px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 16px;border:3px solid var(--accent);box-shadow:0 0 0 6px var(--accent-dim); }
+.sl-name { font-family:'Bebas Neue',var(--display);font-size:38px;letter-spacing:3px;color:var(--text);line-height:1;margin-bottom:6px; }
+.sl-tag { display:inline-block;background:var(--accent);color:#0c0e0d;font-size:10px;font-weight:700;letter-spacing:2px;padding:3px 10px;border-radius:20px;text-transform:uppercase;margin-bottom:12px; }
+.sl-sub { font-size:13px;color:var(--t2);line-height:1.5;max-width:320px;margin:0 auto; }
 
 /* Cards */
-.sl-card {
-  background:var(--s1);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  padding:20px;
-  margin-bottom:12px;
-}
-.sl-card-title {
-  font-size:10px;font-weight:700;
-  letter-spacing:2px;text-transform:uppercase;
-  color:var(--t3);margin-bottom:14px;
-  display:flex;align-items:center;gap:6px;
-}
-.sl-card-title::after {
-  content:'';flex:1;height:1px;background:var(--border);
-}
+.sl-card { background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:12px;opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease; }
+.sl-card.sl-visible { opacity:1;transform:translateY(0); }
+.sl-card-title { font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:14px;display:flex;align-items:center;gap:6px; }
+.sl-card-title::after { content:'';flex:1;height:1px;background:var(--border); }
+
+/* Countdown */
+.sl-countdown-card { text-align:center; }
+.sl-countdown-race { font-family:'Bebas Neue',var(--display);font-size:20px;color:var(--text);letter-spacing:1px;margin-bottom:2px; }
+.sl-countdown-date { font-size:11px;color:var(--t3);margin-bottom:16px; }
+.sl-countdown-grid { display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:16px; }
+.sl-cd-block { background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 8px;min-width:52px; }
+.sl-cd-val { font-family:'Bebas Neue',var(--display);font-size:32px;color:var(--accent);line-height:1;letter-spacing:1px; }
+.sl-cd-lbl { font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:2px; }
+.sl-cd-sep { font-family:'Bebas Neue',var(--display);font-size:28px;color:var(--t4);margin-bottom:14px; }
+.sl-pulse-wrap { position:relative;width:24px;height:24px;margin:0 auto; }
+.sl-pulse-dot { position:absolute;inset:6px;border-radius:50%;background:var(--accent); }
+.sl-pulse-ring { position:absolute;inset:0;border-radius:50%;border:2px solid var(--accent);animation:slPulse 2s ease-out infinite;opacity:0; }
+.sl-pulse-ring2 { animation-delay:1s; }
+@keyframes slPulse { 0%{transform:scale(.5);opacity:.8} 100%{transform:scale(2);opacity:0} }
+
+/* Progress bar */
+.sl-progress-track { height:10px;background:var(--s3);border-radius:5px;overflow:visible;position:relative; }
+.sl-progress-fill { height:100%;border-radius:5px;background:var(--accent);transition:width 1.5s cubic-bezier(.4,0,.2,1);position:relative; }
+.sl-progress-fill::after { content:'▶';position:absolute;right:-8px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--accent); }
 
 /* Stats grid */
-.sl-stats {
-  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
-}
-.sl-stat {
-  background:var(--s2);border-radius:8px;padding:12px 8px;
-  text-align:center;
-}
-.sl-stat-val {
-  font-family:'Bebas Neue',var(--display);
-  font-size:26px;color:var(--accent);
-  line-height:1;margin-bottom:3px;letter-spacing:1px;
-}
-.sl-stat-lbl {
-  font-size:9px;color:var(--t3);
-  text-transform:uppercase;letter-spacing:1px;line-height:1.3;
-}
+.sl-stats { display:grid;grid-template-columns:repeat(3,1fr);gap:8px; }
+.sl-stat { background:var(--s2);border-radius:8px;padding:12px 8px;text-align:center; }
+.sl-stat-val { font-family:'Bebas Neue',var(--display);font-size:24px;color:var(--accent);line-height:1;margin-bottom:3px;letter-spacing:1px; }
+.sl-stat-lbl { font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;line-height:1.3; }
 
-/* Races list */
-.sl-race {
-  display:flex;align-items:center;gap:10px;
-  padding:10px 0;border-bottom:1px solid var(--border);
-}
-.sl-race:last-child { border-bottom:none;padding-bottom:0; }
-.sl-race-nr {
-  font-family:'Bebas Neue',var(--display);
-  font-size:20px;color:var(--accent);
-  min-width:28px;text-align:center;line-height:1;
-}
-.sl-race-info { flex:1;min-width:0; }
-.sl-race-name {
-  font-size:13px;font-weight:600;color:var(--text);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  margin-bottom:2px;
-}
-.sl-race-meta { font-size:11px;color:var(--t3); }
-.sl-race-dist {
-  font-family:'Bebas Neue',var(--display);
-  font-size:16px;color:var(--t2);
-  white-space:nowrap;
-}
+/* Map */
+.sl-map-wrap { position:relative;background:var(--s2);border-radius:8px;overflow:hidden;margin-bottom:10px; }
+.sl-map-tooltip { position:absolute;background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--text);pointer-events:none;max-width:160px;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,.3); }
+.sl-map-legend { display:flex;flex-wrap:wrap;gap:6px;margin-top:6px; }
+.sl-map-legend-item { display:flex;align-items:center;gap:4px;font-size:10px;color:var(--t3); }
 
-/* What sponsor gets */
-.sl-benefit {
-  display:flex;align-items:flex-start;gap:12px;
-  padding:10px 0;border-bottom:1px solid var(--border);
-}
+/* Timeline */
+.sl-timeline { position:relative;padding:0 0 0 20px; }
+.sl-timeline::before { content:'';position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:var(--border); }
+.sl-tl-item { position:relative;padding:0 0 24px 24px;opacity:0;transform:translateX(-12px);transition:opacity .5s ease,transform .5s ease; }
+.sl-tl-item.sl-visible { opacity:1;transform:translateX(0); }
+.sl-tl-right { transform:translateX(12px); }
+.sl-tl-right.sl-visible { transform:translateX(0); }
+.sl-tl-dot { position:absolute;left:-20px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--s3);border:2px solid var(--border); }
+.sl-tl-dot-accent { background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-dim); }
+.sl-tl-year { font-size:10px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px; }
+.sl-tl-title { font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px; }
+.sl-tl-desc { font-size:12px;color:var(--t2);line-height:1.5; }
+.sl-tl-highlight .sl-tl-title { color:var(--accent); }
+
+/* ROI Slider */
+.sl-roi-slider { width:100%;-webkit-appearance:none;appearance:none;height:6px;background:var(--s3);border-radius:3px;outline:none;cursor:pointer; }
+.sl-roi-slider::-webkit-slider-thumb { -webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;border:none; }
+.sl-roi-slider::-moz-range-thumb { width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;border:none; }
+.sl-roi-grid { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px; }
+.sl-roi-item { background:var(--s2);border-radius:8px;padding:10px;border:1px solid var(--border);transition:border-color .3s,background .3s; }
+.sl-roi-item.active { border-color:var(--accent-border);background:var(--accent-dim); }
+.sl-roi-item-icon { font-size:18px;margin-bottom:4px; }
+.sl-roi-item-title { font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px; }
+.sl-roi-item-desc { font-size:10px;color:var(--t3);line-height:1.3; }
+.sl-roi-summary { background:var(--accent-dim);border:1px solid var(--accent-border);border-radius:8px;padding:12px;font-size:12px;color:var(--text);text-align:center;line-height:1.6; }
+
+/* Benefits */
+.sl-benefit { display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border); }
 .sl-benefit:last-child { border-bottom:none;padding-bottom:0; }
-.sl-benefit-icon {
-  width:32px;height:32px;border-radius:8px;
-  background:var(--accent-dim);border:1px solid var(--accent-border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;flex-shrink:0;
-}
-.sl-benefit-text { flex:1; }
-.sl-benefit-title {
-  font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;
-}
+.sl-benefit-icon { width:32px;height:32px;border-radius:8px;background:var(--accent-dim);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0; }
+.sl-benefit-title { font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px; }
 .sl-benefit-desc { font-size:11px;color:var(--t3);line-height:1.4; }
 
-/* Story snippet */
-.sl-story {
-  font-size:13px;color:var(--t2);line-height:1.7;
-  font-style:italic;
-  padding:4px 0 4px 14px;
-  border-left:2px solid var(--accent);
-}
+/* Sponsors strip */
+.sl-sponsors-strip { display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px; }
+.sl-sp-pill { background:var(--s2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--t2);font-weight:600; }
 
 /* CTA */
-.sl-cta {
-  margin-top:8px;
-  display:flex;flex-direction:column;gap:10px;
-}
-.sl-btn-primary {
-  width:100%;padding:15px;
-  background:var(--accent);color:#0c0e0d;
-  font-family:'Bebas Neue',var(--display);
-  font-size:16px;letter-spacing:2px;
-  border:none;border-radius:var(--r);cursor:pointer;
-  transition:opacity .2s;
-}
+.sl-cta { margin-top:8px;display:flex;flex-direction:column;gap:10px; }
+.sl-btn-primary { width:100%;padding:15px;background:var(--accent);color:#0c0e0d;font-family:'Bebas Neue',var(--display);font-size:16px;letter-spacing:2px;border:none;border-radius:var(--r);cursor:pointer;transition:opacity .2s; }
 .sl-btn-primary:hover { opacity:.85; }
-.sl-btn-ghost {
-  width:100%;padding:12px;
-  background:none;
-  color:var(--t3);font-size:12px;
-  border:1px solid var(--border);border-radius:var(--r);
-  cursor:pointer;transition:color .2s,border-color .2s;
-}
+.sl-btn-ghost { width:100%;padding:12px;background:none;color:var(--t3);font-size:12px;border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:color .2s,border-color .2s; }
 .sl-btn-ghost:hover { color:var(--text);border-color:var(--border2); }
-
-/* Sponsor logos strip (existing sponsors) */
-.sl-sponsors-strip {
-  display:flex;flex-wrap:wrap;gap:8px;align-items:center;
-  margin-top:10px;
-}
-.sl-sp-pill {
-  background:var(--s2);border:1px solid var(--border);
-  border-radius:20px;padding:5px 12px;
-  font-size:11px;color:var(--t2);font-weight:600;
-}
 
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -852,72 +778,168 @@ body.readonly label.btn { display:none !important }
 <body class="readonly">
 
 <!-- ══════════════════════════════════════
-     SPONSOR LANDING PAGE
+     SPONSOR LANDING PAGE  v2
      Vizibil doar cu ?sponsor=1 în URL
      ══════════════════════════════════════ -->
 <div id="sponsor-landing">
   <div class="sl-wrap">
+
+    <!-- ── HERO ── -->
     <div class="sl-hero">
       <div class="sl-avatar">🏔️</div>
       <div class="sl-name">BALAN GABRIEL</div>
-      <span class="sl-tag">Trail Runner · HAX</span>
-      <div class="sl-sub">Alergător de ultra-trail din Bârlad. Sezonul 2026 — 10 curse, peste 500km de munte.</div>
+      <span class="sl-tag">Trail Runner · HAX · Bârlad</span>
+      <div class="sl-sub">Ultra-trail runner din Bârlad. Sezonul 2026 — 10 curse, 517km de munte, un singur obiectiv.</div>
     </div>
+
+    <!-- ── COUNTDOWN ── -->
+    <div class="sl-card sl-countdown-card">
+      <div class="sl-card-title">⏱️ Până la următoarea cursă</div>
+      <div class="sl-countdown-race" id="sl-next-race-name">—</div>
+      <div class="sl-countdown-date" id="sl-next-race-date">—</div>
+      <div class="sl-countdown-grid">
+        <div class="sl-cd-block"><div class="sl-cd-val" id="sl-cd-days">—</div><div class="sl-cd-lbl">zile</div></div>
+        <div class="sl-cd-sep">:</div>
+        <div class="sl-cd-block"><div class="sl-cd-val" id="sl-cd-hours">—</div><div class="sl-cd-lbl">ore</div></div>
+        <div class="sl-cd-sep">:</div>
+        <div class="sl-cd-block"><div class="sl-cd-val" id="sl-cd-mins">—</div><div class="sl-cd-lbl">min</div></div>
+        <div class="sl-cd-sep">:</div>
+        <div class="sl-cd-block"><div class="sl-cd-val" id="sl-cd-secs">—</div><div class="sl-cd-lbl">sec</div></div>
+      </div>
+      <div class="sl-pulse-wrap"><div class="sl-pulse-dot"></div><div class="sl-pulse-ring"></div><div class="sl-pulse-ring sl-pulse-ring2"></div></div>
+    </div>
+
+    <!-- ── PROGRES KM ── -->
     <div class="sl-card">
-      <div class="sl-card-title">📊 Statistici 2026</div>
-      <div class="sl-stats">
-        <div class="sl-stat"><div class="sl-stat-val" id="sl-stat-curse">10</div><div class="sl-stat-lbl">curse planificate</div></div>
-        <div class="sl-stat"><div class="sl-stat-val" id="sl-stat-km">517</div><div class="sl-stat-lbl">km total sezon</div></div>
-        <div class="sl-stat"><div class="sl-stat-val">536</div><div class="sl-stat-lbl">ITRA Performance Index</div></div>
-        <div class="sl-stat"><div class="sl-stat-val" id="sl-stat-dplus">35k+</div><div class="sl-stat-lbl">D+ total sezon</div></div>
-        <div class="sl-stat"><div class="sl-stat-val" id="sl-stat-km-ytd">—</div><div class="sl-stat-lbl">km alergați 2026</div></div>
-        <div class="sl-stat"><div class="sl-stat-val">100M</div><div class="sl-stat-lbl">obiectiv principal</div></div>
+      <div class="sl-card-title">📈 Progres km 2026</div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+        <div style="font-family:'Bebas Neue',var(--display);font-size:32px;color:var(--accent);line-height:1" id="sl-km-count">0</div>
+        <div style="font-size:12px;color:var(--t3)">din <span id="sl-km-target">5000</span> km target</div>
+      </div>
+      <div class="sl-progress-track">
+        <div class="sl-progress-fill" id="sl-progress-fill" style="width:0%"></div>
+        <div class="sl-progress-marker" id="sl-progress-marker"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--t4)">
+        <span>Ian 2026</span><span>Dec 2026</span>
+      </div>
+      <div class="sl-stats" style="margin-top:14px">
+        <div class="sl-stat"><div class="sl-stat-val" id="sl-stat-curse">10</div><div class="sl-stat-lbl">curse</div></div>
+        <div class="sl-stat"><div class="sl-stat-val" id="sl-stat-dplus">35k+</div><div class="sl-stat-lbl">D+ total</div></div>
+        <div class="sl-stat"><div class="sl-stat-val">536</div><div class="sl-stat-lbl">ITRA PI</div></div>
       </div>
     </div>
+
+    <!-- ── HARTA INTERACTIVA ── -->
     <div class="sl-card">
-      <div class="sl-card-title">🏁 Cursele sezonului 2026</div>
-      <div id="sl-races-list"></div>
+      <div class="sl-card-title">🗺️ Traseul sezonului</div>
+      <div class="sl-map-wrap" id="sl-map-wrap">
+        <svg id="sl-map-svg" viewBox="0 0 340 300" style="width:100%;height:auto;display:block"></svg>
+        <div class="sl-map-tooltip" id="sl-map-tooltip" style="display:none"></div>
+      </div>
+      <div class="sl-map-legend" id="sl-map-legend"></div>
     </div>
+
+    <!-- ── TIMELINE CARIERA ── -->
     <div class="sl-card">
-      <div class="sl-card-title">⛰️ Povestea</div>
-      <p class="sl-story">Totul a început în mai 2024 — de la primele alergări pe străzile Bârladului, la primul trail, la 100 mile prin furtună în Bucovina. La km 130 cursa s-a oprit. Dar eu nu am renunțat.</p>
-      <p style="font-size:12px;color:var(--t3);margin-top:10px;line-height:1.6">2025: <strong style="color:var(--text)">3.000 km</strong> alergați, inclusiv un challenge de 600km în decembrie. 2026 vine cu 10 curse, de la 25km la 114km — obiectiv final: <strong style="color:var(--accent)">BUCOVINA ULTRA ROCKS 100 MILE</strong>.</p>
+      <div class="sl-card-title">⛰️ Povestea — 2024 → 2026</div>
+      <div class="sl-timeline" id="sl-timeline">
+        <div class="sl-tl-item sl-tl-left">
+          <div class="sl-tl-dot"></div>
+          <div class="sl-tl-content">
+            <div class="sl-tl-year">Mai 2024</div>
+            <div class="sl-tl-title">Prima alergare</div>
+            <div class="sl-tl-desc">De la primele km pe străzile Bârladului la Bucharest 10K — PR spart, stomac mai puțin fericit.</div>
+          </div>
+        </div>
+        <div class="sl-tl-item sl-tl-right">
+          <div class="sl-tl-dot"></div>
+          <div class="sl-tl-content">
+            <div class="sl-tl-year">Oct 2024</div>
+            <div class="sl-tl-title">Triple Crown Challenge</div>
+            <div class="sl-tl-desc">5K + 21K + 15K în zile diferite. Prima întâlnire cu trail-ul montan. Febra de „mentenanță" inclusă.</div>
+          </div>
+        </div>
+        <div class="sl-tl-item sl-tl-left">
+          <div class="sl-tl-dot"></div>
+          <div class="sl-tl-content">
+            <div class="sl-tl-year">Ian 2025</div>
+            <div class="sl-tl-title">Challenge zilnic — 500km</div>
+            <div class="sl-tl-desc">Zi 1 = 1km, Zi 30 = 30km. Peste 500km în ianuarie, după muncă, zi de zi.</div>
+          </div>
+        </div>
+        <div class="sl-tl-item sl-tl-right">
+          <div class="sl-tl-dot"></div>
+          <div class="sl-tl-content">
+            <div class="sl-tl-year">Iul 2025</div>
+            <div class="sl-tl-title">BUCOVINA — km 130</div>
+            <div class="sl-tl-desc">100 mile prin furtună. 3 deshidratări, insolații, o oră de somn. La km 130 furtuna a oprit cursa. Eu nu m-am oprit.</div>
+          </div>
+        </div>
+        <div class="sl-tl-item sl-tl-left">
+          <div class="sl-tl-dot"></div>
+          <div class="sl-tl-content">
+            <div class="sl-tl-year">Dec 2025</div>
+            <div class="sl-tl-title">600km în decembrie</div>
+            <div class="sl-tl-desc">20km dimineața + 20km seara, pe lângă muncă. 3.000km total în 2025. Pregătire finală pentru 2026.</div>
+          </div>
+        </div>
+        <div class="sl-tl-item sl-tl-right sl-tl-highlight">
+          <div class="sl-tl-dot sl-tl-dot-accent"></div>
+          <div class="sl-tl-content">
+            <div class="sl-tl-year">2026 →</div>
+            <div class="sl-tl-title">Sezonul complet</div>
+            <div class="sl-tl-desc">10 curse. 517km. Obiectiv: BUCOVINA ULTRA ROCKS 114KM — terminat.</div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- ── SIMULATOR ROI ── -->
     <div class="sl-card">
-      <div class="sl-card-title">🤝 Ce primești ca sponsor</div>
+      <div class="sl-card-title">💰 Simulator parteneriat</div>
+      <div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+          <span style="font-size:12px;color:var(--t2)">Buget sponsorizare</span>
+          <span style="font-family:'Bebas Neue',var(--display);font-size:24px;color:var(--accent)" id="sl-roi-amount">500 RON</span>
+        </div>
+        <input type="range" class="sl-roi-slider" id="sl-roi-slider" min="100" max="5000" step="100" value="500">
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t4);margin-top:4px">
+          <span>100 RON</span><span>5.000 RON</span>
+        </div>
+      </div>
+      <div id="sl-roi-benefits" class="sl-roi-grid"></div>
+      <div class="sl-roi-summary" id="sl-roi-summary"></div>
+    </div>
+
+    <!-- ── CE PRIMESTI ── -->
+    <div class="sl-card">
+      <div class="sl-card-title">🤝 Ce primești în orice pachet</div>
       <div class="sl-benefit">
         <div class="sl-benefit-icon">👕</div>
-        <div class="sl-benefit-text">
-          <div class="sl-benefit-title">Vizibilitate la curse</div>
-          <div class="sl-benefit-desc">Logo pe echipament la toate cele 10 curse ale sezonului — fotografii și video la finish line</div>
-        </div>
+        <div class="sl-benefit-text"><div class="sl-benefit-title">Vizibilitate la curse</div><div class="sl-benefit-desc">Logo pe echipament la toate cele 10 curse — foto + video la finish line</div></div>
       </div>
       <div class="sl-benefit">
         <div class="sl-benefit-icon">📱</div>
-        <div class="sl-benefit-text">
-          <div class="sl-benefit-title">Social media</div>
-          <div class="sl-benefit-desc">Postări dedicate înainte și după fiecare cursă — tag, story, mențiune în recap-uri</div>
-        </div>
+        <div class="sl-benefit-text"><div class="sl-benefit-title">Social media</div><div class="sl-benefit-desc">Postări dedicate înainte și după fiecare cursă — tag, story, recap</div></div>
       </div>
       <div class="sl-benefit">
         <div class="sl-benefit-icon">📊</div>
-        <div class="sl-benefit-text">
-          <div class="sl-benefit-title">Raport de sezon live</div>
-          <div class="sl-benefit-desc">Acces la acest dashboard cu toate rezultatele, km parcurși și statistici în timp real</div>
-        </div>
+        <div class="sl-benefit-text"><div class="sl-benefit-title">Dashboard live</div><div class="sl-benefit-desc">Acces permanent la acest tracker cu rezultate și statistici în timp real</div></div>
       </div>
       <div class="sl-benefit">
         <div class="sl-benefit-icon">🔗</div>
-        <div class="sl-benefit-text">
-          <div class="sl-benefit-title">Link & branding</div>
-          <div class="sl-benefit-desc">Website-ul tău menționat în toate comunicările publice legate de sezon</div>
-        </div>
+        <div class="sl-benefit-text"><div class="sl-benefit-title">Link & branding</div><div class="sl-benefit-desc">Menționat în toate comunicările publice ale sezonului</div></div>
       </div>
     </div>
+
+    <!-- ── PARTENERI ACTUALI ── -->
     <div class="sl-card" id="sl-current-sponsors-card" style="display:none">
       <div class="sl-card-title">✅ Parteneri actuali</div>
       <div class="sl-sponsors-strip" id="sl-sponsors-strip"></div>
     </div>
+
+    <!-- ── CTA ── -->
     <div class="sl-cta">
       <button class="sl-btn-primary" onclick="slEnterDash()">📈 Vezi dashboardul live →</button>
       <button class="sl-btn-ghost" onclick="slContact()">Contactează-mă pentru detalii parteneriat</button>
@@ -925,7 +947,6 @@ body.readonly label.btn { display:none !important }
     <div style="text-align:center;margin-top:24px;font-size:10px;color:var(--t4);letter-spacing:1px">TRAIL MANAGER 2026 · BALAN GABRIEL · HAX</div>
   </div>
 </div>
-
 
 <!-- ── LOGIN SCREEN ── -->
 <div class="login-screen" id="login-screen" style="display:none" onclick="if(event.target===this)hideLoginModal()">
@@ -4271,75 +4292,96 @@ function toggleBio() {
 
 
 // ══════════════════════════════════════════════════════
-//  SPONSOR LANDING
+//  SPONSOR LANDING v2
 // ══════════════════════════════════════════════════════
+
+let slCountdownInterval = null;
+
 function initSponsorLanding() {
   const el = document.getElementById('sponsor-landing');
   if (!el) return;
   el.classList.add('on');
-  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
-  populateSponsorLanding();
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    el.classList.add('visible');
+    populateSponsorLanding();
+    slAnimateCards();
+    slStartCountdown();
+  }));
 }
 
+// ── Animate cards on scroll ─────────────────────────
+function slAnimateCards() {
+  const cards = document.querySelectorAll('#sponsor-landing .sl-card, #sponsor-landing .sl-tl-item');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('sl-visible'), i * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  cards.forEach(c => obs.observe(c));
+  // Trigger first visible ones immediately
+  setTimeout(() => {
+    cards.forEach(c => {
+      const rect = c.getBoundingClientRect();
+      if (rect.top < window.innerHeight) c.classList.add('sl-visible');
+    });
+  }, 100);
+}
+
+// ── Populate all sections from DB ──────────────────
 function populateSponsorLanding() {
-  // Stats from DB
   const races = DB.races || [];
   const acts  = DB.activities || [];
   const year  = new Date().getFullYear();
 
-  const totalKm   = races.reduce((s,r)=>s+(parseFloat(r.distanta)||0),0);
+  // Stats
+  const totalKm    = races.reduce((s,r)=>s+(parseFloat(r.distanta)||0),0);
   const totalDplus = races.reduce((s,r)=>s+(parseFloat(r.denivelare)||0),0);
-  const ytdKm     = acts.filter(a=>a.date&&a.date.startsWith(String(year))).reduce((s,a)=>s+(a.km||0),0);
+  const ytdKm      = acts.filter(a=>a.date&&a.date.startsWith(String(year))).reduce((s,a)=>s+(a.km||0),0);
+  const targetKm   = parseInt(DB.prefs?.target_km)||5000;
 
   const setSL = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
   setSL('sl-stat-curse', races.length || 10);
-  setSL('sl-stat-km',    Math.round(totalKm) || 517);
   setSL('sl-stat-dplus', totalDplus>=1000 ? Math.round(totalDplus/1000)+'k+' : (totalDplus||'35k+'));
-  setSL('sl-stat-km-ytd', ytdKm>0 ? Math.round(ytdKm)+'km' : '—');
+  setSL('sl-km-target', targetKm.toLocaleString());
 
-  // Races list
-  const raceEl = document.getElementById('sl-races-list');
-  if (raceEl && races.length) {
-    const sorted = [...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
-    raceEl.innerHTML = sorted.map((r,i) => {
-      const d = r.data_cursa ? new Date(r.data_cursa) : null;
-      const dateStr = d ? d.toLocaleDateString('ro-RO',{day:'numeric',month:'short'}) : '—';
-      const past = d && d < new Date();
-      return `<div class="sl-race">
-        <div class="sl-race-nr" style="${past?'color:var(--t3)':''}'">${i+1}</div>
-        <div class="sl-race-info">
-          <div class="sl-race-name">${r.denumire||'—'}</div>
-          <div class="sl-race-meta">${dateStr}${r.localitate?' · '+r.localitate:''}</div>
-        </div>
-        <div class="sl-race-dist" style="${past?'color:var(--t4)':''}">
-          ${r.distanta||'—'}km${r.denivelare?'<br><span style="font-size:11px;color:var(--t3)">D+'+Math.round(r.denivelare/100)/10+'k</span>':''}
-        </div>
-      </div>`;
-    }).join('');
-  } else if (raceEl) {
-    // Fallback hardcodat dacă DB e gol
-    raceEl.innerHTML = [
-      ['Transylvania 100','20 mai','102km · D+6700'],
-      ['Brașov Marathon','30 mai','42km · D+2400'],
-      ['Skyrace Giants Race','12 iun','40km · D+3000'],
-      ['Legendele Nemirei','4 iul','25km · D+1250'],
-      ['Predeal Forest Run','10 iul','38km · D+2420'],
-      ['UTMB Bucovina Ultra Rocks','24 iul','114km · D+6300'],
-      ['2X2 Race','22 aug','46km · D+4200'],
-      ['Ciucaș X3','6 sep','39km · D+2385'],
-      ['Azuga L30 Dynafit','17 oct','30km · D+1700'],
-      ['Istrița xScape','7 nov','41km · D+1850'],
-    ].map((r,i)=>`<div class="sl-race">
-      <div class="sl-race-nr">${i+1}</div>
-      <div class="sl-race-info">
-        <div class="sl-race-name">${r[0]}</div>
-        <div class="sl-race-meta">${r[1]}</div>
-      </div>
-      <div class="sl-race-dist" style="font-size:12px">${r[2]}</div>
-    </div>`).join('');
+  // Animate km counter
+  slAnimateKm(ytdKm||0, targetKm);
+
+  // Progress bar
+  const pct = Math.min(100, ((ytdKm||0)/targetKm)*100);
+  setTimeout(() => {
+    const fill = document.getElementById('sl-progress-fill');
+    if (fill) fill.style.width = pct + '%';
+  }, 600);
+
+  // Next race countdown
+  const now = new Date();
+  const upcoming = races
+    .filter(r => r.data_cursa && new Date(r.data_cursa) > now)
+    .sort((a,b) => new Date(a.data_cursa)-new Date(b.data_cursa));
+  if (upcoming.length) {
+    const next = upcoming[0];
+    setSL('sl-next-race-name', next.denumire || '—');
+    const d = new Date(next.data_cursa);
+    setSL('sl-next-race-date', d.toLocaleDateString('ro-RO',{day:'numeric',month:'long',year:'numeric'}));
   }
 
-  // Sponsors strip — show only confirmed ones
+  // Map
+  slDrawMap(races);
+
+  // ROI simulator
+  slUpdateROI(500);
+  const slider = document.getElementById('sl-roi-slider');
+  if (slider) {
+    slider.addEventListener('input', function() {
+      slUpdateROI(parseInt(this.value));
+    });
+  }
+
+  // Sponsors
   const sps = (DB.sponsors||[]).filter(s=>s.primit);
   const spCard = document.getElementById('sl-current-sponsors-card');
   const spStrip = document.getElementById('sl-sponsors-strip');
@@ -4349,11 +4391,209 @@ function populateSponsorLanding() {
   }
 }
 
+// ── Animate km counter ──────────────────────────────
+function slAnimateKm(target, max) {
+  const el = document.getElementById('sl-km-count');
+  if (!el) return;
+  const duration = 1800;
+  const start = performance.now();
+  function step(now) {
+    const t = Math.min(1, (now - start) / duration);
+    const ease = 1 - Math.pow(1-t, 3);
+    el.textContent = Math.round(ease * target);
+    if (t < 1) requestAnimationFrame(step);
+    else el.textContent = Math.round(target);
+  }
+  setTimeout(() => requestAnimationFrame(step), 400);
+}
+
+// ── Countdown timer ─────────────────────────────────
+function slStartCountdown() {
+  if (slCountdownInterval) clearInterval(slCountdownInterval);
+  function tick() {
+    const races = DB.races || [];
+    const now = new Date();
+    const upcoming = races
+      .filter(r => r.data_cursa && new Date(r.data_cursa) > now)
+      .sort((a,b) => new Date(a.data_cursa)-new Date(b.data_cursa));
+    if (!upcoming.length) return;
+    const diff = new Date(upcoming[0].data_cursa) - now;
+    const days  = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins  = Math.floor((diff % 3600000) / 60000);
+    const secs  = Math.floor((diff % 60000) / 1000);
+    const pad = n => String(n).padStart(2,'0');
+    const setSL = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+    setSL('sl-cd-days',  days);
+    setSL('sl-cd-hours', pad(hours));
+    setSL('sl-cd-mins',  pad(mins));
+    setSL('sl-cd-secs',  pad(secs));
+  }
+  tick();
+  slCountdownInterval = setInterval(tick, 1000);
+}
+
+// ── Draw Romania race map ───────────────────────────
+function slDrawMap(races) {
+  const svg = document.getElementById('sl-map-svg');
+  const legend = document.getElementById('sl-map-legend');
+  if (!svg) return;
+
+  // Approx Romania outline — simplified polygon
+  const roPath = 'M142,32 L158,28 L178,30 L198,25 L215,32 L228,28 L240,35 L252,30 L265,38 L272,50 L280,55 L285,68 L278,80 L290,92 L295,105 L288,118 L278,125 L270,138 L258,142 L248,155 L238,168 L225,175 L215,185 L200,190 L188,182 L175,188 L162,185 L150,178 L138,170 L128,158 L118,148 L110,135 L105,120 L108,108 L115,95 L108,82 L112,68 L120,56 L130,45 Z';
+
+  // Race coords [lat,lng] — approximate locations
+  const raceCoords = {
+    'Transylvania 100':       [46.5, 25.0],
+    'Brasov Marathon':        [45.65, 25.6],
+    'Skyrace Giants Race':    [45.35, 25.55],
+    'Legendele Nemirei':      [46.1, 26.6],
+    'Predeal Forest Run':     [45.5, 25.58],
+    'UTMB Bucovina Ultra Rocks': [47.5, 25.9],
+    '2X2 Race':               [45.4, 23.8],
+    'Ciucas X3':              [45.52, 26.1],
+    'Azuga L30 Dynafit':      [45.43, 25.55],
+    'Istrița xScape':         [44.88, 26.8],
+  };
+
+  // Romania bounding box for projection
+  const latMin=43.6, latMax=48.3, lngMin=20.2, lngMax=30.0;
+  const W=340, H=300, pad=20;
+  const toX = lng => pad + (lng-lngMin)/(lngMax-lngMin)*(W-pad*2);
+  const toY = lat => pad + (latMax-lat)/(latMax-latMin)*(H-pad*2);
+
+  // Difficulty colors using theme — map to accent/orange/red
+  const diffMap = [
+    [80,'#ff4f4f'],  // legendary
+    [50,'#ff8c42'],  // epic
+    [30,'var(--accent)'],  // hard
+    [15,'var(--t2)'], // medium
+    [0,'var(--t3)'],  // easy
+  ];
+  function getDiffColor(r) {
+    const d = (parseFloat(r.distanta)||0) + (parseFloat(r.denivelare)||0)/100;
+    for(const [t,c] of diffMap) if(d>=t) return c;
+    return 'var(--t3)';
+  }
+
+  // Build SVG
+  const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#ccff00';
+  const s3 = getComputedStyle(document.documentElement).getPropertyValue('--s3').trim()||'#2f3535';
+  const border = getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#3a4141';
+
+  let svgContent = `<rect width="${W}" height="${H}" fill="${s3}" rx="8"/>`;
+  // Simple Romania fill
+  svgContent += `<path d="${roPath}" fill="${border}" stroke="${border}" stroke-width="1.5" opacity=".6"/>`;
+
+  // Draw connecting lines between races (sorted by date)
+  const sorted = [...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+  let prevX=null, prevY=null;
+  sorted.forEach(r => {
+    const coords = Object.entries(raceCoords).find(([k])=>r.denumire&&r.denumire.includes(k.split(' ')[0]));
+    if (!coords) return;
+    const [lat,lng] = coords[1];
+    const x=toX(lng), y=toY(lat);
+    if (prevX!==null) {
+      svgContent += `<line x1="${prevX.toFixed(1)}" y1="${prevY.toFixed(1)}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${accentColor}" stroke-width="1" stroke-dasharray="3,4" opacity=".3"/>`;
+    }
+    prevX=x; prevY=y;
+  });
+
+  // Draw race dots
+  const tooltip = document.getElementById('sl-map-tooltip');
+  let dots = '';
+  sorted.forEach((r,i) => {
+    const key = Object.keys(raceCoords).find(k=>r.denumire&&r.denumire.includes(k.split(' ')[0]));
+    if (!key) return;
+    const [lat,lng] = raceCoords[key];
+    const x=toX(lng).toFixed(1), y=toY(lat).toFixed(1);
+    const past = r.data_cursa && new Date(r.data_cursa) < new Date();
+    const col = past ? 'var(--t4)' : getDiffColor(r);
+    const isBig = (parseFloat(r.distanta)||0) >= 100;
+    const r2 = isBig ? 7 : 5;
+    dots += `<g class="sl-map-dot" data-race="${i}" style="cursor:pointer">
+      ${isBig ? `<circle cx="${x}" cy="${y}" r="${r2+4}" fill="${accentColor}" opacity=".15"/>` : ''}
+      <circle cx="${x}" cy="${y}" r="${r2}" fill="${col}" stroke="var(--bg)" stroke-width="1.5"/>
+      <text x="${x}" y="${parseFloat(y)-r2-3}" style="font-size:7px;fill:var(--t2);text-anchor:middle;font-weight:600">${i+1}</text>
+    </g>`;
+  });
+  svgContent += dots;
+  svg.innerHTML = svgContent;
+
+  // Tooltip on dot hover/click
+  svg.querySelectorAll('.sl-map-dot').forEach(dot => {
+    const idx = parseInt(dot.dataset.race);
+    const race = sorted[idx];
+    if (!race) return;
+    const show = (e) => {
+      if (!tooltip) return;
+      const d = race.data_cursa ? new Date(race.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'short'}) : '—';
+      tooltip.innerHTML = `<strong>${race.denumire}</strong><br>${d}<br>${race.distanta||'—'}km · D+${race.denivelare||'—'}`;
+      const rect = svg.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      tooltip.style.display = 'block';
+      tooltip.style.left = Math.min(x+8, rect.width-170)+'px';
+      tooltip.style.top  = Math.max(y-60, 4)+'px';
+    };
+    const hide = () => { if(tooltip) tooltip.style.display='none'; };
+    dot.addEventListener('mouseenter', show);
+    dot.addEventListener('mouseleave', hide);
+    dot.addEventListener('touchstart', show, {passive:true});
+    dot.addEventListener('touchend', hide, {passive:true});
+  });
+
+  // Legend
+  if (legend) {
+    legend.innerHTML = `
+      <div class="sl-map-legend-item"><svg width="10" height="10"><circle cx="5" cy="5" r="5" fill="${accentColor}"/></svg>cursă principală (+100km)</div>
+      <div class="sl-map-legend-item"><svg width="10" height="10"><circle cx="5" cy="5" r="4" fill="${accentColor}" opacity=".6"/></svg>altă cursă</div>
+      <div class="sl-map-legend-item"><svg width="10" height="10"><circle cx="5" cy="5" r="4" fill="var(--t4)"/></svg>deja alergată</div>
+    `;
+  }
+}
+
+// ── ROI Simulator ───────────────────────────────────
+function slUpdateROI(amount) {
+  const el = document.getElementById('sl-roi-amount');
+  if (el) el.textContent = amount.toLocaleString() + ' RON';
+
+  const tiers = [
+    { min:0,    icon:'👕', title:'Logo pe echipament',     desc:'Toate cursele sezonului, foto la finish line', always:true },
+    { min:0,    icon:'📱', title:'1 postare social media', desc:'Story + tag la o cursă aleasă de tine',         always:true },
+    { min:500,  icon:'📱', title:'Postări la toate cursele', desc:'Story + tag + recap la fiecare din cele 10 curse' },
+    { min:1000, icon:'🎥', title:'Video recap sezon',      desc:'Vlog de sezon cu logo și mențiune explicită' },
+    { min:1500, icon:'🔗', title:'Link permanent',         desc:'Site-ul tău în footer-ul dashboard-ului public' },
+    { min:2500, icon:'🏆', title:'Sponsor principal',      desc:'Cel mai vizibil brand în toate comunicările' },
+    { min:5000, icon:'⭐', title:'Naming rights cursă',    desc:'O cursă din sezon purtă numele brandului tău' },
+  ];
+
+  const active = tiers.filter(t => amount >= t.min);
+  const grid = document.getElementById('sl-roi-benefits');
+  if (grid) {
+    grid.innerHTML = active.map(t => `
+      <div class="sl-roi-item active">
+        <div class="sl-roi-item-icon">${t.icon}</div>
+        <div class="sl-roi-item-title">${t.title}</div>
+        <div class="sl-roi-item-desc">${t.desc}</div>
+      </div>`).join('');
+  }
+
+  const summary = document.getElementById('sl-roi-summary');
+  if (summary) {
+    const next = tiers.find(t => amount < t.min);
+    summary.innerHTML = next
+      ? `✅ <strong>${active.length} beneficii</strong> incluse · Adaugă ${(next.min-amount).toLocaleString()} RON pentru a debloca <strong>${next.icon} ${next.title}</strong>`
+      : `🏆 <strong>Pachet complet — toate ${active.length} beneficiile incluse!</strong>`;
+  }
+}
+
 function slEnterDash() {
+  if (slCountdownInterval) { clearInterval(slCountdownInterval); slCountdownInterval=null; }
   const el = document.getElementById('sponsor-landing');
   if (el) {
     el.classList.remove('visible');
-    setTimeout(()=>{ el.classList.remove('on'); }, 400);
+    setTimeout(()=>{ el.classList.remove('on'); }, 450);
   }
 }
 
