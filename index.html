@@ -3244,11 +3244,22 @@ async function syncStrava() {
       method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+authToken}
     });
     const data = await r.json();
+    console.log('[Sync] Response:', JSON.stringify(data));
     if (r.ok) {
-      toast(`✅ Strava sync: ${data.synced||0} activități`, 'ok');
-      await loadAllData(true);
-    } else { toast('❌ Eroare Strava: '+(data.error||r.status),'err'); }
-  } catch(e) { toast('❌ Eroare rețea','err'); }
+      if(data.error) {
+        toast('❌ Sync eroare: '+data.error, 'err');
+        console.error('[Sync] Error detail:', data);
+      } else if((data.synced||0)===0 && (data.fetched||0)===0) {
+        toast('⚠️ 0 activități fetched de la Strava — token expirat?', 'err');
+      } else {
+        toast(`✅ Strava sync: ${data.fetched||0} fetch, ${data.synced||0} noi, ${data.updated||0} actualizate`, 'ok');
+        await loadAllData(true);
+      }
+    } else {
+      toast('❌ HTTP '+r.status+': '+(data.error||JSON.stringify(data)),'err');
+      console.error('[Sync] HTTP error:', r.status, data);
+    }
+  } catch(e) { toast('❌ Eroare rețea: '+e.message,'err'); console.error('[Sync] Network error:',e); }
   finally { if(btn) btn.disabled=false; }
 }
 
@@ -3257,21 +3268,33 @@ async function checkWebhook() {
   const btn = document.getElementById('webhook-btn');
   if(btn) btn.textContent = '⏳';
   try {
+    // Run diagnostic first
+    const rd = await fetch('https://jqhtistewpmiphuoxfmp.supabase.co/functions/v1/strava-webhook/diagnostic', {
+      method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+authToken}
+    });
+    const diag = await rd.json();
+    console.log('[Diagnostic]', diag);
+
+    // Webhook status
     const r = await fetch('https://jqhtistewpmiphuoxfmp.supabase.co/functions/v1/strava-webhook/webhook-status', {
       method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+authToken}
     });
     const data = await r.json();
     const subs = data.subscriptions || [];
+
+    const diagMsg = `DB: ${diag.activities_in_db} activitati | Strava token: ${diag.strava_token} | User: ${diag.resolved_user_id?.slice(0,8)}... | Strava 7 zile: ${diag.strava_activities_last_7d}`;
+    console.log('[Diagnostic]', diagMsg);
+
     if(subs.length) {
       const sub = subs[0];
-      toast(`📡 Webhook activ — ID ${sub.id}, URL: ${sub.callback_url}`, 'ok');
-      if(btn) { btn.textContent='📡✅'; btn.title='Webhook activ ID '+sub.id; }
+      toast(`📡 Webhook activ ID ${sub.id} | ${diagMsg}`, 'ok');
+      if(btn) { btn.textContent='📡✅'; btn.title='Webhook activ ID '+sub.id+' | '+diagMsg; }
     } else {
       const reReg = confirm('Niciun webhook activ! Vrei sa inregistrezi webhook-ul Strava acum?');
       if(reReg) await registerWebhook();
       else { if(btn) btn.textContent='📡❌'; }
     }
-  } catch(e) { toast('❌ Eroare verificare webhook','err'); if(btn) btn.textContent='📡'; }
+  } catch(e) { toast('Eroare verificare webhook: '+e.message,'err'); if(btn) btn.textContent='📡'; }
 }
 
 async function registerWebhook() {
