@@ -54,6 +54,69 @@ document.currentScript.parentNode.appendChild(link);
   --display: 'Bebas Neue', sans-serif;
   --body: 'DM Sans', sans-serif;
 }
+
+/* ── TEMA: VULCAN (portocaliu/roșu pe negru adânc) ── */
+[data-theme="vulcan"] {
+  --bg: #0d0a09;
+  --s1: #161110;
+  --s2: #1d1614;
+  --s3: #251c19;
+  --border: #2e201b;
+  --border2: #3a2820;
+  --accent: #ff6b35;
+  --accent-dim: rgba(255,107,53,0.1);
+  --accent-border: rgba(255,107,53,0.2);
+  --green: #ff9f1c;
+  --orange: #ff4f4f;
+  --yellow: #ffd166;
+  --red: #ff2d55;
+  --text: #f0e6e0;
+  --t2: #9c7e74;
+  --t3: #5c3f36;
+  --t4: #3a2820;
+}
+
+/* ── TEMA: GHETAR (albastru arctic pe negru) ── */
+[data-theme="ghetar"] {
+  --bg: #080c10;
+  --s1: #0d1219;
+  --s2: #121923;
+  --s3: #17202e;
+  --border: #1e2d3d;
+  --border2: #263a52;
+  --accent: #4fc8ff;
+  --accent-dim: rgba(79,200,255,0.1);
+  --accent-border: rgba(79,200,255,0.2);
+  --green: #00e5cc;
+  --orange: #7b61ff;
+  --yellow: #a3d9ff;
+  --red: #ff4f7b;
+  --text: #ddeeff;
+  --t2: #6a8faa;
+  --t3: #3a5570;
+  --t4: #1e3348;
+}
+
+/* ── TEMA: NOAPTE VIOLETA (mov întunecat) ── */
+[data-theme="noapte"] {
+  --bg: #09080d;
+  --s1: #100f18;
+  --s2: #161522;
+  --s3: #1d1c2e;
+  --border: #252338;
+  --border2: #302d4a;
+  --accent: #c77dff;
+  --accent-dim: rgba(199,125,255,0.1);
+  --accent-border: rgba(199,125,255,0.2);
+  --green: #80ffdb;
+  --orange: #ff9f43;
+  --yellow: #f8c8ff;
+  --red: #ff4f82;
+  --text: #ede0ff;
+  --t2: #8a7aa0;
+  --t3: #4a3d60;
+  --t4: #2d2442;
+}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14px;line-height:1.5;min-height:100vh;overflow-x:hidden}
@@ -403,6 +466,11 @@ body.readonly label.btn { display:none !important }
   .race-extra-stat-val{font-size:15px}
   .race-extra-stats{gap:6px}
 }
+
+/* ── THEME SWITCHER ── */
+.theme-btn{background:var(--s2);border:1px solid var(--border);color:var(--t2);border-radius:6px;padding:6px 4px;font-size:10px;cursor:pointer;font-family:var(--body);transition:all .15s;text-align:center}
+.theme-btn:hover{border-color:var(--border2);color:var(--text)}
+.theme-btn.active{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
 
 /* ── STATS PAGE ── */
 .act-row{
@@ -791,6 +859,16 @@ body.readonly label.btn { display:none !important }
     <button class="save-btn" id="export-btn" onclick="exportJSON()" style="margin-top:6px;color:var(--t2);border-color:var(--border)">💾 Export JSON</button>
     <button class="save-btn" id="login-btn" onclick="showLoginModal()" style="margin-top:6px;color:var(--accent);border-color:var(--accent-border);background:var(--accent-dim)">🔑 Login</button>
     <button class="save-btn" id="logout-btn" onclick="doLogout()" style="margin-top:6px;color:var(--red);border-color:rgba(255,79,79,.2);background:rgba(255,79,79,.05);display:none">🚪 Deconectare</button>
+    <!-- Theme switcher — owner only -->
+    <div id="theme-switcher" style="display:none;margin-top:14px;border-top:1px solid var(--border);padding-top:12px">
+      <div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">🎨 Temă</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+        <button onclick="setTheme('default')" data-t="default" class="theme-btn">🌿 Verde</button>
+        <button onclick="setTheme('vulcan')"  data-t="vulcan"  class="theme-btn">🌋 Vulcan</button>
+        <button onclick="setTheme('ghetar')"  data-t="ghetar"  class="theme-btn">🧊 Ghetar</button>
+        <button onclick="setTheme('noapte')"  data-t="noapte"  class="theme-btn">🌙 Noapte</button>
+      </div>
+    </div>
   </div>
 </aside>
 
@@ -870,7 +948,7 @@ body.readonly label.btn { display:none !important }
     </div>
   </div>
 
-  <div class="ph" style="margin-top:0">
+  <div class="ph" style="margin-top:28px">
     <div class="ph-left">
       <h2 id="dash-title-display" onclick="startEditDashTitle()" style="cursor:default" title="">SEZONUL BESTIEI</h2>
       <input id="dash-title-input" style="display:none;font-family:var(--display);font-size:46px;letter-spacing:2px;line-height:1;color:var(--text);background:transparent;border:none;border-bottom:2px solid var(--accent);outline:none;width:100%;max-width:500px" 
@@ -919,7 +997,7 @@ body.readonly label.btn { display:none !important }
         <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">🎯 Target anual km</div>
         <div style="display:flex;align-items:baseline;gap:8px">
           <span style="font-family:var(--display);font-size:36px;color:var(--accent)" id="db-km-actual">0</span>
-          <span style="color:var(--t3);font-size:14px">/ <input type="number" id="db-target-input" style="background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text);font-size:14px;width:60px;text-align:center;font-family:var(--body)" value="5000" onchange="saveTarget(this.value)"> km</span>
+          <span style="color:var(--t3);font-size:14px">/ <span id="db-target-input" style="color:var(--text);font-size:14px;font-family:var(--body)">5000</span> km</span>
         </div>
       </div>
       <div style="text-align:right">
@@ -1762,11 +1840,41 @@ function updateAuthButtons() {
   if (logoutBtn) logoutBtn.style.display = loggedIn ? 'block' : 'none';
   if (saveBtn)   saveBtn.style.display   = isOwner ? 'block' : 'none';
   if (exportBtn) exportBtn.style.display = isOwner ? 'block' : 'none';
+  // Theme switcher — owner only
+  const themeSw = document.getElementById('theme-switcher');
+  if (themeSw) themeSw.style.display = isOwner ? 'block' : 'none';
   // Mobile
   const mLogin  = document.getElementById('m-login-btn');
   const mLogout = document.getElementById('m-logout-btn');
   if (mLogin)  mLogin.style.display  = loggedIn ? 'none' : 'flex';
   if (mLogout) mLogout.style.display = loggedIn ? 'flex' : 'none';
+  // Refresh dash title cursor
+  loadDashTitle();
+}
+
+function setTheme(name) {
+  if (name === 'default') {
+    document.documentElement.removeAttribute('data-theme');
+  } else {
+    document.documentElement.setAttribute('data-theme', name);
+  }
+  D.theme = name;
+  scheduleAutoSave();
+  // Update active button
+  document.querySelectorAll('.theme-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.t === name);
+  });
+}
+
+function applyTheme(name) {
+  if (!name || name === 'default') {
+    document.documentElement.removeAttribute('data-theme');
+  } else {
+    document.documentElement.setAttribute('data-theme', name);
+  }
+  document.querySelectorAll('.theme-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.t === (name || 'default'));
+  });
 }
 
 // ── Load owner data anonymously (no login required) ──
@@ -1929,6 +2037,7 @@ function go(id, el) {
 function renderAll() {
   if (!D) return;
   if (!D.sponsori) D.sponsori = [];
+  applyTheme(D.theme || 'default');
   renderSidebar();
   renderDash();
   renderCurse(curFilter);
