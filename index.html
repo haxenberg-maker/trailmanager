@@ -1642,8 +1642,8 @@ async function loadAllData(useAuth = false) {
       safeFetch('sponsors',           (uid_filter || 'limit=100') + '&order=created_at.asc'),
       safeFetch('equipment',          (uid_filter || 'limit=50')  + '&order=created_at.asc'),
       safeFetch('nutrition_settings', uid_filter || 'limit=1'),
-      safeFetch('supplements',        (uid_filter || 'limit=50')  + '&order=created_at.asc'),
-      safeFetch('transport',          (uid_filter || 'limit=50')  + '&order=created_at.asc'),
+      safeFetch('supplements',        (uid_filter ? uid_filter+'&' : '') + 'limit=50&order=id.asc'),
+      safeFetch('transport',          (uid_filter ? uid_filter+'&' : '') + 'limit=50&order=id.asc'),
       safeFetch('activities',         (uid_filter || 'limit=1000') + '&order=date.desc'),
     ]);
 
