@@ -440,7 +440,7 @@ body.readonly label.btn { display:none !important }
 .race-card.open .race-chevron{transform:rotate(180deg)}
 .race-expand{display:none;padding:0 14px 14px;border-top:1px solid var(--border)}
 .race-card.open .race-expand{display:block}
-.race-map-wrap{background:var(--s2);border-radius:8px;overflow:hidden;margin-top:12px;display:flex;align-items:center;justify-content:center;min-height:100px}
+.race-map-wrap{background:var(--s2);border-radius:8px;overflow:hidden}
 .race-map-wrap svg{display:block;width:100%;height:auto}
 .race-extra-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:8px;margin-top:12px}
 .race-extra-stat{background:var(--s2);border-radius:8px;padding:8px 6px;text-align:center;min-width:0}
@@ -1296,13 +1296,7 @@ body.readonly label.btn { display:none !important }
       <div class="fi"><lbl>Ora start</lbl><input type="time" id="f-ora" value="09:00"></div>
       <div class="fi"><lbl>Data plecare</lbl><input type="date" id="f-dp"></div>
       <div class="fi"><lbl>Data întoarcere</lbl><input type="date" id="f-di"></div>
-      <div class="fi"><lbl>Încălțări</lbl>
-        <select id="f-inc">
-          <option>Hoka Speedgoat 6/7</option>
-          <option>Hoka Mafate X</option>
-          <option>Altele</option>
-        </select>
-      </div>
+      
       <div class="fi"><lbl>Nr. geluri estimat</lbl><input type="number" id="f-gel" placeholder="5"></div>
       <div class="fi"><lbl>Cost cazare (RON)</lbl><input type="number" id="f-caz" placeholder="300"></div>
       <div class="fi fgrow"><lbl>Cost înscriere (RON)</lbl><input type="number" id="f-ins" placeholder="200"></div>
@@ -1391,8 +1385,9 @@ body.readonly label.btn { display:none !important }
       <div class="fi fgrow"><lbl>Link dovadă (factură/chitanță)</lbl><input id="eq-link" placeholder="https://..."></div>
       <div style="margin-top:4px" id="eq-link-preview-wrap"></div>
       <div class="sl">Alocare curse</div>
-      <div class="fi fgrow"><lbl>Curse în care se folosește</lbl>
-        <div id="eq-race-checkboxes" style="display:flex;flex-direction:column;gap:6px;margin-top:4px;max-height:150px;overflow-y:auto;padding:4px 0"></div>
+      <div class="fi fgrow">
+        <lbl>Selectează cursele în care se folosește acest echipament</lbl>
+        <div id="eq-race-checkboxes" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;max-height:260px;overflow-y:auto;padding:2px"></div>
       </div>
     </div>
   </div>
@@ -2211,7 +2206,6 @@ function rcCardFull(c) {
     <div class="rc-nums">
       <div class="rn"><lbl>Distanță</lbl><div class="rv">${c.distanta||'—'}<span class="ru"> km</span></div></div>
       <div class="rn"><lbl>Denivelare</lbl><div class="rv">${c.denivelare?((c.denivelare/1000).toFixed(1)):''}<span class="ru"> km D+</span></div></div>
-      <div class="rn"><lbl>Pantofi</lbl><div class="rv" style="font-size:12px;font-family:var(--body)">${c.incaltari||'—'}</div></div>
       <div class="rn"><lbl>Geluri</lbl><div class="rv">${c.geluri||0}<span class="ru"> buc</span></div></div>
     </div>
     <div class="rc-tags">${tags.join('')}</div>
@@ -2643,7 +2637,6 @@ function openRC(id) {
   v('f-den',x.denumire); v('f-dist',x.distanta); v('f-deniv',x.denivelare);
   v('f-dc',x.data_cursa); v('f-ora',x.ora_start||'09:00');
   v('f-dp',x.data_plecare); v('f-di',x.data_sfarsit);
-  const inc = document.getElementById('f-inc'); if(inc) inc.value = x.incaltari||'Hoka Speedgoat 6/7';
   v('f-gel',x.geluri); v('f-caz',x.cazare); v('f-ins',x.plata_concurs);
   ck('f-rez',x.rezervat); ck('f-pcaz',x.plata_cazare); ck('f-pins',x.plata_concurs_ok);
   v('f-note',x.note); v('f-link-ins',x.link_dovada_ins); v('f-link-caz',x.link_dovada_caz);
@@ -2665,7 +2658,6 @@ async function saveRC() {
     ora_start: document.getElementById('f-ora').value,
     data_plecare: document.getElementById('f-dp').value||null,
     data_sfarsit: document.getElementById('f-di').value||null,
-    incaltari: document.getElementById('f-inc').value,
     geluri: +document.getElementById('f-gel').value||0,
     cazare: document.getElementById('f-caz').value!==''?+document.getElementById('f-caz').value:null,
     plata_concurs: +document.getElementById('f-ins').value||0,
@@ -2779,11 +2771,17 @@ function openEQ(id) {
     const assigned = x.race_ids || [];
     const today = new Date(); today.setHours(0,0,0,0);
     const sorted = [...DB.races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
-    cb.innerHTML = sorted.map(r=>`
-      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:3px 0">
-        <input type="checkbox" value="${r.id}" ${assigned.includes(r.id)?'checked':''} style="accent-color:var(--accent)">
-        <span style="font-size:12px;color:var(--t2)">${fd(r.data_cursa)} — ${r.denumire} (${r.distanta||0}km)</span>
-      </label>`).join('') || '<span style="font-size:12px;color:var(--t3)">Nicio cursă adăugată.</span>';
+    cb.innerHTML = sorted.map(r=>{
+      const chk = assigned.includes(r.id) ? 'checked' : '';
+      const isPast = r.data_cursa && new Date(r.data_cursa) < today;
+      return `<label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;padding:8px 10px;border-radius:8px;border:1px solid ${chk?'rgba(79,255,155,.3)':'var(--border)'};background:${chk?'rgba(79,255,155,.05)':'var(--s1)'};transition:all .15s;opacity:${isPast?.6:1}" onchange="this.style.borderColor=this.querySelector('input').checked?'rgba(79,255,155,.3)':'var(--border)';this.style.background=this.querySelector('input').checked?'rgba(79,255,155,.05)':'var(--s1)'">
+        <input type="checkbox" value="${r.id}" ${chk} style="accent-color:var(--accent);margin-top:2px;flex-shrink:0">
+        <div style="min-width:0">
+          <div style="font-size:12px;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.denumire}</div>
+          <div style="font-size:10px;color:var(--t3);margin-top:1px">${fd(r.data_cursa)} · ${r.distanta||0}km</div>
+        </div>
+      </label>`;
+    }).join('') || '<div style="font-size:12px;color:var(--t3);padding:8px">Nicio cursă adăugată.</div>';
   }
   document.getElementById('ov-eq').classList.add('on');
 }
@@ -3539,12 +3537,12 @@ function renderRaceHistory() {
           ${r.cadence?`<div class="race-extra-stat"><div class="race-extra-val">${r.cadence}</div><div class="race-extra-lbl">spm</div></div>`:''}
         </div>`:''}
         ${!isStrava?`<div style="margin:12px 0 8px;padding:10px 12px;background:var(--s2);border-radius:8px;font-size:12px;color:var(--t3)">📡 Activitate Strava nesincronizată pentru această cursă.</div>`:''}
-        ${hasRoute||hasElev?`
-        <div style="display:grid;grid-template-columns:${hasRoute&&hasElev?'1fr 1fr':'1fr'};gap:12px;margin:12px 0">
-          ${hasRoute?`<div class="race-map-wrap" id="map-${safeId}">${polylineToSVG(r.polyline,300,160,safeId)}</div>`:''}
-          ${hasElev?`<div style="background:var(--s2);border-radius:8px;padding:12px"><div style="font-size:10px;color:var(--t3);margin-bottom:6px">Profil altitudine</div>${drawElevationSVG(r.elev_profile)}</div>`:''}
+        ${hasRoute?`<div class="race-map-wrap" id="map-${safeId}" style="margin:12px 0">${polylineToSVG(r.polyline,600,190,safeId)}</div>`:''}
+        ${hasElev||hasHR?`
+        <div style="display:grid;grid-template-columns:${hasElev&&hasHR?'1fr 1fr':'1fr'};gap:10px;margin-bottom:12px">
+          ${hasElev?`<div style="background:var(--s2);border-radius:8px;padding:10px"><div style="font-size:10px;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:1px">⛰ Profil altitudine</div>${drawElevationSVG(r.elev_profile)}</div>`:''}
+          ${hasHR?`<div style="background:var(--s2);border-radius:8px;padding:10px"><div style="font-size:10px;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:1px">❤️ Frecvență cardiacă</div>${drawHRSVG(r.hr_stream)}</div>`:''}
         </div>`:''}
-        ${hasHR?`<div style="background:var(--s2);border-radius:8px;padding:12px;margin-bottom:12px"><div style="font-size:10px;color:var(--t3);margin-bottom:6px">Frecvență cardiacă</div>${drawHRSVG(r.hr_stream)}</div>`:''}
         ${hasSplit?`
         <div style="margin-bottom:8px">
           <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:6px 0" onclick="toggleSplits('${safeId}')">
@@ -3739,29 +3737,40 @@ function drawPieChart(containerId, segments, total) {
 
 function drawElevationSVG(altArr) {
   if(!altArr?.length) return '';
-  const w=300,h=70,pad=5;
-  const mn=Math.min(...altArr),mx=Math.max(...altArr)||1;
-  const pts=altArr.map((v,i)=>[(i/(altArr.length-1))*(w-2*pad)+pad,h-pad-((v-mn)/(mx-mn||1))*(h-2*pad)]);
-  const d='M'+pts.map(p=>p.join(',')).join('L');
-  const area=d+`L${pts[pts.length-1][0]},${h-pad} L${pad},${h-pad}Z`;
-  return `<svg viewBox="0 0 ${w} ${h}" style="width:100%">
-    <path d="${area}" fill="rgba(255,124,59,.15)"/>
-    <path d="${d}" fill="none" stroke="var(--orange)" stroke-width="1.5"/>
-    <text x="${pad}" y="${h}" style="font-size:7px;fill:var(--t3)">${Math.round(mn)}m</text>
-    <text x="${w-pad}" y="${h}" style="font-size:7px;fill:var(--t3);text-anchor:end">${Math.round(mx)}m</text>
+  let arr=altArr;
+  if(arr.length>400){const step=Math.ceil(arr.length/400);arr=arr.filter((_,i)=>i%step===0);}
+  const w=400,h=80,pad=6,padB=16;
+  const mn=Math.min(...arr),mx=Math.max(...arr)||1;
+  const pts=arr.map((v,i)=>[(i/(arr.length-1||1))*(w-pad*2)+pad, h-padB-((v-mn)/(mx-mn||1))*(h-padB-pad)]);
+  const d='M'+pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join('L');
+  const area=d+`L${pts[pts.length-1][0].toFixed(1)},${h-padB} L${pts[0][0].toFixed(1)},${h-padB}Z`;
+  const dPlus=Math.round(arr.reduce((s,v,i)=>i>0&&v>arr[i-1]?s+(v-arr[i-1]):s,0));
+  return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:${h}px;display:block">
+    <path d="${area}" fill="rgba(255,124,59,.18)"/>
+    <path d="${d}" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linejoin="round"/>
+    <text x="${pad}" y="${h-2}" style="font-size:8px;fill:var(--t3)">${Math.round(mn)}m</text>
+    <text x="${w/2}" y="${h-2}" style="font-size:8px;fill:var(--t3);text-anchor:middle">+${dPlus}m D+</text>
+    <text x="${w-pad}" y="${h-2}" style="font-size:8px;fill:var(--t3);text-anchor:end">${Math.round(mx)}m</text>
   </svg>`;
 }
 
 function drawHRSVG(hrArr) {
   if(!hrArr?.length) return '';
-  const w=300,h=60,pad=5;
-  const mn=Math.min(...hrArr),mx=Math.max(...hrArr)||1;
-  const pts=hrArr.map((v,i)=>[(i/(hrArr.length-1))*(w-2*pad)+pad,h-pad-((v-mn)/(mx-mn||1))*(h-2*pad)]);
-  const d='M'+pts.map(p=>p.join(',')).join('L');
-  return `<svg viewBox="0 0 ${w} ${h}" style="width:100%">
-    <path d="${d}" fill="none" stroke="var(--red)" stroke-width="1.5"/>
-    <text x="${pad}" y="${h}" style="font-size:7px;fill:var(--t3)">${Math.round(mn)} bpm</text>
-    <text x="${w-pad}" y="${h}" style="font-size:7px;fill:var(--t3);text-anchor:end">${Math.round(mx)} bpm</text>
+  // Downsample if too many points (keep max 300 for perf)
+  let arr = hrArr;
+  if(arr.length > 300) { const step=Math.ceil(arr.length/300); arr=arr.filter((_,i)=>i%step===0); }
+  const w=400,h=52,pad=6,padB=16;
+  const mn=Math.min(...arr),mx=Math.max(...arr)||1;
+  const pts=arr.map((v,i)=>[(i/(arr.length-1||1))*(w-pad*2)+pad, h-padB-((v-mn)/(mx-mn||1))*(h-padB-pad)]);
+  const d='M'+pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join('L');
+  const area=d+`L${pts[pts.length-1][0].toFixed(1)},${h-padB} L${pts[0][0].toFixed(1)},${h-padB}Z`;
+  const avg=Math.round(arr.reduce((s,v)=>s+v,0)/arr.length);
+  return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:${h}px;display:block">
+    <path d="${area}" fill="rgba(255,79,79,.12)"/>
+    <path d="${d}" fill="none" stroke="var(--red)" stroke-width="1.5" stroke-linejoin="round"/>
+    <text x="${pad}" y="${h-2}" style="font-size:8px;fill:var(--t3)">${Math.round(mn)} bpm</text>
+    <text x="${w/2}" y="${h-2}" style="font-size:8px;fill:var(--t3);text-anchor:middle">avg ${avg} bpm</text>
+    <text x="${w-pad}" y="${h-2}" style="font-size:8px;fill:var(--t3);text-anchor:end">${Math.round(mx)} bpm</text>
   </svg>`;
 }
 
@@ -3787,17 +3796,29 @@ function polylineToSVG(encoded, w, h, uid) {
   const lats=coords.map(c=>c[0]),lngs=coords.map(c=>c[1]);
   const minLat=Math.min(...lats),maxLat=Math.max(...lats);
   const minLng=Math.min(...lngs),maxLng=Math.max(...lngs);
-  const scale=Math.min((w-20)/(maxLng-minLng||1),(h-20)/(maxLat-minLat||1));
-  const toX=lng=>(lng-minLng)*scale+10;
-  const toY=lat=>(maxLat-lat)*scale+10;
+  const pad=16;
+  // Scale X and Y independently so route fills the box regardless of shape
+  const scaleX=(w-pad*2)/(maxLng-minLng||0.001);
+  const scaleY=(h-pad*2)/(maxLat-minLat||0.001);
+  // Use uniform scale to preserve shape but center in box
+  const scale=Math.min(scaleX,scaleY);
+  const usedW=(maxLng-minLng)*scale, usedH=(maxLat-minLat)*scale;
+  const offX=(w-usedW)/2, offY=(h-usedH)/2;
+  const toX=lng=>(lng-minLng)*scale+offX;
+  const toY=lat=>(maxLat-lat)*scale+offY;
   const d='M'+coords.map(c=>`${toX(c[1]).toFixed(1)},${toY(c[0]).toFixed(1)}`).join('L');
   const gid='grad-'+uid;
-  return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:${h}px">
+  // dot for start
+  const sx=toX(coords[0][1]).toFixed(1), sy=toY(coords[0][0]).toFixed(1);
+  const ex=toX(coords[coords.length-1][1]).toFixed(1), ey=toY(coords[coords.length-1][0]).toFixed(1);
+  return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:${h}px;display:block">
     <defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="var(--accent)"/>
-      <stop offset="100%" stop-color="var(--green)"/>
+      <stop offset="0%" stop-color="#4fff9b"/>
+      <stop offset="100%" stop-color="#b8ff4f"/>
     </linearGradient></defs>
-    <path d="${d}" fill="none" stroke="url(#${gid})" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="${d}" fill="none" stroke="url(#${gid})" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>
+    <circle cx="${sx}" cy="${sy}" r="4" fill="#4fff9b" opacity=".9"/>
+    <circle cx="${ex}" cy="${ey}" r="4" fill="var(--red)" opacity=".9"/>
   </svg>`;
 }
 
