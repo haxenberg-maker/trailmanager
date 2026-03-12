@@ -6,6 +6,13 @@
 <title>Trail Running Manager 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
 <meta name="theme-color" content="#0c0e0d">
+<script>
+// Apply theme immediately — before any rendering — to prevent flash
+(function(){
+  var t = localStorage.getItem('tm_theme');
+  if(t && t !== 'default') document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Trail Manager">
@@ -1938,8 +1945,13 @@ window.addEventListener('load', async () => {
 //  THEME
 // ══════════════════════════════════════════════════════
 function applyTheme(name) {
-  if (!name || name === 'default') document.documentElement.removeAttribute('data-theme');
-  else document.documentElement.setAttribute('data-theme', name);
+  if (!name || name === 'default') {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('tm_theme', 'default');
+  } else {
+    document.documentElement.setAttribute('data-theme', name);
+    localStorage.setItem('tm_theme', name);
+  }
   document.querySelectorAll('.theme-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.t === (name || 'default'));
   });
