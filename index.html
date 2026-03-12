@@ -101,10 +101,11 @@ document.currentScript.parentNode.appendChild(link);
 /* Timeline */
 .sl-timeline { position:relative;padding:0 0 0 20px; }
 .sl-timeline::before { content:'';position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:var(--border); }
-.sl-tl-item { position:relative;padding:0 0 24px 24px;opacity:0;transform:translateX(-12px);transition:opacity .5s ease,transform .5s ease; }
+.sl-tl-item { position:relative;padding:0 0 24px 24px;opacity:0;transform:translateX(-12px);transition:opacity .9s ease,transform .9s ease; }
 .sl-tl-item.sl-visible { opacity:1;transform:translateX(0); }
 .sl-tl-right { transform:translateX(12px); }
 .sl-tl-right.sl-visible { transform:translateX(0); }
+
 .sl-tl-dot { position:absolute;left:-20px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--s3);border:2px solid var(--border); }
 .sl-tl-dot-accent { background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-dim); }
 .sl-tl-year { font-size:10px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px; }
@@ -881,7 +882,7 @@ body.readonly label.btn { display:none !important }
           <div class="sl-tl-content">
             <div class="sl-tl-year">Dec 2025</div>
             <div class="sl-tl-title">600km în decembrie</div>
-            <div class="sl-tl-desc">20km dimineața + 20km seara, pe lângă muncă. 3.000km total în 2025. Pregătire finală pentru 2026.</div>
+            <div class="sl-tl-desc">10km dimineața + 10km seara, pe lângă muncă. 3.000km total în 2025. Pregătire finală pentru 2026.</div>
           </div>
         </div>
         <div class="sl-tl-item sl-tl-right sl-tl-highlight">
@@ -914,22 +915,41 @@ body.readonly label.btn { display:none !important }
 
     <!-- ── CE PRIMESTI ── -->
     <div class="sl-card">
-      <div class="sl-card-title">🤝 Ce primești în orice pachet</div>
+      <div class="sl-card-title">🤝 De ce să mă susții</div>
       <div class="sl-benefit">
-        <div class="sl-benefit-icon">👕</div>
-        <div class="sl-benefit-text"><div class="sl-benefit-title">Vizibilitate la curse</div><div class="sl-benefit-desc">Logo pe echipament la toate cele 10 curse — foto + video la finish line</div></div>
+        <div class="sl-benefit-icon">🏙️</div>
+        <div class="sl-benefit-text">
+          <div class="sl-benefit-title">Reprezinți Bârladul la nivel național</div>
+          <div class="sl-benefit-desc">La fiecare cursă — de la Transylvania 100 la UTMB Bucovina — numele tău e asociat cu un atlet care pune Bârladul pe harta trail-ului românesc.</div>
+        </div>
       </div>
       <div class="sl-benefit">
-        <div class="sl-benefit-icon">📱</div>
-        <div class="sl-benefit-text"><div class="sl-benefit-title">Social media</div><div class="sl-benefit-desc">Postări dedicate înainte și după fiecare cursă — tag, story, recap</div></div>
+        <div class="sl-benefit-icon">🌱</div>
+        <div class="sl-benefit-text">
+          <div class="sl-benefit-title">Aduci sportul în Bârlad</div>
+          <div class="sl-benefit-desc">Susținând un atlet local, contribui concret la cultura sportivă din oraș — inspiri oameni care văd că se poate, chiar din Bârlad.</div>
+        </div>
+      </div>
+      <div class="sl-benefit">
+        <div class="sl-benefit-icon">👕</div>
+        <div class="sl-benefit-text">
+          <div class="sl-benefit-title">Logo la 10 curse, 10 locații diferite</div>
+          <div class="sl-benefit-desc">Echipament cu brandul tău la start și finish în fața a sute de concurenți și spectatori — la Brașov, Sibiu, Bucovina și nu numai.</div>
+        </div>
       </div>
       <div class="sl-benefit">
         <div class="sl-benefit-icon">📊</div>
-        <div class="sl-benefit-text"><div class="sl-benefit-title">Dashboard live</div><div class="sl-benefit-desc">Acces permanent la acest tracker cu rezultate și statistici în timp real</div></div>
+        <div class="sl-benefit-text">
+          <div class="sl-benefit-title">Transparență totală — dashboard live</div>
+          <div class="sl-benefit-desc">Ai acces permanent la acest tracker cu fiecare cursă, fiecare km alergat. Nu cuvinte — cifre reale, în timp real.</div>
+        </div>
       </div>
       <div class="sl-benefit">
-        <div class="sl-benefit-icon">🔗</div>
-        <div class="sl-benefit-text"><div class="sl-benefit-title">Link & branding</div><div class="sl-benefit-desc">Menționat în toate comunicările publice ale sezonului</div></div>
+        <div class="sl-benefit-icon">🤝</div>
+        <div class="sl-benefit-text">
+          <div class="sl-benefit-title">Parteneriat autentic, nu reclamă</div>
+          <div class="sl-benefit-desc">Ești primul. Nu ești la rând. Îți dedic timp, atenție și recunoștință reală — și vorbesc despre tine ca om, nu ca brand impersonal.</div>
+        </div>
       </div>
     </div>
 
@@ -4315,7 +4335,7 @@ function slAnimateCards() {
   const obs = new IntersectionObserver((entries) => {
     entries.forEach((e, i) => {
       if (e.isIntersecting) {
-        setTimeout(() => e.target.classList.add('sl-visible'), i * 80);
+        setTimeout(() => e.target.classList.add('sl-visible'), i * 180);
         obs.unobserve(e.target);
       }
     });
@@ -4439,116 +4459,132 @@ function slDrawMap(races) {
   const legend = document.getElementById('sl-map-legend');
   if (!svg) return;
 
-  // Approx Romania outline — simplified polygon
-  const roPath = 'M142,32 L158,28 L178,30 L198,25 L215,32 L228,28 L240,35 L252,30 L265,38 L272,50 L280,55 L285,68 L278,80 L290,92 L295,105 L288,118 L278,125 L270,138 L258,142 L248,155 L238,168 L225,175 L215,185 L200,190 L188,182 L175,188 L162,185 L150,178 L138,170 L128,158 L118,148 L110,135 L105,120 L108,108 L115,95 L108,82 L112,68 L120,56 L130,45 Z';
-
-  // Race coords [lat,lng] — approximate locations
-  const raceCoords = {
-    'Transylvania 100':       [46.5, 25.0],
-    'Brasov Marathon':        [45.65, 25.6],
-    'Skyrace Giants Race':    [45.35, 25.55],
-    'Legendele Nemirei':      [46.1, 26.6],
-    'Predeal Forest Run':     [45.5, 25.58],
-    'UTMB Bucovina Ultra Rocks': [47.5, 25.9],
-    '2X2 Race':               [45.4, 23.8],
-    'Ciucas X3':              [45.52, 26.1],
-    'Azuga L30 Dynafit':      [45.43, 25.55],
-    'Istrița xScape':         [44.88, 26.8],
-  };
-
-  // Romania bounding box for projection
-  const latMin=43.6, latMax=48.3, lngMin=20.2, lngMax=30.0;
-  const W=340, H=300, pad=20;
+  const W=340, H=260, pad=18;
+  // Romania bounding box
+  const latMin=43.55, latMax=48.35, lngMin=20.15, lngMax=30.05;
   const toX = lng => pad + (lng-lngMin)/(lngMax-lngMin)*(W-pad*2);
   const toY = lat => pad + (latMax-lat)/(latMax-latMin)*(H-pad*2);
+  // Convert geo coords to SVG path
+  const geo2path = pts => 'M'+pts.map(([la,ln])=>toX(ln).toFixed(1)+','+toY(la).toFixed(1)).join('L')+'Z';
 
-  // Difficulty colors using theme — map to accent/orange/red
-  const diffMap = [
-    [80,'#ff4f4f'],  // legendary
-    [50,'#ff8c42'],  // epic
-    [30,'var(--accent)'],  // hard
-    [15,'var(--t2)'], // medium
-    [0,'var(--t3)'],  // easy
+  // Romania outline — real geo coords, simplified ~80 points
+  const romania = [
+    [48.27,22.14],[48.37,22.56],[48.05,22.85],[47.96,23.28],[47.73,23.55],
+    [47.97,24.09],[48.23,24.35],[48.17,24.82],[47.85,25.29],[47.96,25.67],
+    [48.22,25.98],[47.98,26.37],[47.64,26.62],[47.29,26.92],[47.05,27.24],
+    [46.87,27.60],[46.44,27.91],[46.19,28.21],[45.94,28.47],[45.65,28.76],
+    [45.33,28.73],[45.10,29.04],[44.82,29.29],[44.51,28.94],[44.23,28.63],
+    [43.88,28.56],[43.74,28.24],[43.67,27.90],[43.74,27.55],[44.08,27.14],
+    [44.21,26.80],[44.05,26.47],[43.90,26.10],[43.80,25.72],[43.96,25.39],
+    [44.21,25.00],[44.20,24.47],[44.05,24.10],[43.89,23.69],[43.86,23.26],
+    [44.07,22.87],[44.22,22.46],[44.50,22.17],[44.72,22.36],[45.02,22.18],
+    [45.14,21.79],[45.44,21.58],[45.73,21.30],[45.98,21.50],[46.23,21.57],
+    [46.52,21.45],[46.77,21.10],[47.05,21.53],[47.33,21.89],[47.67,21.89],
+    [47.93,22.09],[48.27,22.14]
   ];
-  function getDiffColor(r) {
-    const d = (parseFloat(r.distanta)||0) + (parseFloat(r.denivelare)||0)/100;
-    for(const [t,c] of diffMap) if(d>=t) return c;
-    return 'var(--t3)';
-  }
 
-  // Build SVG
   const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#ccff00';
-  const s3 = getComputedStyle(document.documentElement).getPropertyValue('--s3').trim()||'#2f3535';
-  const border = getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#3a4141';
+  const bg   = getComputedStyle(document.documentElement).getPropertyValue('--s2').trim()||'#242929';
+  const s3   = getComputedStyle(document.documentElement).getPropertyValue('--s3').trim()||'#2f3535';
+  const t4   = getComputedStyle(document.documentElement).getPropertyValue('--t4').trim()||'#495057';
+  const t3   = getComputedStyle(document.documentElement).getPropertyValue('--t3').trim()||'#6c757d';
 
-  let svgContent = `<rect width="${W}" height="${H}" fill="${s3}" rx="8"/>`;
-  // Simple Romania fill
-  svgContent += `<path d="${roPath}" fill="${border}" stroke="${border}" stroke-width="1.5" opacity=".6"/>`;
+  // Update SVG viewBox
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
-  // Draw connecting lines between races (sorted by date)
+  let html = `<rect width="${W}" height="${H}" fill="${bg}" rx="8"/>`;
+  // Romania fill
+  html += `<path d="${geo2path(romania)}" fill="${s3}" stroke="${t4}" stroke-width="1.2"/>`;
+
+  // Race locations [lat, lng]
+  const locs = {
+    'Transylvania 100':          [46.54, 25.08],
+    'Brasov Marathon':           [45.65, 25.61],
+    'Skyrace Giants Race':       [45.36, 25.56],
+    'Legendele Nemirei':         [46.10, 26.65],
+    'Predeal Forest Run':        [45.50, 25.57],
+    'UTMB Bucovina Ultra Rocks': [47.55, 25.93],
+    '2X2 Race':                  [45.40, 23.82],
+    'Ciucas X3':                 [45.53, 26.08],
+    'Azuga L30 Dynafit':         [45.43, 25.57],
+    'Istrița xScape':            [44.88, 26.82],
+    'Barlad':                    [46.23, 27.67],
+  };
+
+  // Sort races by date
   const sorted = [...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+
+  // Draw connecting route
   let prevX=null, prevY=null;
   sorted.forEach(r => {
-    const coords = Object.entries(raceCoords).find(([k])=>r.denumire&&r.denumire.includes(k.split(' ')[0]));
-    if (!coords) return;
-    const [lat,lng] = coords[1];
+    const key = Object.keys(locs).find(k => r.denumire && r.denumire.toLowerCase().includes(k.split(' ')[0].toLowerCase()));
+    if (!key) return;
+    const [lat,lng] = locs[key];
     const x=toX(lng), y=toY(lat);
     if (prevX!==null) {
-      svgContent += `<line x1="${prevX.toFixed(1)}" y1="${prevY.toFixed(1)}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${accentColor}" stroke-width="1" stroke-dasharray="3,4" opacity=".3"/>`;
+      html += `<line x1="${prevX.toFixed(1)}" y1="${prevY.toFixed(1)}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${accentColor}" stroke-width="1" stroke-dasharray="3,4" opacity=".35"/>`;
     }
     prevX=x; prevY=y;
   });
 
-  // Draw race dots
-  const tooltip = document.getElementById('sl-map-tooltip');
-  let dots = '';
+  // Bârlad — home marker
+  const bx = toX(27.67).toFixed(1), by = toY(46.23).toFixed(1);
+  html += `<circle cx="${bx}" cy="${by}" r="5" fill="none" stroke="${accentColor}" stroke-width="1.5" opacity=".5"/>`;
+  html += `<text x="${bx}" y="${(parseFloat(by)-8).toFixed(1)}" style="font-size:7px;fill:${accentColor};text-anchor:middle;opacity:.7">HOME</text>`;
+
+  // Race dots + invisible hit areas for tooltip
+  const dots = [];
   sorted.forEach((r,i) => {
-    const key = Object.keys(raceCoords).find(k=>r.denumire&&r.denumire.includes(k.split(' ')[0]));
+    const key = Object.keys(locs).find(k => r.denumire && r.denumire.toLowerCase().includes(k.split(' ')[0].toLowerCase()));
     if (!key) return;
-    const [lat,lng] = raceCoords[key];
+    const [lat,lng] = locs[key];
     const x=toX(lng).toFixed(1), y=toY(lat).toFixed(1);
     const past = r.data_cursa && new Date(r.data_cursa) < new Date();
-    const col = past ? 'var(--t4)' : getDiffColor(r);
-    const isBig = (parseFloat(r.distanta)||0) >= 100;
-    const r2 = isBig ? 7 : 5;
-    dots += `<g class="sl-map-dot" data-race="${i}" style="cursor:pointer">
-      ${isBig ? `<circle cx="${x}" cy="${y}" r="${r2+4}" fill="${accentColor}" opacity=".15"/>` : ''}
-      <circle cx="${x}" cy="${y}" r="${r2}" fill="${col}" stroke="var(--bg)" stroke-width="1.5"/>
-      <text x="${x}" y="${parseFloat(y)-r2-3}" style="font-size:7px;fill:var(--t2);text-anchor:middle;font-weight:600">${i+1}</text>
-    </g>`;
+    const big  = (parseFloat(r.distanta)||0) >= 100;
+    const col  = past ? t4 : (big ? accentColor : accentColor);
+    const op   = past ? '.5' : '1';
+    const r2   = big ? 7 : 5;
+    if (big) {
+      html += `<circle cx="${x}" cy="${y}" r="${r2+5}" fill="${accentColor}" opacity=".12"/>`;
+    }
+    html += `<circle cx="${x}" cy="${y}" r="${r2}" fill="${col}" stroke="${bg}" stroke-width="1.5" opacity="${op}"/>`;
+    html += `<text x="${x}" y="${(parseFloat(y)-r2-3).toFixed(1)}" style="font-size:7px;fill:${t3};text-anchor:middle">${i+1}</text>`;
+    // Large transparent hit area
+    dots.push({ x, y, r2, race:r, idx:i });
+    html += `<circle cx="${x}" cy="${y}" r="14" fill="transparent" class="sl-map-dot" data-idx="${i}" style="cursor:pointer"/>`;
   });
-  svgContent += dots;
-  svg.innerHTML = svgContent;
 
-  // Tooltip on dot hover/click
+  svg.innerHTML = html;
+
+  // Tooltip
+  const tooltip = document.getElementById('sl-map-tooltip');
   svg.querySelectorAll('.sl-map-dot').forEach(dot => {
-    const idx = parseInt(dot.dataset.race);
+    const idx = parseInt(dot.dataset.idx);
     const race = sorted[idx];
-    if (!race) return;
+    if (!race || !tooltip) return;
     const show = (e) => {
-      if (!tooltip) return;
       const d = race.data_cursa ? new Date(race.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'short'}) : '—';
-      tooltip.innerHTML = `<strong>${race.denumire}</strong><br>${d}<br>${race.distanta||'—'}km · D+${race.denivelare||'—'}`;
+      const past = race.data_cursa && new Date(race.data_cursa) < new Date();
+      tooltip.innerHTML = `<strong>${race.denumire}</strong><br>${d} · ${race.distanta||'—'}km<br>D+${(race.denivelare||0).toLocaleString()}m${past?' ✅':''}`;
       const rect = svg.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const cx = e.clientX - rect.left;
+      const cy = e.clientY - rect.top;
       tooltip.style.display = 'block';
-      tooltip.style.left = Math.min(x+8, rect.width-170)+'px';
-      tooltip.style.top  = Math.max(y-60, 4)+'px';
+      tooltip.style.left = Math.min(cx+10, rect.width-175)+'px';
+      tooltip.style.top  = Math.max(cy-65, 4)+'px';
     };
-    const hide = () => { if(tooltip) tooltip.style.display='none'; };
+    const hide = () => tooltip.style.display='none';
     dot.addEventListener('mouseenter', show);
     dot.addEventListener('mouseleave', hide);
-    dot.addEventListener('touchstart', show, {passive:true});
+    dot.addEventListener('touchstart', e=>{e.preventDefault();show(e.touches[0]);},{passive:false});
     dot.addEventListener('touchend', hide, {passive:true});
   });
 
-  // Legend
   if (legend) {
     legend.innerHTML = `
-      <div class="sl-map-legend-item"><svg width="10" height="10"><circle cx="5" cy="5" r="5" fill="${accentColor}"/></svg>cursă principală (+100km)</div>
-      <div class="sl-map-legend-item"><svg width="10" height="10"><circle cx="5" cy="5" r="4" fill="${accentColor}" opacity=".6"/></svg>altă cursă</div>
-      <div class="sl-map-legend-item"><svg width="10" height="10"><circle cx="5" cy="5" r="4" fill="var(--t4)"/></svg>deja alergată</div>
+      <div class="sl-map-legend-item"><svg width="10" height="10" style="flex-shrink:0"><circle cx="5" cy="5" r="5" fill="${accentColor}"/></svg>cursă principală</div>
+      <div class="sl-map-legend-item"><svg width="10" height="10" style="flex-shrink:0"><circle cx="5" cy="5" r="4" fill="${accentColor}" opacity=".5"/></svg>altă cursă</div>
+      <div class="sl-map-legend-item"><svg width="10" height="10" style="flex-shrink:0"><circle cx="5" cy="5" r="4" stroke="${accentColor}" fill="none" stroke-width="1.5"/></svg>Bârlad — HOME</div>
     `;
   }
 }
@@ -4559,13 +4595,13 @@ function slUpdateROI(amount) {
   if (el) el.textContent = amount.toLocaleString() + ' RON';
 
   const tiers = [
-    { min:0,    icon:'👕', title:'Logo pe echipament',     desc:'Toate cursele sezonului, foto la finish line', always:true },
-    { min:0,    icon:'📱', title:'1 postare social media', desc:'Story + tag la o cursă aleasă de tine',         always:true },
-    { min:500,  icon:'📱', title:'Postări la toate cursele', desc:'Story + tag + recap la fiecare din cele 10 curse' },
-    { min:1000, icon:'🎥', title:'Video recap sezon',      desc:'Vlog de sezon cu logo și mențiune explicită' },
-    { min:1500, icon:'🔗', title:'Link permanent',         desc:'Site-ul tău în footer-ul dashboard-ului public' },
-    { min:2500, icon:'🏆', title:'Sponsor principal',      desc:'Cel mai vizibil brand în toate comunicările' },
-    { min:5000, icon:'⭐', title:'Naming rights cursă',    desc:'O cursă din sezon purtă numele brandului tău' },
+    { min:0,    icon:'🏙️', title:'Reprezinți Bârladul',    desc:'Numele tău la 10 curse naționale — Bârladul pe harta trail-ului' },
+    { min:0,    icon:'👕', title:'Logo pe echipament',     desc:'La start și finish la toate cele 10 curse ale sezonului' },
+    { min:300,  icon:'📊', title:'Dashboard live',         desc:'Link la acest tracker — arată clienților tăi că investești în sport local' },
+    { min:600,  icon:'📸', title:'Fotografie dedicată',    desc:'Foto la finish line cu echipament cu logo-ul tău vizibil, trimisă după fiecare cursă' },
+    { min:1000, icon:'🔗', title:'Mențiune publică',       desc:'Menționat pe orice platformă pe care o voi folosi vreodată — cu link' },
+    { min:2000, icon:'🏆', title:'Sponsor principal Bârlad', desc:'Singurul sponsor principal — primul menționat, cel mai vizibil, adevărat parteneriat' },
+    { min:3500, icon:'🌱', title:'Ambasador sport în Bârlad', desc:'Organizăm împreună un eveniment/alergare locală la Bârlad cu brandul tău în față' },
   ];
 
   const active = tiers.filter(t => amount >= t.min);
