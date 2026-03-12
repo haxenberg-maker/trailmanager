@@ -1577,32 +1577,50 @@ async function sbDelete(table, id, auth = true) {
 // ══════════════════════════════════════════════════════
 async function loadAllData(useAuth = false) {
   setSyncStatus('Se încarcă...', 'var(--yellow)');
+  const uid_filter = useAuth && currentUser ? `user_id=eq.${currentUser.id}` : '';
+
+  // Fetch each table individually with fallback — if a table doesn't exist yet, return empty
+  async function safeFetch(table, params) {
+    try {
+      return await sbGet(table, params, useAuth);
+    } catch(e) {
+      console.warn(`Table "${table}" not ready yet:`, e.message);
+      return [];
+    }
+  }
+
   try {
-    const uid_filter = useAuth && currentUser ? `user_id=eq.${currentUser.id}` : '';
-    // All tables — fetch in parallel
     const [prefs, races, sponsors, eq, nutri, supls, transport, acts] = await Promise.all([
-      sbGet('user_prefs',         uid_filter || 'limit=1', useAuth),
-      sbGet('races',              (uid_filter || 'limit=200') + '&order=data_cursa.asc', useAuth),
-      sbGet('sponsors',           (uid_filter || 'limit=100') + '&order=created_at.asc', useAuth),
-      sbGet('equipment',          (uid_filter || 'limit=50')  + '&order=created_at.asc', useAuth),
-      sbGet('nutrition_settings', uid_filter || 'limit=1', useAuth),
-      sbGet('supplements',        (uid_filter || 'limit=50')  + '&order=created_at.asc', useAuth),
-      sbGet('transport',          (uid_filter || 'limit=50')  + '&order=created_at.asc', useAuth),
-      sbGet('activities',         (uid_filter || 'limit=1000') + '&order=date.desc', useAuth),
+      safeFetch('user_prefs',         uid_filter || 'limit=1'),
+      safeFetch('races',              (uid_filter || 'limit=200') + '&order=data_cursa.asc'),
+      safeFetch('sponsors',           (uid_filter || 'limit=100') + '&order=created_at.asc'),
+      safeFetch('equipment',          (uid_filter || 'limit=50')  + '&order=created_at.asc'),
+      safeFetch('nutrition_settings', uid_filter || 'limit=1'),
+      safeFetch('supplements',        (uid_filter || 'limit=50')  + '&order=created_at.asc'),
+      safeFetch('transport',          (uid_filter || 'limit=50')  + '&order=created_at.asc'),
+      safeFetch('activities',         (uid_filter || 'limit=1000') + '&order=date.desc'),
     ]);
 
-    DB.prefs       = prefs[0]      || { target_km: 5000, dash_title: 'SEZONUL BESTIEI', theme: 'default' };
-    DB.races       = races         || [];
-    DB.sponsors    = sponsors      || [];
-    DB.equipment   = eq            || [];
-    DB.nutri       = nutri[0]      || { gel_pret_set24: 0, gel_training_lunar: 0 };
-    DB.supplements = supls         || [];
-    DB.transport   = transport     || [];
-    DB.activities  = acts          || [];
+    DB.prefs       = prefs[0]  || { target_km: 5000, dash_title: 'SEZONUL BESTIEI', theme: 'default' };
+    DB.races       = races     || [];
+    DB.sponsors    = sponsors  || [];
+    DB.equipment   = eq        || [];
+    DB.nutri       = nutri[0]  || { gel_pret_set24: 0, gel_training_lunar: 0 };
+    DB.supplements = supls     || [];
+    DB.transport   = transport || [];
+    DB.activities  = acts      || [];
 
     applyTheme(DB.prefs.theme || 'default');
     renderAll();
-    setSyncStatus('Sincronizat ☁️', 'var(--green)');
+
+    // Show warning if tables are missing (migration not run yet)
+    const missing = [prefs,races,sponsors,eq,nutri,supls,transport,acts]
+      .filter(r => !Array.isArray(r) && r?.length === undefined).length;
+    if (!races.length && !acts.length && !useAuth) {
+      setSyncStatus('⚠️ Rulează migration.sql', 'var(--yellow)');
+    } else {
+      setSyncStatus('Sincronizat ☁️', 'var(--green)');
+    }
     fetchITRA();
   } catch(e) {
     setSyncStatus('Eroare ☁️', 'var(--red)');
