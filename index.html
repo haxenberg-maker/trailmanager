@@ -2099,16 +2099,32 @@ function renderDash() {
   renderRaceHistory();
 }
 
-function rcCard(x) {
+function rcCard(c) {
+  // Uses same .rc class as rcCardFull — for dashboard upcoming cards (compact)
   const today = new Date(); today.setHours(0,0,0,0);
-  const d = x.data_cursa ? Math.ceil((new Date(x.data_cursa)-today)/86400000) : null;
-  return `<div class="rc-card${x.plata_concurs_ok&&(x.plata_cazare||!x.cazare)?' star':''}">
-    <div style="font-size:10px;color:var(--t3);margin-bottom:6px">${fd(x.data_cursa)}${d!==null?' · '+d+' zile':''}</div>
-    <div style="font-family:var(--display);font-size:18px;letter-spacing:1px;color:var(--text);margin-bottom:8px">${x.denumire}</div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap">
-      <span style="font-size:11px;color:var(--t2)">📍 ${x.distanta||0} km</span>
-      <span style="font-size:11px;color:var(--t2)">⛰️ ${x.denivelare||0} m D+</span>
-      ${x.incaltari?`<span style="font-size:11px;color:var(--t3)">👟 ${x.incaltari}</span>`:''}
+  const dc = c.data_cursa ? new Date(c.data_cursa) : null;
+  const days = dc ? Math.ceil((dc - today) / 86400000) : null;
+  const insOk = c.plata_concurs_ok;
+  const cazOk = c.plata_cazare || c.cazare===0;
+  return `
+  <div class="rc ${(insOk&&cazOk)?' star':''}">
+    <div class="rc-top">
+      <div>
+        <div class="rc-nr">#${c.nr||'—'}</div>
+        <div class="rc-name">${c.denumire}</div>
+        <div class="rc-date">${fd(c.data_cursa)}</div>
+        ${days!==null&&days<=14?`<div class="rc-cd soon">🔥 ${days} zile</div>`:days!==null?`<div class="rc-cd">⏳ ${days} zile</div>`:''}
+      </div>
+    </div>
+    <div class="rc-nums">
+      <div class="rn"><lbl>Distanță</lbl><div class="rv">${c.distanta||'—'}<span class="ru"> km</span></div></div>
+      <div class="rn"><lbl>Denivelare</lbl><div class="rv">${c.denivelare?((c.denivelare/1000).toFixed(1)):''}<span class="ru"> km D+</span></div></div>
+    </div>
+    <div class="rc-foot">
+      <div class="rc-cost">${fmt((c.plata_concurs||0)+(c.cazare||0))} <small>RON</small></div>
+      <div style="font-size:11px;color:${insOk?'var(--green)':'var(--red)'}">
+        ${insOk?'✓ Înscris':'⚠ Neînscris'}
+      </div>
     </div>
   </div>`;
 }
@@ -2120,44 +2136,69 @@ function renderCurse(f = 'all') {
   curFilter = f;
   const today = new Date(); today.setHours(0,0,0,0);
   let list = [...DB.races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
-  if (f === 'viitoare') list = list.filter(x=>x.data_cursa && new Date(x.data_cursa)>=today);
-  if (f === 'trecute')  list = list.filter(x=>x.data_cursa && new Date(x.data_cursa)<today);
+  if (f === 'upcoming') list = list.filter(x=>x.data_cursa && new Date(x.data_cursa)>=today);
+  if (f === 'paid')     list = list.filter(x=>x.plata_concurs_ok);
+  if (f === 'unpaid')   list = list.filter(x=>!x.plata_concurs_ok);
+  document.getElementById('rc-list').innerHTML = list.map(rcCardFull).join('') || '<p style="color:var(--t3);padding:20px 0">Nicio cursă.</p>';
+}
 
-  document.querySelectorAll('.rc-filter-btn').forEach(b => b.classList.toggle('on', b.dataset.f === f));
-
+function rcCardFull(c) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const dc = c.data_cursa ? new Date(c.data_cursa) : null;
+  const past = dc && dc < today;
+  const days = dc ? Math.ceil((dc - today) / 86400000) : null;
   const gpp = (DB.nutri.gel_pret_set24||0)/24;
-  document.getElementById('rc-list').innerHTML = list.map(x=>{
-    const past = x.data_cursa && new Date(x.data_cursa) < today;
-    const insOk = x.plata_concurs_ok, cazOk = x.plata_cazare || x.cazare===0;
-    const d = x.data_cursa ? Math.ceil((new Date(x.data_cursa)-today)/86400000) : null;
-    return `
-    <div class="rc-card${x.plata_concurs_ok&&cazOk?' star':''}${past?' past':''}">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
-        <div style="flex:1">
-          <div style="font-size:10px;color:var(--t3);margin-bottom:4px">#${x.nr||'—'} · ${fd(x.data_cursa)}${d!==null&&!past?' · '+d+' zile':''}</div>
-          <div style="font-family:var(--display);font-size:20px;letter-spacing:1px;color:var(--text);margin-bottom:8px">${x.denumire}</div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px">
-            <span class="badge">📍 ${x.distanta||0} km</span>
-            <span class="badge">⛰️ ${x.denivelare||0} m D+</span>
-            ${x.incaltari?`<span class="badge">👟 ${x.incaltari}</span>`:''}
-            ${x.geluri?`<span class="badge">🍯 ${x.geluri} gel</span>`:''}
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <span style="font-size:11px;${insOk?'color:var(--green)':'color:var(--red)'}">🏁 ${insOk?'✓ Înscriere':'Înscriere restantă'}</span>
-            ${x.cazare>0?`<span style="font-size:11px;${cazOk?'color:var(--green)':'color:var(--red)'}">🏨 ${cazOk?'✓ Cazare':'Cazare restantă'}</span>`:''}
-          </div>
-          ${x.note?`<div style="margin-top:6px;font-size:11px;color:var(--t3);font-style:italic">📝 ${x.note}</div>`:''}
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
-          <div style="font-family:var(--display);font-size:18px;color:var(--accent)">${fmt((x.plata_concurs||0)+(x.cazare||0)+Math.round((x.geluri||0)*gpp))} RON</div>
-          <div style="display:flex;gap:6px">
-            <button class="btn btn-ghost btn-sm btn-icon" onclick="openRC('${x.id}')">✏️</button>
-            <button class="btn btn-ghost btn-sm btn-icon" onclick="delRC('${x.id}')" style="color:var(--red)">🗑</button>
-          </div>
-        </div>
+  const gel = Math.round((c.geluri||0)*gpp);
+  const tot = (c.cazare||0) + (c.plata_concurs||0) + gel;
+  const isUltra = (c.distanta||0) >= 80;
+  const insOk = c.plata_concurs_ok;
+  const cazOk = c.plata_cazare || c.cazare===0;
+
+  let cdHtml = '';
+  if (past) cdHtml = `<div class="rc-cd">✓ Finalizat</div>`;
+  else if (days !== null && days <= 14) cdHtml = `<div class="rc-cd soon">🔥 ${days} zile</div>`;
+  else if (days !== null) cdHtml = `<div class="rc-cd">⏳ ${days} zile</div>`;
+
+  const tags = [];
+  if (c.rezervat) tags.push('<span class="tag tg">🏨 Rezervat</span>');
+  else tags.push('<span class="tag ty">🏨 Fără rezervare</span>');
+  if (insOk) tags.push('<span class="tag tg">✓ Înscris</span>');
+  else tags.push('<span class="tag tr">⚠ Neînscris</span>');
+  if (isUltra) tags.push('<span class="tag ty">🏔 Ultra</span>');
+
+  return `
+  <div class="rc ${past?'past':''}${(insOk&&cazOk)?' star':''}">
+    <div class="rc-top">
+      <div>
+        <div class="rc-nr">#${c.nr||'—'}</div>
+        <div class="rc-name">${c.denumire}</div>
+        <div class="rc-date">${fd(c.data_cursa)} · ${c.ora_start||''}</div>
+        ${cdHtml}
       </div>
-    </div>`;
-  }).join('') || '<p style="color:var(--t3);padding:20px 0">Nicio cursă în această categorie.</p>';
+    </div>
+    <div class="rc-nums">
+      <div class="rn"><lbl>Distanță</lbl><div class="rv">${c.distanta||'—'}<span class="ru"> km</span></div></div>
+      <div class="rn"><lbl>Denivelare</lbl><div class="rv">${c.denivelare?((c.denivelare/1000).toFixed(1)):''}<span class="ru"> km D+</span></div></div>
+      <div class="rn"><lbl>Pantofi</lbl><div class="rv" style="font-size:12px;font-family:var(--body)">${c.incaltari||'—'}</div></div>
+      <div class="rn"><lbl>Geluri</lbl><div class="rv">${c.geluri||0}<span class="ru"> buc</span></div></div>
+    </div>
+    <div class="rc-tags">${tags.join('')}</div>
+    <div class="rc-foot">
+      <div>
+        <div class="rc-cost">${fmt(tot)} <small>RON est.</small></div>
+      </div>
+      <div class="rc-actions">
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="openRC('${c.id}')">✏️</button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="delRC('${c.id}')">🗑</button>
+      </div>
+    </div>
+    ${c.note?`<div class="rc-note">📝 ${c.note}</div>`:''}
+    ${(c.link_dovada_ins||c.link_dovada_caz)?`
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+      ${c.link_dovada_ins?`<button onclick="openPreview('${c.link_dovada_ins.replace(/'/g,"\'")}','Dovadă înscriere — ${c.denumire.replace(/'/g,"\'")}')" class="btn btn-ghost btn-sm" style="font-size:11px">📄 Dovadă înscriere</button>`:''}
+      ${c.link_dovada_caz?`<button onclick="openPreview('${c.link_dovada_caz.replace(/'/g,"\'")}','Dovadă cazare — ${c.denumire.replace(/'/g,"\'")}')" class="btn btn-ghost btn-sm" style="font-size:11px">🏨 Dovadă cazare</button>`:''}
+    </div>`:''}
+  </div>`;
 }
 
 
