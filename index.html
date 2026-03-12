@@ -1960,65 +1960,66 @@ function renderDash() {
   const km = c.reduce((s,x)=>s+(x.distanta||0),0);
   const gpp = (DB.nutri.gel_pret_set24 || 0) / 24;
 
-  const totalDplus = c.reduce((s,x)=>s+(x.denivelare||0),0);
-  const upcoming = [...c].filter(x=>x.data_cursa && new Date(x.data_cursa)>=today).sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
-  const daysToNext = upcoming.length ? Math.ceil((new Date(upcoming[0].data_cursa)-today)/86400000) : null;
-
-  // Activities this year
+  // Activities this year — exclude is_race duplicates
   const curYear = new Date().getFullYear().toString();
   const allActs = getActivities();
-  const actsThisYear = allActs.filter(a => a.date?.startsWith(curYear));
-  const kmThisYear = Math.round(actsThisYear.reduce((s,a)=>s+(a.km||0),0));
+  // km alergați = doar activitățile din tabelul activities (Strava/import), nu din races
+  const actsThisYear = allActs.filter(a => a.date && a.date.startsWith(curYear));
+  const kmThisYear = Math.round(actsThisYear.reduce((s,a)=>s+(parseFloat(a.km)||0),0));
 
-  // Streak
   const streak = calcStreak(allActs);
 
-  const dbSub = document.getElementById('db-sub'); if(dbSub) dbSub.textContent = `${c.length} curse · ${km} km total · Sezon 2026`;
+  const upcoming = [...c].filter(x=>x.data_cursa && new Date(x.data_cursa)>=today)
+    .sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+  const daysToNext = upcoming.length ? Math.ceil((new Date(upcoming[0].data_cursa)-today)/86400000) : null;
 
-  // Hero stats
-  const heroEl = document.getElementById('dash-hero-stats');
-  if (heroEl) heroEl.innerHTML = `
-    <div class="dhs-item"><div class="dhs-val">${kmThisYear}</div><div class="dhs-lbl">km alergați 2026</div></div>
-    <div class="dhs-item"><div class="dhs-val">${c.length}</div><div class="dhs-lbl">curse planificate</div></div>
-    <div class="dhs-item"><div class="dhs-val">${km}</div><div class="dhs-lbl">km curse total</div></div>
-    <div class="dhs-item"><div class="dhs-val">${daysToNext !== null ? daysToNext : '—'}</div><div class="dhs-lbl">zile până la start</div></div>
-    <div class="dhs-item"><div class="dhs-val">${streak.current}🔥</div><div class="dhs-lbl">streak zile</div></div>
-  `;
+  // ── Hero stats (update individual spans) ──────────────
+  const setEl = id => document.getElementById(id);
+  if(setEl('dhs-km-real'))  setEl('dhs-km-real').textContent  = kmThisYear.toLocaleString('ro');
+  if(setEl('dhs-curse'))    setEl('dhs-curse').textContent    = c.length;
+  if(setEl('dhs-km'))       setEl('dhs-km').textContent       = km.toLocaleString('ro');
+  if(setEl('dhs-next'))     setEl('dhs-next').textContent     = daysToNext !== null ? daysToNext : '—';
+  if(setEl('dhs-streak'))   setEl('dhs-streak').textContent   = streak.current + '🔥';
+  if(setEl('db-sub'))       setEl('db-sub').textContent       = `${c.length} curse · ${km} km total · Sezon 2026`;
 
-  // KPI tiles
-  const tSp = DB.sponsors.reduce((s,x)=>s+(x.suma||0),0);
-  const tIns = c.reduce((s,x)=>s+(x.plata_concurs||0),0);
-  const tCaz = c.reduce((s,x)=>s+(x.cazare||0),0);
+  // ── KPI tiles ──────────────────────────────────────────
+  const tSp = DB.sponsors.reduce((s,x)=>s+(parseFloat(x.suma)||0),0);
+  const tIns = c.reduce((s,x)=>s+(parseFloat(x.plata_concurs)||0),0);
+  const tCaz = c.reduce((s,x)=>s+(parseFloat(x.cazare)||0),0);
   const tGel = c.reduce((s,x)=>s+Math.round((x.geluri||0)*gpp),0);
   const tNecesar = tIns + tCaz + tGel;
-  const restant = DB.sponsors.filter(s=>!s.primit).reduce((s,x)=>s+(x.suma||0),0);
-  const pIns = c.filter(x=>x.plata_concurs_ok).reduce((s,x)=>s+(x.plata_concurs||0),0);
-  const pCaz = c.filter(x=>x.plata_cazare).reduce((s,x)=>s+(x.cazare||0),0);
+  const restant = DB.sponsors.filter(s=>!s.primit).reduce((s,x)=>s+(parseFloat(x.suma)||0),0);
+  const pIns = c.filter(x=>x.plata_concurs_ok).reduce((s,x)=>s+(parseFloat(x.plata_concurs)||0),0);
+  const pCaz = c.filter(x=>x.plata_cazare).reduce((s,x)=>s+(parseFloat(x.cazare)||0),0);
   const deficit = tNecesar - tSp;
 
-  document.getElementById('db-tiles').innerHTML = `
+  const tilesEl = setEl('db-tiles');
+  if(tilesEl) tilesEl.innerHTML = `
     <div class="tile"><lbl>Total necesar 2026</lbl><div class="tv">${fmt(tNecesar)} RON</div><div class="ts">curse + geluri</div></div>
     <div class="tile"><lbl>Sponsorizare angajată</lbl><div class="tv accent">${fmt(tSp)} RON</div><div class="ts" style="color:var(--yellow)">${fmt(restant)} RON neprimit</div></div>
     <div class="tile"><lbl>${deficit>0?'Deficit':'Surplus'}</lbl><div class="tv ${deficit>0?'red':'green'}">${fmt(Math.abs(deficit))} RON</div><div class="ts">${deficit>0?'fonduri insuficiente':'fonduri suficiente'}</div></div>
     <div class="tile"><lbl>Plăți restante</lbl><div class="tv red">${fmt((tIns-pIns)+(tCaz-pCaz))} RON</div><div class="ts">înscrieri + cazare</div></div>
   `;
 
-  // Sponsor donut
+  // ── Donut chart ────────────────────────────────────────
+  const primit = DB.sponsors.filter(s=>s.primit).reduce((s,x)=>s+(parseFloat(x.suma)||0),0);
   const donutData = [
-    { label: 'Primit', val: DB.sponsors.filter(s=>s.primit).reduce((s,x)=>s+(x.suma||0),0), color: 'var(--green)' },
-    { label: 'Angajat', val: restant, color: 'var(--accent)' },
-    { label: 'Necesar', val: Math.max(0, tNecesar - tSp), color: 'var(--red)' },
+    { label:'Primit',  val:primit,                         color:'var(--green)' },
+    { label:'Angajat', val:restant,                        color:'var(--accent)' },
+    { label:'Necesar', val:Math.max(0, tNecesar - tSp),    color:'var(--red)' },
   ].filter(x=>x.val>0);
   drawDonutChart('db-donut', donutData, tNecesar);
 
-  document.getElementById('db-donut-legend').innerHTML = donutData.map(s=>`
+  const legendEl = setEl('db-donut-legend');
+  if(legendEl) legendEl.innerHTML = donutData.map(s=>`
     <div style="display:flex;align-items:center;gap:8px">
       <div style="width:10px;height:10px;border-radius:50%;background:${s.color};flex-shrink:0"></div>
       <div style="flex:1;font-size:12px;color:var(--t2)">${s.label}</div>
       <div style="font-family:var(--display);font-size:14px;color:${s.color}">${fmt(s.val)}</div>
     </div>`).join('');
 
-  document.getElementById('db-donut-breakdown').innerHTML = `
+  const brkEl = setEl('db-donut-breakdown');
+  if(brkEl) brkEl.innerHTML = `
     <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t3);margin-bottom:4px">
       <span>Necesar total</span><span style="color:var(--text)">${fmt(tNecesar)} RON</span>
     </div>
@@ -2026,76 +2027,67 @@ function renderDash() {
       <span>Sponsorizare totală</span><span style="color:var(--accent)">${fmt(tSp)} RON</span>
     </div>`;
 
-  // Sponsor list
-  document.getElementById('db-sp-list').innerHTML = (DB.sponsors.slice(0,5)).map(s=>`
+  // ── Sponsor list ───────────────────────────────────────
+  const spListEl = setEl('db-sp-list');
+  if(spListEl) spListEl.innerHTML = DB.sponsors.slice(0,5).map(s=>`
     <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)">
       <div>
         <div style="font-size:12px;color:var(--text)">${s.denumire}</div>
         <div style="font-size:10px;color:var(--t3)">${s.tip||'general'} · ${s.primit?'✅ Primit':'⏳ Angajat'}</div>
       </div>
-      <div style="font-family:var(--display);font-size:16px;color:${s.primit?'var(--green)':'var(--accent)'}">${fmt(s.suma)} RON</div>
+      <div style="font-family:var(--display);font-size:16px;color:${s.primit?'var(--green)':'var(--accent)'}">${fmt(parseFloat(s.suma)||0)} RON</div>
     </div>`).join('') || '<div style="color:var(--t3);font-size:12px">Niciun sponsor înregistrat</div>';
-  const spTotal = document.getElementById('db-sp-total');
-  if (spTotal) spTotal.textContent = fmt(tSp) + ' RON';
+  if(setEl('db-sp-total')) setEl('db-sp-total').textContent = fmt(tSp) + ' RON';
 
-  // Target KM
-  const targetKm = DB.prefs.target_km || 5000;
-  const targetEl = document.getElementById('db-target-input');
-  if (targetEl) targetEl.textContent = fmt(targetKm);
-  const kmActEl = document.getElementById('db-km-actual');
-  if (kmActEl) kmActEl.textContent = kmThisYear;
+  // ── Upcoming races ─────────────────────────────────────
+  const upcomingCards = upcoming.slice(0,3);
+  const upEl = setEl('db-upcoming');
+  if(upEl) upEl.innerHTML = upcomingCards.map(rcCard).join('') || '<p style="color:var(--t3)">Nicio cursă viitoare înregistrată.</p>';
+
+  // ── Target KM ──────────────────────────────────────────
+  const targetKm = parseInt(DB.prefs.target_km) || 5000;
+  if(setEl('db-target-input')) setEl('db-target-input').textContent = fmt(targetKm);
+  if(setEl('db-km-actual'))    setEl('db-km-actual').textContent    = kmThisYear.toLocaleString('ro');
   const pct = Math.min(100, Math.round(kmThisYear/targetKm*100));
-  const pbarEl = document.getElementById('db-target-bar');
-  if (pbarEl) pbarEl.style.width = pct+'%';
-  const pctEl = document.getElementById('db-target-pct');
-  if (pctEl) pctEl.textContent = pct+'%';
-
-  // Prediction
+  if(setEl('db-target-bar'))   setEl('db-target-bar').style.width   = pct+'%';
+  if(setEl('db-target-pct'))   setEl('db-target-pct').textContent   = pct+'% din target';
+  if(setEl('db-target-rem'))   setEl('db-target-rem').textContent   = Math.max(0,targetKm-kmThisYear).toLocaleString('ro')+' km rămași';
   const dayOfYear = Math.ceil((new Date()-new Date(curYear+'-01-01'))/86400000);
-  const pred = dayOfYear > 0 ? Math.round(kmThisYear/dayOfYear*365) : 0;
-  const predEl = document.getElementById('db-km-pred');
-  if (predEl) predEl.textContent = fmt(pred) + ' km';
+  const pred = dayOfYear>0 ? Math.round(kmThisYear/dayOfYear*365) : 0;
+  if(setEl('db-km-pred')) setEl('db-km-pred').textContent = pred.toLocaleString('ro')+' km';
 
-  // Streak
-  const scEl = document.getElementById('db-streak-cur') || document.getElementById('db-streak-cur');
-  const sbEl = document.getElementById('db-streak-best');
-  if (scEl) scEl.textContent = streak.current + ' zile';
-  if (sbEl) sbEl.textContent = streak.best + ' zile';
+  // ── Streak ─────────────────────────────────────────────
+  if(setEl('db-streak-cur'))  setEl('db-streak-cur').textContent  = streak.current;
+  if(setEl('db-streak-best')) setEl('db-streak-best').textContent = streak.best;
 
-  // Heatmap
+  // ── Heatmap ────────────────────────────────────────────
   drawHeatmap('db-heatmap', allActs, new Date().getFullYear());
 
-  // Upcoming
-  const upcomingCards = [...c].filter(x=>x.data_cursa && new Date(x.data_cursa)>=today).sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa)).slice(0,3);
-  document.getElementById('db-upcoming').innerHTML = upcomingCards.map(rcCard).join('') || '<p style="color:var(--t3)">Nicio cursă viitoare înregistrată.</p>';
-
-  // Unpaid
-  const unpaid = [...c].filter(x=>(!x.plata_concurs_ok||!x.plata_cazare)&&x.data_cursa&&new Date(x.data_cursa)>=today).sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa)).slice(0,5);
-  if (unpaid.length) {
-    const ulEl = document.getElementById('db-unpaid-label'); if(ulEl) ulEl.textContent = '⚠️ Plăți restante — curse viitoare';
-    document.getElementById('db-unpaid-list').innerHTML = unpaid.map(x => {
-      const insOk = x.plata_concurs_ok, cazOk = x.plata_cazare || x.cazare === 0;
-      const deAchitat = (!insOk?x.plata_concurs||0:0)+(!cazOk?x.cazare||0:0);
-      return `<div class="pay-card">
-        <div class="pay-card-top">
-          <div>
-            <div class="pay-card-name">${x.denumire}</div>
-            <div class="pay-card-date">${fd(x.data_cursa)} · ⏳ ${Math.ceil((new Date(x.data_cursa)-today)/86400000)} zile</div>
-          </div>
-          <div style="font-family:var(--display);font-size:20px;color:var(--red)">${fmt(deAchitat)} RON <span style="font-family:var(--body);font-size:11px;color:var(--t3)">restant</span></div>
+  // ── Unpaid (Buget page) ────────────────────────────────
+  const unpaid = [...c].filter(x=>(!x.plata_concurs_ok||(!x.plata_cazare&&x.cazare>0))&&x.data_cursa&&new Date(x.data_cursa)>=today)
+    .sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa)).slice(0,5);
+  const ulbl = setEl('db-unpaid-label');
+  const ulist = setEl('db-unpaid-list');
+  if(ulbl) ulbl.textContent = unpaid.length ? '⚠️ Plăți restante — curse viitoare' : '';
+  if(ulist) ulist.innerHTML = unpaid.map(x=>{
+    const insOk=x.plata_concurs_ok, cazOk=x.plata_cazare||x.cazare===0||!x.cazare;
+    const deAchitat=(!insOk?parseFloat(x.plata_concurs)||0:0)+(!cazOk&&x.cazare>0?parseFloat(x.cazare):0);
+    return `<div class="pay-card">
+      <div class="pay-card-top">
+        <div>
+          <div class="pay-card-name">${x.denumire}</div>
+          <div class="pay-card-date">${fd(x.data_cursa)} · ⏳ ${Math.ceil((new Date(x.data_cursa)-today)/86400000)} zile</div>
         </div>
-        <div class="pay-rows">
-          ${x.plata_concurs?`<div class="pay-row"><div class="pay-row-left"><span class="pay-row-icon">🏁</span><span class="pay-row-lbl">Înscriere</span></div><span class="pay-row-amount ${insOk?'paid':'owed'}">${insOk?'✓ Plătit':fmt(x.plata_concurs)+' RON'}</span></div>`:''}
-          ${x.cazare>0?`<div class="pay-row"><div class="pay-row-left"><span class="pay-row-icon">🏨</span><span class="pay-row-lbl">Cazare</span></div><span class="pay-row-amount ${cazOk?'paid':'owed'}">${cazOk?'✓ Plătit':fmt(x.cazare)+' RON'}</span></div>`:''}
-        </div>
-      </div>`;
-    }).join('');
-  } else {
-    const ulEl2 = document.getElementById('db-unpaid-label'); if(ulEl2) ulEl2.textContent = '';
-    document.getElementById('db-unpaid-list').innerHTML = '';
-  }
+        <div style="font-family:var(--display);font-size:20px;color:var(--red)">${fmt(deAchitat)} RON</div>
+      </div>
+      <div class="pay-rows">
+        ${x.plata_concurs?`<div class="pay-row"><div class="pay-row-left"><span>🏁</span><span class="pay-row-lbl">Înscriere</span></div><span class="pay-row-amount ${insOk?'paid':'owed'}">${insOk?'✓ Plătit':fmt(parseFloat(x.plata_concurs)||0)+' RON'}</span></div>`:''}
+        ${x.cazare>0?`<div class="pay-row"><div class="pay-row-left"><span>🏨</span><span class="pay-row-lbl">Cazare</span></div><span class="pay-row-amount ${cazOk?'paid':'owed'}">${cazOk?'✓ Plătit':fmt(parseFloat(x.cazare)||0)+' RON'}</span></div>`:''}
+      </div>
+    </div>`;
+  }).join('');
 
-  // Race history
+  // ── Race history ───────────────────────────────────────
   renderRaceHistory();
 }
 
@@ -3318,17 +3310,25 @@ function renderRaceHistory() {
     </div>`;
   }).join('');
 
-  // Pagination
-  const pagEl = document.getElementById('db-race-pagination');
-  if (pagEl && totalPages>1) {
-    pagEl.innerHTML = `
-      <button class="btn btn-ghost btn-sm" onclick="racePagePrev()" ${_racePage===0?'disabled':''}>‹</button>
-      ${Array.from({length:totalPages},(_,i)=>`<button class="btn btn-ghost btn-sm${i===_racePage?' btn-primary':''}" onclick="raceGoPage(${i})">${i+1}</button>`).join('')}
-      <button class="btn btn-ghost btn-sm" onclick="racePageNext()" ${_racePage===totalPages-1?'disabled':''}>›</button>`;
-    pagEl.style.display='flex';
-  } else if (pagEl) {
-    pagEl.style.display='none';
-  }
+  // Pagination — use existing HTML elements
+  const pagEl   = document.getElementById('db-race-pagination');
+  const prevBtn = document.getElementById('db-race-prev');
+  const nextBtn = document.getElementById('db-race-next');
+  const pageBtns= document.getElementById('db-race-page-btns');
+  const pageInfo= document.getElementById('db-race-page-info');
+  const countEl = document.getElementById('db-race-count');
+  const subEl   = document.getElementById('db-race-subtitle');
+
+  if(countEl) countEl.textContent = total + (total===1?' cursă':' curse');
+  if(subEl)   subEl.textContent   = 'sortate după dificultate';
+
+  if(pagEl)    pagEl.style.display = totalPages>1 ? 'block' : 'none';
+  if(prevBtn)  prevBtn.disabled = _racePage===0;
+  if(nextBtn)  nextBtn.disabled = _racePage>=totalPages-1;
+  if(pageInfo) pageInfo.textContent = totalPages>1 ? `Pagina ${_racePage+1} din ${totalPages}` : '';
+  if(pageBtns) pageBtns.innerHTML = totalPages>1 ? Array.from({length:totalPages},(_,i)=>
+    `<button onclick="raceGoPage(${i})" style="background:${i===_racePage?'var(--accent)':'none'};color:${i===_racePage?'var(--bg)':'var(--t2)'};border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:var(--body)">${i+1}</button>`
+  ).join('') : '';
 }
 
 function toggleRaceCard(safeId) {
