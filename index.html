@@ -1287,12 +1287,59 @@ body.readonly label.btn { display:none !important }
       <div class="cb-row"><input type="checkbox" id="f-pcaz"><label for="f-pcaz">✅ Cazare plătită</label></div>
       <div class="cb-row"><input type="checkbox" id="f-pins"><label for="f-pins">✅ Înscriere plătită</label></div>
     </div>
+    <div class="sl">🔗 Dovezi plăți</div>
+    <div class="fg">
+      <div class="fi fgrow">
+        <lbl>Link dovadă înscriere</lbl>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input id="f-link-ins" placeholder="https://drive.google.com/... sau orice link" style="flex:1">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('f-link-ins')" title="Preview">👁</button>
+        </div>
+      </div>
+      <div class="fi fgrow">
+        <lbl>Link dovadă cazare</lbl>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input id="f-link-caz" placeholder="https://drive.google.com/... sau orice link" style="flex:1">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('f-link-caz')" title="Preview">👁</button>
+        </div>
+      </div>
+    </div>
     <div class="sl">Note</div>
     <textarea id="f-note" rows="2" placeholder="Observații, parteneri de cursă, detalii logistice..."></textarea>
   </div>
   <div class="mf">
     <button class="btn btn-ghost" onclick="closeRC()">Anulează</button>
     <button class="btn btn-primary" onclick="saveRC()">Salvează</button>
+  </div>
+</div>
+</div>
+
+<!-- MODAL PREVIEW DOCUMENT -->
+<div class="overlay" id="ov-preview" onclick="if(event.target===this)closePreview()">
+<div class="modal" style="max-width:800px;width:95vw;height:85vh;display:flex;flex-direction:column">
+  <div class="mh">
+    <h3 id="preview-title">PREVIZUALIZARE DOCUMENT</h3>
+    <div style="display:flex;gap:8px;align-items:center">
+      <a id="preview-open-link" href="#" target="_blank" class="btn btn-ghost btn-sm" style="font-size:11px">🔗 Deschide</a>
+      <button class="mx" onclick="closePreview()">✕</button>
+    </div>
+  </div>
+  <div style="flex:1;position:relative;background:var(--s2);border-radius:0 0 var(--r) var(--r);overflow:hidden">
+    <div id="preview-loading" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--t3)">
+      <div style="font-size:32px">⏳</div>
+      <div style="font-size:13px">Se încarcă...</div>
+    </div>
+    <iframe id="preview-iframe" 
+      style="width:100%;height:100%;border:none;display:none" 
+      onload="document.getElementById('preview-loading').style.display='none';this.style.display='block'"
+      onerror="previewFallback()">
+    </iframe>
+    <div id="preview-fallback" style="display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;position:absolute;inset:0;color:var(--t2);text-align:center;padding:32px">
+      <div style="font-size:48px">📄</div>
+      <div style="font-family:var(--display);font-size:22px;letter-spacing:1px">PREVIEW INDISPONIBIL</div>
+      <div style="font-size:13px;color:var(--t3);max-width:360px">Sursa nu permite afișarea în iframe (ex: Gmail, WhatsApp). Deschide direct linkul.</div>
+      <a id="preview-fallback-link" href="#" target="_blank" class="btn btn-primary">🔗 Deschide în tab nou</a>
+    </div>
   </div>
 </div>
 </div>
@@ -2466,16 +2513,22 @@ function renderBuget() {
         <div class="pay-rows">
           <div class="pay-row">
             <div class="pay-row-left"><span class="pay-row-icon">🏁</span><span class="pay-row-lbl">Înscriere</span></div>
-            <span class="pay-row-amount ${insOk?'paid':'owed'}">${insOk?`✓ ${fmt(x.plata_concurs||0)} RON`:fmt(x.plata_concurs||0)+' RON'}</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              ${x.link_dovada_ins ? `<button onclick="openPreview('${x.link_dovada_ins.replace(/'/g,"\\'")}','Dovadă înscriere — ${x.denumire.replace(/'/g,"\\'")}')\" class="btn btn-ghost btn-sm" style="font-size:10px;padding:2px 7px">👁</button>` : ''}
+              <span class="pay-row-amount ${insOk?'paid':'owed'}">${insOk?`✓ ${fmt(x.plata_concurs||0)} RON`:fmt(x.plata_concurs||0)+' RON'}</span>
+            </div>
           </div>
           <div class="pay-row">
             <div class="pay-row-left"><span class="pay-row-icon">🏨</span><span class="pay-row-lbl">Cazare${x.rezervat?' (rezervat)':''}</span></div>
-            ${x.cazare===0
-              ? `<span class="pay-row-amount na">Fără cazare</span>`
-              : x.cazare==null
-                ? `<span class="pay-row-amount na">Nesetat</span>`
-                : `<span class="pay-row-amount ${cazOk?'paid':'owed'}">${cazOk?`✓ ${fmt(x.cazare)} RON`:fmt(x.cazare)+' RON'}</span>`
-            }
+            <div style="display:flex;align-items:center;gap:8px">
+              ${x.link_dovada_caz ? `<button onclick="openPreview('${x.link_dovada_caz.replace(/'/g,"\\'")}','Dovadă cazare — ${x.denumire.replace(/'/g,"\\'")}')\" class="btn btn-ghost btn-sm" style="font-size:10px;padding:2px 7px">👁</button>` : ''}
+              ${x.cazare===0
+                ? `<span class="pay-row-amount na">Fără cazare</span>`
+                : x.cazare==null
+                  ? `<span class="pay-row-amount na">Nesetat</span>`
+                  : `<span class="pay-row-amount ${cazOk?'paid':'owed'}">${cazOk?`✓ ${fmt(x.cazare)} RON`:fmt(x.cazare)+' RON'}</span>`
+              }
+            </div>
           </div>
           <div class="pay-row">
             <div class="pay-row-left"><span class="pay-row-icon">🍯</span><span class="pay-row-lbl">Geluri (est. ${x.geluri||0} buc)</span></div>
@@ -2932,10 +2985,61 @@ function openRC(id) {
   v('f-ins',c.plata_concurs);
   ck('f-rez',c.rezervat); ck('f-pcaz',c.plata_cazare); ck('f-pins',c.plata_concurs_ok);
   v('f-note',c.note);
+  v('f-link-ins', c.link_dovada_ins);
+  v('f-link-caz', c.link_dovada_caz);
   document.getElementById('ov-rc').classList.add('on');
 }
 
-function closeRC() { document.getElementById('ov-rc').classList.remove('on'); editRCid=null; }
+function previewDoc(inputId, title) {
+  const url = document.getElementById(inputId)?.value?.trim();
+  if (!url) { toast('⚠️ Completează mai întâi linkul!', 'err'); return; }
+  openPreview(url, title || 'PREVIZUALIZARE DOCUMENT');
+}
+
+function openPreview(url, title) {
+  // Convert Google Drive share links to embeddable preview URLs
+  let embedUrl = url;
+  const gdMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+  if (gdMatch) {
+    embedUrl = `https://drive.google.com/file/d/${gdMatch[1]}/preview`;
+  }
+  // Dropbox: replace www with dl and ?dl=0 with ?raw=1
+  if (url.includes('dropbox.com')) {
+    embedUrl = url.replace('www.dropbox.com','dl.dropboxusercontent.com').replace('?dl=0','').replace('?dl=1','');
+  }
+
+  document.getElementById('preview-title').textContent = title || 'PREVIZUALIZARE';
+  document.getElementById('preview-open-link').href = url;
+  document.getElementById('preview-fallback-link').href = url;
+  document.getElementById('preview-loading').style.display = 'flex';
+  document.getElementById('preview-fallback').style.display = 'none';
+  const iframe = document.getElementById('preview-iframe');
+  iframe.style.display = 'none';
+  iframe.src = embedUrl;
+  document.getElementById('ov-preview').classList.add('on');
+
+  // Timeout fallback — if iframe doesn't load in 6s show fallback
+  clearTimeout(window._previewTimer);
+  window._previewTimer = setTimeout(() => {
+    if (document.getElementById('preview-loading').style.display !== 'none') {
+      previewFallback();
+    }
+  }, 6000);
+}
+
+function previewFallback() {
+  document.getElementById('preview-loading').style.display = 'none';
+  document.getElementById('preview-iframe').style.display = 'none';
+  document.getElementById('preview-fallback').style.display = 'flex';
+}
+
+function closePreview() {
+  document.getElementById('ov-preview').classList.remove('on');
+  const iframe = document.getElementById('preview-iframe');
+  iframe.src = '';
+  iframe.style.display = 'none';
+  clearTimeout(window._previewTimer);
+}
 
 function saveRC() {
   if (!isOwnerLoggedIn()) return;
@@ -2958,7 +3062,9 @@ function saveRC() {
     rezervat: document.getElementById('f-rez').checked,
     plata_cazare: document.getElementById('f-pcaz').checked,
     plata_concurs_ok: document.getElementById('f-pins').checked,
-    note: document.getElementById('f-note').value.trim()
+    note: document.getElementById('f-note').value.trim(),
+    link_dovada_ins: document.getElementById('f-link-ins').value.trim(),
+    link_dovada_caz: document.getElementById('f-link-caz').value.trim(),
   };
 
   if (editRCid) {
@@ -3052,7 +3158,7 @@ function toast(msg, type='ok') {
 }
 
 // Close overlays on click outside
-['ov-rc','ov-eq','ov-sp','ov-supl','ov-tr'].forEach(id => {
+['ov-rc','ov-eq','ov-sp','ov-supl','ov-tr','ov-preview'].forEach(id => {
   document.getElementById(id).addEventListener('click', e => {
     if (e.target === e.currentTarget) { closeRC(); closeEQ(); closeSP(); closeSupl(); closeTr(); }
   });
