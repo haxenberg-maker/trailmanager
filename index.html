@@ -502,7 +502,7 @@ body.readonly label.btn { display:none !important }
   .act-row,.act-row-head{grid-template-columns:64px 1fr 60px 60px}
   .act-row > *:nth-child(5),.act-row > *:nth-child(6),
   .act-row-head > *:nth-child(5),.act-row-head > *:nth-child(6){display:none}
-  #st-charts-row{grid-template-columns:1fr}
+  #st-charts-row2,#st-charts-row3{grid-template-columns:1fr!important}
 }
 
 /* ── DASHBOARD HERO ── */
@@ -716,7 +716,7 @@ body.readonly label.btn { display:none !important }
   .act-row,.act-row-head{grid-template-columns:64px 1fr 60px 60px}
   .act-row > *:nth-child(5),.act-row > *:nth-child(6),
   .act-row-head > *:nth-child(5),.act-row-head > *:nth-child(6){display:none}
-  #st-charts-row{grid-template-columns:1fr}
+  #st-charts-row2,#st-charts-row3{grid-template-columns:1fr!important}
 }
 </style>
 </head>
@@ -1168,58 +1168,54 @@ body.readonly label.btn { display:none !important }
   </div>
 
   <!-- KPI tiles -->
-  <div class="tiles" id="st-tiles" style="margin-bottom:28px"></div>
+  <div class="tiles" id="st-tiles" style="margin-bottom:24px"></div>
 
-  <!-- AN SELECTOR -->
-  <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap" id="st-year-tabs"></div>
-
-  <!-- TARGET BLOCK -->
-  <div id="st-target-block"></div>
+  <!-- AN SELECTOR + TARGET -->
+  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap" id="st-year-tabs"></div>
+  <div id="st-target-block" style="margin-bottom:20px"></div>
 
   <!-- YEARLY COMPARISON CARDS -->
-  <div id="st-year-cards" style="margin-bottom:28px"></div>
+  <div id="st-year-cards" style="margin-bottom:20px"></div>
+  <div id="st-growth-row" style="margin-bottom:20px"></div>
 
-  <!-- GROWTH ROW -->
-  <div id="st-growth-row" style="margin-bottom:28px"></div>
-
-  <!-- Charts row 1: km/luna + pie tip -->
-  <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:20px" id="st-charts-row">
-    <div class="bk-card" style="padding:20px">
-      <h4 style="margin-bottom:4px">📅 KM pe lună</h4>
-      <div style="font-size:11px;color:var(--t3);margin-bottom:14px" id="chart-km-month-sub">—</div>
-      <div style="position:relative;height:160px" id="chart-km-month"></div>
-    </div>
-    <div class="bk-card" style="padding:20px">
-      <h4 style="margin-bottom:4px">🏷️ Tipuri activitate</h4>
-      <div style="font-size:11px;color:var(--t3);margin-bottom:14px">distribuție</div>
-      <div style="position:relative;height:160px;display:flex;align-items:center;justify-content:center" id="chart-pie"></div>
-    </div>
+  <!-- KM pe lună — full width -->
+  <div class="bk-card" style="padding:20px;margin-bottom:16px">
+    <h4 style="margin-bottom:4px">📅 KM pe lună</h4>
+    <div style="font-size:11px;color:var(--t3);margin-bottom:14px" id="chart-km-month-sub">—</div>
+    <div style="position:relative;height:180px" id="chart-km-month"></div>
   </div>
 
-  <!-- Chart row 2: elevatie + durata -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+  <!-- D+ + Ore — 2 col pe desktop, 1 pe mobile -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" id="st-charts-row2">
     <div class="bk-card" style="padding:20px">
       <h4 style="margin-bottom:14px">⛰️ D+ pe lună (m)</h4>
-      <div style="position:relative;height:140px" id="chart-elev-month"></div>
+      <div style="position:relative;height:150px" id="chart-elev-month"></div>
     </div>
     <div class="bk-card" style="padding:20px">
       <h4 style="margin-bottom:14px">⏱️ Ore alergare / lună</h4>
-      <div style="position:relative;height:140px" id="chart-dur-month"></div>
+      <div style="position:relative;height:150px" id="chart-dur-month"></div>
     </div>
   </div>
 
-  <!-- Cumulative -->
-  <div class="bk-card" style="padding:20px;margin-bottom:28px">
-    <h4 style="margin-bottom:4px">📈 KM cumulați în timp</h4>
-    <div style="font-size:11px;color:var(--t3);margin-bottom:14px" id="chart-cum-sub">—</div>
-    <div style="position:relative;height:200px" id="chart-cumulative"></div>
+  <!-- Cumulative + Pie — 3fr 1fr pe desktop -->
+  <div style="display:grid;grid-template-columns:3fr 1fr;gap:16px;margin-bottom:16px" id="st-charts-row3">
+    <div class="bk-card" style="padding:20px">
+      <h4 style="margin-bottom:4px">📈 KM cumulați în timp</h4>
+      <div style="font-size:11px;color:var(--t3);margin-bottom:14px" id="chart-cum-sub">—</div>
+      <div style="position:relative;height:180px" id="chart-cumulative"></div>
+    </div>
+    <div class="bk-card" style="padding:20px;display:flex;flex-direction:column">
+      <h4 style="margin-bottom:4px">🏷️ Tipuri</h4>
+      <div style="font-size:11px;color:var(--t3);margin-bottom:14px">distribuție</div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;min-height:140px" id="chart-pie"></div>
+    </div>
   </div>
 
   <!-- Personal records -->
-  <div id="st-records" style="margin-bottom:28px"></div>
+  <div id="st-records" style="margin-bottom:20px"></div>
 
-  <!-- HEATMAP -->
-  <div class="bk-card" style="padding:20px;margin-bottom:28px">
+  <!-- HEATMAP — full width -->
+  <div class="bk-card" style="padding:20px;margin-bottom:20px">
     <h4 style="margin-bottom:4px">🗓️ Heatmap activitate</h4>
     <div style="font-size:11px;color:var(--t3);margin-bottom:14px" id="st-heatmap-sub">zile cu alergare</div>
     <div id="st-heatmap" style="overflow-x:auto"></div>
@@ -1781,8 +1777,7 @@ async function saveData() {
 let autoSaveTimer = null;
 function isOwnerLoggedIn() {
   if (document.body.classList.contains('readonly')) {
-    toast('🔒 Trebuie să fii logat ca owner pentru a modifica datele.', 'err');
-    showLoginModal();
+    toast('🔒 Trebuie să fii owner pentru a modifica datele.', 'err');
     return false;
   }
   return true;
@@ -1853,17 +1848,15 @@ function updateAuthButtons() {
 }
 
 function setTheme(name) {
-  if (name === 'default') {
-    document.documentElement.removeAttribute('data-theme');
-  } else {
-    document.documentElement.setAttribute('data-theme', name);
-  }
   D.theme = name;
-  scheduleAutoSave();
-  // Update active button
-  document.querySelectorAll('.theme-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.t === name);
-  });
+  applyTheme(name);
+  // Save immediately — theme change should always persist
+  if (currentUser && !document.body.classList.contains('readonly')) {
+    pushToSupabase().then(ok => {
+      setSyncStatus(ok ? 'Sincronizat ☁️' : 'Eroare sync', ok ? 'var(--green)' : 'var(--red)');
+      if (ok) toast('🎨 Temă salvată!', 'ok');
+    });
+  }
 }
 
 function applyTheme(name) {
@@ -3380,7 +3373,7 @@ function renderStats() {
   const empty = document.getElementById('st-empty');
   if (all.length === 0) {
     empty.style.display = 'block';
-    ['st-tiles','st-year-cards','st-growth-row','st-charts-row','st-records','st-activity-list','st-year-tabs'].forEach(id => {
+    ['st-tiles','st-year-cards','st-growth-row','st-charts-row2','st-charts-row3','st-records','st-activity-list','st-year-tabs'].forEach(id => {
       const el = document.getElementById(id); if(el) el.innerHTML = '';
     });
     return;
