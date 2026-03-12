@@ -3410,10 +3410,9 @@ function renderRaceHistory() {
     if(!actsByDate[d]) actsByDate[d] = [];
     actsByDate[d].push(a);
   });
-  // Debug: log activities with GPX data
+  // Debug: log activities with GPX data + race matching
   const withGPX = (DB.activities||[]).filter(a=>a.polyline||a.elev_profile||a.splits);
-  if(withGPX.length) console.log('[Race History] Activities with GPX/data:', withGPX.length, 'total acts:', (DB.activities||[]).length);
-  else console.warn('[Race History] NO activities have GPX/elev/splits data. Total acts:', (DB.activities||[]).length, 'Sample:', (DB.activities||[]).slice(0,2));
+  console.log('[Race History] Activities with GPX/data:', withGPX.length, 'total acts:', (DB.activities||[]).length);
   function findAct(r) {
     if(!r.data_cursa) return null;
     const d = r.data_cursa.slice(0,10);
@@ -3446,6 +3445,7 @@ function renderRaceHistory() {
     const safeId = 'rc_'+(r.id||'').replace(/-/g,'');
     // Merge race data with matched activity (for GPX, HR, splits etc)
     const act = findAct(r);
+    if(act) console.log(`[Match] ${r.denumire} → ${act.name} | poly:${!!act.polyline} elev:${!!act.elev_profile} splits:${!!act.splits} elev_type:${typeof act.elev_profile} elev_val:${JSON.stringify(act.elev_profile)?.slice(0,60)}`);
     // Normalize JSONB arrays — Supabase may return {values:[]} or stringified JSON
     function normArr(v) {
       if(!v) return null;
