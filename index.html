@@ -2032,16 +2032,19 @@ function renderDash() {
   const tIns = c.reduce((s,x)=>s+(parseFloat(x.plata_concurs)||0),0);
   const tCaz = c.reduce((s,x)=>s+(parseFloat(x.cazare)||0),0);
   const tGel = c.reduce((s,x)=>s+Math.round((x.geluri||0)*gpp),0);
-  const tNecesar = tIns + tCaz + tGel;
   const restant = DB.sponsors.filter(s=>!s.primit).reduce((s,x)=>s+(parseFloat(x.suma)||0),0);
   const pIns = c.filter(x=>x.plata_concurs_ok).reduce((s,x)=>s+(parseFloat(x.plata_concurs)||0),0);
   const pCaz = c.filter(x=>x.plata_cazare).reduce((s,x)=>s+(parseFloat(x.cazare)||0),0);
-  const echipTotalDash = DB.equipment.reduce((s,x)=>s+(parseFloat(x.pret)||0),0);
-  const deficit = (tNecesar + echipTotalDash) - tSp;
+  const echipTotalDash  = DB.equipment.reduce((s,x)=>s+(parseFloat(x.pret)||0),0);
+  const suplLunarDash   = DB.supplements.reduce((s,x)=>s+(parseFloat(x.pret_lunar)||0),0);
+  const suplAnualDash   = suplLunarDash * 12;
+  const gelTrainDash    = Math.round((DB.nutri.gel_training_lunar||0) * gpp * 12);
+  const tNecesar = tIns + tCaz + tGel + echipTotalDash + suplAnualDash + gelTrainDash;
+  const deficit = tNecesar - tSp;
 
   const tilesEl = setEl('db-tiles');
   if(tilesEl) tilesEl.innerHTML = `
-    <div class="tile"><lbl>Total necesar 2026</lbl><div class="tv">${fmt(tNecesar+echipTotalDash)} RON</div><div class="ts">curse + geluri + echipament</div></div>
+    <div class="tile"><lbl>Total necesar 2026</lbl><div class="tv">${fmt(tNecesar)} RON</div><div class="ts">curse + echipament + suplimente</div></div>
     <div class="tile"><lbl>Sponsorizare angajată</lbl><div class="tv accent">${fmt(tSp)} RON</div><div class="ts" style="color:var(--yellow)">${fmt(restant)} RON neprimit</div></div>
     <div class="tile"><lbl>${deficit>0?'Deficit':'Surplus'}</lbl><div class="tv ${deficit>0?'red':'green'}">${fmt(Math.abs(deficit))} RON</div><div class="ts">${deficit>0?'fonduri insuficiente':'fonduri suficiente'}</div></div>
     <div class="tile"><lbl>Plăți restante</lbl><div class="tv red">${fmt((tIns-pIns)+(tCaz-pCaz))} RON</div><div class="ts">înscrieri + cazare</div></div>
@@ -2085,8 +2088,8 @@ function renderDash() {
     </div>`).join('') || '<div style="color:var(--t3);font-size:12px">Niciun sponsor înregistrat</div>';
   if(setEl('db-sp-total')) setEl('db-sp-total').textContent = fmt(tSp) + ' RON';
 
-  // ── Upcoming races ─────────────────────────────────────
-  const upcomingCards = upcoming.slice(0,3);
+  // ── Upcoming races — 2 next by date ──────────────────
+  const upcomingCards = upcoming.slice(0,2);
   const upEl = setEl('db-upcoming');
   if(upEl) upEl.innerHTML = upcomingCards.map(rcCard).join('') || '<p style="color:var(--t3)">Nicio cursă viitoare înregistrată.</p>';
 
@@ -2255,31 +2258,101 @@ function renderCal() {
   const months = ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
   const year = 2026;
   const today = new Date(); today.setHours(0,0,0,0);
+
+  // Build per-month events including travel periods
+  // Each race can span: data_plecare → data_sfarsit (or data_cursa if no travel dates)
+  function daysInMonth(m) { return new Date(year, m+1, 0).getDate(); }
+  function parseD(s) { return s ? new Date(s) : null; }
+
   let html = '';
   for (let m = 0; m < 12; m++) {
+    const dim = daysInMonth(m);
+    // Find races that touch this month (via data_cursa, data_plecare, or data_sfarsit)
     const races = DB.races.filter(x => {
       if (!x.data_cursa) return false;
-      const d = new Date(x.data_cursa);
-      return d.getFullYear()===year && d.getMonth()===m;
+      const start = parseD(x.data_plecare || x.data_cursa);
+      const end   = parseD(x.data_sfarsit || x.data_cursa);
+      const mStart = new Date(year, m, 1);
+      const mEnd   = new Date(year, m, dim);
+      return start <= mEnd && end >= mStart;
     });
     if (!races.length) continue;
-    html += `<div class="bk-card" style="padding:16px;margin-bottom:12px">
-      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px">${months[m]} ${year}</div>
-      ${races.map(x=>{
-        const past = new Date(x.data_cursa) < today;
-        return `<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border)">
-          <div style="font-family:var(--display);font-size:20px;color:${past?'var(--t3)':'var(--accent)'};min-width:28px">${new Date(x.data_cursa).getDate()}</div>
-          <div style="flex:1">
-            <div style="font-size:13px;color:${past?'var(--t3)':'var(--text)'}">${x.denumire}</div>
-            <div style="font-size:10px;color:var(--t3)">${x.distanta||0}km · ${x.denivelare||0}m D+</div>
+
+    // Build a day grid for this month
+    // Each day cell: empty / travel / race-day
+    const dayTypes = Array(dim+1).fill(''); // 1-indexed
+    races.forEach(x => {
+      const dep  = parseD(x.data_plecare);
+      const ret  = parseD(x.data_sfarsit);
+      const race = parseD(x.data_cursa);
+      for (let d = 1; d <= dim; d++) {
+        const cur = new Date(year, m, d);
+        if (race && cur.toDateString() === race.toDateString()) {
+          dayTypes[d] = 'race';
+        } else if (dep && ret && cur >= dep && cur <= ret) {
+          dayTypes[d] = dayTypes[d] || 'travel';
+        } else if (dep && !ret && cur.toDateString() === dep.toDateString()) {
+          dayTypes[d] = dayTypes[d] || 'travel';
+        }
+      }
+    });
+
+    // Day headers
+    const dayNames = ['D','L','M','M','J','V','S'];
+    const firstDay = new Date(year, m, 1).getDay(); // 0=Sun
+    let gridCells = '';
+    // header row
+    dayNames.forEach(n => { gridCells += `<div style="font-size:9px;color:var(--t3);text-align:center;padding-bottom:4px">${n}</div>`; });
+    // empty cells before first day
+    for (let i=0; i<firstDay; i++) gridCells += '<div></div>';
+    for (let d=1; d<=dim; d++) {
+      const cur = new Date(year, m, d);
+      const isPast = cur < today;
+      const type = dayTypes[d];
+      let bg = 'transparent', color = isPast ? 'var(--t3)' : 'var(--t2)', fw = '400', border = 'none';
+      if (type === 'race')   { bg = 'var(--accent)'; color = '#0a1a0a'; fw = '700'; border = 'none'; }
+      if (type === 'travel') { bg = 'rgba(184,255,79,.15)'; color = isPast?'var(--t3)':'var(--accent)'; border = '1px solid rgba(184,255,79,.25)'; }
+      gridCells += `<div style="text-align:center;padding:3px 0;border-radius:4px;font-size:11px;background:${bg};color:${color};font-weight:${fw};border:${border}">${d}</div>`;
+    }
+
+    // Race event rows
+    const eventRows = races.sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa)).map(x => {
+      const past = new Date(x.data_cursa) < today;
+      const dep  = x.data_plecare  ? fd(x.data_plecare)  : null;
+      const ret  = x.data_sfarsit  ? fd(x.data_sfarsit)  : null;
+      const raceDay = new Date(x.data_cursa).getDate();
+      const nights = (dep && ret && x.data_plecare !== x.data_sfarsit)
+        ? Math.round((new Date(x.data_sfarsit)-new Date(x.data_plecare))/86400000)
+        : 0;
+      return `
+      <div style="padding:10px 0;border-top:1px solid var(--border);display:flex;gap:12px;align-items:flex-start;opacity:${past?.6:1}">
+        <div style="font-family:var(--display);font-size:28px;color:${past?'var(--t3)':'var(--accent)'};line-height:1;min-width:32px;text-align:center">${raceDay}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:600;color:${past?'var(--t3)':'var(--text)'};margin-bottom:3px">${x.denumire}</div>
+          <div style="font-size:11px;color:var(--t3);margin-bottom:4px">${x.distanta||0} km · ${x.denivelare||0} m D+ · Start ${x.ora_start||'?'}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+            ${dep?`<span style="font-size:10px;background:rgba(184,255,79,.1);border:1px solid rgba(184,255,79,.2);color:var(--accent);padding:2px 8px;border-radius:10px">✈️ Plecare ${dep}</span>`:''}
+            ${ret && ret!==dep?`<span style="font-size:10px;background:rgba(184,255,79,.1);border:1px solid rgba(184,255,79,.2);color:var(--accent);padding:2px 8px;border-radius:10px">🏠 Întoarcere ${ret}</span>`:''}
+            ${nights>0?`<span style="font-size:10px;color:var(--t3)">${nights} nopți</span>`:''}
+            ${x.rezervat?'<span style="font-size:10px;color:var(--green)">🏨 Rezervat</span>':'<span style="font-size:10px;color:var(--yellow)">🏨 Fără rezervare</span>'}
+            <span style="font-size:10px;color:${x.plata_concurs_ok?'var(--green)':'var(--red)'}">
+              ${x.plata_concurs_ok?'✓ Înscris':'⏳ '+fmt(x.plata_concurs||0)+' RON restant'}
+            </span>
           </div>
-          <div style="font-size:10px;color:${x.plata_concurs_ok?'var(--green)':'var(--red)'}">
-            ${x.plata_concurs_ok?'✓':'⏳'} ${fmt(x.plata_concurs||0)} RON
-          </div>
-        </div>`;
-      }).join('')}
+        </div>
+      </div>`;
+    }).join('');
+
+    html += `
+    <div class="bk-card" style="padding:16px;margin-bottom:14px">
+      <div style="font-family:var(--display);font-size:16px;letter-spacing:2px;color:var(--t2);margin-bottom:12px">${months[m].toUpperCase()} ${year}</div>
+      <!-- Day grid -->
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:14px">${gridCells}</div>
+      <!-- Event details -->
+      ${eventRows}
     </div>`;
   }
+
   const cal = document.getElementById('cal-view');
   if (cal) cal.innerHTML = html || '<p style="color:var(--t3)">Nicio cursă înregistrată.</p>';
 }
@@ -3477,7 +3550,7 @@ function renderRaceHistory() {
     })
     .sort((a,b) => new Date(b.data_cursa) - new Date(a.data_cursa));
 
-  // 3. Unify — Strava races first, then past races without Strava
+  // 3. Unify — sorted by difficulty DESC
   // Build lookup for DB.races by date to enrich strava entries
   const raceByDate = {};
   (DB.races||[]).forEach(r => { if(r.data_cursa) raceByDate[r.data_cursa.slice(0,10)] = r; });
@@ -3535,6 +3608,13 @@ function renderRaceHistory() {
       note: r.note || '',
     }))
   ];
+
+  // Sort by difficulty DESC (km + denivelare/100)
+  allEntries.sort((a,b) => {
+    const da = (parseFloat(a.distanta)||0) + (parseFloat(a.denivelare)||0)/100;
+    const db2 = (parseFloat(b.distanta)||0) + (parseFloat(b.denivelare)||0)/100;
+    return db2 - da;
+  });
 
   const total = allEntries.length;
   const totalPages = Math.ceil(total / RACE_PER_PAGE);
