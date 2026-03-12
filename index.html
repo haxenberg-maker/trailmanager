@@ -718,6 +718,32 @@ body.readonly label.btn { display:none !important }
   .act-row-head > *:nth-child(5),.act-row-head > *:nth-child(6){display:none}
   #st-charts-row2,#st-charts-row3{grid-template-columns:1fr!important}
 }
+
+.breakdown-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:8px}
+.bk-card h4{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between}
+.bk-card h4 span{color:var(--accent);font-family:var(--display);font-size:16px;letter-spacing:1px}
+.bk-row{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid rgba(37,43,38,.3);font-size:13px}
+.bk-row .bl{color:var(--t2)}
+.bk-row .bv{font-weight:600;color:var(--text)}
+.bk-row .bv.a{color:var(--accent);font-family:var(--display);font-size:15px}
+.bk-total{display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.bk-total .bl{font-weight:600;font-size:13px}
+.bk-total .bv{font-family:var(--display);font-size:20px;color:var(--accent)}
+.timeline{display:grid;gap:8px}
+.tl-month{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.tl-head{display:flex;align-items:center;gap:14px;padding:12px 16px;cursor:pointer;transition:background .15s}
+.tl-head:hover{background:var(--s2)}
+.tl-month-name{font-family:var(--display);font-size:18px;letter-spacing:1px;min-width:120px}
+.tl-bar-wrap{flex:1;height:6px;background:var(--s3);border-radius:3px;overflow:hidden}
+.tl-bar{height:100%;border-radius:3px;background:var(--accent);transition:width .6s}
+.tl-total{font-family:var(--display);font-size:18px;letter-spacing:.5px;min-width:110px;text-align:right}
+.tl-total.high{color:var(--red)}.tl-total.mid{color:var(--yellow)}.tl-total.low{color:var(--green)}
+.tl-body{padding:0 16px;max-height:0;overflow:hidden;transition:max-height .3s ease}
+.tl-body.open{max-height:600px}
+.tl-item{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(37,43,38,.3);font-size:13px}
+.tl-item:last-child{border-bottom:none}
+.tl-item-lbl{color:var(--t2)}.tl-item-val{font-weight:600}
+@media(max-width:800px){.breakdown-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body class="readonly">
@@ -2001,11 +2027,12 @@ function renderDash() {
   const restant = DB.sponsors.filter(s=>!s.primit).reduce((s,x)=>s+(parseFloat(x.suma)||0),0);
   const pIns = c.filter(x=>x.plata_concurs_ok).reduce((s,x)=>s+(parseFloat(x.plata_concurs)||0),0);
   const pCaz = c.filter(x=>x.plata_cazare).reduce((s,x)=>s+(parseFloat(x.cazare)||0),0);
-  const deficit = tNecesar - tSp;
+  const echipTotalDash = DB.equipment.reduce((s,x)=>s+(parseFloat(x.pret)||0),0);
+  const deficit = (tNecesar + echipTotalDash) - tSp;
 
   const tilesEl = setEl('db-tiles');
   if(tilesEl) tilesEl.innerHTML = `
-    <div class="tile"><lbl>Total necesar 2026</lbl><div class="tv">${fmt(tNecesar)} RON</div><div class="ts">curse + geluri</div></div>
+    <div class="tile"><lbl>Total necesar 2026</lbl><div class="tv">${fmt(tNecesar+echipTotalDash)} RON</div><div class="ts">curse + geluri + echipament</div></div>
     <div class="tile"><lbl>Sponsorizare angajată</lbl><div class="tv accent">${fmt(tSp)} RON</div><div class="ts" style="color:var(--yellow)">${fmt(restant)} RON neprimit</div></div>
     <div class="tile"><lbl>${deficit>0?'Deficit':'Surplus'}</lbl><div class="tv ${deficit>0?'red':'green'}">${fmt(Math.abs(deficit))} RON</div><div class="ts">${deficit>0?'fonduri insuficiente':'fonduri suficiente'}</div></div>
     <div class="tile"><lbl>Plăți restante</lbl><div class="tv red">${fmt((tIns-pIns)+(tCaz-pCaz))} RON</div><div class="ts">înscrieri + cazare</div></div>
@@ -2265,11 +2292,13 @@ function renderBuget() {
   const tSp = DB.sponsors.reduce((s,x)=>s+(x.suma||0),0);
   const restantIns=tIns-pIns, restantCaz=tCaz-pCaz;
 
+  const echipTotal = DB.equipment.reduce((s,x)=>s+(parseFloat(x.pret)||0),0);
   document.getElementById('bg-tiles').innerHTML = `
     <div class="tile"><lbl>Înscrieri totale</lbl><div class="tv">${fmt(tIns)} RON</div><div class="ts" style="color:var(--red)">${fmt(restantIns)} RON restant</div><div class="pbar"><div class="pfill" style="width:${tIns?Math.round(pIns/tIns*100):0}%"></div></div></div>
     <div class="tile"><lbl>Cazare totală</lbl><div class="tv">${fmt(tCaz)} RON</div><div class="ts" style="color:var(--red)">${fmt(restantCaz)} RON restant</div><div class="pbar"><div class="pfill" style="width:${tCaz?Math.round(pCaz/tCaz*100):0}%"></div></div></div>
     <div class="tile"><lbl>Geluri curse (est.)</lbl><div class="tv yellow">${fmt(tGel)} RON</div><div class="ts">${gpp.toFixed(2)} RON/gel</div></div>
-    <div class="tile"><lbl>Total de achitat</lbl><div class="tv red">${fmt(restantIns+restantCaz)} RON</div><div class="ts">din ${fmt(tIns+tCaz)} RON total curse</div></div>
+    <div class="tile"><lbl>Echipament</lbl><div class="tv yellow">${fmt(echipTotal)} RON</div><div class="ts">${DB.equipment.length} item(e) înregistrate</div></div>
+    <div class="tile"><lbl>Total de achitat</lbl><div class="tv red">${fmt(restantIns+restantCaz)} RON</div><div class="ts">din ${fmt(tIns+tCaz+echipTotal)} RON total</div></div>
   `;
 
   const sorted = [...c].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
@@ -2338,59 +2367,145 @@ function esc(s) { return (s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
 // ══════════════════════════════════════════════════════
 function renderEstimare() {
   const c = DB.races;
-  const gpp = (DB.nutri.gel_pret_set24||0)/24;
-  const months = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
+  const gpp = (DB.nutri.gel_pret_set24||0) / 24;
+  const months     = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
   const monthsFull = ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
 
-  const tIns  = c.reduce((s,x)=>s+(x.plata_concurs||0),0);
-  const tCaz  = c.reduce((s,x)=>s+(x.cazare||0),0);
+  const tIns  = c.reduce((s,x)=>s+(parseFloat(x.plata_concurs)||0),0);
+  const tCaz  = c.reduce((s,x)=>s+(parseFloat(x.cazare)||0),0);
   const tGelC = c.reduce((s,x)=>s+Math.round((x.geluri||0)*gpp),0);
-  const suplLunar = DB.supplements.reduce((s,x)=>s+(x.pret_lunar||0),0);
-  const suplAnual = suplLunar * 12;
-  const gelTr = Math.round((DB.nutri.gel_training_lunar||0)*gpp*12);
-  const total = tIns+tCaz+tGelC+suplAnual+gelTr;
-  const tSp = DB.sponsors.reduce((s,x)=>s+(x.suma||0),0);
+  const suplLunar    = DB.supplements.reduce((s,x)=>s+(parseFloat(x.pret_lunar)||0),0);
+  const suplAnual    = suplLunar * 12;
+  const gelTrainLunar = Math.round((DB.nutri.gel_training_lunar||0)*gpp);
+  const gelTrainAnual = gelTrainLunar * 12;
+  const echipTotal   = DB.equipment.reduce((s,x)=>s+(parseFloat(x.pret)||0),0);
+  const spTotal      = DB.sponsors.reduce((s,x)=>s+(parseFloat(x.suma)||0),0);
+  const totCurse     = tIns + tCaz + tGelC;
+  const totRecur     = suplAnual + gelTrainAnual;
+  const totalAn      = totCurse + totRecur + echipTotal;
+  const deficit      = totalAn - spTotal;
 
+  // Tiles
   document.getElementById('est-tiles').innerHTML = `
-    <div class="tile"><lbl>Total estimat 2026</lbl><div class="tv">${fmt(total)} RON</div></div>
-    <div class="tile"><lbl>Sponsorizare</lbl><div class="tv accent">${fmt(tSp)} RON</div></div>
-    <div class="tile"><lbl>${total>tSp?'Deficit':'Surplus'}</lbl><div class="tv ${total>tSp?'red':'green'}">${fmt(Math.abs(total-tSp))} RON</div></div>
+    <div class="tile"><lbl>Costuri curse</lbl><div class="tv red">${fmt(totCurse)} RON</div><div class="ts">Înscrisuri + cazare + geluri</div></div>
+    <div class="tile"><lbl>Costuri recurente</lbl><div class="tv yellow">${fmt(totRecur)} RON</div><div class="ts">${fmt(suplLunar+gelTrainLunar)} RON/lună × 12</div></div>
+    <div class="tile"><lbl>Echipament</lbl><div class="tv yellow">${fmt(echipTotal)} RON</div><div class="ts">${DB.equipment.length} item(e)</div></div>
+    <div class="tile"><lbl>TOTAL AN 2026</lbl><div class="tv red">${fmt(totalAn)} RON</div><div class="ts">Curse + recurente + echipament</div></div>
+    <div class="tile"><lbl>Sponsorizare</lbl><div class="tv green">${fmt(spTotal)} RON</div><div class="ts" style="color:${deficit>0?'var(--red)':'var(--green)'}">
+      ${deficit>0?'Deficit: '+fmt(deficit)+' RON':'Surplus: '+fmt(-deficit)+' RON'}</div>
+      <div class="pbar"><div class="pfill" style="width:${totalAn>0?Math.min(100,Math.round(spTotal/totalAn*100)):0}%;background:${spTotal>=totalAn?'var(--green)':spTotal>totalAn*.6?'var(--yellow)':'var(--red)'}"></div></div>
+    </div>
   `;
 
-  document.getElementById('est-breakdown').innerHTML = [
-    {lbl:'Înscrieri curse',val:tIns,icon:'🏁'},
-    {lbl:'Cazare',val:tCaz,icon:'🏨'},
-    {lbl:'Geluri curse',val:tGelC,icon:'🍯'},
-    {lbl:'Geluri training (12 luni)',val:gelTr,icon:'🏃'},
-    {lbl:'Suplimente (12 luni)',val:suplAnual,icon:'💊'},
-  ].map(({lbl,val,icon})=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-      <div style="display:flex;align-items:center;gap:8px">
-        <span>${icon}</span><span style="font-size:13px;color:var(--t2)">${lbl}</span>
+  // Breakdown cards
+  function bkCard(title, total, rows, showOk=false) {
+    return `<div class="bk-card">
+      <h4>${title} <span>${fmt(total)} RON</span></h4>
+      ${rows.map(r=>`<div class="bk-row">
+        <span class="bl">${r.lbl}</span>
+        <span class="bv a" style="${showOk?r.ok?'color:var(--green)':'color:var(--red)':''}">${showOk&&r.ok?'✓ ':''}${fmt(r.v)} RON</span>
+      </div>`).join('')}
+      <div class="bk-total"><span class="bl">Total</span><span class="bv">${fmt(total)} RON</span></div>
+    </div>`;
+  }
+  const bkIns  = c.map(x=>({lbl:x.denumire, v:parseFloat(x.plata_concurs)||0, ok:x.plata_concurs_ok}));
+  const bkCaz  = c.filter(x=>x.cazare>0).map(x=>({lbl:x.denumire, v:parseFloat(x.cazare)||0, ok:x.plata_cazare}));
+  const bkGel  = c.filter(x=>x.geluri>0).map(x=>({lbl:`${x.denumire} (${x.geluri} gel)`, v:Math.round(x.geluri*gpp)}));
+  document.getElementById('est-breakdown').innerHTML = `
+    <div class="breakdown-grid">
+      ${bkCard('🏁 Înscrieri curse', tIns, bkIns, true)}
+      ${bkCard('🏨 Cazare curse', tCaz, bkCaz, true)}
+      ${bkCard('🍯 Geluri curse', tGelC, bkGel)}
+      <div class="bk-card">
+        <h4>💊 Suplimente anuale <span>${fmt(suplAnual)} RON</span></h4>
+        ${DB.supplements.map(s=>`<div class="bk-row">
+          <span class="bl">${s.denumire}</span>
+          <span class="bv a">${fmt(s.pret_lunar||0)} × 12 = ${fmt((s.pret_lunar||0)*12)} RON</span>
+        </div>`).join('') || '<div class="bk-row"><span class="bl" style="color:var(--t3)">Niciun supliment</span></div>'}
+        <div class="bk-total"><span class="bl">Total</span><span class="bv">${fmt(suplAnual)} RON</span></div>
       </div>
-      <span style="font-family:var(--display);font-size:16px;color:var(--accent)">${fmt(val)} RON</span>
-    </div>`).join('');
+      <div class="bk-card">
+        <h4>🍯 Geluri training <span>${fmt(gelTrainAnual)} RON</span></h4>
+        <div class="bk-row"><span class="bl">${DB.nutri.gel_training_lunar||0} geluri/lună</span><span class="bv a">${fmt(gelTrainLunar)} RON/lună</span></div>
+        <div class="bk-row"><span class="bl">Anual (×12)</span><span class="bv a">${fmt(gelTrainAnual)} RON</span></div>
+        <div class="bk-total"><span class="bl">Total</span><span class="bv">${fmt(gelTrainAnual)} RON</span></div>
+      </div>
+      <div class="bk-card">
+        <h4>👟 Echipament <span>${fmt(echipTotal)} RON</span></h4>
+        ${DB.equipment.map(e=>`<div class="bk-row">
+          <span class="bl">${e.denumire}<br><span style="font-size:11px;color:var(--t3)">${e.categorie||''} · ${e.km_max||0} km max</span></span>
+          <span class="bv a">${fmt(e.pret||0)} RON</span>
+        </div>`).join('') || '<div class="bk-row"><span class="bl" style="color:var(--t3)">Niciun echipament</span></div>'}
+        <div class="bk-total"><span class="bl">Total</span><span class="bv">${fmt(echipTotal)} RON</span></div>
+      </div>
+      <div class="bk-card" style="border-color:${deficit<=0?'rgba(79,255,155,.3)':'rgba(255,79,79,.25)'}">
+        <h4>📊 Sumar final <span style="color:${deficit<=0?'var(--green)':'var(--red)'}">${fmt(totalAn)} RON</span></h4>
+        <div class="bk-row"><span class="bl">Costuri curse</span><span class="bv">${fmt(totCurse)} RON</span></div>
+        <div class="bk-row"><span class="bl">Costuri recurente</span><span class="bv">${fmt(totRecur)} RON</span></div>
+        <div class="bk-row"><span class="bl">Echipament</span><span class="bv">${fmt(echipTotal)} RON</span></div>
+        <div class="bk-row"><span class="bl" style="font-weight:700">TOTAL NECESAR</span><span class="bv a" style="color:var(--red)">${fmt(totalAn)} RON</span></div>
+        <div class="bk-row"><span class="bl" style="color:var(--green)">Sponsorizare</span><span class="bv" style="color:var(--green)">− ${fmt(spTotal)} RON</span></div>
+        <div class="bk-total" style="border-top-color:${deficit<=0?'rgba(79,255,155,.3)':'rgba(255,79,79,.25)'}">
+          <span class="bl">${deficit<=0?'Surplus':'Deficit'}</span>
+          <span class="bv" style="font-family:var(--display);font-size:22px;color:${deficit<=0?'var(--green)':'var(--red)'}">${deficit<=0?'+':'−'}${fmt(Math.abs(deficit))} RON</span>
+        </div>
+      </div>
+    </div>`;
 
-  // Monthly timeline
-  const byMonth = Array(12).fill(0);
-  c.forEach(x=>{ if(x.data_cursa){ const m=new Date(x.data_cursa).getMonth(); byMonth[m]+=(x.plata_concurs||0)+(x.cazare||0)+Math.round((x.geluri||0)*gpp); }});
-  const monthlyTotal = byMonth.map((v,i)=>v+suplLunar+Math.round((DB.nutri.gel_training_lunar||0)*gpp));
-  const maxV = Math.max(...monthlyTotal,1);
-
-  let tlHtml = '<div style="display:grid;grid-template-columns:repeat(12,1fr);gap:4px;align-items:end;height:120px;margin-bottom:8px">';
-  monthlyTotal.forEach((v,i)=>{
-    const pct=Math.max(4,Math.round(v/maxV*100));
-    tlHtml+=`<div title="${monthsFull[i]}: ${fmt(v)} RON" style="background:var(--accent-dim);border:1px solid var(--accent-border);border-radius:4px 4px 0 0;height:${pct}%;display:flex;align-items:flex-end;justify-content:center;cursor:default;transition:background .15s" onmouseover="this.style.background='var(--accent-border)'" onmouseout="this.style.background='var(--accent-dim)'"></div>`;
+  // Monthly timeline — clickable
+  const monthly = Array.from({length:12}, (_,m) => ({ m, name:monthsFull[m], short:months[m], items:[], total:0 }));
+  for(let m=0;m<12;m++){
+    if(suplLunar>0){ monthly[m].items.push({lbl:'💊 Suplimente', v:suplLunar}); monthly[m].total+=suplLunar; }
+    if(gelTrainLunar>0){ monthly[m].items.push({lbl:'🍯 Geluri training', v:gelTrainLunar}); monthly[m].total+=gelTrainLunar; }
+  }
+  if(echipTotal>0){
+    monthly[0].items.push({lbl:`👟 Echipament (${DB.equipment.length} item)`, v:echipTotal, sub:DB.equipment.map(e=>e.denumire).join(', ')});
+    monthly[0].total+=echipTotal;
+  }
+  c.forEach(x=>{
+    const dp = x.data_plecare || x.data_cursa;
+    if(!dp) return;
+    const m = new Date(dp).getMonth();
+    const gelCost = Math.round((x.geluri||0)*gpp);
+    const tot = (parseFloat(x.plata_concurs)||0)+(parseFloat(x.cazare)||0)+gelCost;
+    monthly[m].items.push({lbl:`🏁 ${x.denumire}`, v:tot, sub:`Inscr. ${fmt(x.plata_concurs||0)} + Caz. ${fmt(x.cazare||0)} + Gel. ${fmt(gelCost)}`});
+    monthly[m].total+=tot;
   });
-  tlHtml+='</div><div style="display:grid;grid-template-columns:repeat(12,1fr);gap:4px">';
-  months.forEach(m=>{ tlHtml+=`<div style="text-align:center;font-size:8px;color:var(--t3)">${m}</div>`; });
-  tlHtml+='</div>';
-  document.getElementById('est-timeline').innerHTML = tlHtml;
+  const maxM = Math.max(...monthly.map(m=>m.total),1);
+
+  document.getElementById('est-timeline').innerHTML = `
+    <div class="timeline">
+      ${monthly.map((m,i)=>`
+        <div class="tl-month">
+          <div class="tl-head" onclick="toggleMonth(${i})">
+            <div class="tl-month-name">${m.name}</div>
+            <div class="tl-bar-wrap"><div class="tl-bar" style="width:${Math.round(m.total/maxM*100)}%"></div></div>
+            <div class="tl-total ${m.total>3000?'high':m.total>1000?'mid':'low'}">${m.total>0?fmt(m.total)+' RON':'—'}</div>
+          </div>
+          <div class="tl-body" id="tl-body-${i}">
+            <div style="padding:8px 0">
+              ${m.items.map(it=>`
+                <div class="tl-item">
+                  <div><span class="tl-item-lbl">${it.lbl}</span>${it.sub?`<div style="font-size:11px;color:var(--t3)">${it.sub}</div>`:''}</div>
+                  <span class="tl-item-val">${fmt(it.v)} RON</span>
+                </div>`).join('')}
+              ${m.total>0?`<div class="tl-item" style="border-top:1px solid var(--border);margin-top:4px;padding-top:8px">
+                <span class="tl-item-lbl" style="font-weight:700">Total luna</span>
+                <span class="tl-item-val" style="color:var(--accent)">${fmt(m.total)} RON</span>
+              </div>`:'<div style="padding:8px 0;font-size:12px;color:var(--t3)">Nicio cheltuială planificată</div>'}
+            </div>
+          </div>
+        </div>`).join('')}
+      <div style="background:var(--s2);border:1px solid var(--accent-border);border-radius:var(--r);padding:14px 20px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;color:var(--t2);font-weight:600">TOTAL AN 2026</span>
+        <span style="font-family:var(--display);font-size:28px;color:var(--accent);letter-spacing:1px">${fmt(totalAn)} RON</span>
+      </div>
+    </div>`;
 }
 
 function toggleMonth(i) {
-  const el=document.getElementById('est-month-'+i);
-  if(el) el.style.display=el.style.display==='none'?'block':'none';
+  const el=document.getElementById('tl-body-'+i);
+  if(el) el.classList.toggle('open');
 }
 
 // ══════════════════════════════════════════════════════
@@ -3288,16 +3403,32 @@ function renderRaceHistory() {
   const diffMap=[[120,'LEGENDARY','#ff4f4f'],[60,'EPIC','#ff7c3b'],[30,'HARD','#ffcb4f'],[15,'MEDIUM','#b8ff4f'],[0,'EASY','#4fff9b']];
   function getDiff(r){const d=raceDifficulty(r);for(const[t,l,c]of diffMap)if(d>=t)return[l,c];return['EASY','#4fff9b'];}
 
-  // Build activity lookup — match race to activity by date or is_race flag
-  const actByDate = {};
+  // Build activity lookup — match race to Strava activity
+  const actsByDate = {};
   (DB.activities||[]).forEach(a=>{
-    if(a.date) actByDate[a.date] = a;
-    if(a.is_race && a.date) actByDate['race_'+a.date] = a;
+    const d = (a.date||'').slice(0,10);
+    if(!actsByDate[d]) actsByDate[d] = [];
+    actsByDate[d].push(a);
   });
   function findAct(r) {
     if(!r.data_cursa) return null;
     const d = r.data_cursa.slice(0,10);
-    return actByDate['race_'+d] || actByDate[d] || null;
+    const rKm = parseFloat(r.distanta)||0;
+    // Try exact date first — prefer is_race or closest km match
+    const tryDate = dt => {
+      const acts = actsByDate[dt] || [];
+      if(!acts.length) return null;
+      const raceActs = acts.filter(a=>a.is_race);
+      if(raceActs.length===1) return raceActs[0];
+      // Match by closest distance
+      return acts.sort((a,b)=>Math.abs((a.km||0)-rKm)-Math.abs((b.km||0)-rKm))[0];
+    };
+    // Try race date ±1 day (Strava sometimes records next day)
+    const d0 = new Date(d); 
+    const dm1 = new Date(d0); dm1.setDate(d0.getDate()-1);
+    const dp1 = new Date(d0); dp1.setDate(d0.getDate()+1);
+    const fmt2 = d=>d.toISOString().slice(0,10);
+    return tryDate(d) || tryDate(fmt2(dp1)) || tryDate(fmt2(dm1)) || null;
   }
 
   const container = document.getElementById('db-race-list');
