@@ -1636,6 +1636,7 @@ async function doAuth() {
     // Successful login
     authToken = data.access_token;
     currentUser = { id: data.user.id, email: data.user.email };
+    if (data.refresh_token) localStorage.setItem('sb_refresh', data.refresh_token);
     await onLoggedIn();
 
   } catch(e) {
@@ -1683,6 +1684,7 @@ async function doLogout() {
   isCloud = false;
   D = null;
   localStorage.removeItem('sb_session');
+  localStorage.removeItem('sb_refresh');
   // Reset to fully readonly BEFORE any render
   document.body.classList.add('readonly');
   document.getElementById('auth-email').value = '';
@@ -1952,7 +1954,6 @@ async function loadOwnerDataAnonymously() {
 
 // ── Auto-login if session exists in localStorage ─────
 window.addEventListener('load', async () => {
-  // Always start fully readonly + hidden until auth is resolved
   document.body.classList.add('readonly');
 
   const saved = localStorage.getItem('sb_session');
@@ -1960,24 +1961,41 @@ window.addEventListener('load', async () => {
     try {
       const session = JSON.parse(saved);
       if (session.access_token && session.user) {
-        // Validate token with Supabase before trusting it
+        // Try existing access_token first
         const res = await fetch(`${SB_URL}/auth/v1/user`, {
           headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + session.access_token }
         });
         if (res.ok) {
           authToken = session.access_token;
           currentUser = { id: session.user.id, email: session.user.email };
-          // Token valid — go straight to owner flow, skip anonymous load entirely
           await onLoggedIn();
           return;
         }
+        // Access token expired — try refresh token
+        const refreshToken = localStorage.getItem('sb_refresh');
+        if (refreshToken) {
+          const rRes = await fetch(`${SB_URL}/auth/v1/token?grant_type=refresh_token`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY },
+            body: JSON.stringify({ refresh_token: refreshToken })
+          });
+          if (rRes.ok) {
+            const rData = await rRes.json();
+            authToken = rData.access_token;
+            currentUser = { id: rData.user.id, email: rData.user.email };
+            // Update stored session + refresh token
+            localStorage.setItem('sb_session', JSON.stringify({ access_token: authToken, user: currentUser }));
+            if (rData.refresh_token) localStorage.setItem('sb_refresh', rData.refresh_token);
+            await onLoggedIn();
+            return;
+          }
+        }
       }
     } catch(e) {}
-    // Session invalid/expired — clear it
     localStorage.removeItem('sb_session');
+    localStorage.removeItem('sb_refresh');
   }
 
-  // No valid session — load owner data publicly
   await loadOwnerDataAnonymously();
   updateAuthButtons();
 });
@@ -2433,6 +2451,11 @@ function rcCard(c) {
         </div>
       </div>
       ${c.note?`<div class="rc-note">📝 ${c.note}</div>`:''}
+      ${(c.link_dovada_ins||c.link_dovada_caz)?`
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+        ${c.link_dovada_ins?`<button onclick="openPreview('${c.link_dovada_ins.replace(/'/g,"\\'")}','Dovadă înscriere — ${c.denumire.replace(/'/g,"\\'")}')\" class="btn btn-ghost btn-sm" style="font-size:11px">📄 Dovadă înscriere</button>`:''}
+        ${c.link_dovada_caz?`<button onclick="openPreview('${c.link_dovada_caz.replace(/'/g,"\\'")}','Dovadă cazare — ${c.denumire.replace(/'/g,"\\'")}')\" class="btn btn-ghost btn-sm" style="font-size:11px">🏨 Dovadă cazare</button>`:''}
+      </div>`:''}
     </div>
   `;
 }
