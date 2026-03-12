@@ -520,17 +520,20 @@ body.readonly label.btn { display:none !important }
 .dash-hero-eyebrow{font-size:10px;color:var(--t3);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
 .dash-hero-title{font-family:var(--display);font-size:52px;letter-spacing:4px;color:var(--text);line-height:1;margin-bottom:4px}
 .dash-hero-aka{font-family:var(--display);font-size:18px;color:var(--accent);letter-spacing:3px;margin-bottom:22px}
-.dash-hero-stats{display:grid;grid-template-columns:repeat(5,1fr);align-items:center;gap:0;margin-top:4px}
+.dash-hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:8px}
 .dhs{display:flex;flex-direction:column;align-items:center;text-align:center;padding:12px 8px;position:relative}
 .dhs+.dhs::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:1px;height:36px;background:var(--border2)}
+.dhs:nth-child(1)::before{display:none}
+.dhs:nth-child(4){border-top:1px solid var(--border)}
+.dhs:nth-child(4)::before{display:none}
 .dhs span{font-family:var(--display);font-size:28px;color:var(--text);letter-spacing:1px;line-height:1}
-.dhs small{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:4px;text-align:center;display:block;white-space:nowrap}
+.dhs small{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:4px;text-align:center;display:block}
 .dhs-sep{display:none}
 @media(max-width:600px){
   .dash-hero{padding:20px}
   .dash-hero-title{font-size:36px}
-  .dhs span{font-size:20px}
-  .dhs{padding:10px 4px}
+  .dhs span{font-size:22px}
+  .dhs{padding:10px 6px}
 }
 
 /* ── BIO CARD ── */
@@ -662,9 +665,9 @@ body.readonly label.btn { display:none !important }
   .tiles{grid-template-columns:1fr}
   .cal{grid-template-columns:1fr}
   .dash-hero-title{font-size:30px;letter-spacing:2px}
-  .dhs span{font-size:16px}
-  .dhs{padding:8px 2px}
-  .dhs small{font-size:9px;letter-spacing:.5px;white-space:normal}
+  .dhs span{font-size:20px}
+  .dhs{padding:8px 4px}
+  .dhs small{font-size:9px;letter-spacing:.5px}
   .race-name{font-size:13px}
   .race-extra-stat-val{font-size:14px}
 }
@@ -3407,6 +3410,10 @@ function renderRaceHistory() {
     if(!actsByDate[d]) actsByDate[d] = [];
     actsByDate[d].push(a);
   });
+  // Debug: log activities with GPX data
+  const withGPX = (DB.activities||[]).filter(a=>a.polyline||a.elev_profile||a.splits);
+  if(withGPX.length) console.log('[Race History] Activities with GPX/data:', withGPX.length, 'total acts:', (DB.activities||[]).length);
+  else console.warn('[Race History] NO activities have GPX/elev/splits data. Total acts:', (DB.activities||[]).length, 'Sample:', (DB.activities||[]).slice(0,2));
   function findAct(r) {
     if(!r.data_cursa) return null;
     const d = r.data_cursa.slice(0,10);
@@ -3439,14 +3446,29 @@ function renderRaceHistory() {
     const safeId = 'rc_'+(r.id||'').replace(/-/g,'');
     // Merge race data with matched activity (for GPX, HR, splits etc)
     const act = findAct(r);
-    const rd = act ? {...r, polyline:act.polyline||r.polyline, elev_profile:act.elev_profile||r.elev_profile,
-      hr_stream:act.hr_stream||r.hr_stream, splits:act.splits||r.splits,
-      hr_avg:act.hr_avg||r.hr_avg, hr_max:act.hr_max||r.hr_max,
-      cadence:act.cadence||r.cadence, dur:act.dur||r.dur } : r;
-    const hasRoute = rd.polyline;
-    const hasHR    = rd.hr_stream?.length;
-    const hasElev  = rd.elev_profile?.length;
-    const hasSplit = rd.splits?.length;
+    // Normalize JSONB arrays — Supabase may return {values:[]} or stringified JSON
+    function normArr(v) {
+      if(!v) return null;
+      if(Array.isArray(v)) return v.length ? v : null;
+      if(typeof v === 'string') { try { const p=JSON.parse(v); return Array.isArray(p)&&p.length?p:null; } catch{return null;} }
+      if(v.values && Array.isArray(v.values)) return v.values.length ? v.values : null;
+      return null;
+    }
+    const rd = act ? {
+      ...r,
+      polyline:     act.polyline     || r.polyline     || null,
+      elev_profile: normArr(act.elev_profile) || normArr(r.elev_profile),
+      hr_stream:    normArr(act.hr_stream)    || normArr(r.hr_stream),
+      splits:       normArr(act.splits)       || normArr(r.splits),
+      hr_avg:  act.hr_avg  || r.hr_avg,
+      hr_max:  act.hr_max  || r.hr_max,
+      cadence: act.cadence || r.cadence,
+      dur:     act.dur     || r.dur,
+    } : {...r, elev_profile:normArr(r.elev_profile), hr_stream:normArr(r.hr_stream), splits:normArr(r.splits)};
+    const hasRoute = !!rd.polyline;
+    const hasHR    = !!(rd.hr_stream?.length);
+    const hasElev  = !!(rd.elev_profile?.length);
+    const hasSplit = !!(rd.splits?.length);
 
     return `
     <div class="race-card" id="card-${safeId}">
@@ -3458,7 +3480,7 @@ function renderRaceHistory() {
             <span>📍 ${r.distanta||0} km</span>
             <span>⛰️ ${r.denivelare||0} m D+</span>
             ${rd.hr_avg?`<span>❤️ ${rd.hr_avg} bpm</span>`:''}
-            ${act?'<span style="font-size:9px;color:var(--green);opacity:.7">● Strava</span>':''}
+            ${act?`<span style="font-size:9px;color:var(--green);opacity:.8" title="Act: ${act.name||''} | poly:${!!act.polyline} | elev:${!!(act.elev_profile)} | splits:${!!(act.splits)}">● Strava</span>`:''}
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
