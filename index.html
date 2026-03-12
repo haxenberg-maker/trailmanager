@@ -720,7 +720,7 @@ body.readonly label.btn { display:none !important }
 }
 </style>
 </head>
-<body>
+<body class="readonly">
 
 <!-- ── LOGIN SCREEN ── -->
 <div class="login-screen" id="login-screen" style="display:none" onclick="if(event.target===this)hideLoginModal()">
@@ -1677,10 +1677,14 @@ async function doLogout() {
       headers: sbHeaders(true)
     });
   } catch(e) {}
+  // Clear ALL auth state
   authToken = null;
   currentUser = null;
   isCloud = false;
   D = null;
+  localStorage.removeItem('sb_session');
+  // Reset to fully readonly BEFORE any render
+  document.body.classList.add('readonly');
   document.getElementById('auth-email').value = '';
   document.getElementById('auth-pass').value = '';
   document.getElementById('auth-err').textContent = '';
@@ -1688,10 +1692,12 @@ async function doLogout() {
   document.getElementById('auth-btn').textContent = 'Intră în cont';
   document.getElementById('user-email-display').textContent = '';
   document.getElementById('guest-banner').style.display = 'none';
+  const themeSw = document.getElementById('theme-switcher');
+  if (themeSw) themeSw.style.display = 'none';
   setSyncStatus('Deconectat', 'var(--t4)');
   updateAuthButtons();
   toast('👋 Deconectat!', 'info');
-  // Reload owner data publicly
+  // Reload owner data publicly (anonymous)
   await loadOwnerDataAnonymously();
 }
 
@@ -1705,33 +1711,29 @@ async function onLoggedIn() {
     user: currentUser
   }));
 
-  // Hide login modal
+  // ── OWNER CHECK — do this FIRST, before any render ──
+  const isOwner = currentUser.email.toLowerCase() === OWNER_EMAIL.toLowerCase();
+  if (isOwner) {
+    document.body.classList.remove('readonly');
+    document.getElementById('guest-banner').style.display = 'none';
+  } else {
+    document.body.classList.add('readonly');
+    document.getElementById('guest-banner').style.display = 'flex';
+  }
+
+  // Set isCloud before updateAuthButtons so buttons render correctly
+  isCloud = true;
   hideLoginModal();
 
-  // Show user email
   const emailEl = document.getElementById('user-email-display');
   if (emailEl) emailEl.textContent = '👤 ' + currentUser.email;
 
-  // ── OWNER CHECK ──────────────────────────────────────
-  const isOwner = currentUser.email.toLowerCase() === OWNER_EMAIL.toLowerCase();
-  if (!isOwner) {
-    document.body.classList.add('readonly');
-    document.getElementById('guest-banner').style.display = 'flex';
-  } else {
-    document.body.classList.remove('readonly');
-    document.getElementById('guest-banner').style.display = 'none';
-  }
-
   updateAuthButtons();
-  isCloud = true;
   setSyncStatus('Se încarcă...', 'var(--yellow)');
 
   try {
-    // Guests always load OWNER's data — find owner's user_id first
-    let targetUserId = currentUser.id;
-
     if (!isOwner) {
-      // Fetch owner's row directly — owner data is public to read via RLS (we'll add a guest policy)
+      // Guest: load owner's public data
       const allRows = await fetch(
         `${SB_URL}/rest/v1/${SB_TABLE}?select=user_id,data&limit=1`,
         { headers: sbHeaders(true) }
@@ -1747,8 +1749,9 @@ async function onLoggedIn() {
       }
     }
 
+    // Owner: load own data
     const res = await fetch(
-      `${SB_URL}/rest/v1/${SB_TABLE}?user_id=eq.${targetUserId}&select=data&limit=1`,
+      `${SB_URL}/rest/v1/${SB_TABLE}?user_id=eq.${currentUser.id}&select=data&limit=1`,
       { headers: sbHeaders(true) }
     );
 
@@ -1761,7 +1764,7 @@ async function onLoggedIn() {
       if (!D.sponsori) D.sponsori = [];
       renderAll();
       setSyncStatus('Sincronizat ☁️', 'var(--green)');
-      toast(isOwner ? '☁️ Bine ai revenit, ' + currentUser.email.split('@')[0] + '!' : '👁️ Mod vizualizare activ', isOwner ? 'ok' : 'info');
+      toast('☁️ Bine ai revenit, ' + currentUser.email.split('@')[0] + '!', 'ok');
       fetchITRA();
     } else {
       if (!isOwner) {
@@ -1949,25 +1952,32 @@ async function loadOwnerDataAnonymously() {
 
 // ── Auto-login if session exists in localStorage ─────
 window.addEventListener('load', async () => {
+  // Always start fully readonly + hidden until auth is resolved
+  document.body.classList.add('readonly');
+
   const saved = localStorage.getItem('sb_session');
   if (saved) {
     try {
       const session = JSON.parse(saved);
       if (session.access_token && session.user) {
+        // Validate token with Supabase before trusting it
         const res = await fetch(`${SB_URL}/auth/v1/user`, {
           headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + session.access_token }
         });
         if (res.ok) {
           authToken = session.access_token;
           currentUser = { id: session.user.id, email: session.user.email };
+          // Token valid — go straight to owner flow, skip anonymous load entirely
           await onLoggedIn();
           return;
         }
       }
     } catch(e) {}
+    // Session invalid/expired — clear it
     localStorage.removeItem('sb_session');
   }
-  // No session — load owner data publicly, no login required
+
+  // No valid session — load owner data publicly
   await loadOwnerDataAnonymously();
   updateAuthButtons();
 });
