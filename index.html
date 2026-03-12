@@ -870,7 +870,14 @@ body.readonly label.btn { display:none !important }
     </div>
   </div>
 
-  <div class="ph" style="margin-top:0"><div class="ph-left"><h2>DASHBOARD</h2><p id="db-sub">Sezon 2026</p></div></div>
+  <div class="ph" style="margin-top:0">
+    <div class="ph-left">
+      <h2 id="dash-title-display" onclick="startEditDashTitle()" style="cursor:default" title="">SEZONUL BESTIEI</h2>
+      <input id="dash-title-input" style="display:none;font-family:var(--display);font-size:46px;letter-spacing:2px;line-height:1;color:var(--text);background:transparent;border:none;border-bottom:2px solid var(--accent);outline:none;width:100%;max-width:500px" 
+        onblur="saveDashTitle()" onkeydown="if(event.key==='Enter')saveDashTitle()">
+      <p id="db-sub">Sezon 2026</p>
+    </div>
+  </div>
 
   <!-- KPI tiles row -->
   <div class="tiles" id="db-tiles"></div>
@@ -1784,6 +1791,7 @@ async function loadOwnerDataAnonymously() {
       document.body.classList.add('readonly');
       renderAll();
       setSyncStatus('Public ☁️', 'var(--t3)');
+      fetchITRA(); // ITRA e public — hardcodat, nu necesită auth
     }
   } catch(e) {
     setSyncStatus('Eroare', 'var(--red)');
@@ -1860,6 +1868,40 @@ function toggleBio() {
   }
 }
 
+function startEditDashTitle() {
+  if (!isOwnerLoggedIn()) return;
+  const display = document.getElementById('dash-title-display');
+  const input   = document.getElementById('dash-title-input');
+  if (!display || !input) return;
+  input.value = display.textContent;
+  display.style.display = 'none';
+  input.style.display = 'block';
+  input.focus();
+  input.select();
+}
+
+function saveDashTitle() {
+  const display = document.getElementById('dash-title-display');
+  const input   = document.getElementById('dash-title-input');
+  if (!display || !input) return;
+  const val = input.value.trim().toUpperCase() || 'SEZONUL BESTIEI';
+  display.textContent = val;
+  display.style.display = '';
+  input.style.display = 'none';
+  D.dash_title = val;
+  scheduleAutoSave();
+}
+
+function loadDashTitle() {
+  const el = document.getElementById('dash-title-display');
+  if (!el) return;
+  const title = D.dash_title || 'SEZONUL BESTIEI';
+  el.textContent = title;
+  // Show pencil hint only for owner
+  el.title = isOwnerLoggedIn() ? '✏️ Click pentru a edita titlul' : '';
+  el.style.cursor = isOwnerLoggedIn() ? 'pointer' : 'default';
+}
+
 async function fetchITRA() {
   // ITRA Performance Index hardcodat (actualizat manual)
   const el = document.getElementById('itra-pi-val');
@@ -1929,6 +1971,7 @@ function renderSidebar() {
 //  DASHBOARD
 // ══════════════════════════════════════════════════════
 function renderDash() {
+  loadDashTitle();
   const c = D.curse;
   const today = new Date(); today.setHours(0,0,0,0);
   const km = c.reduce((s,x)=>s+(x.distanta||0),0);
