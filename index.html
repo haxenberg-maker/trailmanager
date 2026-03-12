@@ -1700,7 +1700,7 @@ function switchLoginTab(mode, el) {
   loginMode = mode;
   document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('on'));
   el.classList.add('on');
-  document.getElementById('auth-btn').textContent = mode === 'signup' ? 'Creează cont' : 'Intră în cont';
+  const el_auth_btn=document.getElementById('auth-btn');if(el_auth_btn){el_auth_btn.textContent = mode === 'signup' ? 'Creează cont' : 'Intră în cont';}
 }
 
 async function doAuth() {
@@ -1799,10 +1799,10 @@ async function doLogout() {
   document.body.classList.add('readonly');
   document.getElementById('auth-email').value = '';
   document.getElementById('auth-pass').value  = '';
-  document.getElementById('auth-err').textContent = '';
+  const el_auth_err=document.getElementById('auth-err');if(el_auth_err){el_auth_err.textContent = '';}
   document.getElementById('auth-btn').disabled = false;
-  document.getElementById('auth-btn').textContent = 'Intră în cont';
-  document.getElementById('user-email-display').textContent = '';
+  const el_auth_btn=document.getElementById('auth-btn');if(el_auth_btn){el_auth_btn.textContent = 'Intră în cont';}
+  const el_user_email_display=document.getElementById('user-email-display');if(el_user_email_display){el_user_email_display.textContent = '';}
   document.getElementById('guest-banner').style.display = 'none';
   const sw = document.getElementById('theme-switcher');
   if (sw) sw.style.display = 'none';
@@ -1896,20 +1896,20 @@ function renderAll() {
 // ══════════════════════════════════════════════════════
 function renderSidebar() {
   const c = DB.races;
-  document.getElementById('b-curse').textContent = c.length;
-  document.getElementById('b-sp').textContent = DB.sponsors.length;
+  const el_b_curse=document.getElementById('b-curse');if(el_b_curse){el_b_curse.textContent = c.length;}
+  const el_b_sp=document.getElementById('b-sp');if(el_b_sp){el_b_sp.textContent = DB.sponsors.length;}
   const km = c.reduce((s,x)=>s+(x.distanta||0),0);
-  document.getElementById('sk-km').textContent = km;
-  document.getElementById('sk-kmsub').textContent = c.length + ' curse înregistrate';
+  const el_sk_km=document.getElementById('sk-km');if(el_sk_km){el_sk_km.textContent = km;}
+  const el_sk_kmsub=document.getElementById('sk-kmsub');if(el_sk_kmsub){el_sk_kmsub.textContent = c.length + ' curse înregistrate';}
   const today = new Date(); today.setHours(0,0,0,0);
   const up = [...c].filter(x=>x.data_cursa && new Date(x.data_cursa)>=today).sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
   if (up.length) {
     const d = Math.ceil((new Date(up[0].data_cursa)-today)/86400000);
-    document.getElementById('sk-next').textContent = d + ' zile';
-    document.getElementById('sk-nextn').textContent = up[0].denumire;
+    const el_sk_next=document.getElementById('sk-next');if(el_sk_next){el_sk_next.textContent = d + ' zile';}
+    const el_sk_nextn=document.getElementById('sk-nextn');if(el_sk_nextn){el_sk_nextn.textContent = up[0].denumire;}
   } else {
-    document.getElementById('sk-next').textContent = '—';
-    document.getElementById('sk-nextn').textContent = 'Nicio cursă viitoare';
+    const el_sk_next=document.getElementById('sk-next');if(el_sk_next){el_sk_next.textContent = '—';}
+    const el_sk_nextn=document.getElementById('sk-nextn');if(el_sk_nextn){el_sk_nextn.textContent = 'Nicio cursă viitoare';}
   }
   const dkm = document.getElementById('d-km'); if(dkm) dkm.textContent = km;
   const dnext = document.getElementById('d-next'); if(dnext) dnext.textContent = up.length ? Math.ceil((new Date(up[0].data_cursa)-today)/86400000)+' zile' : '—';
@@ -1972,7 +1972,7 @@ function renderDash() {
   // Streak
   const streak = calcStreak(allActs);
 
-  document.getElementById('db-sub').textContent = `${c.length} curse · ${km} km total · Sezon 2026`;
+  const dbSub = document.getElementById('db-sub'); if(dbSub) dbSub.textContent = `${c.length} curse · ${km} km total · Sezon 2026`;
 
   // Hero stats
   const heroEl = document.getElementById('db-hero-stats');
@@ -2056,8 +2056,10 @@ function renderDash() {
   if (predEl) predEl.textContent = fmt(pred) + ' km';
 
   // Streak
-  document.getElementById('db-streak-current').textContent = streak.current + ' zile';
-  document.getElementById('db-streak-best').textContent = streak.best + ' zile';
+  const scEl = document.getElementById('db-streak-cur') || document.getElementById('db-streak-current');
+  const sbEl = document.getElementById('db-streak-best');
+  if (scEl) scEl.textContent = streak.current + ' zile';
+  if (sbEl) sbEl.textContent = streak.best + ' zile';
 
   // Heatmap
   drawHeatmap('db-heatmap', allActs, new Date().getFullYear());
@@ -2069,7 +2071,7 @@ function renderDash() {
   // Unpaid
   const unpaid = [...c].filter(x=>(!x.plata_concurs_ok||!x.plata_cazare)&&x.data_cursa&&new Date(x.data_cursa)>=today).sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa)).slice(0,5);
   if (unpaid.length) {
-    document.getElementById('db-unpaid-label').textContent = '⚠️ Plăți restante — curse viitoare';
+    const ulEl = document.getElementById('db-unpaid-label'); if(ulEl) ulEl.textContent = '⚠️ Plăți restante — curse viitoare';
     document.getElementById('db-unpaid-list').innerHTML = unpaid.map(x => {
       const insOk = x.plata_concurs_ok, cazOk = x.plata_cazare || x.cazare === 0;
       const deAchitat = (!insOk?x.plata_concurs||0:0)+(!cazOk?x.cazare||0:0);
@@ -2088,7 +2090,7 @@ function renderDash() {
       </div>`;
     }).join('');
   } else {
-    document.getElementById('db-unpaid-label').textContent = '';
+    const ulEl2 = document.getElementById('db-unpaid-label'); if(ulEl2) ulEl2.textContent = '';
     document.getElementById('db-unpaid-list').innerHTML = '';
   }
 
@@ -2461,7 +2463,7 @@ async function saveGelSettings() {
 // ══════════════════════════════════════════════════════
 function openRC(id) {
   editRCid = id || null;
-  document.getElementById('rc-title').textContent = id ? 'EDITEAZĂ CURSĂ' : 'CURSĂ NOUĂ';
+  const el_rc_title=document.getElementById('rc-title');if(el_rc_title){el_rc_title.textContent = id ? 'EDITEAZĂ CURSĂ' : 'CURSĂ NOUĂ';}
   const x = id ? DB.races.find(r=>r.id===id) : {};
   const v = (fid,val)=>{ const el=document.getElementById(fid); if(el) el.value=val||''; };
   const ck = (fid,val)=>{ const el=document.getElementById(fid); if(el) el.checked=!!val; };
@@ -2534,7 +2536,7 @@ async function delRC(id) {
 // ══════════════════════════════════════════════════════
 function openSP(id) {
   editSPid = id||null;
-  document.getElementById('sp-title').textContent = id ? 'EDITEAZĂ SPONSOR' : 'SPONSOR NOU';
+  const el_sp_title=document.getElementById('sp-title');if(el_sp_title){el_sp_title.textContent = id ? 'EDITEAZĂ SPONSOR' : 'SPONSOR NOU';}
   const x = id ? DB.sponsors.find(s=>s.id===id) : {};
   const v=(fid,val)=>{const el=document.getElementById(fid);if(el)el.value=val||'';};
   v('sp-den',x.denumire); v('sp-suma',x.suma); v('sp-data',x.data);
@@ -2589,7 +2591,7 @@ async function delSP(id) {
 // ══════════════════════════════════════════════════════
 function openEQ(id) {
   editEQid = id||null;
-  document.getElementById('eq-title').textContent = id ? 'EDITEAZĂ ECHIPAMENT' : 'ECHIPAMENT NOU';
+  const el_eq_title=document.getElementById('eq-title');if(el_eq_title){el_eq_title.textContent = id ? 'EDITEAZĂ ECHIPAMENT' : 'ECHIPAMENT NOU';}
   const x = id ? DB.equipment.find(e=>e.id===id) : {};
   const v=(fid,val)=>{const el=document.getElementById(fid);if(el)el.value=val||'';};
   const cat=document.getElementById('eq-cat'); if(cat) cat.value=x.categorie||'Pantofi Curse Scurte';
@@ -2757,7 +2759,7 @@ function openPreview(url, title) {
   const gdMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
   if (gdMatch) embedUrl = `https://drive.google.com/file/d/${gdMatch[1]}/preview`;
   if (url.includes('dropbox.com')) embedUrl = url.replace('www.dropbox.com','dl.dropboxusercontent.com').replace('?dl=0','').replace('?dl=1','');
-  document.getElementById('preview-title').textContent = title||'PREVIZUALIZARE';
+  const el_preview_title=document.getElementById('preview-title');if(el_preview_title){el_preview_title.textContent = title||'PREVIZUALIZARE';}
   document.getElementById('preview-open-link').href = url;
   document.getElementById('preview-fallback-link').href = url;
   document.getElementById('preview-loading').style.display='flex';
@@ -3103,7 +3105,7 @@ function renderStats() {
   const durRound  = durByMonth.map(v=>Math.round(v*10)/10);
 
   // Charts
-  document.getElementById('chart-km-month-sub').textContent = `${fmt(totalKm)} km total · ${chartYear}`;
+  const el_chart_km_month_sub=document.getElementById('chart-km-month-sub');if(el_chart_km_month_sub){el_chart_km_month_sub.textContent = `${fmt(totalKm)} km total · ${chartYear}`;}
   drawBarChart('chart-km-month', months, kmRound, 'var(--accent)', v=>`${fmt(v)} km`, DB.prefs.target_km/12);
   drawBarChart('chart-elev-month', months, elevRound, 'var(--orange)', v=>`${fmt(v)} m D+`);
   drawBarChart('chart-dur-month', months, durRound, 'var(--green)', v=>`${v}h`);
@@ -3112,7 +3114,7 @@ function renderStats() {
   let cum=0; const cumPts=[];
   const sorted=[...allActs].filter(a=>yearFilter?a.date?.startsWith(yearFilter):true).sort((a,b)=>new Date(a.date)-new Date(b.date));
   sorted.forEach(a=>{ cum+=a.km||0; cumPts.push({x:a.date,y:Math.round(cum)}); });
-  document.getElementById('chart-cum-sub').textContent = `${fmt(Math.round(cum))} km cumulați`;
+  const el_chart_cum_sub=document.getElementById('chart-cum-sub');if(el_chart_cum_sub){el_chart_cum_sub.textContent = `${fmt(Math.round(cum))} km cumulați`;}
   drawLineChart('chart-cumulative', cumPts);
 
   // Pie chart
@@ -3147,7 +3149,7 @@ function renderStats() {
     </div>`;
 
   // Heatmap
-  document.getElementById('st-heatmap-sub').textContent = `${actsForYear.length} zile cu alergare în ${chartYear}`;
+  const el_st_heatmap_sub=document.getElementById('st-heatmap-sub');if(el_st_heatmap_sub){el_st_heatmap_sub.textContent = `${actsForYear.length} zile cu alergare în ${chartYear}`;}
   drawHeatmap('st-heatmap', allActs, parseInt(chartYear)||curYear);
 
   // Activity list
