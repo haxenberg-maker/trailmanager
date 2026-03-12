@@ -520,17 +520,17 @@ body.readonly label.btn { display:none !important }
 .dash-hero-eyebrow{font-size:10px;color:var(--t3);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
 .dash-hero-title{font-family:var(--display);font-size:52px;letter-spacing:4px;color:var(--text);line-height:1;margin-bottom:4px}
 .dash-hero-aka{font-family:var(--display);font-size:18px;color:var(--accent);letter-spacing:3px;margin-bottom:22px}
-.dash-hero-stats{display:flex;align-items:center;flex-wrap:wrap;gap:4px}
-.dhs{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
-.dhs:first-child{padding-left:0}
-.dhs span{font-family:var(--display);font-size:28px;color:var(--accent);letter-spacing:1px;line-height:1}
-.dhs small{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:3px;text-align:center;display:block}
-.dhs-sep{width:1px;height:36px;background:var(--border2);flex-shrink:0}
+.dash-hero-stats{display:grid;grid-template-columns:repeat(5,1fr);align-items:center;gap:0;margin-top:4px}
+.dhs{display:flex;flex-direction:column;align-items:center;text-align:center;padding:12px 8px;position:relative}
+.dhs+.dhs::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:1px;height:36px;background:var(--border2)}
+.dhs span{font-family:var(--display);font-size:28px;color:var(--text);letter-spacing:1px;line-height:1}
+.dhs small{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:4px;text-align:center;display:block;white-space:nowrap}
+.dhs-sep{display:none}
 @media(max-width:600px){
   .dash-hero{padding:20px}
   .dash-hero-title{font-size:36px}
-  .dhs span{font-size:22px}
-  .dhs{padding:0 12px}
+  .dhs span{font-size:20px}
+  .dhs{padding:10px 4px}
 }
 
 /* ── BIO CARD ── */
@@ -662,8 +662,9 @@ body.readonly label.btn { display:none !important }
   .tiles{grid-template-columns:1fr}
   .cal{grid-template-columns:1fr}
   .dash-hero-title{font-size:30px;letter-spacing:2px}
-  .dhs span{font-size:19px}
-  .dhs{padding:0 8px}
+  .dhs span{font-size:16px}
+  .dhs{padding:8px 2px}
+  .dhs small{font-size:9px;letter-spacing:.5px;white-space:normal}
   .race-name{font-size:13px}
   .race-extra-stat-val{font-size:14px}
 }
@@ -912,13 +913,9 @@ body.readonly label.btn { display:none !important }
     <div class="dash-hero-aka">HAX · 2026</div>
     <div class="dash-hero-stats" id="dash-hero-stats">
       <div class="dhs"><span id="dhs-km-real" style="color:var(--accent)">—</span><small>km alergați 2026</small></div>
-      <div class="dhs-sep"></div>
       <div class="dhs"><span id="dhs-curse">—</span><small>curse planificate</small></div>
-      <div class="dhs-sep"></div>
       <div class="dhs"><span id="dhs-km">—</span><small>km curse</small></div>
-      <div class="dhs-sep"></div>
       <div class="dhs"><span id="dhs-next">—</span><small>zile până la start</small></div>
-      <div class="dhs-sep"></div>
       <div class="dhs"><span id="dhs-streak" style="color:var(--orange)">—</span><small>🔥 streak</small></div>
     </div>
   </div>
