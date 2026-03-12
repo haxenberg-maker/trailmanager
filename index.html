@@ -38,127 +38,9 @@ link.rel = 'manifest';
 link.href = URL.createObjectURL(blob);
 document.currentScript.parentNode.appendChild(link);
 </script>
+<link rel="stylesheet" href="themes.css">
 <style>
-:root {
-  /* Fundal - Un gri-antracit neutru (fără verdele ăla ciudat) */
-  --bg: #0f1111;      /* Mai adânc, dar nu negru pur */
-  --s1: #1a1d1d;      /* Suprafețe clare */
-  --s2: #242929;      /* Carduri și input-uri */
-  --s3: #2f3535;      /* State-uri de hover */
-
-  /* Borduri - Mai luminoase să dea formă */
-  --border: #3a4141;
-  --border2: #4f5858;
-
-  /* Accent - Am păstrat ideea de Lime, dar mai saturat și vizibil */
-  --accent: #ccff00;  
-  --accent-dim: rgba(204, 255, 0, 0.1);
-  --accent-border: rgba(204, 255, 0, 0.25);
-
-  /* Culori de stare standard */
-  --green: #2ecc71;
-  --orange: #ff9f43;
-  --yellow: #f1c40f;
-  --red: #ee5253;
-
-  /* Text - Maximă lizibilitate */
-  --text: #f5f6f7;    /* Alb-curat, nu gri-verzui */
-  --t2: #a0a9a9;      /* Text secundar mult mai "soft" și lizibil */
-  --t3: #6c757d;      /* Text terțiar */
-  --t4: #495057;      /* Placeholder */
-
-  /* Layout & Fonts */
-  --r: 12px;          /* Rotunjire un pic mai modernă */
-  --display: 'Inter', 'Bebas Neue', sans-serif; /* Inter e mult mai lizibil ca font de bază */
-  --body: 'Inter', 'DM Sans', sans-serif;
-}
-
-[data-theme="vulcan"] {
-  /* Fundal - Un pic mai închis, spre culoarea nisipului sau a hârtiei reciclate */
-  --bg: #f2e9e4;      /* Un gri-bej odihnitor */
-  --s1: #e9ddd5;      /* Suprafețe de nivel 1 */
-  --s2: #dfcec3;      /* Carduri și input-uri */
-  --s3: #d5beb1;      /* Hover/Active - se simte solid */
-
-  /* Borduri - Mai pronunțate, să nu pară "ștearsă" */
-  --border: #c9ada1;
-  --border2: #9a8c98;
-
-  /* Accent - Un portocaliu ars, intens, care "mușcă" din fundal */
-  --accent: #d9480f;  
-  --accent-dim: rgba(217, 72, 15, 0.1);
-  --accent-border: rgba(217, 72, 15, 0.3);
-
-  /* Culori de stare - Mai profunde */
-  --green: #386641;
-  --orange: #bc4749;
-  --yellow: #bc6c25;
-  --red: #a4161a;
-
-  /* Text - Contrast solid, negru-maroniu */
-  --text: #221a18;    /* Foarte vizibil pe fundalul bej */
-  --t2: #4a3f3b;      /* Text secundar clar */
-  --t3: #6d5952;      /* Text terțiar */
-  --t4: #8d7e79;      /* Placeholder */
-}
-
-[data-theme="ghetar"] {
-  /* Fundal - Un albastru-alb înghețat (foarte deschis, dar cu tentă) */
-  --bg: #f0f4f8;      
-  --s1: #e1e9f1;      /* Suprafețe nivel 1 */
-  --s2: #d1dde9;      /* Suprafețe nivel 2 (carduri) */
-  --s3: #c2d2e1;      /* Hover/Active */
-
-  /* Borduri - Albastru oțelit, să dea structură */
-  --border: #a8bbc9;
-  --border2: #8ba0b3;
-
-  /* Accent - Albastru electric puternic (să sară în ochi pe telefon) */
-  --accent: #0077cc;  
-  --accent-dim: rgba(0, 119, 204, 0.1);
-  --accent-border: rgba(0, 119, 204, 0.25);
-
-  /* Culori de stare - Mai profunde pentru lizibilitate pe alb */
-  --green: #008f80;
-  --orange: #5a45d6;
-  --yellow: #005a9e;
-  --red: #d62851;
-
-  /* Text - Contrast maxim pentru citit clar */
-  --text: #0a1118;    /* Albastru-negru foarte închis */
-  --t2: #334e68;      /* Albastru mediu pentru text secundar */
-  --t3: #627d98;      /* Text terțiar */
-  --t4: #9fb3c8;      /* Placeholder */
-}
-
-[data-theme="noapte"] {
-  /* Fundal - Un mov-gri închis, nu negru total (ajută la reflexii) */
-  --bg: #1a1625;      
-  --s1: #241f33;      /* Suprafețe vizibile */
-  --s2: #2d2741;      /* Carduri care se disting clar de fundal */
-  --s3: #393152;      /* Hover - solid, nu șters */
-
-  /* Borduri - Trebuie să fie luminoase să delimiteze zonele */
-  --border: #4a3d60;
-  --border2: #624f80;
-
-  /* Accent - Mov electric, dar cu contrast mare */
-  --accent: #d69dff;  
-  --accent-dim: rgba(214, 157, 255, 0.15);
-  --accent-border: rgba(214, 157, 255, 0.3);
-
-  /* Culori de stare - Mai vibrante pe fundal dark */
-  --green: #80ffdb;
-  --orange: #ffb366;
-  --yellow: #f8c8ff;
-  --red: #ff7096;
-
-  /* Text - Aici e marea diferență de lizibilitate */
-  --text: #f3efff;    /* Aproape alb, cu o tentă de violet */
-  --t2: #b1a2cc;      /* Text secundar mult mai deschis (era prea șters) */
-  --t3: #7b6a96;      /* Text terțiar vizibil sub soare */
-  --t4: #4a3d60;      /* Elemente discrete */
-}
+/* Temele sunt în themes.css — linkuit în <head> */
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14px;line-height:1.5;min-height:100vh;overflow-x:hidden}
@@ -3873,7 +3755,17 @@ function drawHeatmap(containerId, activities, year) {
       const key=date.toISOString().slice(0,10);
       const km=dayMap[key]||0;
       const intensity=km>30?1:km>20?.8:km>15?.6:km>10?.45:km>5?.3:km>0?.15:0;
-      const fill=km>0?`rgba(184,255,79,${intensity})`:'var(--s3)';
+      const accentRaw = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ccff00';
+      // Convert hex accent to rgba with intensity
+      let fill;
+      if(km>0) {
+        // Parse hex to rgb
+        const hex = accentRaw.replace('#','');
+        const r=parseInt(hex.slice(0,2),16), g=parseInt(hex.slice(2,4),16), b=parseInt(hex.slice(4,6),16);
+        fill = `rgba(${r},${g},${b},${intensity})`;
+      } else {
+        fill = 'var(--s3)';
+      }
       const m=date.getMonth();
       if(!monthPos[m]) monthPos[m]=w;
       svg+=`<rect x="${w*14+36}" y="${d*14+8}" width="12" height="12" rx="2" fill="${fill}" title="${key}: ${Math.round(km)} km"/>`;
@@ -4058,13 +3950,15 @@ function polylineToSVG(encoded, w, h, uid) {
   // dot for start
   const sx=toX(coords[0][1]).toFixed(1), sy=toY(coords[0][0]).toFixed(1);
   const ex=toX(coords[coords.length-1][1]).toFixed(1), ey=toY(coords[coords.length-1][0]).toFixed(1);
+  const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ccff00';
+  const accentDim = getComputedStyle(document.documentElement).getPropertyValue('--accent-dim').trim() || 'rgba(204,255,0,0.1)';
   return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:${h}px;display:block">
     <defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#4fff9b"/>
-      <stop offset="100%" stop-color="#b8ff4f"/>
+      <stop offset="0%" stop-color="${accentColor}" stop-opacity="1"/>
+      <stop offset="100%" stop-color="${accentColor}" stop-opacity="0.5"/>
     </linearGradient></defs>
     <path d="${d}" fill="none" stroke="url(#${gid})" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>
-    <circle cx="${sx}" cy="${sy}" r="4" fill="#4fff9b" opacity=".9"/>
+    <circle cx="${sx}" cy="${sy}" r="4" fill="${accentColor}" opacity=".9"/>
     <circle cx="${ex}" cy="${ey}" r="4" fill="var(--red)" opacity=".9"/>
   </svg>`;
 }
