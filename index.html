@@ -41,6 +41,181 @@ document.currentScript.parentNode.appendChild(link);
 <link rel="stylesheet" href="themes.css">
 <style>
 /* Temele sunt în themes.css — linkuit în <head> */
+/* ═══════════════════════════════════════
+   SPONSOR LANDING PAGE
+   ═══════════════════════════════════════ */
+#sponsor-landing {
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg);
+  overflow-y:auto;
+  display:none;
+  opacity:0;
+  transition:opacity .4s ease;
+}
+#sponsor-landing.on { display:block; }
+#sponsor-landing.visible { opacity:1; }
+
+.sl-wrap {
+  max-width:480px;margin:0 auto;
+  padding:32px 20px 60px;
+  min-height:100vh;
+  display:flex;flex-direction:column;gap:0;
+}
+
+/* Hero */
+.sl-hero {
+  text-align:center;
+  padding:40px 0 32px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:28px;
+}
+.sl-avatar {
+  width:80px;height:80px;border-radius:50%;
+  background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;margin:0 auto 16px;
+  border:3px solid var(--accent);
+  box-shadow:0 0 0 6px var(--accent-dim);
+}
+.sl-name {
+  font-family:'Bebas Neue',var(--display);
+  font-size:38px;letter-spacing:3px;
+  color:var(--text);line-height:1;
+  margin-bottom:6px;
+}
+.sl-tag {
+  display:inline-block;
+  background:var(--accent);color:#0c0e0d;
+  font-size:10px;font-weight:700;
+  letter-spacing:2px;padding:3px 10px;
+  border-radius:20px;text-transform:uppercase;
+  margin-bottom:12px;
+}
+.sl-sub {
+  font-size:13px;color:var(--t2);line-height:1.5;
+  max-width:320px;margin:0 auto;
+}
+
+/* Cards */
+.sl-card {
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:20px;
+  margin-bottom:12px;
+}
+.sl-card-title {
+  font-size:10px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--t3);margin-bottom:14px;
+  display:flex;align-items:center;gap:6px;
+}
+.sl-card-title::after {
+  content:'';flex:1;height:1px;background:var(--border);
+}
+
+/* Stats grid */
+.sl-stats {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+}
+.sl-stat {
+  background:var(--s2);border-radius:8px;padding:12px 8px;
+  text-align:center;
+}
+.sl-stat-val {
+  font-family:'Bebas Neue',var(--display);
+  font-size:26px;color:var(--accent);
+  line-height:1;margin-bottom:3px;letter-spacing:1px;
+}
+.sl-stat-lbl {
+  font-size:9px;color:var(--t3);
+  text-transform:uppercase;letter-spacing:1px;line-height:1.3;
+}
+
+/* Races list */
+.sl-race {
+  display:flex;align-items:center;gap:10px;
+  padding:10px 0;border-bottom:1px solid var(--border);
+}
+.sl-race:last-child { border-bottom:none;padding-bottom:0; }
+.sl-race-nr {
+  font-family:'Bebas Neue',var(--display);
+  font-size:20px;color:var(--accent);
+  min-width:28px;text-align:center;line-height:1;
+}
+.sl-race-info { flex:1;min-width:0; }
+.sl-race-name {
+  font-size:13px;font-weight:600;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin-bottom:2px;
+}
+.sl-race-meta { font-size:11px;color:var(--t3); }
+.sl-race-dist {
+  font-family:'Bebas Neue',var(--display);
+  font-size:16px;color:var(--t2);
+  white-space:nowrap;
+}
+
+/* What sponsor gets */
+.sl-benefit {
+  display:flex;align-items:flex-start;gap:12px;
+  padding:10px 0;border-bottom:1px solid var(--border);
+}
+.sl-benefit:last-child { border-bottom:none;padding-bottom:0; }
+.sl-benefit-icon {
+  width:32px;height:32px;border-radius:8px;
+  background:var(--accent-dim);border:1px solid var(--accent-border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.sl-benefit-text { flex:1; }
+.sl-benefit-title {
+  font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;
+}
+.sl-benefit-desc { font-size:11px;color:var(--t3);line-height:1.4; }
+
+/* Story snippet */
+.sl-story {
+  font-size:13px;color:var(--t2);line-height:1.7;
+  font-style:italic;
+  padding:4px 0 4px 14px;
+  border-left:2px solid var(--accent);
+}
+
+/* CTA */
+.sl-cta {
+  margin-top:8px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.sl-btn-primary {
+  width:100%;padding:15px;
+  background:var(--accent);color:#0c0e0d;
+  font-family:'Bebas Neue',var(--display);
+  font-size:16px;letter-spacing:2px;
+  border:none;border-radius:var(--r);cursor:pointer;
+  transition:opacity .2s;
+}
+.sl-btn-primary:hover { opacity:.85; }
+.sl-btn-ghost {
+  width:100%;padding:12px;
+  background:none;
+  color:var(--t3);font-size:12px;
+  border:1px solid var(--border);border-radius:var(--r);
+  cursor:pointer;transition:color .2s,border-color .2s;
+}
+.sl-btn-ghost:hover { color:var(--text);border-color:var(--border2); }
+
+/* Sponsor logos strip (existing sponsors) */
+.sl-sponsors-strip {
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  margin-top:10px;
+}
+.sl-sp-pill {
+  background:var(--s2);border:1px solid var(--border);
+  border-radius:20px;padding:5px 12px;
+  font-size:11px;color:var(--t2);font-weight:600;
+}
+
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14px;line-height:1.5;min-height:100vh;overflow-x:hidden}
@@ -675,6 +850,82 @@ body.readonly label.btn { display:none !important }
 </style>
 </head>
 <body class="readonly">
+
+<!-- ══════════════════════════════════════
+     SPONSOR LANDING PAGE
+     Vizibil doar cu ?sponsor=1 în URL
+     ══════════════════════════════════════ -->
+<div id="sponsor-landing">
+  <div class="sl-wrap">
+    <div class="sl-hero">
+      <div class="sl-avatar">🏔️</div>
+      <div class="sl-name">BALAN GABRIEL</div>
+      <span class="sl-tag">Trail Runner · HAX</span>
+      <div class="sl-sub">Alergător de ultra-trail din Bârlad. Sezonul 2026 — 10 curse, peste 500km de munte.</div>
+    </div>
+    <div class="sl-card">
+      <div class="sl-card-title">📊 Statistici 2026</div>
+      <div class="sl-stats">
+        <div class="sl-stat"><div class="sl-stat-val" id="sl-stat-curse">10</div><div class="sl-stat-lbl">curse planificate</div></div>
+        <div class="sl-stat"><div class="sl-stat-val" id="sl-stat-km">517</div><div class="sl-stat-lbl">km total sezon</div></div>
+        <div class="sl-stat"><div class="sl-stat-val">536</div><div class="sl-stat-lbl">ITRA Performance Index</div></div>
+        <div class="sl-stat"><div class="sl-stat-val" id="sl-stat-dplus">35k+</div><div class="sl-stat-lbl">D+ total sezon</div></div>
+        <div class="sl-stat"><div class="sl-stat-val" id="sl-stat-km-ytd">—</div><div class="sl-stat-lbl">km alergați 2026</div></div>
+        <div class="sl-stat"><div class="sl-stat-val">100M</div><div class="sl-stat-lbl">obiectiv principal</div></div>
+      </div>
+    </div>
+    <div class="sl-card">
+      <div class="sl-card-title">🏁 Cursele sezonului 2026</div>
+      <div id="sl-races-list"></div>
+    </div>
+    <div class="sl-card">
+      <div class="sl-card-title">⛰️ Povestea</div>
+      <p class="sl-story">Totul a început în mai 2024 — de la primele alergări pe străzile Bârladului, la primul trail, la 100 mile prin furtună în Bucovina. La km 130 cursa s-a oprit. Dar eu nu am renunțat.</p>
+      <p style="font-size:12px;color:var(--t3);margin-top:10px;line-height:1.6">2025: <strong style="color:var(--text)">3.000 km</strong> alergați, inclusiv un challenge de 600km în decembrie. 2026 vine cu 10 curse, de la 25km la 114km — obiectiv final: <strong style="color:var(--accent)">BUCOVINA ULTRA ROCKS 100 MILE</strong>.</p>
+    </div>
+    <div class="sl-card">
+      <div class="sl-card-title">🤝 Ce primești ca sponsor</div>
+      <div class="sl-benefit">
+        <div class="sl-benefit-icon">👕</div>
+        <div class="sl-benefit-text">
+          <div class="sl-benefit-title">Vizibilitate la curse</div>
+          <div class="sl-benefit-desc">Logo pe echipament la toate cele 10 curse ale sezonului — fotografii și video la finish line</div>
+        </div>
+      </div>
+      <div class="sl-benefit">
+        <div class="sl-benefit-icon">📱</div>
+        <div class="sl-benefit-text">
+          <div class="sl-benefit-title">Social media</div>
+          <div class="sl-benefit-desc">Postări dedicate înainte și după fiecare cursă — tag, story, mențiune în recap-uri</div>
+        </div>
+      </div>
+      <div class="sl-benefit">
+        <div class="sl-benefit-icon">📊</div>
+        <div class="sl-benefit-text">
+          <div class="sl-benefit-title">Raport de sezon live</div>
+          <div class="sl-benefit-desc">Acces la acest dashboard cu toate rezultatele, km parcurși și statistici în timp real</div>
+        </div>
+      </div>
+      <div class="sl-benefit">
+        <div class="sl-benefit-icon">🔗</div>
+        <div class="sl-benefit-text">
+          <div class="sl-benefit-title">Link & branding</div>
+          <div class="sl-benefit-desc">Website-ul tău menționat în toate comunicările publice legate de sezon</div>
+        </div>
+      </div>
+    </div>
+    <div class="sl-card" id="sl-current-sponsors-card" style="display:none">
+      <div class="sl-card-title">✅ Parteneri actuali</div>
+      <div class="sl-sponsors-strip" id="sl-sponsors-strip"></div>
+    </div>
+    <div class="sl-cta">
+      <button class="sl-btn-primary" onclick="slEnterDash()">📈 Vezi dashboardul live →</button>
+      <button class="sl-btn-ghost" onclick="slContact()">Contactează-mă pentru detalii parteneriat</button>
+    </div>
+    <div style="text-align:center;margin-top:24px;font-size:10px;color:var(--t4);letter-spacing:1px">TRAIL MANAGER 2026 · BALAN GABRIEL · HAX</div>
+  </div>
+</div>
+
 
 <!-- ── LOGIN SCREEN ── -->
 <div class="login-screen" id="login-screen" style="display:none" onclick="if(event.target===this)hideLoginModal()">
@@ -1583,6 +1834,10 @@ async function loadAllData(useAuth = false) {
 
     applyTheme(DB.prefs.theme || 'default');
     renderAll();
+    // Refresh sponsor landing if open
+    if (document.getElementById('sponsor-landing')?.classList.contains('on')) {
+      populateSponsorLanding();
+    }
 
     // Show warning if tables are missing (migration not run yet)
     const missing = [prefs,races,sponsors,eq,nutri,supls,transport,acts]
@@ -1821,6 +2076,7 @@ window.addEventListener('load', async () => {
   }
   await loadAllData(false);
   updateAuthButtons();
+  checkSponsorParam();
 });
 
 // ══════════════════════════════════════════════════════
@@ -4011,6 +4267,105 @@ function toggleBio() {
   const open=full.style.display==='none';
   full.style.display=open?'block':'none';
   btn.textContent=open?'Restrânge ▴':'Vezi mai mult ▾';
+}
+
+
+// ══════════════════════════════════════════════════════
+//  SPONSOR LANDING
+// ══════════════════════════════════════════════════════
+function initSponsorLanding() {
+  const el = document.getElementById('sponsor-landing');
+  if (!el) return;
+  el.classList.add('on');
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+  populateSponsorLanding();
+}
+
+function populateSponsorLanding() {
+  // Stats from DB
+  const races = DB.races || [];
+  const acts  = DB.activities || [];
+  const year  = new Date().getFullYear();
+
+  const totalKm   = races.reduce((s,r)=>s+(parseFloat(r.distanta)||0),0);
+  const totalDplus = races.reduce((s,r)=>s+(parseFloat(r.denivelare)||0),0);
+  const ytdKm     = acts.filter(a=>a.date&&a.date.startsWith(String(year))).reduce((s,a)=>s+(a.km||0),0);
+
+  const setSL = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+  setSL('sl-stat-curse', races.length || 10);
+  setSL('sl-stat-km',    Math.round(totalKm) || 517);
+  setSL('sl-stat-dplus', totalDplus>=1000 ? Math.round(totalDplus/1000)+'k+' : (totalDplus||'35k+'));
+  setSL('sl-stat-km-ytd', ytdKm>0 ? Math.round(ytdKm)+'km' : '—');
+
+  // Races list
+  const raceEl = document.getElementById('sl-races-list');
+  if (raceEl && races.length) {
+    const sorted = [...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+    raceEl.innerHTML = sorted.map((r,i) => {
+      const d = r.data_cursa ? new Date(r.data_cursa) : null;
+      const dateStr = d ? d.toLocaleDateString('ro-RO',{day:'numeric',month:'short'}) : '—';
+      const past = d && d < new Date();
+      return `<div class="sl-race">
+        <div class="sl-race-nr" style="${past?'color:var(--t3)':''}'">${i+1}</div>
+        <div class="sl-race-info">
+          <div class="sl-race-name">${r.denumire||'—'}</div>
+          <div class="sl-race-meta">${dateStr}${r.localitate?' · '+r.localitate:''}</div>
+        </div>
+        <div class="sl-race-dist" style="${past?'color:var(--t4)':''}">
+          ${r.distanta||'—'}km${r.denivelare?'<br><span style="font-size:11px;color:var(--t3)">D+'+Math.round(r.denivelare/100)/10+'k</span>':''}
+        </div>
+      </div>`;
+    }).join('');
+  } else if (raceEl) {
+    // Fallback hardcodat dacă DB e gol
+    raceEl.innerHTML = [
+      ['Transylvania 100','20 mai','102km · D+6700'],
+      ['Brașov Marathon','30 mai','42km · D+2400'],
+      ['Skyrace Giants Race','12 iun','40km · D+3000'],
+      ['Legendele Nemirei','4 iul','25km · D+1250'],
+      ['Predeal Forest Run','10 iul','38km · D+2420'],
+      ['UTMB Bucovina Ultra Rocks','24 iul','114km · D+6300'],
+      ['2X2 Race','22 aug','46km · D+4200'],
+      ['Ciucaș X3','6 sep','39km · D+2385'],
+      ['Azuga L30 Dynafit','17 oct','30km · D+1700'],
+      ['Istrița xScape','7 nov','41km · D+1850'],
+    ].map((r,i)=>`<div class="sl-race">
+      <div class="sl-race-nr">${i+1}</div>
+      <div class="sl-race-info">
+        <div class="sl-race-name">${r[0]}</div>
+        <div class="sl-race-meta">${r[1]}</div>
+      </div>
+      <div class="sl-race-dist" style="font-size:12px">${r[2]}</div>
+    </div>`).join('');
+  }
+
+  // Sponsors strip — show only confirmed ones
+  const sps = (DB.sponsors||[]).filter(s=>s.primit);
+  const spCard = document.getElementById('sl-current-sponsors-card');
+  const spStrip = document.getElementById('sl-sponsors-strip');
+  if (sps.length && spCard && spStrip) {
+    spCard.style.display = 'block';
+    spStrip.innerHTML = sps.map(s=>`<div class="sl-sp-pill">${s.denumire}</div>`).join('');
+  }
+}
+
+function slEnterDash() {
+  const el = document.getElementById('sponsor-landing');
+  if (el) {
+    el.classList.remove('visible');
+    setTimeout(()=>{ el.classList.remove('on'); }, 400);
+  }
+}
+
+function slContact() {
+  window.location.href = 'mailto:evoluttionofall@gmail.com?subject=Sponsorizare Trail 2026&body=Buna ziua, sunt interesat de un parteneriat pentru sezonul 2026.';
+}
+
+function checkSponsorParam() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('sponsor') === '1') {
+    initSponsorLanding();
+  }
 }
 
 // Close overlays on click outside or ESC
