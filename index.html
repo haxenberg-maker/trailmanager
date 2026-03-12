@@ -2125,7 +2125,10 @@ function renderCurse(f = 'all') {
   document.querySelectorAll('.rc-filter-btn').forEach(b => b.classList.toggle('on', b.dataset.f === f));
 
   const gpp = (DB.nutri.gel_pret_set24||0)/24;
-  document.getElementById('curse-list').innerHTML = list.map(x=>{
+  
+  const containerCurse = document.getElementById('curse-list');
+  
+  const htmlCurse = list.map(x=>{
     const past = x.data_cursa && new Date(x.data_cursa) < today;
     const insOk = x.plata_concurs_ok, cazOk = x.plata_cazare || x.cazare===0;
     const d = x.data_cursa ? Math.ceil((new Date(x.data_cursa)-today)/86400000) : null;
@@ -2157,7 +2160,12 @@ function renderCurse(f = 'all') {
       </div>
     </div>`;
   }).join('') || '<p style="color:var(--t3);padding:20px 0">Nicio cursă în această categorie.</p>';
-}
+
+  if (containerCurse) {
+      containerCurse.innerHTML = htmlCurse;
+  } else {
+      console.warn("Elementul 'curse-list' nu a fost găsit în DOM.");
+  }
 
 // ══════════════════════════════════════════════════════
 //  CALENDAR
