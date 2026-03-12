@@ -3396,91 +3396,131 @@ function racePageNext() { const total=DB.races.length; if((_racePage+1)*RACE_PER
 function raceGoPage(p)  { _racePage=p; renderRaceHistory(); }
 
 function renderRaceHistory() {
-  const races = [...DB.races].sort((a,b)=>raceDifficulty(b)-raceDifficulty(a));
-  const total = races.length;
-  const totalPages = Math.ceil(total/RACE_PER_PAGE);
-  const page = races.slice(_racePage*RACE_PER_PAGE, (_racePage+1)*RACE_PER_PAGE);
-  const diffMap=[[120,'LEGENDARY','#ff4f4f'],[60,'EPIC','#ff7c3b'],[30,'HARD','#ffcb4f'],[15,'MEDIUM','#b8ff4f'],[0,'EASY','#4fff9b']];
-  function getDiff(r){const d=raceDifficulty(r);for(const[t,l,c]of diffMap)if(d>=t)return[l,c];return['EASY','#4fff9b'];}
+  // Race history = activități Strava cu is_race:true (curse deja alergare)
+  // + curse planificate trecute fără activitate Strava (fallback)
+  const today = new Date(); today.setHours(0,0,0,0);
 
-  // Build activity lookup — match race to Strava activity
-  const actsByDate = {};
-  (DB.activities||[]).forEach(a=>{
-    const d = (a.date||'').slice(0,10);
-    if(!actsByDate[d]) actsByDate[d] = [];
-    actsByDate[d].push(a);
-  });
-  // Debug: log activities with GPX data + race matching
-  const withGPX = (DB.activities||[]).filter(a=>a.polyline||a.elev_profile||a.splits);
-  console.log('[Race History] Activities with GPX/data:', withGPX.length, 'total acts:', (DB.activities||[]).length);
-  function findAct(r) {
-    if(!r.data_cursa) return null;
-    const d = r.data_cursa.slice(0,10);
-    const rKm = parseFloat(r.distanta)||0;
-    // Try exact date first — prefer is_race or closest km match
-    const tryDate = dt => {
-      const acts = actsByDate[dt] || [];
-      if(!acts.length) return null;
-      const raceActs = acts.filter(a=>a.is_race);
-      if(raceActs.length===1) return raceActs[0];
-      // Match by closest distance
-      return acts.sort((a,b)=>Math.abs((a.km||0)-rKm)-Math.abs((b.km||0)-rKm))[0];
-    };
-    // Try race date ±1 day (Strava sometimes records next day)
-    const d0 = new Date(d); 
-    const dm1 = new Date(d0); dm1.setDate(d0.getDate()-1);
-    const dp1 = new Date(d0); dp1.setDate(d0.getDate()+1);
-    const fmt2 = d=>d.toISOString().slice(0,10);
-    return tryDate(d) || tryDate(fmt2(dp1)) || tryDate(fmt2(dm1)) || null;
-  }
+  // 1. Activități Strava marcate ca rasă
+  const stravaRaces = (DB.activities||[])
+    .filter(a => a.is_race)
+    .sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
+
+  // 2. Curse planificate trecute fără activitate Strava matchată
+  const stravaDateSet = new Set(stravaRaces.map(a=>(a.date||'').slice(0,10)));
+  const pastRacesNoStrava = (DB.races||[])
+    .filter(r => {
+      if(!r.data_cursa) return false;
+      const d = new Date(r.data_cursa); d.setHours(0,0,0,0);
+      if(d >= today) return false; // viitoare, skip
+      // check if any strava activity exists within ±1 day
+      const ds = r.data_cursa.slice(0,10);
+      const d0 = new Date(ds);
+      const dm1 = new Date(d0); dm1.setDate(d0.getDate()-1);
+      const dp1 = new Date(d0); dp1.setDate(d0.getDate()+1);
+      const fmt2 = d=>d.toISOString().slice(0,10);
+      return !stravaDateSet.has(ds) && !stravaDateSet.has(fmt2(dp1)) && !stravaDateSet.has(fmt2(dm1));
+    })
+    .sort((a,b) => new Date(b.data_cursa) - new Date(a.data_cursa));
+
+  // 3. Unify — Strava races first, then past races without Strava
+  // Build lookup for DB.races by date to enrich strava entries
+  const raceByDate = {};
+  (DB.races||[]).forEach(r => { if(r.data_cursa) raceByDate[r.data_cursa.slice(0,10)] = r; });
+
+  const allEntries = [
+    ...stravaRaces.map(a => {
+      const ds = (a.date||'').slice(0,10);
+      const planned = raceByDate[ds] || raceByDate[
+        Object.keys(raceByDate).find(k => Math.abs(new Date(k)-new Date(ds)) <= 86400000)
+      ] || null;
+      // normArr helper
+      function normArr(v) {
+        if(!v) return null;
+        if(Array.isArray(v)) return v.length ? v : null;
+        if(typeof v==='string'){try{const p=JSON.parse(v);return Array.isArray(p)&&p.length?p:null;}catch{return null;}}
+        if(v.values&&Array.isArray(v.values)) return v.values.length?v.values:null;
+        return null;
+      }
+      return {
+        _src: 'strava',
+        id: a.id,
+        denumire: a.name || (planned?.denumire) || 'Cursă',
+        data_cursa: ds,
+        distanta: a.km || planned?.distanta || 0,
+        denivelare: a.elev || planned?.denivelare || 0,
+        polyline: a.polyline || null,
+        elev_profile: normArr(a.elev_profile),
+        hr_stream: normArr(a.hr_stream),
+        splits: normArr(a.splits),
+        hr_avg: a.hr_avg,
+        hr_max: a.hr_max,
+        cadence: a.cadence,
+        dur: a.dur,
+        plata_concurs: planned?.plata_concurs,
+        plata_concurs_ok: planned?.plata_concurs_ok,
+        cazare: planned?.cazare,
+        note: planned?.note || a.description || '',
+      };
+    }),
+    ...pastRacesNoStrava.map(r => ({
+      _src: 'planned',
+      id: r.id,
+      denumire: r.denumire,
+      data_cursa: r.data_cursa,
+      distanta: r.distanta,
+      denivelare: r.denivelare,
+      polyline: null,
+      elev_profile: null,
+      hr_stream: null,
+      splits: null,
+      hr_avg: null, hr_max: null, cadence: null, dur: null,
+      plata_concurs: r.plata_concurs,
+      plata_concurs_ok: r.plata_concurs_ok,
+      cazare: r.cazare,
+      note: r.note || '',
+    }))
+  ];
+
+  const total = allEntries.length;
+  const totalPages = Math.ceil(total / RACE_PER_PAGE);
+  const page = allEntries.slice(_racePage * RACE_PER_PAGE, (_racePage+1) * RACE_PER_PAGE);
+
+  const diffMap=[[120,'LEGENDARY','#ff4f4f'],[60,'EPIC','#ff7c3b'],[30,'HARD','#ffcb4f'],[15,'MEDIUM','#b8ff4f'],[0,'EASY','#4fff9b']];
+  function getDiff(r){const d=(r.distanta||0)+(r.denivelare||0)/100;for(const[t,l,c]of diffMap)if(d>=t)return[l,c];return['EASY','#4fff9b'];}
 
   const container = document.getElementById('db-race-list');
-  if (!container) return;
-  if (!total) { container.innerHTML='<p style="color:var(--t3)">Nicio cursă înregistrată.</p>'; return; }
+  if(!container) return;
 
-  container.innerHTML = page.map((r,i)=>{
-    const globalIdx = _racePage*RACE_PER_PAGE+i;
+  if(!total) {
+    container.innerHTML='<div style="text-align:center;padding:40px 20px;color:var(--t3)"><div style="font-size:32px;margin-bottom:8px">🏁</div><div>Nicio cursă terminată încă.</div><div style="font-size:11px;margin-top:6px">Curse trecute cu Strava sincronizat vor apărea aici.</div></div>';
+    return;
+  }
+
+  container.innerHTML = page.map((r, i) => {
+    const globalIdx = _racePage * RACE_PER_PAGE + i;
     const medal = globalIdx===0?'🥇':globalIdx===1?'🥈':globalIdx===2?'🥉':'';
-    const [diff,diffColor]=getDiff(r);
-    const safeId = 'rc_'+(r.id||'').replace(/-/g,'');
-    // Merge race data with matched activity (for GPX, HR, splits etc)
-    const act = findAct(r);
-    if(act) console.log(`[Match] ${r.denumire} → ${act.name} | poly:${!!act.polyline} elev:${!!act.elev_profile} splits:${!!act.splits} elev_type:${typeof act.elev_profile} elev_val:${JSON.stringify(act.elev_profile)?.slice(0,60)}`);
-    // Normalize JSONB arrays — Supabase may return {values:[]} or stringified JSON
-    function normArr(v) {
-      if(!v) return null;
-      if(Array.isArray(v)) return v.length ? v : null;
-      if(typeof v === 'string') { try { const p=JSON.parse(v); return Array.isArray(p)&&p.length?p:null; } catch{return null;} }
-      if(v.values && Array.isArray(v.values)) return v.values.length ? v.values : null;
-      return null;
-    }
-    const rd = act ? {
-      ...r,
-      polyline:     act.polyline     || r.polyline     || null,
-      elev_profile: normArr(act.elev_profile) || normArr(r.elev_profile),
-      hr_stream:    normArr(act.hr_stream)    || normArr(r.hr_stream),
-      splits:       normArr(act.splits)       || normArr(r.splits),
-      hr_avg:  act.hr_avg  || r.hr_avg,
-      hr_max:  act.hr_max  || r.hr_max,
-      cadence: act.cadence || r.cadence,
-      dur:     act.dur     || r.dur,
-    } : {...r, elev_profile:normArr(r.elev_profile), hr_stream:normArr(r.hr_stream), splits:normArr(r.splits)};
-    const hasRoute = !!rd.polyline;
-    const hasHR    = !!(rd.hr_stream?.length);
-    const hasElev  = !!(rd.elev_profile?.length);
-    const hasSplit = !!(rd.splits?.length);
+    const [diff, diffColor] = getDiff(r);
+    const safeId = 'rh_' + String(r.id||globalIdx).replace(/-/g,'');
+    const hasRoute = !!r.polyline;
+    const hasElev  = !!(r.elev_profile?.length);
+    const hasHR    = !!(r.hr_stream?.length);
+    const hasSplit = !!(r.splits?.length);
+    const isStrava = r._src === 'strava';
 
     return `
     <div class="race-card" id="card-${safeId}">
       <div class="race-card-head" onclick="toggleRaceCard('${safeId}')">
         <div class="race-info">
-          <span class="race-name">${medal?medal+' ':''}<span>${r.denumire}</span></span>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <span class="race-name">${medal?medal+' ':''}${r.denumire}</span>
+            ${isStrava?'<span style="font-size:9px;color:var(--green);background:rgba(79,255,155,.1);border:1px solid rgba(79,255,155,.2);padding:1px 6px;border-radius:10px">● Strava</span>':'<span style="font-size:9px;color:var(--t3);background:var(--s2);border:1px solid var(--border);padding:1px 6px;border-radius:10px">Planificat</span>'}
+          </div>
           <span class="race-date">${fd(r.data_cursa)}</span>
-          <div class="race-stats">
+          <div class="race-stats" style="margin-top:4px">
             <span>📍 ${r.distanta||0} km</span>
             <span>⛰️ ${r.denivelare||0} m D+</span>
-            ${rd.hr_avg?`<span>❤️ ${rd.hr_avg} bpm</span>`:''}
-            ${act?`<span style="font-size:9px;color:var(--green);opacity:.8" title="Act: ${act.name||''} | poly:${!!act.polyline} | elev:${!!(act.elev_profile)} | splits:${!!(act.splits)}">● Strava</span>`:''}
+            ${r.hr_avg?`<span>❤️ ${r.hr_avg} bpm</span>`:''}
+            ${r.dur?`<span>⏱️ ${fmtDur(r.dur)}</span>`:''}
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
@@ -3489,19 +3529,22 @@ function renderRaceHistory() {
         </div>
       </div>
       <div class="race-expand" id="exp-${safeId}" style="display:none">
+        ${(r.distanta||r.denivelare||r.dur||r.hr_avg)?`
         <div class="race-extra-stats">
           ${r.distanta?`<div class="race-extra-stat"><div class="race-extra-val">${r.distanta}</div><div class="race-extra-lbl">km</div></div>`:''}
           ${r.denivelare?`<div class="race-extra-stat"><div class="race-extra-val">${r.denivelare}</div><div class="race-extra-lbl">m D+</div></div>`:''}
-          ${rd.dur?`<div class="race-extra-stat"><div class="race-extra-val">${fmtDur(rd.dur)}</div><div class="race-extra-lbl">timp</div></div>`:''}
-          ${rd.hr_avg?`<div class="race-extra-stat"><div class="race-extra-val">${rd.hr_avg}</div><div class="race-extra-lbl">bpm avg ❤️</div></div>`:''}
-          ${rd.hr_max?`<div class="race-extra-stat"><div class="race-extra-val">${rd.hr_max}</div><div class="race-extra-lbl">bpm max ▲</div></div>`:''}
-          ${rd.cadence?`<div class="race-extra-stat"><div class="race-extra-val">${rd.cadence}</div><div class="race-extra-lbl">spm</div></div>`:''}
-        </div>
-        <div style="display:grid;grid-template-columns:${hasRoute&&hasElev?'1fr 1fr':'1fr'};gap:12px;margin-bottom:12px">
-          ${hasRoute?`<div class="race-map-wrap" id="map-${safeId}">${polylineToSVG(rd.polyline,300,160,safeId)}</div>`:''}
-          ${hasElev?`<div style="background:var(--s2);border-radius:8px;padding:12px"><div style="font-size:10px;color:var(--t3);margin-bottom:6px">Profil altitudine</div>${drawElevationSVG(rd.elev_profile)}</div>`:''}
-        </div>
-        ${hasHR?`<div style="background:var(--s2);border-radius:8px;padding:12px;margin-bottom:12px"><div style="font-size:10px;color:var(--t3);margin-bottom:6px">Frecvență cardiacă</div>${drawHRSVG(rd.hr_stream)}</div>`:''}
+          ${r.dur?`<div class="race-extra-stat"><div class="race-extra-val">${fmtDur(r.dur)}</div><div class="race-extra-lbl">timp</div></div>`:''}
+          ${r.hr_avg?`<div class="race-extra-stat"><div class="race-extra-val">${r.hr_avg}</div><div class="race-extra-lbl">bpm avg ❤️</div></div>`:''}
+          ${r.hr_max?`<div class="race-extra-stat"><div class="race-extra-val">${r.hr_max}</div><div class="race-extra-lbl">bpm max ▲</div></div>`:''}
+          ${r.cadence?`<div class="race-extra-stat"><div class="race-extra-val">${r.cadence}</div><div class="race-extra-lbl">spm</div></div>`:''}
+        </div>`:''}
+        ${!isStrava?`<div style="margin:12px 0 8px;padding:10px 12px;background:var(--s2);border-radius:8px;font-size:12px;color:var(--t3)">📡 Activitate Strava nesincronizată pentru această cursă.</div>`:''}
+        ${hasRoute||hasElev?`
+        <div style="display:grid;grid-template-columns:${hasRoute&&hasElev?'1fr 1fr':'1fr'};gap:12px;margin:12px 0">
+          ${hasRoute?`<div class="race-map-wrap" id="map-${safeId}">${polylineToSVG(r.polyline,300,160,safeId)}</div>`:''}
+          ${hasElev?`<div style="background:var(--s2);border-radius:8px;padding:12px"><div style="font-size:10px;color:var(--t3);margin-bottom:6px">Profil altitudine</div>${drawElevationSVG(r.elev_profile)}</div>`:''}
+        </div>`:''}
+        ${hasHR?`<div style="background:var(--s2);border-radius:8px;padding:12px;margin-bottom:12px"><div style="font-size:10px;color:var(--t3);margin-bottom:6px">Frecvență cardiacă</div>${drawHRSVG(r.hr_stream)}</div>`:''}
         ${hasSplit?`
         <div style="margin-bottom:8px">
           <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:6px 0" onclick="toggleSplits('${safeId}')">
@@ -3511,34 +3554,31 @@ function renderRaceHistory() {
           <div id="splits-${safeId}" style="display:none">
             <table class="splits-table"><colgroup><col class="c-km"><col class="c-pace"><col class="c-hr"><col class="c-elev"></colgroup>
             <thead><tr><th>Km</th><th>Pace</th><th>HR</th><th>D+</th></tr></thead>
-            <tbody>${rd.splits.map(s=>`<tr><td>${s.km||'—'}</td><td>${s.pace||'—'}</td><td>${s.hr?s.hr+' bpm':'—'}</td><td>${s.elev?'+'+s.elev+'m':'—'}</td></tr>`).join('')}</tbody>
+            <tbody>${r.splits.map(s=>`<tr><td>${s.km||'—'}</td><td>${s.pace||'—'}</td><td>${s.hr?s.hr+' bpm':'—'}</td><td>${s.elev?'+'+s.elev+'m':'—'}</td></tr>`).join('')}</tbody>
             </table>
           </div>
         </div>`:''}
+        ${r.note?`<div style="margin-top:8px;font-size:11px;color:var(--t3);font-style:italic">📝 ${r.note}</div>`:''}
         <button onclick="toggleRaceCard('${safeId}')" style="width:100%;background:none;border:none;color:var(--t3);font-size:11px;cursor:pointer;padding:8px 0;text-align:center">▲ Restrânge</button>
       </div>
     </div>`;
   }).join('');
 
-  // Pagination — use existing HTML elements
-  const pagEl   = document.getElementById('db-race-pagination');
-  const prevBtn = document.getElementById('db-race-prev');
-  const nextBtn = document.getElementById('db-race-next');
-  const pageBtns= document.getElementById('db-race-page-btns');
-  const pageInfo= document.getElementById('db-race-page-info');
-  const countEl = document.getElementById('db-race-count');
-  const subEl   = document.getElementById('db-race-subtitle');
-
-  if(countEl) countEl.textContent = total + (total===1?' cursă':' curse');
-  if(subEl)   subEl.textContent   = 'sortate după dificultate';
-
-  if(pagEl)    pagEl.style.display = totalPages>1 ? 'block' : 'none';
-  if(prevBtn)  prevBtn.disabled = _racePage===0;
-  if(nextBtn)  nextBtn.disabled = _racePage>=totalPages-1;
-  if(pageInfo) pageInfo.textContent = totalPages>1 ? `Pagina ${_racePage+1} din ${totalPages}` : '';
+  // Pagination
+  const prevBtn  = document.getElementById('db-race-prev');
+  const nextBtn  = document.getElementById('db-race-next');
+  const pageBtns = document.getElementById('db-race-page-btns');
+  const pageInfo = document.getElementById('db-race-page-info');
+  const countEl  = document.getElementById('db-race-count');
+  const subEl    = document.getElementById('db-race-subtitle');
+  if(prevBtn) prevBtn.disabled = _racePage===0;
+  if(nextBtn) nextBtn.disabled = _racePage>=totalPages-1;
   if(pageBtns) pageBtns.innerHTML = totalPages>1 ? Array.from({length:totalPages},(_,i)=>
-    `<button onclick="raceGoPage(${i})" style="background:${i===_racePage?'var(--accent)':'none'};color:${i===_racePage?'var(--bg)':'var(--t2)'};border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:var(--body)">${i+1}</button>`
+    `<button onclick="_racePage=${i};renderRaceHistory()" style="padding:4px 10px;border-radius:6px;border:1px solid ${i===_racePage?'var(--accent)':'var(--border)'};background:${i===_racePage?'var(--accent-dim)':'none'};color:${i===_racePage?'var(--accent)':'var(--t3)'};font-size:11px;cursor:pointer;font-family:var(--body)">${i+1}</button>`
   ).join('') : '';
+  if(pageInfo) pageInfo.textContent = totalPages>1 ? `Pagina ${_racePage+1} / ${totalPages}` : '';
+  if(countEl)  countEl.textContent  = total;
+  if(subEl)    subEl.textContent    = `${stravaRaces.length} cu Strava · ${pastRacesNoStrava.length} fără date`;
 }
 
 function toggleRaceCard(safeId) {
