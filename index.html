@@ -1219,6 +1219,7 @@ body.readonly label.btn { display:none !important }
         ＋ Import
         <input type="file" id="stats-file-input" accept=".csv,.gpx,.tcx,.fit" multiple style="display:none" onchange="importActivities(this.files)">
       </label>
+      <button class="btn btn-ghost btn-sm" onclick="checkWebhook()" title="Status webhook Strava" style="color:var(--t3);border-color:var(--border);font-size:10px" id="webhook-btn">📡</button>
       <button class="btn btn-ghost btn-sm" onclick="syncStrava()" title="Sync Strava" style="color:#fc5200;border-color:rgba(252,82,0,.3)">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-right:4px"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
         Sync Strava
@@ -3249,6 +3250,45 @@ async function syncStrava() {
     } else { toast('❌ Eroare Strava: '+(data.error||r.status),'err'); }
   } catch(e) { toast('❌ Eroare rețea','err'); }
   finally { if(btn) btn.disabled=false; }
+}
+
+async function checkWebhook() {
+  if (!isOwnerLoggedIn()) return;
+  const btn = document.getElementById('webhook-btn');
+  if(btn) btn.textContent = '⏳';
+  try {
+    const r = await fetch('https://jqhtistewpmiphuoxfmp.supabase.co/functions/v1/strava-webhook/webhook-status', {
+      method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+authToken}
+    });
+    const data = await r.json();
+    const subs = data.subscriptions || [];
+    if(subs.length) {
+      const sub = subs[0];
+      toast(`📡 Webhook activ — ID ${sub.id}, URL: ${sub.callback_url}`, 'ok');
+      if(btn) { btn.textContent='📡✅'; btn.title='Webhook activ ID '+sub.id; }
+    } else {
+      const reReg = confirm('Niciun webhook activ! Vrei sa inregistrezi webhook-ul Strava acum?');
+      if(reReg) await registerWebhook();
+      else { if(btn) btn.textContent='📡❌'; }
+    }
+  } catch(e) { toast('❌ Eroare verificare webhook','err'); if(btn) btn.textContent='📡'; }
+}
+
+async function registerWebhook() {
+  toast('🔄 Înregistrare webhook Strava...','info');
+  try {
+    const r = await fetch('https://jqhtistewpmiphuoxfmp.supabase.co/functions/v1/strava-webhook/webhook-register', {
+      method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+authToken}
+    });
+    const data = await r.json();
+    if(data.ok) {
+      toast('✅ Webhook înregistrat! ID: '+data.result?.id,'ok');
+      const btn = document.getElementById('webhook-btn');
+      if(btn) btn.textContent='📡✅';
+    } else {
+      toast('❌ Eroare înregistrare: '+JSON.stringify(data.result),'err');
+    }
+  } catch(e) { toast('❌ Eroare rețea','err'); }
 }
 
 // ── CSV / GPX / TCX parsers ──────────────────────────
