@@ -1384,10 +1384,24 @@ body.readonly label.btn { display:none !important }
       <div class="sl">Dovadă achiziție</div>
       <div class="fi fgrow"><lbl>Link dovadă (factură/chitanță)</lbl><input id="eq-link" placeholder="https://..."></div>
       <div style="margin-top:4px" id="eq-link-preview-wrap"></div>
-      <div class="sl">Alocare curse</div>
+      <div class="sl">Utilizare</div>
       <div class="fi fgrow">
-        <lbl>Selectează cursele în care se folosește acest echipament</lbl>
-        <div id="eq-race-checkboxes" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;max-height:260px;overflow-y:auto;padding:2px"></div>
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <button type="button" id="eq-use-race-btn" onclick="setEqUse('race')" class="btn btn-ghost btn-sm" style="flex:1;border-color:var(--accent);color:var(--accent)">🏁 Curse</button>
+          <button type="button" id="eq-use-train-btn" onclick="setEqUse('training')" class="btn btn-ghost btn-sm" style="flex:1">🏃 Training</button>
+        </div>
+        <input type="hidden" id="eq-use-type" value="race">
+        <!-- Training section -->
+        <div id="eq-train-section" style="display:none">
+          <lbl>Luni de utilizare (training)</lbl>
+          <input type="number" id="eq-train-months" placeholder="ex: 6" min="1" max="24" style="margin-top:6px">
+          <div style="font-size:11px;color:var(--t3);margin-top:4px">Costul va fi distribuit lunar în Estimare An</div>
+        </div>
+        <!-- Race section -->
+        <div id="eq-race-section">
+          <lbl>Selectează cursele în care se folosește</lbl>
+          <div id="eq-race-checkboxes" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;max-height:280px;overflow-y:auto;padding:2px"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -2452,10 +2466,22 @@ function renderEstimare() {
     if(suplLunar>0){ monthly[m].items.push({lbl:'💊 Suplimente', v:suplLunar}); monthly[m].total+=suplLunar; }
     if(gelTrainLunar>0){ monthly[m].items.push({lbl:'🍯 Geluri training', v:gelTrainLunar}); monthly[m].total+=gelTrainLunar; }
   }
-  if(echipTotal>0){
-    monthly[0].items.push({lbl:`👟 Echipament (${DB.equipment.length} item)`, v:echipTotal, sub:DB.equipment.map(e=>e.denumire).join(', ')});
-    monthly[0].total+=echipTotal;
-  }
+  // Equipment: training items spread over months, race items go to race month
+  DB.equipment.forEach(e=>{
+    const cost = parseFloat(e.pret)||0;
+    if(!cost) return;
+    if(e.use_type==='training' && e.train_months>0) {
+      const perMonth = cost / e.train_months;
+      for(let mi=0; mi<Math.min(e.train_months,12); mi++){
+        monthly[mi].items.push({lbl:`👟 ${e.denumire} (luna ${mi+1}/${e.train_months})`, v:Math.round(perMonth)});
+        monthly[mi].total += Math.round(perMonth);
+      }
+    } else {
+      // Race equipment: put in January as upfront cost
+      monthly[0].items.push({lbl:`👟 ${e.denumire}`, v:cost});
+      monthly[0].total += cost;
+    }
+  });
   c.forEach(x=>{
     const dp = x.data_plecare || x.data_cursa;
     if(!dp) return;
@@ -2765,25 +2791,52 @@ function openEQ(id) {
   // Preview button
   const pw = document.getElementById('eq-link-preview-wrap');
   if(pw) pw.innerHTML = x.link_dovada ? `<button class="btn btn-ghost btn-sm" onclick="openPreview('${(x.link_dovada||'').replace(/'/g,"\'")}','Dovadă — ${(x.denumire||'').replace(/'/g,"\'")}')">👁️ Previzualizare</button>` : '';
+  // Use type toggle
+  const useType = x.use_type || 'race';
+  const utEl = document.getElementById('eq-use-type');
+  if(utEl) utEl.value = useType;
+  setEqUse(useType);
+  const tmEl = document.getElementById('eq-train-months');
+  if(tmEl) tmEl.value = x.train_months || '';
   // Race checkboxes
   const cb = document.getElementById('eq-race-checkboxes');
   if(cb) {
     const assigned = x.race_ids || [];
-    const today = new Date(); today.setHours(0,0,0,0);
+    const today2 = new Date(); today2.setHours(0,0,0,0);
     const sorted = [...DB.races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
     cb.innerHTML = sorted.map(r=>{
       const chk = assigned.includes(r.id) ? 'checked' : '';
-      const isPast = r.data_cursa && new Date(r.data_cursa) < today;
-      return `<label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;padding:8px 10px;border-radius:8px;border:1px solid ${chk?'rgba(79,255,155,.3)':'var(--border)'};background:${chk?'rgba(79,255,155,.05)':'var(--s1)'};transition:all .15s;opacity:${isPast?.6:1}" onchange="this.style.borderColor=this.querySelector('input').checked?'rgba(79,255,155,.3)':'var(--border)';this.style.background=this.querySelector('input').checked?'rgba(79,255,155,.05)':'var(--s1)'">
-        <input type="checkbox" value="${r.id}" ${chk} style="accent-color:var(--accent);margin-top:2px;flex-shrink:0">
-        <div style="min-width:0">
-          <div style="font-size:12px;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.denumire}</div>
-          <div style="font-size:10px;color:var(--t3);margin-top:1px">${fd(r.data_cursa)} · ${r.distanta||0}km</div>
+      const isPast = r.data_cursa && new Date(r.data_cursa) < today2;
+      return `<label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;border-radius:8px;border:1px solid ${chk?'rgba(79,255,155,.3)':'var(--border)'};background:${chk?'rgba(79,255,155,.06)':'var(--s1)'};transition:all .15s;opacity:${isPast?.55:1}" onchange="this.style.borderColor=this.querySelector('input').checked?'rgba(79,255,155,.3)':'var(--border)';this.style.background=this.querySelector('input').checked?'rgba(79,255,155,.06)':'var(--s1)'">
+        <input type="checkbox" value="${r.id}" ${chk} style="accent-color:var(--accent);width:16px;height:16px;flex-shrink:0">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;color:var(--text);font-weight:600">${r.denumire}</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:1px">${fd(r.data_cursa)} · ${r.distanta||0} km · ${r.denivelare||0} m D+</div>
         </div>
+        ${isPast?'<span style="font-size:9px;color:var(--t3);background:var(--s3);padding:2px 6px;border-radius:10px">trecut</span>':''}
       </label>`;
     }).join('') || '<div style="font-size:12px;color:var(--t3);padding:8px">Nicio cursă adăugată.</div>';
   }
   document.getElementById('ov-eq').classList.add('on');
+}
+
+function setEqUse(type) {
+  const trainSec = document.getElementById('eq-train-section');
+  const raceSec  = document.getElementById('eq-race-section');
+  const trainBtn = document.getElementById('eq-use-train-btn');
+  const raceBtn  = document.getElementById('eq-use-race-btn');
+  const utEl     = document.getElementById('eq-use-type');
+  if(utEl) utEl.value = type;
+  if(trainSec) trainSec.style.display = type==='training' ? 'block' : 'none';
+  if(raceSec)  raceSec.style.display  = type==='race'     ? 'block' : 'none';
+  if(trainBtn) {
+    trainBtn.style.borderColor = type==='training'?'var(--accent)':'var(--border)';
+    trainBtn.style.color       = type==='training'?'var(--accent)':'var(--t2)';
+  }
+  if(raceBtn) {
+    raceBtn.style.borderColor = type==='race'?'var(--accent)':'var(--border)';
+    raceBtn.style.color       = type==='race'?'var(--accent)':'var(--t2)';
+  }
 }
 function closeEQ() { document.getElementById('ov-eq').classList.remove('on'); editEQid=null; }
 
@@ -2792,6 +2845,7 @@ async function saveEQ() {
   const den = document.getElementById('eq-den').value.trim();
   if (!den) { toast('⚠️ Introduceți denumirea!','err'); return; }
   const raceChecks = document.querySelectorAll('#eq-race-checkboxes input[type=checkbox]:checked');
+  const useType = (document.getElementById('eq-use-type')||{}).value || 'race';
   const payload = {
     user_id: currentUser.id,
     categorie: document.getElementById('eq-cat').value,
@@ -2801,7 +2855,9 @@ async function saveEQ() {
     km_actuali: +document.getElementById('eq-kma').value||0,
     note: document.getElementById('eq-note').value.trim(),
     link_dovada: document.getElementById('eq-link').value.trim()||null,
-    race_ids: Array.from(raceChecks).map(c=>c.value),
+    race_ids: useType==='race' ? Array.from(raceChecks).map(c=>c.value) : [],
+    use_type: useType,
+    train_months: useType==='training' ? (+document.getElementById('eq-train-months').value||0) : null,
   };
   try {
     if (editEQid) {
@@ -3396,9 +3452,10 @@ function raceGoPage(p)  { _racePage=p; renderRaceHistory(); }
 function renderRaceHistory() {
   // Race history = activități Strava cu is_race:true (curse deja alergare)
   // + curse planificate trecute fără activitate Strava (fallback)
+  // Sorted by date DESCENDING (most recent first)
   const today = new Date(); today.setHours(0,0,0,0);
 
-  // 1. Activități Strava marcate ca rasă
+  // 1. Activități Strava marcate ca rasă — cele mai recente primele
   const stravaRaces = (DB.activities||[])
     .filter(a => a.is_race)
     .sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
