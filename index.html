@@ -2550,6 +2550,11 @@ function renderBuget() {
           </div>
         </div>
         ${x.note?`<div style="margin-top:8px;font-size:11px;color:var(--t3);font-style:italic">📝 ${x.note}</div>`:''}
+        ${(x.link_dovada_ins || x.link_dovada_caz) ? `
+        <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:6px">
+          ${x.link_dovada_ins ? `<button onclick="openPreview('${x.link_dovada_ins.replace(/'/g,"\\'")}','Dovadă înscriere — ${x.denumire.replace(/'/g,"\\'")}')\" class="btn btn-ghost btn-sm" style="font-size:11px;gap:5px">📄 Dovadă înscriere</button>` : ''}
+          ${x.link_dovada_caz ? `<button onclick="openPreview('${x.link_dovada_caz.replace(/'/g,"\\'")}','Dovadă cazare — ${x.denumire.replace(/'/g,"\\'")}')\" class="btn btn-ghost btn-sm" style="font-size:11px;gap:5px">🏨 Dovadă cazare</button>` : ''}
+        </div>` : ''}
       </div>
     `;
   }).join('');
@@ -2999,6 +3004,8 @@ function openRC(id) {
   v('f-link-caz', c.link_dovada_caz);
   document.getElementById('ov-rc').classList.add('on');
 }
+
+function closeRC() { document.getElementById('ov-rc').classList.remove('on'); editRCid = null; }
 
 function previewDoc(inputId, title) {
   const url = document.getElementById(inputId)?.value?.trim();
