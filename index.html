@@ -1487,6 +1487,7 @@ create policy "Users see own data" on trail_data
 <div class="toast" id="toast"></div>
 
 <script>
+
 // ══════════════════════════════════════════════════════
 //  SUPABASE CONFIG
 // ══════════════════════════════════════════════════════
@@ -1692,8 +1693,8 @@ function getActivities() { return DB.activities || []; }
 // ══════════════════════════════════════════════════════
 let loginMode = 'login';
 
-function showLoginModal()  { document.getElementById('ov-login')?.classList.add('on'); }
-function hideLoginModal()  { document.getElementById('ov-login')?.classList.remove('on'); }
+function showLoginModal()  { const el=document.getElementById('login-screen'); if(el){el.style.display='flex';} }
+function hideLoginModal()  { const el=document.getElementById('login-screen'); if(el){el.style.display='none';} }
 function hideBanner()      { document.getElementById('guest-banner').style.display = 'none'; }
 
 function switchLoginTab(mode, el) {
@@ -1975,7 +1976,7 @@ function renderDash() {
   const dbSub = document.getElementById('db-sub'); if(dbSub) dbSub.textContent = `${c.length} curse · ${km} km total · Sezon 2026`;
 
   // Hero stats
-  const heroEl = document.getElementById('db-hero-stats');
+  const heroEl = document.getElementById('dash-hero-stats');
   if (heroEl) heroEl.innerHTML = `
     <div class="dhs-item"><div class="dhs-val">${kmThisYear}</div><div class="dhs-lbl">km alergați 2026</div></div>
     <div class="dhs-item"><div class="dhs-val">${c.length}</div><div class="dhs-lbl">curse planificate</div></div>
@@ -2044,7 +2045,7 @@ function renderDash() {
   const kmActEl = document.getElementById('db-km-actual');
   if (kmActEl) kmActEl.textContent = kmThisYear;
   const pct = Math.min(100, Math.round(kmThisYear/targetKm*100));
-  const pbarEl = document.getElementById('db-target-pbar');
+  const pbarEl = document.getElementById('db-target-bar');
   if (pbarEl) pbarEl.style.width = pct+'%';
   const pctEl = document.getElementById('db-target-pct');
   if (pctEl) pctEl.textContent = pct+'%';
@@ -2056,7 +2057,7 @@ function renderDash() {
   if (predEl) predEl.textContent = fmt(pred) + ' km';
 
   // Streak
-  const scEl = document.getElementById('db-streak-cur') || document.getElementById('db-streak-current');
+  const scEl = document.getElementById('db-streak-cur') || document.getElementById('db-streak-cur');
   const sbEl = document.getElementById('db-streak-best');
   if (scEl) scEl.textContent = streak.current + ' zile';
   if (sbEl) sbEl.textContent = streak.best + ' zile';
@@ -2125,8 +2126,7 @@ function renderCurse(f = 'all') {
   document.querySelectorAll('.rc-filter-btn').forEach(b => b.classList.toggle('on', b.dataset.f === f));
 
   const gpp = (DB.nutri.gel_pret_set24||0)/24;
-  
-  document.getElementById('curse-list').innerHTML = list.map(x=>{
+  document.getElementById('rc-list').innerHTML = list.map(x=>{
     const past = x.data_cursa && new Date(x.data_cursa) < today;
     const insOk = x.plata_concurs_ok, cazOk = x.plata_cazare || x.cazare===0;
     const d = x.data_cursa ? Math.ceil((new Date(x.data_cursa)-today)/86400000) : null;
@@ -2160,6 +2160,12 @@ function renderCurse(f = 'all') {
   }).join('') || '<p style="color:var(--t3);padding:20px 0">Nicio cursă în această categorie.</p>';
 }
 
+
+function filterC(f, el) {
+  document.querySelectorAll('#pg-curse .tab').forEach(t => t.classList.remove('on'));
+  if (el) el.classList.add('on');
+  renderCurse(f === 'upcoming' ? 'viitoare' : f === 'paid' ? 'platite' : f === 'unpaid' ? 'neachitate' : 'all');
+}
 // ══════════════════════════════════════════════════════
 //  CALENDAR
 // ══════════════════════════════════════════════════════
@@ -2192,7 +2198,7 @@ function renderCal() {
       }).join('')}
     </div>`;
   }
-  const cal = document.getElementById('cal-grid');
+  const cal = document.getElementById('cal-view');
   if (cal) cal.innerHTML = html || '<p style="color:var(--t3)">Nicio cursă înregistrată.</p>';
 }
 
@@ -2596,7 +2602,7 @@ function openEQ(id) {
   const x = id ? DB.equipment.find(e=>e.id===id) : {};
   const v=(fid,val)=>{const el=document.getElementById(fid);if(el)el.value=val||'';};
   const cat=document.getElementById('eq-cat'); if(cat) cat.value=x.categorie||'Pantofi Curse Scurte';
-  v('eq-den',x.denumire); v('eq-pret',x.pret); v('eq-km-max',x.km_max); v('eq-km-act',x.km_actuali); v('eq-note',x.note);
+  v('eq-den',x.denumire); v('eq-prt',x.pret); v('eq-kmx',x.km_max); v('eq-kma',x.km_actuali); v('eq-note',x.note);
   document.getElementById('ov-eq').classList.add('on');
 }
 function closeEQ() { document.getElementById('ov-eq').classList.remove('on'); editEQid=null; }
@@ -2609,9 +2615,9 @@ async function saveEQ() {
     user_id: currentUser.id,
     categorie: document.getElementById('eq-cat').value,
     denumire: den,
-    pret: +document.getElementById('eq-pret').value||0,
-    km_max: +document.getElementById('eq-km-max').value||0,
-    km_actuali: +document.getElementById('eq-km-act').value||0,
+    pret: +document.getElementById('eq-prt').value||0,
+    km_max: +document.getElementById('eq-kmx').value||0,
+    km_actuali: +document.getElementById('eq-kma').value||0,
     note: document.getElementById('eq-note').value.trim(),
   };
   try {
@@ -3208,7 +3214,7 @@ function renderRaceHistory() {
   const diffMap=[[120,'LEGENDARY','#ff4f4f'],[60,'EPIC','#ff7c3b'],[30,'HARD','#ffcb4f'],[15,'MEDIUM','#b8ff4f'],[0,'EASY','#4fff9b']];
   function getDiff(r){const d=raceDifficulty(r);for(const[t,l,c]of diffMap)if(d>=t)return[l,c];return['EASY','#4fff9b'];}
 
-  const container = document.getElementById('race-history-list');
+  const container = document.getElementById('db-race-list');
   if (!container) return;
   if (!total) { container.innerHTML='<p style="color:var(--t3)">Nicio cursă înregistrată.</p>'; return; }
 
@@ -3272,7 +3278,7 @@ function renderRaceHistory() {
   }).join('');
 
   // Pagination
-  const pagEl = document.getElementById('race-pagination');
+  const pagEl = document.getElementById('db-race-pagination');
   if (pagEl && totalPages>1) {
     pagEl.innerHTML = `
       <button class="btn btn-ghost btn-sm" onclick="racePagePrev()" ${_racePage===0?'disabled':''}>‹</button>
@@ -3555,18 +3561,20 @@ function toggleBio() {
 }
 
 // Close overlays on click outside or ESC
-['ov-rc','ov-eq','ov-sp','ov-supl','ov-tr','ov-preview','ov-login'].forEach(id=>{
+['ov-rc','ov-eq','ov-sp','ov-supl','ov-tr','ov-preview'].forEach(id=>{
   const el=document.getElementById(id);
   if(el) el.addEventListener('click',e=>{ if(e.target===el) el.classList.remove('on'); });
 });
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape') {
-    ['ov-rc','ov-eq','ov-sp','ov-supl','ov-tr','ov-preview','ov-login'].forEach(id=>{
+    ['ov-rc','ov-eq','ov-sp','ov-supl','ov-tr','ov-preview'].forEach(id=>{
       document.getElementById(id)?.classList.remove('on');
     });
+    hideLoginModal();
     closePreview();
   }
 });
+
 
 </script>
 </body>
