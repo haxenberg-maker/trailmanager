@@ -149,7 +149,7 @@ document.currentScript.parentNode.appendChild(link);
 .sl-budget-row { display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border); }
 .sl-budget-row:last-child { border-bottom:none; }
 .sl-budget-label { display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2); }
-.sl-budget-bar-wrap { flex:1;mx:12px;height:4px;background:var(--s3);border-radius:2px;margin:0 12px;overflow:hidden; }
+.sl-budget-bar-wrap { flex:1;height:4px;background:var(--s3);border-radius:2px;margin:0 12px;overflow:hidden; }
 .sl-budget-bar-fill { height:100%;border-radius:2px;background:var(--accent);transition:width 1.2s cubic-bezier(.4,0,.2,1); }
 .sl-budget-amount { font-family:'Bebas Neue',var(--display);font-size:14px;color:var(--accent);white-space:nowrap; }
 .sl-budget-total { margin-top:12px;padding:12px;background:var(--s2);border-radius:8px;display:flex;justify-content:space-between;align-items:baseline; }
@@ -4472,7 +4472,7 @@ function populateSponsorLanding() {
   }
 
   // Photo — set URL here when you have one
-  const PHOTO_URL = ''; // <- imgur direct link pending
+  const PHOTO_URL = 'https://i.imgur.com/7VqAGjI.jpeg';
   if (PHOTO_URL) {
     const img = document.getElementById('sl-avatar-img');
     const emoji = document.getElementById('sl-avatar-emoji');
@@ -4629,136 +4629,118 @@ function slDrawMap(races) {
   const legend = document.getElementById('sl-map-legend');
   if (!svg) return;
 
-  const W=340, H=260, pad=18;
-  // Romania bounding box
-  const latMin=43.55, latMax=48.35, lngMin=20.15, lngMax=30.05;
-  const toX = lng => pad + (lng-lngMin)/(lngMax-lngMin)*(W-pad*2);
-  const toY = lat => pad + (latMax-lat)/(latMax-latMin)*(H-pad*2);
-  // Convert geo coords to SVG path
-  const geo2path = pts => 'M'+pts.map(([la,ln])=>toX(ln).toFixed(1)+','+toY(la).toFixed(1)).join('L')+'Z';
+  const W=340, H=240, pad=14;
+  const latMin=43.6, latMax=48.3, lngMin=20.2, lngMax=30.0;
+  const toX = lng => pad + (lng - lngMin) / (lngMax - lngMin) * (W - pad*2);
+  const toY = lat => pad + (latMax - lat) / (latMax - latMin) * (H - pad*2);
+  const p2s = ([la,ln]) => toX(ln).toFixed(1) + ',' + toY(la).toFixed(1);
 
-  // Romania outline — real geo coords, simplified ~80 points
-  const romania = [
-    [48.27,22.14],[48.37,22.56],[48.05,22.85],[47.96,23.28],[47.73,23.55],
-    [47.97,24.09],[48.23,24.35],[48.17,24.82],[47.85,25.29],[47.96,25.67],
-    [48.22,25.98],[47.98,26.37],[47.64,26.62],[47.29,26.92],[47.05,27.24],
-    [46.87,27.60],[46.44,27.91],[46.19,28.21],[45.94,28.47],[45.65,28.76],
-    [45.33,28.73],[45.10,29.04],[44.82,29.29],[44.51,28.94],[44.23,28.63],
-    [43.88,28.56],[43.74,28.24],[43.67,27.90],[43.74,27.55],[44.08,27.14],
-    [44.21,26.80],[44.05,26.47],[43.90,26.10],[43.80,25.72],[43.96,25.39],
-    [44.21,25.00],[44.20,24.47],[44.05,24.10],[43.89,23.69],[43.86,23.26],
-    [44.07,22.87],[44.22,22.46],[44.50,22.17],[44.72,22.36],[45.02,22.18],
-    [45.14,21.79],[45.44,21.58],[45.73,21.30],[45.98,21.50],[46.23,21.57],
-    [46.52,21.45],[46.77,21.10],[47.05,21.53],[47.33,21.89],[47.67,21.89],
-    [47.93,22.09],[48.27,22.14]
+  // Verified Romania border — 64 points clockwise
+  const RO = [
+    [48.15,22.18],[48.26,22.58],[48.07,22.83],[47.97,23.27],[47.72,23.54],
+    [47.98,24.10],[48.22,24.35],[48.18,24.80],[47.86,25.29],[47.97,25.63],
+    [48.20,26.00],[47.97,26.38],[47.63,26.62],[47.28,26.93],[47.04,27.24],
+    [46.86,27.61],[46.44,27.91],[46.19,28.22],[45.93,28.48],[45.65,28.77],
+    [45.32,28.74],[45.09,29.05],[44.83,29.30],
+    [44.51,28.94],[44.22,28.64],[43.87,28.57],[43.74,28.25],[43.67,27.90],
+    [43.74,27.55],
+    [44.07,27.15],[44.20,26.80],[44.05,26.48],[43.90,26.10],[43.79,25.71],
+    [43.96,25.39],[44.20,25.01],[44.19,24.48],[44.05,24.10],[43.90,23.68],
+    [43.86,23.26],[44.07,22.87],[44.22,22.46],
+    [44.49,22.18],[44.72,22.37],[45.02,22.19],[45.14,21.79],[45.43,21.58],
+    [45.74,21.31],[45.98,21.50],[46.22,21.57],
+    [46.52,21.46],[46.77,21.11],[47.05,21.53],[47.33,21.89],[47.67,21.89],
+    [47.93,22.09],[48.15,22.18]
   ];
 
-  const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#ccff00';
-  const bg   = getComputedStyle(document.documentElement).getPropertyValue('--s2').trim()||'#242929';
-  const s3   = getComputedStyle(document.documentElement).getPropertyValue('--s3').trim()||'#2f3535';
-  const t4   = getComputedStyle(document.documentElement).getPropertyValue('--t4').trim()||'#495057';
-  const t3   = getComputedStyle(document.documentElement).getPropertyValue('--t3').trim()||'#6c757d';
+  const acc = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ccff00';
+  const bg  = getComputedStyle(document.documentElement).getPropertyValue('--s2').trim()  || '#242929';
+  const s3  = getComputedStyle(document.documentElement).getPropertyValue('--s3').trim()  || '#2f3535';
+  const bdr = getComputedStyle(document.documentElement).getPropertyValue('--border').trim() || '#3a4141';
+  const t3  = getComputedStyle(document.documentElement).getPropertyValue('--t3').trim()  || '#6c757d';
+  const t4  = getComputedStyle(document.documentElement).getPropertyValue('--t4').trim()  || '#495057';
 
-  // Update SVG viewBox
-  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
 
-  let html = `<rect width="${W}" height="${H}" fill="${bg}" rx="8"/>`;
-  // Romania fill
-  html += `<path d="${geo2path(romania)}" fill="${s3}" stroke="${t4}" stroke-width="1.2"/>`;
+  const roD = 'M' + RO.map(p2s).join('L') + 'Z';
+  let html = '<rect width="' + W + '" height="' + H + '" fill="' + bg + '" rx="8"/>';
+  html += '<path d="' + roD + '" fill="' + s3 + '" stroke="' + bdr + '" stroke-width="1.5" stroke-linejoin="round"/>';
 
-  // Race locations [lat, lng]
-  const locs = {
-    'Transylvania 100':          [46.54, 25.08],
-    'Brasov Marathon':           [45.65, 25.61],
-    'Skyrace Giants Race':       [45.36, 25.56],
-    'Legendele Nemirei':         [46.10, 26.65],
-    'Predeal Forest Run':        [45.50, 25.57],
-    'UTMB Bucovina Ultra Rocks': [47.55, 25.93],
-    '2X2 Race':                  [45.40, 23.82],
-    'Ciucas X3':                 [45.53, 26.08],
-    'Azuga L30 Dynafit':         [45.43, 25.57],
-    'Istrița xScape':            [44.88, 26.82],
-    'Barlad':                    [46.23, 27.67],
+  const LOCS = {
+    'Transylvania': [46.54,25.08], 'Brasov': [45.65,25.61],
+    'Brașov': [45.65,25.61],      'Skyrace': [45.36,25.56],
+    'Nemirei': [46.10,26.65],     'Predeal': [45.50,25.57],
+    'Bucovina': [47.55,25.93],    'UTMB': [47.55,25.93],
+    '2X2': [45.40,23.82],         'Ciucas': [45.53,26.08],
+    'Azuga': [45.43,25.57],       'Istrita': [44.88,26.82],
+  };
+  const findLoc = d => {
+    if (!d) return null;
+    const dl = d.toLowerCase();
+    for (const [k,v] of Object.entries(LOCS)) {
+      if (dl.includes(k.toLowerCase())) return v;
+    }
+    return null;
   };
 
-  // Sort races by date
-  const sorted = [...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+  const sorted = [...races].sort((a,b) => new Date(a.data_cursa) - new Date(b.data_cursa));
 
-  // Draw connecting route
-  let prevX=null, prevY=null;
-  sorted.forEach(r => {
-    const key = Object.keys(locs).find(k => r.denumire && r.denumire.toLowerCase().includes(k.split(' ')[0].toLowerCase()));
-    if (!key) return;
-    const [lat,lng] = locs[key];
-    const x=toX(lng), y=toY(lat);
-    if (prevX!==null) {
-      html += `<line x1="${prevX.toFixed(1)}" y1="${prevY.toFixed(1)}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${accentColor}" stroke-width="1" stroke-dasharray="3,4" opacity=".35"/>`;
-    }
-    prevX=x; prevY=y;
-  });
+  // Dashed route line
+  const pts = sorted.map(r => findLoc(r.denumire)).filter(Boolean);
+  if (pts.length >= 2) {
+    html += '<path d="M' + pts.map(p2s).join('L') + '" fill="none" stroke="' + acc + '" stroke-width="1" stroke-dasharray="4,5" opacity=".3"/>';
+  }
 
-  // Bârlad — home marker
-  const bx = toX(27.67).toFixed(1), by = toY(46.23).toFixed(1);
-  html += `<circle cx="${bx}" cy="${by}" r="5" fill="none" stroke="${accentColor}" stroke-width="1.5" opacity=".5"/>`;
-  html += `<text x="${bx}" y="${(parseFloat(by)-8).toFixed(1)}" style="font-size:7px;fill:${accentColor};text-anchor:middle;opacity:.7">HOME</text>`;
+  // HOME dot
+  const hx = toX(27.67).toFixed(1), hy = toY(46.23).toFixed(1);
+  html += '<circle cx="' + hx + '" cy="' + hy + '" r="3" fill="none" stroke="' + acc + '" stroke-width="1.5" opacity=".6"/>';
+  html += '<text x="' + hx + '" y="' + (parseFloat(hy)-6).toFixed(1) + '" style="font-size:6px;fill:' + acc + ';text-anchor:middle;opacity:.7;font-weight:bold">HOME</text>';
 
-  // Race dots + invisible hit areas for tooltip
-  const dots = [];
-  sorted.forEach((r,i) => {
-    const key = Object.keys(locs).find(k => r.denumire && r.denumire.toLowerCase().includes(k.split(' ')[0].toLowerCase()));
-    if (!key) return;
-    const [lat,lng] = locs[key];
-    const x=toX(lng).toFixed(1), y=toY(lat).toFixed(1);
+  // Race dots + hit areas
+  sorted.forEach((r, i) => {
+    const loc = findLoc(r.denumire);
+    if (!loc) return;
+    const x = toX(loc[1]).toFixed(1), y = toY(loc[0]).toFixed(1);
     const past = r.data_cursa && new Date(r.data_cursa) < new Date();
     const big  = (parseFloat(r.distanta)||0) >= 100;
-    const col  = past ? t4 : (big ? accentColor : accentColor);
-    const op   = past ? '.5' : '1';
-    const r2   = big ? 7 : 5;
-    if (big) {
-      html += `<circle cx="${x}" cy="${y}" r="${r2+5}" fill="${accentColor}" opacity=".12"/>`;
-    }
-    html += `<circle cx="${x}" cy="${y}" r="${r2}" fill="${col}" stroke="${bg}" stroke-width="1.5" opacity="${op}"/>`;
-    html += `<text x="${x}" y="${(parseFloat(y)-r2-3).toFixed(1)}" style="font-size:7px;fill:${t3};text-anchor:middle">${i+1}</text>`;
-    // Large transparent hit area
-    dots.push({ x, y, r2, race:r, idx:i });
-    html += `<circle cx="${x}" cy="${y}" r="14" fill="transparent" class="sl-map-dot" data-idx="${i}" style="cursor:pointer"/>`;
+    const r2 = big ? 7 : 5;
+    const col = past ? t4 : acc;
+    const op  = past ? '.5' : '1';
+    if (big) html += '<circle cx="' + x + '" cy="' + y + '" r="' + (r2+5) + '" fill="' + acc + '" opacity=".12"/>';
+    html += '<circle cx="' + x + '" cy="' + y + '" r="' + r2 + '" fill="' + col + '" stroke="' + bg + '" stroke-width="1.5" opacity="' + op + '"/>';
+    html += '<text x="' + x + '" y="' + (parseFloat(y)-r2-3).toFixed(1) + '" style="font-size:7px;fill:' + t3 + ';text-anchor:middle">' + (i+1) + '</text>';
+    html += '<circle cx="' + x + '" cy="' + y + '" r="14" fill="transparent" class="sl-map-dot" data-i="' + i + '" style="cursor:pointer"/>';
   });
 
   svg.innerHTML = html;
 
-  // Tooltip
+  // Tooltips
   const tooltip = document.getElementById('sl-map-tooltip');
-  svg.querySelectorAll('.sl-map-dot').forEach(dot => {
-    const idx = parseInt(dot.dataset.idx);
-    const race = sorted[idx];
-    if (!race || !tooltip) return;
-    const show = (e) => {
-      const d = race.data_cursa ? new Date(race.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'short'}) : '—';
-      const past = race.data_cursa && new Date(race.data_cursa) < new Date();
-      tooltip.innerHTML = `<strong>${race.denumire}</strong><br>${d} · ${race.distanta||'—'}km<br>D+${(race.denivelare||0).toLocaleString()}m${past?' ✅':''}`;
-      const rect = svg.getBoundingClientRect();
-      const cx = e.clientX - rect.left;
-      const cy = e.clientY - rect.top;
-      tooltip.style.display = 'block';
-      tooltip.style.left = Math.min(cx+10, rect.width-175)+'px';
-      tooltip.style.top  = Math.max(cy-65, 4)+'px';
-    };
-    const hide = () => tooltip.style.display='none';
-    dot.addEventListener('mouseenter', show);
-    dot.addEventListener('mouseleave', hide);
-    dot.addEventListener('touchstart', e=>{e.preventDefault();show(e.touches[0]);},{passive:false});
-    dot.addEventListener('touchend', hide, {passive:true});
-  });
-
-  if (legend) {
-    legend.innerHTML = `
-      <div class="sl-map-legend-item"><svg width="10" height="10" style="flex-shrink:0"><circle cx="5" cy="5" r="5" fill="${accentColor}"/></svg>cursă principală</div>
-      <div class="sl-map-legend-item"><svg width="10" height="10" style="flex-shrink:0"><circle cx="5" cy="5" r="4" fill="${accentColor}" opacity=".5"/></svg>altă cursă</div>
-      <div class="sl-map-legend-item"><svg width="10" height="10" style="flex-shrink:0"><circle cx="5" cy="5" r="4" stroke="${accentColor}" fill="none" stroke-width="1.5"/></svg>Bârlad — HOME</div>
-    `;
+  if (tooltip) {
+    svg.querySelectorAll('.sl-map-dot').forEach(dot => {
+      const race = sorted[parseInt(dot.dataset.i)];
+      if (!race) return;
+      const show = (ex, ey) => {
+        const d = race.data_cursa ? new Date(race.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'short'}) : '?';
+        const past = race.data_cursa && new Date(race.data_cursa) < new Date();
+        tooltip.innerHTML = '<strong>' + race.denumire + '</strong><br>' + d + '<br>' + (race.distanta||'?') + 'km · D+' + (race.denivelare||0).toLocaleString() + 'm' + (past ? ' ✅' : '');
+        const rect = svg.getBoundingClientRect();
+        tooltip.style.display = 'block';
+        tooltip.style.left = Math.min(ex-rect.left+10, rect.width-175) + 'px';
+        tooltip.style.top  = Math.max(ey-rect.top-70, 4) + 'px';
+      };
+      dot.addEventListener('mouseenter', e => show(e.clientX, e.clientY));
+      dot.addEventListener('mouseleave', () => { tooltip.style.display='none'; });
+      dot.addEventListener('touchstart', e => { e.preventDefault(); const t=e.touches[0]; show(t.clientX,t.clientY); }, {passive:false});
+      dot.addEventListener('touchend', () => { tooltip.style.display='none'; }, {passive:true});
+    });
   }
-}
 
+  if (legend) legend.innerHTML =
+    '<div class="sl-map-legend-item"><svg width="10" height="10" style="flex-shrink:0"><circle cx="5" cy="5" r="5" fill="' + acc + '"/></svg>cursă +100km</div>' +
+    '<div class="sl-map-legend-item"><svg width="10" height="10" style="flex-shrink:0"><circle cx="5" cy="5" r="4" fill="' + acc + '" opacity=".5"/></svg>altă cursă</div>' +
+    '<div class="sl-map-legend-item"><svg width="10" height="10" style="flex-shrink:0"><circle cx="5" cy="5" r="3" fill="none" stroke="' + acc + '" stroke-width="1.5"/></svg>Bârlad</div>';
+}
 // ── ROI Simulator ───────────────────────────────────
 function slUpdateROI(amount) {
   const el = document.getElementById('sl-roi-amount');
