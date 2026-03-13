@@ -5137,90 +5137,87 @@ function slDrawMap(races) {
   if (!svg) return;
 
   const W=340, H=240, pad=14;
-  const latMin=43.6, latMax=48.4, lngMin=21.0, lngMax=29.4;
-  const toX = lng => pad + (lng - lngMin) / (lngMax - lngMin) * (W - pad*2);
-  const toY = lat => pad + (latMax - lat) / (latMax - latMin) * (H - pad*2);
-  const p2s = ([la,ln]) => toX(ln).toFixed(1) + ',' + toY(la).toFixed(1);
+  const latMin=43.55, latMax=48.35, lngMin=20.8, lngMax=29.8;
+  const toX = lng => pad + (lng-lngMin)/(lngMax-lngMin)*(W-pad*2);
+  const toY = lat => pad + (latMax-lat)/(latMax-latMin)*(H-pad*2);
+  const p2s = ([la,ln]) => toX(ln).toFixed(1)+','+toY(la).toFixed(1);
 
-  // Natural Earth Romania border — 84 points
+  // Romania border — 113 verified points
   const RO = [
-    [48.15,22.14],[48.22,22.38],[48.32,22.64],[48.10,22.84],[47.95,22.97],
-    [47.98,23.27],[47.73,23.54],[47.78,23.80],[47.92,24.07],[48.15,24.32],
-    [48.20,24.55],[48.25,24.83],[48.03,25.09],[47.90,25.32],[47.97,25.55],
-    [48.05,25.82],[48.22,26.05],[48.00,26.33],[47.63,26.59],[47.47,26.77],
-    [47.28,26.89],[47.08,27.19],[46.87,27.54],[46.68,27.68],[46.47,27.87],
-    [46.20,28.18],[45.97,28.43],[45.72,28.68],[45.47,28.72],[45.25,28.81],
-    [45.10,28.98],[44.98,29.22],[44.82,29.28],
-    [44.65,29.13],[44.51,28.98],[44.35,28.81],[44.20,28.65],
-    [43.97,28.55],[43.80,28.45],[43.72,28.19],[43.69,27.91],[43.74,27.55],
-    [43.84,27.28],[44.02,26.95],[44.15,26.73],[44.08,26.48],[43.93,26.20],
-    [43.83,25.82],[43.80,25.56],[43.93,25.32],[44.15,25.08],[44.18,24.73],
-    [44.07,24.32],[43.92,24.07],[43.89,23.72],[43.87,23.38],[43.93,23.08],
-    [44.07,22.85],[44.20,22.55],[44.35,22.28],
-    [44.48,22.18],[44.63,22.27],[44.75,22.37],[44.92,22.21],[45.10,22.05],
-    [45.20,21.83],[45.32,21.63],[45.52,21.47],[45.72,21.28],[45.92,21.42],
-    [46.17,21.52],[46.35,21.47],[46.52,21.45],[46.68,21.22],[46.78,21.11],
-    [46.90,21.20],[47.08,21.47],[47.22,21.70],[47.40,21.85],[47.58,21.89],
-    [47.73,21.94],[47.93,22.09],[48.05,22.11],[48.15,22.14]
+    [48.15,22.18],[48.20,22.38],[48.26,22.58],[48.15,22.70],[48.07,22.83],
+    [48.00,23.05],[47.97,23.27],[47.85,23.40],[47.72,23.54],[47.80,23.78],
+    [47.98,24.10],[48.10,24.22],[48.22,24.35],[48.20,24.58],[48.18,24.80],
+    [48.05,25.05],[47.86,25.29],[47.90,25.46],[47.97,25.63],[48.08,25.81],
+    [48.20,26.00],[48.10,26.18],[47.97,26.38],[47.80,26.50],[47.63,26.62],
+    [47.45,26.78],[47.28,26.93],[47.16,27.08],[47.04,27.24],
+    [46.95,27.43],[46.86,27.61],[46.65,27.76],[46.44,27.91],[46.32,28.07],
+    [46.19,28.22],[46.06,28.35],[45.93,28.48],[45.79,28.62],[45.65,28.77],
+    [45.48,28.75],[45.32,28.74],[45.20,28.90],[45.09,29.05],[44.96,29.18],
+    [44.83,29.30],[44.67,29.12],[44.51,28.94],[44.36,28.79],[44.22,28.64],
+    [44.05,28.60],[43.87,28.57],[43.80,28.40],[43.74,28.25],[43.70,28.07],
+    [43.67,27.90],[43.70,27.72],[43.74,27.55],[43.90,27.35],[44.07,27.15],
+    [44.14,26.97],[44.20,26.80],[44.12,26.64],[44.05,26.48],[43.98,26.29],
+    [43.90,26.10],[43.84,25.90],[43.79,25.71],[43.87,25.55],[43.96,25.39],
+    [44.08,25.20],[44.20,25.01],[44.20,24.74],[44.19,24.48],[44.12,24.29],
+    [44.05,24.10],[43.97,23.89],[43.90,23.68],[43.88,23.47],[43.86,23.26],
+    [43.96,23.06],[44.07,22.87],[44.14,22.66],[44.22,22.46],
+    [44.35,22.32],[44.49,22.18],[44.61,22.28],[44.72,22.37],[44.87,22.28],
+    [45.02,22.19],[45.08,21.99],[45.14,21.79],[45.28,21.68],[45.43,21.58],
+    [45.58,21.44],[45.74,21.31],[45.86,21.40],[45.98,21.50],[46.10,21.54],
+    [46.22,21.57],[46.37,21.52],[46.52,21.46],[46.65,21.28],[46.77,21.11],
+    [46.91,21.32],[47.05,21.53],[47.19,21.71],[47.33,21.89],[47.50,21.89],
+    [47.67,21.89],[47.80,21.99],[47.93,22.09],[48.04,22.14],[48.15,22.18]
   ];
 
-  const acc = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ccff00';
-  const bg  = getComputedStyle(document.documentElement).getPropertyValue('--s2').trim()  || '#242929';
-  const s3  = getComputedStyle(document.documentElement).getPropertyValue('--s3').trim()  || '#2f3535';
-  const bdr = getComputedStyle(document.documentElement).getPropertyValue('--border').trim() || '#3a4141';
-  const t3  = getComputedStyle(document.documentElement).getPropertyValue('--t3').trim()  || '#6c757d';
-  const t4  = getComputedStyle(document.documentElement).getPropertyValue('--t4').trim()  || '#495057';
+  const acc = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#ccff00';
+  const bg  = getComputedStyle(document.documentElement).getPropertyValue('--s2').trim()||'#242929';
+  const s3  = getComputedStyle(document.documentElement).getPropertyValue('--s3').trim()||'#2f3535';
+  const bdr = getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#3a4141';
+  const t3  = getComputedStyle(document.documentElement).getPropertyValue('--t3').trim()||'#6c757d';
+  const t4  = getComputedStyle(document.documentElement).getPropertyValue('--t4').trim()||'#495057';
 
-  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  svg.setAttribute('viewBox', '0 0 '+W+' '+H);
 
-  const roD = 'M' + RO.map(p2s).join('L') + 'Z';
-  let html = '<rect width="' + W + '" height="' + H + '" fill="' + bg + '" rx="8"/>';
-  html += '<path d="' + roD + '" fill="' + s3 + '" stroke="' + bdr + '" stroke-width="1.5" stroke-linejoin="round"/>';
+  const roD = 'M'+RO.map(p2s).join('L')+'Z';
+  let html = '<rect width="'+W+'" height="'+H+'" fill="'+bg+'" rx="8"/>';
+  html += '<path d="'+roD+'" fill="'+s3+'" stroke="'+bdr+'" stroke-width="1.5" stroke-linejoin="round"/>';
 
   const LOCS = {
-    'Transylvania': [46.54,25.08], 'Brasov': [45.65,25.61],
-    'Brașov': [45.65,25.61],      'Skyrace': [45.36,25.56],
-    'Nemirei': [46.10,26.65],     'Predeal': [45.50,25.57],
-    'Bucovina': [47.55,25.93],    'UTMB': [47.55,25.93],
-    '2X2': [45.40,23.82],         'Ciucas': [45.53,26.08],
-    'Azuga': [45.43,25.57],       'Istrita': [44.88,26.82],
+    'Transylvania':[46.54,25.08], 'Brasov':[45.65,25.61], 'Brașov':[45.65,25.61],
+    'Skyrace':[45.36,25.56],      'Nemirei':[46.10,26.65], 'Predeal':[45.50,25.57],
+    'Bucovina':[47.55,25.93],     'UTMB':[47.55,25.93],    '2X2':[45.40,23.82],
+    'Ciucas':[45.53,26.08],       'Ciucaș':[45.53,26.08],  'Azuga':[45.43,25.57],
+    'Istrita':[44.88,26.82],      'Istrița':[44.88,26.82],
   };
   const findLoc = d => {
     if (!d) return null;
     const dl = d.toLowerCase();
-    for (const [k,v] of Object.entries(LOCS)) {
-      if (dl.includes(k.toLowerCase())) return v;
-    }
+    for (const [k,v] of Object.entries(LOCS)) if (dl.includes(k.toLowerCase())) return v;
     return null;
   };
 
-  const sorted = [...races].sort((a,b) => new Date(a.data_cursa) - new Date(b.data_cursa));
+  const sorted = [...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
 
-  // Dashed route line
-  const pts = sorted.map(r => findLoc(r.denumire)).filter(Boolean);
-  if (pts.length >= 2) {
-    html += '<path d="M' + pts.map(p2s).join('L') + '" fill="none" stroke="' + acc + '" stroke-width="1" stroke-dasharray="4,5" opacity=".3"/>';
-  }
+  // Route line
+  const pts = sorted.map(r=>findLoc(r.denumire)).filter(Boolean);
+  if (pts.length>=2) html += '<path d="M'+pts.map(p2s).join('L')+'" fill="none" stroke="'+acc+'" stroke-width="1" stroke-dasharray="4,5" opacity=".3"/>';
 
-  // HOME dot
-  const hx = toX(27.67).toFixed(1), hy = toY(46.23).toFixed(1);
-  html += '<circle cx="' + hx + '" cy="' + hy + '" r="3" fill="none" stroke="' + acc + '" stroke-width="1.5" opacity=".6"/>';
-  html += '<text x="' + hx + '" y="' + (parseFloat(hy)-6).toFixed(1) + '" style="font-size:6px;fill:' + acc + ';text-anchor:middle;opacity:.7;font-weight:bold">HOME</text>';
+  // Bârlad HOME
+  const hx=toX(27.67).toFixed(1), hy=toY(46.23).toFixed(1);
+  html += '<circle cx="'+hx+'" cy="'+hy+'" r="3" fill="none" stroke="'+acc+'" stroke-width="1.5" opacity=".7"/>';
+  html += '<text x="'+hx+'" y="'+(parseFloat(hy)-6).toFixed(1)+'" style="font-size:6px;fill:'+acc+';text-anchor:middle;font-weight:bold">HOME</text>';
 
-  // Race dots + hit areas
-  sorted.forEach((r, i) => {
-    const loc = findLoc(r.denumire);
-    if (!loc) return;
-    const x = toX(loc[1]).toFixed(1), y = toY(loc[0]).toFixed(1);
-    const past = r.data_cursa && new Date(r.data_cursa) < new Date();
-    const big  = (parseFloat(r.distanta)||0) >= 100;
-    const r2 = big ? 7 : 5;
-    const col = past ? t4 : acc;
-    const op  = past ? '.5' : '1';
-    if (big) html += '<circle cx="' + x + '" cy="' + y + '" r="' + (r2+5) + '" fill="' + acc + '" opacity=".12"/>';
-    html += '<circle cx="' + x + '" cy="' + y + '" r="' + r2 + '" fill="' + col + '" stroke="' + bg + '" stroke-width="1.5" opacity="' + op + '"/>';
-    html += '<text x="' + x + '" y="' + (parseFloat(y)-r2-3).toFixed(1) + '" style="font-size:7px;fill:' + t3 + ';text-anchor:middle">' + (i+1) + '</text>';
-    html += '<circle cx="' + x + '" cy="' + y + '" r="14" fill="transparent" class="sl-map-dot" data-i="' + i + '" style="cursor:pointer"/>';
+  // Race dots
+  sorted.forEach((r,i)=>{
+    const loc=findLoc(r.denumire); if(!loc) return;
+    const x=toX(loc[1]).toFixed(1), y=toY(loc[0]).toFixed(1);
+    const past=r.data_cursa&&new Date(r.data_cursa)<new Date();
+    const big=(parseFloat(r.distanta)||0)>=100;
+    const r2=big?7:5, col=past?t4:acc, op=past?'.5':'1';
+    if(big) html+='<circle cx="'+x+'" cy="'+y+'" r="'+(r2+5)+'" fill="'+acc+'" opacity=".12"/>';
+    html+='<circle cx="'+x+'" cy="'+y+'" r="'+r2+'" fill="'+col+'" stroke="'+bg+'" stroke-width="1.5" opacity="'+op+'"/>';
+    html+='<text x="'+x+'" y="'+(parseFloat(y)-r2-3).toFixed(1)+'" style="font-size:7px;fill:'+t3+';text-anchor:middle">'+(i+1)+'</text>';
+    html+='<circle cx="'+x+'" cy="'+y+'" r="14" fill="transparent" class="sl-map-dot" data-i="'+i+'" style="cursor:pointer"/>';
   });
 
   svg.innerHTML = html;
@@ -5228,30 +5225,30 @@ function slDrawMap(races) {
   // Tooltips
   const tooltip = document.getElementById('sl-map-tooltip');
   if (tooltip) {
-    svg.querySelectorAll('.sl-map-dot').forEach(dot => {
-      const race = sorted[parseInt(dot.dataset.i)];
-      if (!race) return;
-      const show = (ex, ey) => {
-        const d = race.data_cursa ? new Date(race.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'short'}) : '?';
-        const past = race.data_cursa && new Date(race.data_cursa) < new Date();
-        tooltip.innerHTML = '<strong>' + race.denumire + '</strong><br>' + d + '<br>' + (race.distanta||'?') + 'km · D+' + (race.denivelare||0).toLocaleString() + 'm' + (past ? ' ✅' : '');
-        const rect = svg.getBoundingClientRect();
-        tooltip.style.display = 'block';
-        tooltip.style.left = Math.min(ex-rect.left+10, rect.width-175) + 'px';
-        tooltip.style.top  = Math.max(ey-rect.top-70, 4) + 'px';
+    svg.querySelectorAll('.sl-map-dot').forEach(dot=>{
+      const race=sorted[parseInt(dot.dataset.i)]; if(!race) return;
+      const show=(ex,ey)=>{
+        const d=race.data_cursa?new Date(race.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'short'}):'?';
+        const past=race.data_cursa&&new Date(race.data_cursa)<new Date();
+        tooltip.innerHTML='<strong>'+race.denumire+'</strong><br>'+d+'<br>'+(race.distanta||'?')+'km · D+'+(race.denivelare||0).toLocaleString()+'m'+(past?' ✅':'');
+        const rect=svg.getBoundingClientRect();
+        tooltip.style.display='block';
+        tooltip.style.left=Math.min(ex-rect.left+10,rect.width-175)+'px';
+        tooltip.style.top=Math.max(ey-rect.top-70,4)+'px';
       };
-      dot.addEventListener('mouseenter', e => show(e.clientX, e.clientY));
-      dot.addEventListener('mouseleave', () => { tooltip.style.display='none'; });
-      dot.addEventListener('touchstart', e => { e.preventDefault(); const t=e.touches[0]; show(t.clientX,t.clientY); }, {passive:false});
-      dot.addEventListener('touchend', () => { tooltip.style.display='none'; }, {passive:true});
+      dot.addEventListener('mouseenter',e=>show(e.clientX,e.clientY));
+      dot.addEventListener('mouseleave',()=>{tooltip.style.display='none';});
+      dot.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];show(t.clientX,t.clientY);},{passive:false});
+      dot.addEventListener('touchend',()=>{tooltip.style.display='none';},{passive:true});
     });
   }
 
   if (legend) legend.innerHTML =
-    '<div class="sl-map-legend-item"><svg width="10" height="10" style="flex-shrink:0"><circle cx="5" cy="5" r="5" fill="' + acc + '"/></svg>cursă +100km</div>' +
-    '<div class="sl-map-legend-item"><svg width="10" height="10" style="flex-shrink:0"><circle cx="5" cy="5" r="4" fill="' + acc + '" opacity=".5"/></svg>altă cursă</div>' +
-    '<div class="sl-map-legend-item"><svg width="10" height="10" style="flex-shrink:0"><circle cx="5" cy="5" r="3" fill="none" stroke="' + acc + '" stroke-width="1.5"/></svg>Bârlad</div>';
+    '<div class="sl-map-legend-item"><svg width="10" height="10" style="flex-shrink:0"><circle cx="5" cy="5" r="5" fill="'+acc+'"/></svg>cursă +100km</div>'+
+    '<div class="sl-map-legend-item"><svg width="10" height="10" style="flex-shrink:0"><circle cx="5" cy="5" r="4" fill="'+acc+'" opacity=".6"/></svg>altă cursă</div>'+
+    '<div class="sl-map-legend-item"><svg width="10" height="10" style="flex-shrink:0"><circle cx="5" cy="5" r="3" fill="none" stroke="'+acc+'" stroke-width="1.5"/></svg>Bârlad HOME</div>';
 }
+
 // ── ROI Simulator ───────────────────────────────────
 function slUpdateROI(amount) {
   const el = document.getElementById('sl-roi-amount');
