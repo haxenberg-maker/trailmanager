@@ -4771,7 +4771,6 @@ async function saveSettings() {
   });
 
   // Save landing_settings to user_prefs
-  const landingJson = JSON.stringify(SETTINGS);
   const targetKm    = parseInt(g('set-target-km')) || 5000;
   const dashTitle   = g('set-dash-title') || 'SEZONUL BESTIEI';
 
@@ -4798,7 +4797,7 @@ async function saveSettings() {
       },
       body: JSON.stringify({
         user_id:          currentUser.id,
-        landing_settings: landingJson,
+        landing_settings: SETTINGS,
         target_km:        targetKm,
         dash_title:       dashTitle,
       }),
@@ -4809,7 +4808,7 @@ async function saveSettings() {
       throw new Error(err.message || r.status);
     }
 
-    DB.prefs.landing_settings = landingJson;
+    DB.prefs.landing_settings = SETTINGS;
     DB.prefs.target_km        = targetKm;
     DB.prefs.dash_title       = dashTitle;
 
@@ -5517,13 +5516,13 @@ async function saveSettings() {
     // Save landing_settings into user_prefs JSON column
     await sbUpsert('user_prefs', {
       user_id:        currentUser.id,
-      landing_settings: JSON.stringify(SETTINGS),
+      landing_settings: SETTINGS,
       target_km:      targetKm,
       dash_title:     dashTitle,
     }, 'user_id');
 
     // Update in-memory DB
-    DB.prefs.landing_settings = JSON.stringify(SETTINGS);
+    DB.prefs.landing_settings = SETTINGS;
     DB.prefs.target_km      = targetKm;
     DB.prefs.dash_title     = dashTitle;
 
