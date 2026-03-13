@@ -4604,13 +4604,15 @@ let SETTINGS = { ...DEFAULT_SETTINGS };
 
 // ── Load settings from user_prefs.landing_settings ──
 function loadSettings() {
-  const raw = DB.prefs?.landing_settings;
-  if (raw) {
-    try {
-      const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
-      SETTINGS = { ...DEFAULT_SETTINGS, ...parsed };
-    } catch(e) { SETTINGS = { ...DEFAULT_SETTINGS }; }
-  } else {
+  try {
+    let raw = DB.prefs?.landing_settings;
+    if (!raw) { SETTINGS = { ...DEFAULT_SETTINGS }; return; }
+    // Handle double-encoded string (stored as JSON string instead of jsonb object)
+    if (typeof raw === 'string') raw = JSON.parse(raw);
+    if (typeof raw === 'string') raw = JSON.parse(raw); // second parse if double-encoded
+    SETTINGS = { ...DEFAULT_SETTINGS, ...raw };
+  } catch(e) {
+    console.warn('loadSettings error:', e);
     SETTINGS = { ...DEFAULT_SETTINGS };
   }
 }
@@ -5356,63 +5358,7 @@ async function loadLandingConfig() {
 }
 
 // ── Render settings page ────────────────────────────
-function renderSetari() {
-  if (!isOwnerLoggedIn()) return;
-  loadLandingConfig();
-
-  // Media
-  setVal('set-photo-url',    LC.photo_url    || '');
-  setVal('set-video-url',    LC.video_url    || '');
-  // Texts
-  setVal('set-quote',        LC.quote        || '');
-  setVal('set-hero-sub',     LC.hero_sub     || '');
-  setVal('set-story',        LC.story        || '');
-  setVal('set-contact-email',LC.contact_email|| '');
-  // Dashboard
-  setVal('set-target-km',    DB.prefs?.target_km  || 5000);
-  setVal('set-dash-title',   DB.prefs?.dash_title || 'SEZONUL BESTIEI');
-  // Toggles
-  setChk('set-show-map',      LC.show_map      !== false);
-  setChk('set-show-video',    LC.show_video    !== false);
-  setChk('set-show-budget',   LC.show_budget   !== false);
-  setChk('set-show-faq',      LC.show_faq      !== false);
-  setChk('set-show-timeline', LC.show_timeline !== false);
-
-  // Photo preview
-  previewPhoto();
-
-  // Sponsor link
-  const linkEl = document.getElementById('set-sponsor-link');
-  if (linkEl) linkEl.textContent = window.location.origin + window.location.pathname + '?sponsor=1';
-
-  // Render FAQ list
-  renderSetFaq();
-  // Render pachete
-  renderSetPackages();
-}
-
-function setVal(id, v) { const e=document.getElementById(id); if(e) e.value=v; }
-function setChk(id, v) { const e=document.getElementById(id); if(e) e.checked=!!v; }
-function getVal(id)    { const e=document.getElementById(id); return e ? e.value.trim() : ''; }
-function getChk(id)    { const e=document.getElementById(id); return e ? e.checked : true; }
-
-// ── Photo preview ───────────────────────────────────
-function previewPhoto() {
-  const url = document.getElementById('set-photo-url')?.value?.trim();
-  const wrap = document.getElementById('set-photo-preview');
-  const img  = document.getElementById('set-photo-img');
-  if (!wrap || !img) return;
-  if (url) {
-    img.src = url;
-    wrap.style.display = 'block';
-  } else {
-    wrap.style.display = 'none';
-  }
-}
-// Live preview on input
-document.addEventListener('input', e => {
-  if (e.target.id === 'set-photo-url') previewPhoto();
-});
+// (duplicate renderSetari removed)
 
 // ── FAQ editor ──────────────────────────────────────
 function renderSetFaq() {
@@ -5492,47 +5438,7 @@ function previewSponsorPage() {
 }
 
 // ── Save all settings ───────────────────────────────
-async function saveSettings() {
-  if (!isOwnerLoggedIn()) return;
-
-  // Collect from form
-  LC.photo_url     = getVal('set-photo-url');
-  LC.video_url     = getVal('set-video-url');
-  LC.quote         = getVal('set-quote');
-  LC.hero_sub      = getVal('set-hero-sub');
-  LC.story         = getVal('set-story');
-  LC.contact_email = getVal('set-contact-email');
-  LC.show_map      = getChk('set-show-map');
-  LC.show_video    = getChk('set-show-video');
-  LC.show_budget   = getChk('set-show-budget');
-  LC.show_faq      = getChk('set-show-faq');
-  LC.show_timeline = getChk('set-show-timeline');
-  // FAQ + packages already updated live via oninput
-
-  const targetKm  = parseInt(getVal('set-target-km')) || 5000;
-  const dashTitle = getVal('set-dash-title') || 'SEZONUL BESTIEI';
-
-  try {
-    // Save landing_settings into user_prefs JSON column
-    await sbUpsert('user_prefs', {
-      user_id:        currentUser.id,
-      landing_settings: SETTINGS,
-      target_km:      targetKm,
-      dash_title:     dashTitle,
-    }, 'user_id');
-
-    // Update in-memory DB
-    DB.prefs.landing_settings = SETTINGS;
-    DB.prefs.target_km      = targetKm;
-    DB.prefs.dash_title     = dashTitle;
-
-    applyTheme(DB.prefs.theme);
-    loadDashTitle();
-    toast('✅ Setări salvate!', 'ok');
-  } catch(e) {
-    toast('❌ Eroare salvare: ' + e.message, 'err');
-  }
-}
+// saveSettings defined above (single implementation)
 
 // ── Helper ──────────────────────────────────────────
 function escHtml(s) {
