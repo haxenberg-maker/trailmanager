@@ -874,7 +874,7 @@ body.readonly label.btn { display:none !important }
     <div class="sl-card" id="sl-video-card" style="display:none">
       <div class="sl-card-title">🎥 Pe teren</div>
       <div class="sl-video-wrap">
-        <iframe id="sl-video-iframe" src="" frameborder="0" allowfullscreen style="width:100%;height:200px;border-radius:8px;display:block"></iframe>
+        <iframe id="sl-video-iframe" src="" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width:100%;aspect-ratio:9/16;max-height:480px;border-radius:8px;display:block"></iframe>
       </div>
     </div>
 
@@ -4472,7 +4472,7 @@ function populateSponsorLanding() {
   }
 
   // Photo — set URL here when you have one
-  const PHOTO_URL = 'https://i.imgur.com/7VqAGjI.jpeg';
+  const PHOTO_URL = ''; // <- imgur direct link pending
   if (PHOTO_URL) {
     const img = document.getElementById('sl-avatar-img');
     const emoji = document.getElementById('sl-avatar-emoji');
@@ -4481,7 +4481,7 @@ function populateSponsorLanding() {
   }
 
   // Video — set YouTube/Vimeo URL here
-    const VIDEO_URL = 'https://www.youtube.com/shorts/kD_nMBhmG_Y'; // <- ex: ''
+  const VIDEO_URL = 'https://www.youtube.com/embed/kD_nMBhmG_Y';
   if (VIDEO_URL) {
     const card = document.getElementById('sl-video-card');
     const iframe = document.getElementById('sl-video-iframe');
@@ -4804,7 +4804,7 @@ function slEnterDash() {
 }
 
 function slContact() {
-  window.location.href = 'mailto:ultrahax.run@gmail.com?subject=Sponsorizare Trail 2026&body=Buna ziua, sunt interesat de un parteneriat pentru sezonul 2026.';
+  window.location.href = 'mailto:evoluttionofall@gmail.com?subject=Sponsorizare Trail 2026&body=Buna ziua, sunt interesat de un parteneriat pentru sezonul 2026.';
 }
 
 function checkSponsorParam() {
