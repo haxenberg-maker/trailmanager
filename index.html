@@ -4918,13 +4918,16 @@ async function populateSponsorLanding() {
     if (emoji) emoji.style.display = 'none';
   }
 
-  // Video — set YouTube/Vimeo URL here
+  // Video — only show if URL set AND toggle is on
   const VIDEO_URL = SETTINGS.video_url || '';
-  if (VIDEO_URL) {
+  if (VIDEO_URL && SETTINGS.show_video !== false) {
     const card = document.getElementById('sl-video-card');
     const iframe = document.getElementById('sl-video-iframe');
     if (card) card.style.display = 'block';
     if (iframe) iframe.src = VIDEO_URL;
+  } else {
+    const card = document.getElementById('sl-video-card');
+    if (card) card.style.display = 'none';
   }
 
   // Section visibility — from SETTINGS
@@ -4957,7 +4960,6 @@ async function populateSponsorLanding() {
 
   // Sections
   showHide('#sponsor-landing .sl-map-wrap', SETTINGS.show_map !== false);
-  showHide('#sl-video-card',                SETTINGS.show_video !== false);
 
   // Budget card — find parent card of breakdown
   const budgetCard = document.getElementById('sl-budget-breakdown')?.closest('.sl-card');
