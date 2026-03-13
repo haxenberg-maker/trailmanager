@@ -2368,7 +2368,13 @@ function updateAuthButtons() {
   setF('m-logout-btn', li, 'flex');
   loadDashTitle();
 }
-
+function checkSponsorParam() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('sponsor') === '1') {
+    // Logica pentru afișarea paginii de sponsor
+    renderSponsorPreview(); 
+  }
+}
 // ── Auto-login on page load ───────────────────────────
 window.addEventListener('load', async () => {
   document.body.classList.add('readonly');
@@ -5416,8 +5422,6 @@ document.addEventListener('keydown',e=>{
     closePreview();
   }
 });
-
-
 </script>
 </body>
 </html>
