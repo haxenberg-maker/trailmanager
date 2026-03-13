@@ -2080,9 +2080,15 @@ async function loadAllData(useAuth = false) {
   // Fetch each table individually with fallback — if a table doesn't exist yet, return empty
   async function safeFetch(table, params) {
     try {
-      return await sbGet(table, params, useAuth);
+      const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, { headers: sbH(useAuth) });
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        console.warn(`Table "${table}" error ${r.status}:`, err.message || err);
+        return [];
+      }
+      return r.json();
     } catch(e) {
-      console.warn(`Table "${table}" not ready yet:`, e.message);
+      console.warn(`Table "${table}" fetch failed:`, e.message);
       return [];
     }
   }
