@@ -2105,7 +2105,7 @@ async function loadAllData(useAuth = false) {
       safeFetch('activities',         (uid_filter || 'limit=1000') + '&order=date.desc'),
     ]);
 
-    DB.prefs       = prefs[0]  || { target_km: 5000, dash_title: 'SEZONUL BESTIEI', theme: 'default', landing_config: {} };
+    DB.prefs       = prefs[0]  || { target_km: 5000, dash_title: 'SEZONUL BESTIEI', theme: 'default', landing_settings: {} };
     DB.races       = races     || [];
     DB.sponsors    = sponsors  || [];
     DB.equipment   = eq        || [];
@@ -4782,7 +4782,9 @@ async function saveSettings() {
       if (saved) { const s = JSON.parse(saved); authToken = s.access_token; }
     } catch(e) {}
   }
+  console.log('saveSettings debug:', { authToken: authToken?.slice(0,20), currentUser, SB_KEY: SB_KEY?.slice(0,20) });
   if (!authToken) { toast('❌ Nu ești autentificat. Reconectează-te.', 'err'); return; }
+  if (!currentUser?.id) { toast('❌ currentUser lipsă. Reconectează-te.', 'err'); return; }
 
   try {
     const r = await fetch(`${SB_URL}/rest/v1/user_prefs`, {
@@ -5308,7 +5310,7 @@ function checkSponsorParam() {
 //  SETTINGS PAGE — LANDING CONFIG
 // ══════════════════════════════════════════════════════
 
-// In-memory config — loaded from user_prefs.landing_config JSON
+// In-memory config — loaded from user_prefs.landing_settings JSON
 let LC = {}; // landing config
 
 const LC_DEFAULTS = {
@@ -5346,7 +5348,7 @@ const LC_DEFAULTS = {
 async function loadLandingConfig() {
   try {
     const prefs = DB.prefs || {};
-    LC = Object.assign({}, LC_DEFAULTS, prefs.landing_config || {});
+    LC = Object.assign({}, LC_DEFAULTS, prefs.landing_settings || {});
   } catch(e) {
     LC = Object.assign({}, LC_DEFAULTS);
   }
@@ -5510,16 +5512,16 @@ async function saveSettings() {
   const dashTitle = getVal('set-dash-title') || 'SEZONUL BESTIEI';
 
   try {
-    // Save landing_config into user_prefs JSON column
+    // Save landing_settings into user_prefs JSON column
     await sbUpsert('user_prefs', {
       user_id:        currentUser.id,
-      landing_config: LC,
+      landing_settings: JSON.stringify(SETTINGS),
       target_km:      targetKm,
       dash_title:     dashTitle,
     }, 'user_id');
 
     // Update in-memory DB
-    DB.prefs.landing_config = LC;
+    DB.prefs.landing_settings = JSON.stringify(SETTINGS);
     DB.prefs.target_km      = targetKm;
     DB.prefs.dash_title     = dashTitle;
 
