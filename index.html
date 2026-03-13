@@ -4769,13 +4769,37 @@ async function saveSettings() {
   const targetKm    = parseInt(g('set-target-km')) || 5000;
   const dashTitle   = g('set-dash-title') || 'SEZONUL BESTIEI';
 
+  // Ensure authToken is fresh from localStorage
+  if (!authToken) {
+    try {
+      const saved = localStorage.getItem('sb_session');
+      if (saved) { const s = JSON.parse(saved); authToken = s.access_token; }
+    } catch(e) {}
+  }
+  if (!authToken) { toast('❌ Nu ești autentificat. Reconectează-te.', 'err'); return; }
+
   try {
-    await sbUpsert('user_prefs', {
-      user_id:          currentUser.id,
-      landing_settings: landingJson,
-      target_km:        targetKm,
-      dash_title:       dashTitle,
-    }, 'user_id');
+    const r = await fetch(`${SB_URL}/rest/v1/user_prefs`, {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'apikey':        SB_KEY,
+        'Authorization': 'Bearer ' + authToken,
+        'Prefer':        'resolution=merge-duplicates,return=representation',
+        'on-conflict':   'user_id',
+      },
+      body: JSON.stringify({
+        user_id:          currentUser.id,
+        landing_settings: landingJson,
+        target_km:        targetKm,
+        dash_title:       dashTitle,
+      }),
+    });
+
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({}));
+      throw new Error(err.message || r.status);
+    }
 
     DB.prefs.landing_settings = landingJson;
     DB.prefs.target_km        = targetKm;
