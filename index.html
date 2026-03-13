@@ -55,7 +55,8 @@ document.currentScript.parentNode.appendChild(link);
 
 /* Hero */
 .sl-hero { text-align:center;padding:40px 0 32px;border-bottom:1px solid var(--border);margin-bottom:16px; }
-.sl-avatar { width:80px;height:80px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 16px;border:3px solid var(--accent);box-shadow:0 0 0 6px var(--accent-dim); }
+.sl-avatar { width:90px;height:90px;border-radius:50%;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 16px;border:3px solid var(--accent);box-shadow:0 0 0 6px var(--accent-dim);overflow:hidden;flex-shrink:0; }
+.sl-avatar img { width:100%;height:100%;object-fit:cover;border-radius:50%; }
 .sl-name { font-family:'Bebas Neue',var(--display);font-size:38px;letter-spacing:3px;color:var(--text);line-height:1;margin-bottom:6px; }
 .sl-tag { display:inline-block;background:var(--accent);color:#0c0e0d;font-size:10px;font-weight:700;letter-spacing:2px;padding:3px 10px;border-radius:20px;text-transform:uppercase;margin-bottom:12px; }
 .sl-sub { font-size:13px;color:var(--t2);line-height:1.5;max-width:320px;margin:0 auto; }
@@ -135,6 +136,35 @@ document.currentScript.parentNode.appendChild(link);
 /* Sponsors strip */
 .sl-sponsors-strip { display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px; }
 .sl-sp-pill { background:var(--s2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--t2);font-weight:600; }
+
+/* Quote */
+.sl-quote-card { border-left:3px solid var(--accent) !important;background:var(--accent-dim) !important; }
+.sl-quote-text { font-family:'Bebas Neue',var(--display);font-size:22px;color:var(--text);line-height:1.3;letter-spacing:.5px;margin-bottom:8px; }
+.sl-quote-author { font-size:11px;color:var(--t3);letter-spacing:1px;text-transform:uppercase; }
+
+/* Video */
+.sl-video-wrap { border-radius:8px;overflow:hidden; }
+
+/* Budget breakdown */
+.sl-budget-row { display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border); }
+.sl-budget-row:last-child { border-bottom:none; }
+.sl-budget-label { display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2); }
+.sl-budget-bar-wrap { flex:1;mx:12px;height:4px;background:var(--s3);border-radius:2px;margin:0 12px;overflow:hidden; }
+.sl-budget-bar-fill { height:100%;border-radius:2px;background:var(--accent);transition:width 1.2s cubic-bezier(.4,0,.2,1); }
+.sl-budget-amount { font-family:'Bebas Neue',var(--display);font-size:14px;color:var(--accent);white-space:nowrap; }
+.sl-budget-total { margin-top:12px;padding:12px;background:var(--s2);border-radius:8px;display:flex;justify-content:space-between;align-items:baseline; }
+.sl-budget-total-lbl { font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:1px; }
+.sl-budget-total-val { font-family:'Bebas Neue',var(--display);font-size:22px;color:var(--accent); }
+.sl-budget-covered { font-size:11px;color:var(--t3);margin-top:4px;text-align:center; }
+
+/* FAQ */
+.sl-faq-item { border-bottom:1px solid var(--border); }
+.sl-faq-item:last-child { border-bottom:none; }
+.sl-faq-q { width:100%;text-align:left;background:none;border:none;padding:12px 0;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px; }
+.sl-faq-arr { color:var(--accent);transition:transform .3s;flex-shrink:0; }
+.sl-faq-item.open .sl-faq-arr { transform:rotate(180deg); }
+.sl-faq-a { display:none;font-size:12px;color:var(--t2);line-height:1.6;padding-bottom:12px; }
+.sl-faq-item.open .sl-faq-a { display:block; }
 
 /* CTA */
 .sl-cta { margin-top:8px;display:flex;flex-direction:column;gap:10px; }
@@ -787,7 +817,10 @@ body.readonly label.btn { display:none !important }
 
     <!-- ── HERO ── -->
     <div class="sl-hero">
-      <div class="sl-avatar">🏔️</div>
+      <div class="sl-avatar" id="sl-avatar-wrap">
+        <img id="sl-avatar-img" src="" alt="Balan Gabriel" style="display:none" onerror="this.style.display='none';document.getElementById('sl-avatar-emoji').style.display='block'">
+        <span id="sl-avatar-emoji">🏔️</span>
+      </div>
       <div class="sl-name">BALAN GABRIEL</div>
       <span class="sl-tag">Trail Runner · HAX · Bârlad</span>
       <div class="sl-sub">Ultra-trail runner din Bârlad. Sezonul 2026 — 10 curse, 517km de munte, un singur obiectiv.</div>
@@ -831,11 +864,25 @@ body.readonly label.btn { display:none !important }
       </div>
     </div>
 
+    <!-- ── CITAT ── -->
+    <div class="sl-card sl-quote-card">
+      <div class="sl-quote-text">"Nu alerg să câștig. Alerg ca să demonstrez că din Bârlad se poate."</div>
+      <div class="sl-quote-author">— Balan Gabriel</div>
+    </div>
+
+    <!-- ── VIDEO ── -->
+    <div class="sl-card" id="sl-video-card" style="display:none">
+      <div class="sl-card-title">🎥 Pe teren</div>
+      <div class="sl-video-wrap">
+        <iframe id="sl-video-iframe" src="" frameborder="0" allowfullscreen style="width:100%;height:200px;border-radius:8px;display:block"></iframe>
+      </div>
+    </div>
+
     <!-- ── HARTA INTERACTIVA ── -->
     <div class="sl-card">
       <div class="sl-card-title">🗺️ Traseul sezonului</div>
       <div class="sl-map-wrap" id="sl-map-wrap">
-        <svg id="sl-map-svg" viewBox="0 0 340 300" style="width:100%;height:auto;display:block"></svg>
+        <svg id="sl-map-svg" viewBox="0 0 340 260" style="width:100%;height:auto;display:block"></svg>
         <div class="sl-map-tooltip" id="sl-map-tooltip" style="display:none"></div>
       </div>
       <div class="sl-map-legend" id="sl-map-legend"></div>
@@ -913,6 +960,14 @@ body.readonly label.btn { display:none !important }
       <div class="sl-roi-summary" id="sl-roi-summary"></div>
     </div>
 
+    <!-- ── UNDE SE DUC BANII ── -->
+    <div class="sl-card">
+      <div class="sl-card-title">💸 Unde se duc banii</div>
+      <p style="font-size:12px;color:var(--t3);margin-bottom:14px;line-height:1.6">Sponsorizarea ta acoperă costuri reale de sezon. Mai jos vezi exact pe ce se duc banii — live din planificarea mea:</p>
+      <div id="sl-budget-breakdown"></div>
+      <div class="sl-budget-total" id="sl-budget-total"></div>
+    </div>
+
     <!-- ── CE PRIMESTI ── -->
     <div class="sl-card">
       <div class="sl-card-title">🤝 De ce să mă susții</div>
@@ -949,6 +1004,33 @@ body.readonly label.btn { display:none !important }
         <div class="sl-benefit-text">
           <div class="sl-benefit-title">Parteneriat autentic, nu reclamă</div>
           <div class="sl-benefit-desc">Ești primul. Nu ești la rând. Îți dedic timp, atenție și recunoștință reală — și vorbesc despre tine ca om, nu ca brand impersonal.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FAQ ── -->
+    <div class="sl-card">
+      <div class="sl-card-title">❓ Întrebări frecvente</div>
+      <div class="sl-faq" id="sl-faq-list">
+        <div class="sl-faq-item">
+          <button class="sl-faq-q" onclick="slToggleFaq(this)">De ce să sponsorizez un alergător necunoscut? <span class="sl-faq-arr">▾</span></button>
+          <div class="sl-faq-a">Tocmai asta e oportunitatea. Când voi deveni cunoscut, sponsorii vor fi mulți și costul va fi mare. Acum ești primul — parteneriat real, nu reclamă. Și eu nu voi uita asta niciodată.</div>
+        </div>
+        <div class="sl-faq-item">
+          <button class="sl-faq-q" onclick="slToggleFaq(this)">Ce vizibilitate am dacă nu ai mulți urmăritori? <span class="sl-faq-arr">▾</span></button>
+          <div class="sl-faq-a">Vizibilitatea principală e fizică — logo pe echipament la curse cu sute de participanți și spectatori. Dashboard-ul live e un instrument de credibilitate, nu de reach. Iar Bârladul e un oraș mic — toată lumea va ști că firma ta susține sportul local.</div>
+        </div>
+        <div class="sl-faq-item">
+          <button class="sl-faq-q" onclick="slToggleFaq(this)">Cum știu că banii se duc unde spui? <span class="sl-faq-arr">▾</span></button>
+          <div class="sl-faq-a">Ești pe pagina de răspuns. Acest dashboard arată în timp real fiecare cursă, fiecare km, fiecare cheltuială planificată. Nu există alt atlet cu un nivel de transparență ca ăsta.</div>
+        </div>
+        <div class="sl-faq-item">
+          <button class="sl-faq-q" onclick="slToggleFaq(this)">Ce se întâmplă dacă nu termini o cursă? <span class="sl-faq-arr">▾</span></button>
+          <div class="sl-faq-a">La Bucovina 2025 am ajuns la km 130 din 161 când furtuna a oprit cursa. Am continuat sezonul. Sponsorizarea nu e pe rezultate — e pe prezență, determinare și reprezentare. Acele lucruri nu se opresc la km 130.</div>
+        </div>
+        <div class="sl-faq-item">
+          <button class="sl-faq-q" onclick="slToggleFaq(this)">Suma minimă de sponsorizare? <span class="sl-faq-arr">▾</span></button>
+          <div class="sl-faq-a">Nu există minim. O contribuție de 200 RON e la fel de apreciată ca una de 2.000 RON — și va fi tratată cu același respect. Folosește simulatorul de mai sus să vezi ce primești în schimb.</div>
         </div>
       </div>
     </div>
@@ -4389,6 +4471,27 @@ function populateSponsorLanding() {
     setSL('sl-next-race-date', d.toLocaleDateString('ro-RO',{day:'numeric',month:'long',year:'numeric'}));
   }
 
+  // Photo — set URL here when you have one
+  const PHOTO_URL = 'https://imgur.com/a/PTqMrGM'; // <- pune URL-ul pozei tale aici (ex: imgur, cloudinary)
+  if (PHOTO_URL) {
+    const img = document.getElementById('sl-avatar-img');
+    const emoji = document.getElementById('sl-avatar-emoji');
+    if (img) { img.src = PHOTO_URL; img.style.display = 'block'; }
+    if (emoji) emoji.style.display = 'none';
+  }
+
+  // Video — set YouTube/Vimeo URL here
+  const VIDEO_URL = ''; // <- ex: 'https://youtube.com/shorts/kD_nMBhmG_Y?feature=share'
+  if (VIDEO_URL) {
+    const card = document.getElementById('sl-video-card');
+    const iframe = document.getElementById('sl-video-iframe');
+    if (card) card.style.display = 'block';
+    if (iframe) iframe.src = VIDEO_URL;
+  }
+
+  // Budget breakdown from DB
+  slRenderBudget();
+
   // Map
   slDrawMap(races);
 
@@ -4451,6 +4554,73 @@ function slStartCountdown() {
   }
   tick();
   slCountdownInterval = setInterval(tick, 1000);
+}
+
+// ── Budget breakdown ───────────────────────────────
+function slRenderBudget() {
+  const el = document.getElementById('sl-budget-breakdown');
+  const tot = document.getElementById('sl-budget-total');
+  if (!el) return;
+
+  // Pull from DB — races + equipment + supplements
+  const races = DB.races || [];
+  const eq = DB.equipment || [];
+  const supls = DB.supplements || [];
+  const nutri = DB.nutri || {};
+
+  const inscrieriTotal = races.reduce((s,r)=>s+(parseFloat(r.cost_inscriere)||0),0);
+  const cazareTotal    = races.reduce((s,r)=>s+(parseFloat(r.cost_cazare)||0),0);
+  const eqTotal        = eq.reduce((s,e)=>s+(parseFloat(e.pret)||0),0);
+  const suplTotal      = supls.reduce((s,x)=>s+((parseFloat(x.pret_lunar)||0)*12),0);
+  const gelTotal       = (() => {
+    const pricePerGel = parseFloat(nutri.gel_price)||5;
+    const gelsCursa   = races.reduce((s,r)=>s+(parseFloat(r.geluri_cursa)||0),0);
+    return Math.round(gelsCursa * pricePerGel);
+  })();
+  const transportTotal = races.reduce((s,r)=>s+(parseFloat(r.cost_transport)||0),0);
+
+  const items = [
+    { icon:'🏁', label:'Taxe de înscriere',    val: inscrieriTotal || 4200 },
+    { icon:'🏨', label:'Cazare curse',          val: cazareTotal    || 2800 },
+    { icon:'🚗', label:'Transport',             val: transportTotal || 1500 },
+    { icon:'👟', label:'Echipament',            val: eqTotal        || 3200 },
+    { icon:'🧃', label:'Nutriție (geluri)',      val: gelTotal       || 800  },
+    { icon:'💊', label:'Suplimente anuale',      val: suplTotal      || 900  },
+  ];
+
+  const total = items.reduce((s,i)=>s+i.val, 0);
+  const maxVal = Math.max(...items.map(i=>i.val));
+
+  el.innerHTML = items.map(item => `
+    <div class="sl-budget-row">
+      <div class="sl-budget-label">${item.icon} ${item.label}</div>
+      <div class="sl-budget-bar-wrap">
+        <div class="sl-budget-bar-fill" style="width:0%" data-pct="${Math.round(item.val/maxVal*100)}"></div>
+      </div>
+      <div class="sl-budget-amount">${item.val.toLocaleString()} RON</div>
+    </div>`).join('');
+
+  if (tot) {
+    tot.innerHTML = `
+      <span class="sl-budget-total-lbl">Total sezon 2026</span>
+      <span class="sl-budget-total-val">${total.toLocaleString()} RON</span>`;
+  }
+
+  // Animate bars after render
+  setTimeout(() => {
+    el.querySelectorAll('.sl-budget-bar-fill').forEach(bar => {
+      bar.style.width = bar.dataset.pct + '%';
+    });
+  }, 300);
+}
+
+// ── FAQ toggle ──────────────────────────────────────
+function slToggleFaq(btn) {
+  const item = btn.closest('.sl-faq-item');
+  if (!item) return;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.sl-faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
 }
 
 // ── Draw Romania race map ───────────────────────────
@@ -4634,7 +4804,7 @@ function slEnterDash() {
 }
 
 function slContact() {
-  window.location.href = 'mailto:evoluttionofall@gmail.com?subject=Sponsorizare Trail 2026&body=Buna ziua, sunt interesat de un parteneriat pentru sezonul 2026.';
+  window.location.href = 'mailto:ultrahax.run@gmail.com?subject=Sponsorizare Trail 2026&body=Buna ziua, sunt interesat de un parteneriat pentru sezonul 2026.';
 }
 
 function checkSponsorParam() {
