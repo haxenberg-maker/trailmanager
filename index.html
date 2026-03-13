@@ -97,6 +97,15 @@ document.currentScript.parentNode.appendChild(link);
 .sl-map-wrap { position:relative;background:var(--s2);border-radius:8px;overflow:hidden;margin-bottom:10px; }
 .sl-map-tooltip { position:absolute;background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--text);pointer-events:none;max-width:160px;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,.3); }
 .sl-map-legend { display:flex;flex-wrap:wrap;gap:6px;margin-top:6px; }
+
+.sl-counter-box { background:var(--s2);border-radius:10px;padding:16px 12px;text-align:center;border:1px solid var(--border); }
+.sl-counter-val { font-family:'Bebas Neue',var(--display);font-size:32px;color:var(--accent);line-height:1;letter-spacing:1px; }
+
+.sl-pkg-card { background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;opacity:.7; }
+.sl-pkg-card.sl-pkg-active { opacity:1;border-color:var(--accent-border);background:var(--s3); }
+.sl-pkg-card:hover { transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.15); }
+.sl-pkg-card.sl-pkg-active:hover { border-color:var(--accent); }
+.sl-counter-lbl { font-size:11px;color:var(--t3);margin-top:4px;line-height:1.3; }
 .sl-map-legend-item { display:flex;align-items:center;gap:4px;font-size:10px;color:var(--t3); }
 
 /* Timeline */
@@ -877,6 +886,28 @@ body.readonly label.btn { display:none !important }
     <div class="sl-card sl-quote-card">
       <div class="sl-quote-text">"Nu alerg să câștig. Alerg ca să demonstrez că din Bârlad se poate."</div>
       <div class="sl-quote-author">— Balan Gabriel</div>
+
+    <!-- ── CIFRE 2025 ── -->
+    <div class="sl-card" id="sl-stats-card">
+      <div class="sl-card-title">📊 Cifre 2025 — ce înseamnă asta în practică</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:4px" id="sl-counters-grid">
+        <div class="sl-counter-box">
+          <div class="sl-counter-val" data-target="3000" data-suffix="km" id="ctr-km">0</div>
+          <div class="sl-counter-lbl">km alergați în 2025</div>
+        </div>
+        <div class="sl-counter-box">
+          <div class="sl-counter-val" data-target="600" data-suffix="km" id="ctr-challenge">0</div>
+          <div class="sl-counter-lbl">km în challenge dec.</div>
+        </div>
+        <div class="sl-counter-box">
+          <div class="sl-counter-val" data-target="120" data-suffix="zile" id="ctr-zile">0</div>
+          <div class="sl-counter-lbl">zile consecutive alergat</div>
+        </div>
+        <div class="sl-counter-box">
+          <div class="sl-counter-val" data-target="10" data-suffix="curse" id="ctr-curse">0</div>
+          <div class="sl-counter-lbl">curse planificate 2026</div>
+        </div>
+      </div>
     </div>
 
     <!-- ── VIDEO ── -->
@@ -3117,21 +3148,41 @@ function renderSponsori() {
 // ══════════════════════════════════════════════════════
 function renderEchip() {
   document.getElementById('eq-list').innerHTML = DB.equipment.map(x=>{
-    const pct = x.km_max>0 ? Math.min(100,Math.round((x.km_actuali||0)/x.km_max*100)) : 0;
-    const warn = pct>=80;
+    const km = parseFloat(x.km_actuali)||0;
+    const kmMax = parseFloat(x.km_max)||0;
+    const pct = kmMax>0 ? Math.min(100,Math.round(km/kmMax*100)) : 0;
+    const isShoe = (x.categorie||'').toLowerCase().includes('panto');
+
+    // Traffic light pentru pantofi
+    let tl = null;
+    if (isShoe && kmMax > 0) {
+      if (km < 400)       tl = { color:'#22c55e', label:'Stare optimă',          icon:'🟢', msg:'' };
+      else if (km < 600)  tl = { color:'#f59e0b', label:'Antrenamente ușoare',   icon:'🟡', msg:'Recomandat doar pentru antrenamente ușoare, nu concurs' };
+      else                tl = { color:'#ef4444', label:'Înlocuiește urgent',     icon:'🔴', msg:'Amortizare compromisă — risc fasciită plantară!' };
+    } else if (kmMax > 0) {
+      if (pct>=90)        tl = { color:'var(--red)',    label:'Limită atinsă',      icon:'🔴', msg:'' };
+      else if (pct>=70)   tl = { color:'var(--orange)', label:'Aproape de limită',  icon:'🟡', msg:'' };
+    }
+
     const assignedRaces = (x.race_ids||[]).map(rid=>DB.races.find(r=>r.id===rid)).filter(Boolean);
+    const barColor = isShoe ? (km<400?'#22c55e':km<600?'#f59e0b':'#ef4444') : (pct>=80?'var(--orange)':'var(--accent)');
+    const cardBorder = tl ? (tl.color==='#ef4444'?'border-color:rgba(239,68,68,.4)':tl.color==='#f59e0b'?'border-color:rgba(245,158,11,.3)':'') : '';
+
     return `
-    <div class="bk-card" style="padding:16px;margin-bottom:10px${warn?';border-color:rgba(255,124,59,.3)':''}">
+    <div class="bk-card" style="padding:16px;margin-bottom:10px;${cardBorder}">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap">
         <div style="flex:1;min-width:160px">
-          <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">${x.categorie||'—'}</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+            <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">${x.categorie||'—'}</div>
+            ${tl ? `<span style="font-size:11px;font-weight:600;color:${tl.color}">${tl.icon} ${tl.label}</span>` : ''}
+          </div>
           <div style="font-family:var(--display);font-size:18px;letter-spacing:1px;color:var(--text);margin-bottom:6px">${x.denumire}</div>
+          ${tl&&tl.msg ? `<div style="font-size:11px;color:${tl.color};margin-bottom:8px;padding:6px 10px;background:${tl.color}22;border-radius:6px;border-left:3px solid ${tl.color}">${tl.msg}</div>` : ''}
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
             <span class="badge">💰 ${fmt(x.pret)} RON</span>
-            <span class="badge">🏃 ${x.km_actuali||0} / ${x.km_max||0} km</span>
-            ${warn?`<span class="badge" style="color:var(--orange);border-color:rgba(255,124,59,.3)">⚠️ Aproape de limită</span>`:''}
+            <span class="badge" style="${isShoe&&km>=600?'color:#ef4444':isShoe&&km>=400?'color:#f59e0b':''}">🏃 ${km} / ${kmMax||'∞'} km</span>
           </div>
-          <div class="pbar"><div class="pfill" style="width:${pct}%;${warn?'background:var(--orange)':''}"></div></div>
+          ${kmMax>0?`<div class="pbar"><div class="pfill" style="width:${pct}%;background:${barColor};transition:width 1s ease"></div></div><div style="font-size:10px;color:var(--t3);margin-top:3px;text-align:right">${pct}%</div>`:''}
           ${x.note?`<div style="margin-top:6px;font-size:11px;color:var(--t3)">${x.note}</div>`:''}
           ${assignedRaces.length?`<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px">${assignedRaces.map(r=>`<span class="badge" style="color:var(--accent);border-color:var(--accent-border)">🏁 ${r.denumire}</span>`).join('')}</div>`:''}
           ${x.link_dovada?`<div style="margin-top:8px"><button class="btn btn-ghost btn-sm" onclick="openPreview('${(x.link_dovada||'').replace(/'/g,"\'")}','Dovadă — ${(x.denumire||'').replace(/'/g,"\'")}')">📄 Dovadă achiziție</button></div>`:''}
@@ -3144,6 +3195,7 @@ function renderEchip() {
     </div>`;
   }).join('') || '<p style="color:var(--t3)">Niciun echipament înregistrat.</p>';
 }
+
 
 // ══════════════════════════════════════════════════════
 //  NUTRITIE & TRANSPORT
@@ -4324,23 +4376,23 @@ function drawHeatmap(containerId, activities, year) {
 function drawBarChart(containerId, labels, values, color, tipFn, targetValue) {
   const el=document.getElementById(containerId);
   if(!el) return;
-  const w=el.offsetWidth||360, h=el.offsetHeight||160;
+  const w=el.offsetWidth||360, h=el.offsetHeight||180;
   const max=Math.max(...values,targetValue||0,1);
-  const bw=Math.floor((w-40)/labels.length)-2;
-  const ch=h-30;
+  const bw=Math.floor((w-44)/labels.length)-3;
+  const ch=h-36;
   let svg=`<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:100%">`;
   if(targetValue){
     const ty=ch-Math.round(targetValue/max*ch)+5;
     svg+=`<line x1="36" y1="${ty}" x2="${w-4}" y2="${ty}" stroke="var(--red)" stroke-width="1" stroke-dasharray="4,3" opacity=".6"/>`;
-    svg+=`<text x="${w-6}" y="${ty-3}" style="font-size:8px;fill:var(--red);text-anchor:end">target</text>`;
+    svg+=`<text x="${w-6}" y="${ty-4}" style="font-size:10px;fill:var(--red);text-anchor:end">target</text>`;
   }
   values.forEach((v,i)=>{
     const bh=Math.max(2,Math.round(v/max*ch));
-    const x=36+i*(bw+2), y=ch-bh+5;
-    svg+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="2" fill="${color}" opacity=".8">`;
+    const x=36+i*(bw+3), y=ch-bh+5;
+    svg+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="2" fill="${color}" opacity=".85">`;
     svg+=`<title>${labels[i]}: ${tipFn?tipFn(v):v}</title></rect>`;
-    if(v>0) svg+=`<text x="${x+bw/2}" y="${y-2}" style="font-size:7px;fill:var(--t3);text-anchor:middle">${v>999?Math.round(v/100)/10+'k':v}</text>`;
-    svg+=`<text x="${x+bw/2}" y="${ch+18}" style="font-size:8px;fill:var(--t3);text-anchor:middle">${labels[i]}</text>`;
+    if(v>0) svg+=`<text x="${x+bw/2}" y="${y-3}" style="font-size:9px;fill:var(--t2);text-anchor:middle;font-weight:600">${v>999?Math.round(v/100)/10+'k':v}</text>`;
+    svg+=`<text x="${x+bw/2}" y="${ch+22}" style="font-size:10px;fill:var(--t2);text-anchor:middle">${labels[i]}</text>`;
   });
   svg+='</svg>';
   el.innerHTML=svg;
@@ -4366,7 +4418,7 @@ function drawLineChart(containerId, points) {
     const v=Math.round(maxY*f);
     const y=toY(v);
     svg+=`<line x1="${pad.l}" y1="${y}" x2="${w-pad.r}" y2="${y}" stroke="var(--border)" stroke-width="1"/>`;
-    svg+=`<text x="${pad.l-4}" y="${y+3}" style="font-size:8px;fill:var(--t3);text-anchor:end">${v>999?Math.round(v/100)/10+'k':v}</text>`;
+    svg+=`<text x="${pad.l-4}" y="${y+4}" style="font-size:10px;fill:var(--t2);text-anchor:end">${v>999?Math.round(v/100)/10+'k':v}</text>`;
   });
   svg+='</svg>';
   el.innerHTML=svg;
@@ -4411,10 +4463,10 @@ function drawPieChart(containerId, segments, total) {
     const mid=angle+a/2;
     const lx=cx+(r+8)*Math.cos(mid),ly=cy+(r+8)*Math.sin(mid);
     svg+=`<path d="M${xi1},${yi1} L${x1},${y1} A${r},${r} 0 ${lg},1 ${x2},${y2} L${xi2},${yi2} A${ir},${ir} 0 ${lg},0 ${xi1},${yi1}" fill="${color}" opacity=".85"/>`;
-    if(val/sum>0.08) svg+=`<text x="${lx}" y="${ly}" style="font-size:7px;fill:var(--text);text-anchor:middle">${label}</text>`;
+    if(val/sum>0.08) svg+=`<text x="${lx}" y="${ly}" style="font-size:10px;fill:var(--text);text-anchor:middle;font-weight:600">${label}</text>`;
     angle+=a;
   });
-  svg+=`<text x="${cx}" y="${cy+4}" style="font-size:9px;fill:var(--text);text-anchor:middle">${fmt(total)} km</text>`;
+  svg+=`<text x="${cx}" y="${cy+4}" style="font-size:11px;fill:var(--text);text-anchor:middle;font-weight:700">${fmt(total)} km</text>`;
   svg+='</svg>';
   el.innerHTML=svg;
 }
@@ -4606,14 +4658,17 @@ let SETTINGS = { ...DEFAULT_SETTINGS };
 function loadSettings() {
   try {
     let raw = DB.prefs?.landing_settings;
-    if (!raw) { SETTINGS = { ...DEFAULT_SETTINGS }; return; }
-    // Handle double-encoded string (stored as JSON string instead of jsonb object)
+    if (!raw) { SETTINGS = JSON.parse(JSON.stringify(DEFAULT_SETTINGS)); return; }
     if (typeof raw === 'string') raw = JSON.parse(raw);
-    if (typeof raw === 'string') raw = JSON.parse(raw); // second parse if double-encoded
-    SETTINGS = { ...DEFAULT_SETTINGS, ...raw };
+    if (typeof raw === 'string') raw = JSON.parse(raw);
+    // Deep merge: keep DEFAULT arrays if DB has empty array
+    const merged = { ...DEFAULT_SETTINGS, ...raw };
+    if (!merged.faq     || !merged.faq.length)      merged.faq      = JSON.parse(JSON.stringify(DEFAULT_SETTINGS.faq));
+    if (!merged.packages|| !merged.packages.length)  merged.packages = JSON.parse(JSON.stringify(DEFAULT_SETTINGS.packages));
+    SETTINGS = merged;
   } catch(e) {
     console.warn('loadSettings error:', e);
-    SETTINGS = { ...DEFAULT_SETTINGS };
+    SETTINGS = JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
   }
 }
 
@@ -4680,6 +4735,7 @@ function renderSetari() {
 function renderSetPackages() {
   const el = document.getElementById('set-packages-list');
   if (!el) return;
+  if (!SETTINGS.packages || !SETTINGS.packages.length) { loadSettings(); }
   el.innerHTML = (SETTINGS.packages || []).map((p, i) => `
     <div class="set-pkg-row" style="background:var(--s2);border-radius:8px;padding:10px;margin-bottom:8px">
       <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px">
@@ -4709,6 +4765,7 @@ function setAddPackage() {
 function renderSetFaq() {
   const el = document.getElementById('set-faq-list');
   if (!el) return;
+  if (!SETTINGS.faq || !SETTINGS.faq.length) { loadSettings(); }
   el.innerHTML = (SETTINGS.faq || []).map((f, i) => `
     <div style="background:var(--s2);border-radius:8px;padding:10px;margin-bottom:8px">
       <div style="display:flex;gap:6px;align-items:flex-start;margin-bottom:6px">
@@ -5019,6 +5076,31 @@ async function populateSponsorLanding() {
     spCard.style.display = 'block';
     spStrip.innerHTML = sps.map(s=>`<div class="sl-sp-pill">${s.denumire}</div>`).join('');
   }
+
+  // Animate counters when they enter viewport
+  const counters = document.querySelectorAll('.sl-counter-val[data-target]');
+  if (counters.length) {
+    const animateCounter = (el) => {
+      const target = parseInt(el.dataset.target)||0;
+      const suffix = ' ' + (el.dataset.suffix||'');
+      const step = 16, steps = 1800/step;
+      let cur = 0, inc = target/steps;
+      const t = setInterval(()=>{
+        cur = Math.min(cur+inc, target);
+        el.textContent = Math.round(cur).toLocaleString('ro') + suffix;
+        if(cur>=target) clearInterval(t);
+      }, step);
+    };
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting && !e.target.dataset.animated){
+          e.target.dataset.animated='1';
+          animateCounter(e.target);
+        }
+      });
+    }, {threshold:0.3});
+    counters.forEach(c=>obs.observe(c));
+  }
 }
 
 // ── Animate km counter ──────────────────────────────
@@ -5069,56 +5151,51 @@ function slRenderBudget() {
   const tot = document.getElementById('sl-budget-total');
   if (!el) return;
 
-  // Pull from DB — races + equipment + supplements
   const races = DB.races || [];
-  const eq = DB.equipment || [];
+  const eq    = DB.equipment || [];
   const supls = DB.supplements || [];
   const nutri = DB.nutri || {};
+  const gpp   = (parseFloat(nutri.gel_pret_set24)||120) / 24;
 
-  const inscrieriTotal = races.reduce((s,r)=>s+(parseFloat(r.cost_inscriere)||0),0);
-  const cazareTotal    = races.reduce((s,r)=>s+(parseFloat(r.cost_cazare)||0),0);
+  const inscrieriTotal = races.reduce((s,r)=>s+(parseFloat(r.plata_concurs)||0),0);
+  const cazareTotal    = races.reduce((s,r)=>s+(parseFloat(r.cazare)||0),0);
+  const gelCursaTotal  = races.reduce((s,r)=>s+Math.round((r.geluri||0)*gpp),0);
+  const gelTrainTotal  = Math.round((nutri.gel_training_lunar||0)*gpp*12);
   const eqTotal        = eq.reduce((s,e)=>s+(parseFloat(e.pret)||0),0);
   const suplTotal      = supls.reduce((s,x)=>s+((parseFloat(x.pret_lunar)||0)*12),0);
-  const gelTotal       = (() => {
-    const pricePerGel = parseFloat(nutri.gel_price)||5;
-    const gelsCursa   = races.reduce((s,r)=>s+(parseFloat(r.geluri_cursa)||0),0);
-    return Math.round(gelsCursa * pricePerGel);
-  })();
-  const transportTotal = races.reduce((s,r)=>s+(parseFloat(r.cost_transport)||0),0);
+  const transportTotal = DB.transport.reduce((s,x)=>s+(parseFloat(x.pret)||0),0);
 
   const items = [
     { icon:'🏁', label:'Taxe de înscriere',    val: inscrieriTotal || 4200 },
     { icon:'🏨', label:'Cazare curse',          val: cazareTotal    || 2800 },
     { icon:'🚗', label:'Transport',             val: transportTotal || 1500 },
+    { icon:'🍯', label:'Geluri curse',          val: gelCursaTotal  || 800  },
+    { icon:'🍯', label:'Geluri antrenament',    val: gelTrainTotal  || 600  },
+    { icon:'💊', label:'Suplimente anuale',     val: suplTotal      || 1800 },
     { icon:'👟', label:'Echipament',            val: eqTotal        || 3200 },
-    { icon:'🧃', label:'Nutriție (geluri)',      val: gelTotal       || 800  },
-    { icon:'💊', label:'Suplimente anuale',      val: suplTotal      || 900  },
   ];
 
-  const total = items.reduce((s,i)=>s+i.val, 0);
-  const maxVal = Math.max(...items.map(i=>i.val));
+  const total = items.reduce((s,x)=>s+x.val, 0);
+  const maxVal = Math.max(...items.map(x=>x.val), 1);
 
-  el.innerHTML = items.map(item => `
-    <div class="sl-budget-row">
-      <div class="sl-budget-label">${item.icon} ${item.label}</div>
-      <div class="sl-budget-bar-wrap">
-        <div class="sl-budget-bar-fill" style="width:0%" data-pct="${Math.round(item.val/maxVal*100)}"></div>
+  el.innerHTML = items.map(item => {
+    const pct = Math.round(item.val / maxVal * 100);
+    const pctOfTotal = Math.round(item.val / total * 100);
+    return `<div class="sl-budget-item">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:13px;color:var(--t2)">${item.icon} ${item.label}</span>
+        <span style="font-family:var(--display);font-size:15px;color:var(--accent)">${item.val.toLocaleString()} <span style="font-size:11px;color:var(--t3)">RON</span></span>
       </div>
-      <div class="sl-budget-amount">${item.val.toLocaleString()} RON</div>
-    </div>`).join('');
+      <div style="background:var(--s3);border-radius:4px;height:6px;overflow:hidden">
+        <div class="sl-budget-bar" style="width:${pct}%;height:100%;background:var(--accent);border-radius:4px;opacity:.8;transition:width 1s ease"></div>
+      </div>
+      <div style="font-size:10px;color:var(--t3);margin-top:2px;text-align:right">${pctOfTotal}% din total</div>
+    </div>`;
+  }).join('');
 
-  if (tot) {
-    tot.innerHTML = `
-      <span class="sl-budget-total-lbl">Total sezon 2026</span>
-      <span class="sl-budget-total-val">${total.toLocaleString()} RON</span>`;
-  }
-
-  // Animate bars after render
-  setTimeout(() => {
-    el.querySelectorAll('.sl-budget-bar-fill').forEach(bar => {
-      bar.style.width = bar.dataset.pct + '%';
-    });
-  }, 300);
+  if (tot) tot.innerHTML = `
+    <span class="sl-budget-total-lbl">Total sezon 2026</span>
+    <span class="sl-budget-total-val">${total.toLocaleString()} RON</span>`;
 }
 
 // ── FAQ toggle ──────────────────────────────────────
@@ -5232,98 +5309,64 @@ function slDrawMap(races) {
 
 // ── ROI Simulator ───────────────────────────────────
 function slUpdateROI(amount) {
-  const el = document.getElementById('sl-roi-amount');
-  if (el) el.textContent = amount.toLocaleString() + ' RON';
+  const amountEl = document.getElementById('sl-roi-amount');
+  if (amountEl) amountEl.textContent = Number(amount).toLocaleString('ro') + ' RON';
 
-  const tiers = (LC.packages && LC.packages.length) ? LC.packages : [
-    { min:0,    icon:'🏙️', title:'Reprezinți Bârladul',    desc:'Numele tău la 10 curse naționale — Bârladul pe harta trail-ului' },
-    { min:0,    icon:'👕', title:'Logo pe echipament',     desc:'La start și finish la toate cele 10 curse ale sezonului' },
-    { min:300,  icon:'📊', title:'Dashboard live',         desc:'Link la acest tracker — arată clienților tăi că investești în sport local' },
-    { min:600,  icon:'📸', title:'Fotografie dedicată',    desc:'Foto la finish line cu echipament cu logo-ul tău vizibil, trimisă după fiecare cursă' },
-    { min:1000, icon:'🔗', title:'Mențiune publică',       desc:'Menționat pe orice platformă pe care o voi folosi vreodată — cu link' },
-    { min:2000, icon:'🏆', title:'Sponsor principal Bârlad', desc:'Singurul sponsor principal — primul menționat, cel mai vizibil, adevărat parteneriat' },
-    { min:3500, icon:'🌱', title:'Ambasador sport în Bârlad', desc:'Organizăm împreună un eveniment/alergare locală la Bârlad cu brandul tău în față' },
+  const tiers = (SETTINGS.packages && SETTINGS.packages.length) ? SETTINGS.packages : [
+    { min:0,    icon:'🏙️', title:'Reprezinți Bârladul',   desc:'Numele tău la 10 curse naționale' },
+    { min:0,    icon:'👕', title:'Logo pe echipament',    desc:'La start și finish la toate cele 10 curse' },
+    { min:300,  icon:'📊', title:'Dashboard live',        desc:'Link la tracker — investiție vizibilă în sport local' },
+    { min:600,  icon:'📸', title:'Fotografie dedicată',   desc:'Foto la finish line cu logo vizibil, după fiecare cursă' },
+    { min:1000, icon:'🔗', title:'Mențiune publică',      desc:'Menționat pe orice platformă, cu link' },
+    { min:2000, icon:'🏆', title:'Sponsor principal',     desc:'Primul menționat, cel mai vizibil' },
+    { min:3500, icon:'🌱', title:'Ambasador sport Bârlad',desc:'Eveniment/alergare locală cu brandul tău' },
   ];
 
-  const active = tiers.filter(t => amount >= t.min);
-  const grid = document.getElementById('sl-roi-benefits');
-  if (grid) {
-    grid.innerHTML = active.map(t => `
-      <div class="sl-roi-item active">
-        <div class="sl-roi-item-icon">${t.icon}</div>
-        <div class="sl-roi-item-title">${t.title}</div>
-        <div class="sl-roi-item-desc">${t.desc}</div>
-      </div>`).join('');
-  }
+  const active = tiers.filter(t => Number(amount) >= t.min);
+  const next   = tiers.find(t => Number(amount) < t.min);
 
-  const summary = document.getElementById('sl-roi-summary');
-  if (summary) {
-    const next = tiers.find(t => amount < t.min);
-    summary.innerHTML = next
-      ? `✅ <strong>${active.length} beneficii</strong> incluse · Adaugă ${(next.min-amount).toLocaleString()} RON pentru a debloca <strong>${next.icon} ${next.title}</strong>`
-      : `🏆 <strong>Pachet complet — toate ${active.length} beneficiile incluse!</strong>`;
-  }
-}
+  const el = document.getElementById('sl-roi-benefits');
+  if (!el) return;
 
-function slEnterDash() {
-  if (slCountdownInterval) { clearInterval(slCountdownInterval); slCountdownInterval=null; }
-  const el = document.getElementById('sponsor-landing');
-  if (el) {
-    el.classList.remove('visible');
-    setTimeout(()=>{ el.classList.remove('on'); }, 450);
-  }
-}
+  el.innerHTML = tiers.map((t, i) => {
+    const unlocked = Number(amount) >= t.min;
+    return `<div class="sl-pkg-card ${unlocked?'sl-pkg-active':''}" onclick="slSelectPackage(${i})" style="cursor:pointer;transition:all .25s">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:22px;opacity:${unlocked?1:.35}">${t.icon}</span>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600;color:${unlocked?'var(--text)':'var(--t3)'}">${t.title}</div>
+          <div style="font-size:11px;color:${unlocked?'var(--t2)':'var(--t4)'};margin-top:2px">${t.desc}</div>
+        </div>
+        ${unlocked
+          ? `<span style="font-size:18px">✅</span>`
+          : `<span style="font-size:11px;color:var(--t3);white-space:nowrap">de la ${t.min.toLocaleString()} RON</span>`}
+      </div>
+    </div>`;
+  }).join('');
 
-function slContact() {
-  const email = SETTINGS.contact_email || 'evoluttionofall@gmail.com';
-  window.location.href = 'mailto:' + email + '?subject=Sponsorizare Trail 2026&body=Buna ziua, sunt interesat de un parteneriat pentru sezonul 2026.';
-}
-
-function checkSponsorParam() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('sponsor') === '1') {
-    initSponsorLanding();
+  const summaryEl = document.getElementById('sl-roi-summary');
+  if (summaryEl) {
+    if (active.length) {
+      summaryEl.innerHTML = `<div style="background:var(--s2);border-radius:10px;padding:14px;margin-top:8px;border:1px solid var(--accent-border)">
+        <div style="font-size:11px;color:var(--t3);margin-bottom:6px">Cu ${Number(amount).toLocaleString('ro')} RON obții ${active.length} beneficii:</div>
+        <div style="font-size:13px;color:var(--accent);font-weight:600">${active.map(t=>t.icon+' '+t.title).join(' · ')}</div>
+        ${next ? `<div style="font-size:11px;color:var(--t3);margin-top:6px">Adaugă ${(next.min-amount).toLocaleString('ro')} RON pentru: <strong style="color:var(--text)">${next.icon} ${next.title}</strong></div>` : '<div style="font-size:11px;color:var(--green);margin-top:6px">🏆 Pachet maxim deblocat!</div>'}
+      </div>`;
+    } else {
+      summaryEl.innerHTML = '';
+    }
   }
 }
 
-
-// ══════════════════════════════════════════════════════
-//  SETTINGS PAGE — LANDING CONFIG
-// ══════════════════════════════════════════════════════
-
-// In-memory config — loaded from user_prefs.landing_settings JSON
-let LC = {}; // landing config
-
-const LC_DEFAULTS = {
-  photo_url:      'https://i.imgur.com/7VqAGjI.jpeg',
-  video_url:      'https://www.youtube.com/embed/kD_nMBhmG_Y',
-  quote:          'Nu alerg să câștig. Alerg ca să demonstrez că din Bârlad se poate.',
-  hero_sub:       'Ultra-trail runner din Bârlad. Sezonul 2026 — 10 curse, 517km de munte, un singur obiectiv.',
-  story:          'Totul a început în mai 2024. De la primele km pe străzile Bârladului, la primul trail, la km 130 din Bucovina prin furtună. La km 130 cursa s-a oprit. Eu nu m-am oprit.',
-  contact_email:  'evoluttionofall@gmail.com',
-  landing_active: true,
-  show_map:       true,
-  show_video:     true,
-  show_budget:    true,
-  show_faq:       true,
-  show_timeline:  true,
-  faq: [
-    { q: 'De ce să sponsorizez un alergător necunoscut?', a: 'Tocmai asta e oportunitatea. Când voi deveni cunoscut, sponsorii vor fi mulți și costul va fi mare. Acum ești primul — parteneriat real, nu reclamă.' },
-    { q: 'Ce vizibilitate am dacă nu ai mulți urmăritori?', a: 'Vizibilitatea principală e fizică — logo pe echipament la curse cu sute de participanți. Dashboard-ul live e un instrument de credibilitate. Iar Bârladul e mic — toată lumea va ști că firma ta susține sportul local.' },
-    { q: 'Cum știu că banii se duc unde spui?', a: 'Ești pe pagina de răspuns. Acest dashboard arată în timp real fiecare cursă, fiecare km, fiecare cheltuială planificată.' },
-    { q: 'Ce se întâmplă dacă nu termini o cursă?', a: 'La Bucovina 2025 am ajuns la km 130 când furtuna a oprit cursa. Am continuat sezonul. Sponsorizarea nu e pe rezultate — e pe prezență și determinare.' },
-    { q: 'Suma minimă de sponsorizare?', a: 'Nu există minim. O contribuție de 200 RON e la fel de apreciată ca una de 2.000 RON. Folosește simulatorul să vezi ce primești în schimb.' },
-  ],
-  packages: [
-    { min: 0,    icon: '🏙️', title: 'Reprezinți Bârladul',      desc: 'Numele tău la 10 curse naționale — Bârladul pe harta trail-ului' },
-    { min: 0,    icon: '👕', title: 'Logo pe echipament',        desc: 'La start și finish la toate cele 10 curse ale sezonului' },
-    { min: 300,  icon: '📊', title: 'Dashboard live',            desc: 'Link la acest tracker — arată clienților că investești în sport local' },
-    { min: 600,  icon: '📸', title: 'Fotografie dedicată',       desc: 'Foto la finish line cu logo-ul tău vizibil, trimisă după fiecare cursă' },
-    { min: 1000, icon: '🔗', title: 'Mențiune publică',          desc: 'Menționat pe orice platformă — cu link activ' },
-    { min: 2000, icon: '🏆', title: 'Sponsor principal Bârlad', desc: 'Primul menționat, cel mai vizibil — adevărat parteneriat' },
-    { min: 3500, icon: '🌱', title: 'Eveniment local Bârlad',    desc: 'Organizăm împreună o alergare locală cu brandul tău în față' },
-  ],
-};
+function slSelectPackage(i) {
+  const tiers = (SETTINGS.packages && SETTINGS.packages.length) ? SETTINGS.packages : [];
+  if (!tiers[i]) return;
+  const slider = document.getElementById('sl-roi-slider');
+  if (slider && tiers[i].min > 0) {
+    slider.value = tiers[i].min;
+    slUpdateROI(tiers[i].min);
+  }
+}
 
 // ── Load config from DB ─────────────────────────────
 async function loadLandingConfig() {
@@ -5339,71 +5382,7 @@ async function loadLandingConfig() {
 // (duplicate renderSetari removed)
 
 // ── FAQ editor ──────────────────────────────────────
-function renderSetFaq() {
-  const el = document.getElementById('set-faq-list');
-  if (!el) return;
-  const faqs = LC.faq || [];
-  el.innerHTML = faqs.map((f, i) => `
-    <div class="set-list-item" id="set-faq-${i}">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-        <span style="font-size:11px;color:var(--t3);flex:1">Întrebare ${i+1}</span>
-        <button class="btn btn-ghost btn-sm btn-icon" onclick="setDelFaq(${i})" style="color:var(--red)">🗑</button>
-      </div>
-      <input type="text" value="${escHtml(f.q)}" oninput="LC.faq[${i}].q=this.value"
-        style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px;margin-bottom:6px">
-      <textarea rows="2" oninput="LC.faq[${i}].a=this.value"
-        style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px;resize:vertical"
-        >${escHtml(f.a)}</textarea>
-    </div>`).join('') || '<div style="font-size:12px;color:var(--t3);padding:8px 0">Niciun FAQ. Apasă + pentru a adăuga.</div>';
-}
-
-function setAddFaq() {
-  if (!LC.faq) LC.faq = [];
-  LC.faq.push({ q: '', a: '' });
-  renderSetFaq();
-}
-
-function setDelFaq(i) {
-  LC.faq.splice(i, 1);
-  renderSetFaq();
-}
-
-// ── Pachete editor ──────────────────────────────────
-function renderSetPackages() {
-  const el = document.getElementById('set-packages-list');
-  if (!el) return;
-  const pkgs = LC.packages || [];
-  el.innerHTML = pkgs.map((p, i) => `
-    <div class="set-list-item" style="margin-bottom:10px;background:var(--s2);border-radius:8px;padding:12px;border:1px solid var(--border)">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <input type="text" value="${escHtml(p.icon||'')}" oninput="LC.packages[${i}].icon=this.value"
-          style="width:42px;text-align:center;background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:6px;font-size:16px;color:var(--text)">
-        <input type="text" value="${escHtml(p.title||'')}" placeholder="Titlu nivel" oninput="LC.packages[${i}].title=this.value"
-          style="flex:1;background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;font-weight:600;color:var(--text)">
-        <button class="btn btn-ghost btn-sm btn-icon" onclick="setDelPackage(${i})" style="color:var(--red)">🗑</button>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-        <lbl style="font-size:11px;color:var(--t3);white-space:nowrap">De la (RON)</lbl>
-        <input type="number" value="${p.min||0}" oninput="LC.packages[${i}].min=parseInt(this.value)||0"
-          style="width:90px;background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--accent)">
-      </div>
-      <textarea rows="2" placeholder="Descriere beneficiu..." oninput="LC.packages[${i}].desc=this.value"
-        style="width:100%;background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:11px;resize:vertical"
-        >${escHtml(p.desc||'')}</textarea>
-    </div>`).join('') || '<div style="font-size:12px;color:var(--t3);padding:8px 0">Niciun pachet. Apasă + pentru a adăuga.</div>';
-}
-
-function setAddPackage() {
-  if (!LC.packages) LC.packages = [];
-  LC.packages.push({ min: 0, icon: '🎁', title: '', desc: '' });
-  renderSetPackages();
-}
-
-function setDelPackage(i) {
-  LC.packages.splice(i, 1);
-  renderSetPackages();
-}
-
+// (duplicate renderSetFaq/renderSetPackages removed)
 // ── Copy sponsor link ───────────────────────────────
 function setCopyLink() {
   const link = window.location.origin + window.location.pathname + '?sponsor=1';
