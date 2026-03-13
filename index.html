@@ -137,6 +137,10 @@ document.currentScript.parentNode.appendChild(link);
 .sl-sponsors-strip { display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px; }
 .sl-sp-pill { background:var(--s2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--t2);font-weight:600; }
 
+/* Welcome msg */
+.sl-welcome-card { background:var(--s2) !important;border:1px dashed var(--accent-border) !important; }
+.sl-welcome-text { font-size:13px;color:var(--t2);line-height:1.7;font-style:italic; }
+
 /* Quote */
 .sl-quote-card { border-left:3px solid var(--accent) !important;background:var(--accent-dim) !important; }
 .sl-quote-text { font-family:'Bebas Neue',var(--display);font-size:22px;color:var(--text);line-height:1.3;letter-spacing:.5px;margin-bottom:8px; }
@@ -864,6 +868,11 @@ body.readonly label.btn { display:none !important }
       </div>
     </div>
 
+    <!-- ── MESAJ BUN VENIT ── -->
+    <div class="sl-card sl-welcome-card" id="sl-welcome-card">
+      <div class="sl-welcome-text" id="sl-welcome-text">Bun venit! Sunt Gabriel Balan, trail runner din Bârlad. Dacă ești aici, înseamnă că poate ne putem ajuta reciproc. Citește mai jos — îți promit că merită 3 minute.</div>
+    </div>
+
     <!-- ── CITAT ── -->
     <div class="sl-card sl-quote-card">
       <div class="sl-quote-text">"Nu alerg să câștig. Alerg ca să demonstrez că din Bârlad se poate."</div>
@@ -1120,6 +1129,7 @@ body.readonly label.btn { display:none !important }
     <div class="ni" onclick="go('nutri',this);closeDrawer()"><span class="ico">🍌</span>Nutriție</div>
     <div class="nav-group">Performanță</div>
     <div class="ni" onclick="go('stats',this);closeDrawer()"><span class="ico">📈</span>Statistici</div>
+    <div class="ni owner-only" id="nav-setari-drawer" onclick="go('setari',this);closeDrawer()" style="display:none"><span class="ico">⚙️</span>Setări Landing</div>
   </div>
   <div class="drawer-kpi">
     <div class="drawer-kpi-row"><span>Total km sezon</span><strong id="d-km">—</strong></div>
@@ -1166,6 +1176,7 @@ body.readonly label.btn { display:none !important }
     <div class="ni" onclick="go('nutri',this)"><span class="ico">🍌</span>Nutriție & Transport</div>
     <div class="nav-group">Performanță</div>
     <div class="ni" onclick="go('stats',this)"><span class="ico">📈</span>Statistici Alergări</div>
+    <div class="ni owner-only" id="nav-setari-sidebar" onclick="go('setari',this)" style="display:none"><span class="ico">⚙️</span>Setări Landing</div>
   </nav>
   <div class="sidebar-bottom">
     <div class="kpi">
@@ -1580,6 +1591,148 @@ body.readonly label.btn { display:none !important }
 </div>
 
 
+<!-- ── SETĂRI PAGINA SPONSOR ── (owner only) -->
+<div class="page" id="pg-setari">
+<div class="ph">
+  <div class="ph-left"><h2>⚙️ SETĂRI LANDING</h2><p>Configurează pagina publică pentru sponsori</p></div>
+  <div class="ph-right">
+    <button class="btn btn-ghost btn-sm" onclick="previewSponsorPage()" style="color:var(--accent);border-color:var(--accent-border)">👁 Preview sponsor</button>
+  </div>
+</div>
+
+<!-- ── LINK SPONSOR ── -->
+<div class="bk-card" style="padding:16px;margin-bottom:12px">
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px">🔗 Link pentru sponsori</div>
+  <div style="background:var(--s2);border-radius:8px;padding:12px;font-size:12px;color:var(--accent);display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
+    <span style="flex:1;word-break:break-all" id="set-sponsor-link">—</span>
+    <button class="btn btn-ghost btn-sm" onclick="setCopyLink()">📋 Copiază</button>
+  </div>
+  <div style="font-size:10px;color:var(--t3);margin-top:6px">Trimite acest link sponsorilor — deschide pagina de prezentare înainte de dashboard.</div>
+</div>
+
+<!-- ── MEDIA ── -->
+<div class="bk-card" style="padding:20px;margin-bottom:12px">
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">📸 Media</div>
+  <div class="fi" style="margin-bottom:14px">
+    <lbl>URL Poză profil</lbl>
+    <div style="display:flex;gap:8px;align-items:center">
+      <input type="url" id="set-photo-url" placeholder="https://i.imgur.com/..." style="font-size:12px;flex:1">
+      <div id="set-photo-preview" style="display:none"><img id="set-photo-img" src="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)"></div>
+    </div>
+    <div style="font-size:10px;color:var(--t3);margin-top:4px">Link direct la imagine (imgur, cloudinary etc). Apare ca avatar circular în hero.</div>
+  </div>
+  <div class="fi">
+    <lbl>URL Video embed</lbl>
+    <input type="url" id="set-video-url" placeholder="https://www.youtube.com/embed/..." style="font-size:12px">
+    <div style="font-size:10px;color:var(--t3);margin-top:4px">YouTube: copiază ID-ul din link și pune-l după /embed/. Ex: youtube.com/shorts/<strong>kD_nMBhmG_Y</strong> → youtube.com/embed/<strong>kD_nMBhmG_Y</strong></div>
+  </div>
+</div>
+
+<!-- ── TEXTE ── -->
+<div class="bk-card" style="padding:20px;margin-bottom:12px">
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">💬 Texte landing</div>
+  <div class="fi" style="margin-bottom:12px">
+    <lbl>Citat personal (apare bold, mare)</lbl>
+    <input type="text" id="set-quote" style="font-size:13px">
+  </div>
+  <div class="fi" style="margin-bottom:12px">
+    <lbl>Subtitlu hero (sub nume)</lbl>
+    <input type="text" id="set-hero-sub" style="font-size:12px">
+    <div style="font-size:10px;color:var(--t3);margin-top:3px">Ex: "Ultra-trail runner din Bârlad. 10 curse, 517km."</div>
+  </div>
+  <div class="fi" style="margin-bottom:12px">
+    <lbl>Mesaj de bun-venit (primul text vizibil sub hero)</lbl>
+    <textarea id="set-welcome-msg" rows="2" style="font-size:12px;width:100%;resize:vertical;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text)"></textarea>
+    <div style="font-size:10px;color:var(--t3);margin-top:3px">Apare imediat după countdown — primul lucru pe care îl citește sponsorul.</div>
+  </div>
+  <div class="fi" style="margin-bottom:12px">
+    <lbl>Poveste scurtă (paragraful introductiv)</lbl>
+    <textarea id="set-story-short" rows="3" style="font-size:12px;width:100%;resize:vertical;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text)"></textarea>
+    <div style="font-size:10px;color:var(--t3);margin-top:3px">Apare în cardul "Povestea" de pe landing, după citat.</div>
+  </div>
+  <div class="fi">
+    <lbl>Email contact sponsor</lbl>
+    <input type="email" id="set-contact-email" style="font-size:12px">
+  </div>
+</div>
+
+<!-- ── PACHETE SPONSORIZARE ── -->
+<div class="bk-card" style="padding:20px;margin-bottom:12px">
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">💰 Pachete sponsorizare</div>
+  <div style="font-size:11px;color:var(--t3);margin-bottom:14px">Nivelele din simulatorul ROI — suma minimă + ce primești.</div>
+  <div id="set-packages-list"></div>
+  <button class="btn btn-ghost btn-sm" onclick="setAddPackage()" style="margin-top:10px;width:100%">+ Adaugă nivel</button>
+</div>
+
+<!-- ── FAQ ── -->
+<div class="bk-card" style="padding:20px;margin-bottom:12px">
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px">❓ FAQ</div>
+  <div id="set-faq-list"></div>
+  <button class="btn btn-ghost btn-sm" onclick="setAddFaq()" style="margin-top:10px;width:100%">+ Adaugă întrebare</button>
+</div>
+
+<!-- ── TOGGLES SECTIUNI ── -->
+<div class="bk-card" style="padding:20px;margin-bottom:12px">
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px">👁 Vizibilitate landing</div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <!-- Landing activ -->
+    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer;padding-bottom:12px;border-bottom:1px solid var(--border)">
+      <div>
+        <span style="font-weight:600">🌐 Landing activ (?sponsor=1)</span>
+        <div style="font-size:10px;color:var(--t3);margin-top:2px">Dezactivează dacă nu vrei ca sponsorii să vadă pagina momentan</div>
+      </div>
+      <input type="checkbox" id="set-landing-active" class="set-toggle" style="width:20px;height:20px;accent-color:var(--accent);flex-shrink:0">
+    </label>
+    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
+      <span>🗺️ Hartă curse</span>
+      <input type="checkbox" id="set-show-map" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
+    </label>
+    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
+      <span>🎥 Video</span>
+      <input type="checkbox" id="set-show-video" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
+    </label>
+    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
+      <span>💸 Unde se duc banii</span>
+      <input type="checkbox" id="set-show-budget" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
+    </label>
+    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
+      <span>❓ FAQ</span>
+      <input type="checkbox" id="set-show-faq" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
+    </label>
+    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
+      <span>⛰️ Timeline carieră</span>
+      <input type="checkbox" id="set-show-timeline" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
+    </label>
+    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
+      <span>💰 Simulator parteneriat (ROI)</span>
+      <input type="checkbox" id="set-show-roi" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
+    </label>
+    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
+      <span>🤝 Secțiunea "De ce să mă susții"</span>
+      <input type="checkbox" id="set-show-benefits" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
+    </label>
+  </div>
+</div>
+
+<!-- ── GENERAL ── -->
+<div class="bk-card" style="padding:20px;margin-bottom:12px">
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">🎯 General dashboard</div>
+  <div class="fi" style="margin-bottom:12px">
+    <lbl>Target km anual</lbl>
+    <input type="number" id="set-target-km" placeholder="5000" style="font-size:13px">
+  </div>
+  <div class="fi">
+    <lbl>Titlu dashboard</lbl>
+    <input type="text" id="set-dash-title" placeholder="SEZONUL BESTIEI" style="font-size:13px">
+  </div>
+</div>
+
+<div style="display:flex;gap:10px;margin-bottom:24px">
+  <button class="btn btn-primary" onclick="saveSettings()" style="flex:1;padding:14px;font-size:14px">💾 Salvează toate setările</button>
+  <button class="btn btn-ghost" onclick="previewSponsorPage()" style="padding:14px">👁</button>
+</div>
+</div>
+
 
 </main>
 </div>
@@ -1946,7 +2099,7 @@ async function loadAllData(useAuth = false) {
       safeFetch('activities',         (uid_filter || 'limit=1000') + '&order=date.desc'),
     ]);
 
-    DB.prefs       = prefs[0]  || { target_km: 5000, dash_title: 'SEZONUL BESTIEI', theme: 'default' };
+    DB.prefs       = prefs[0]  || { target_km: 5000, dash_title: 'SEZONUL BESTIEI', theme: 'default', landing_config: {} };
     DB.races       = races     || [];
     DB.sponsors    = sponsors  || [];
     DB.equipment   = eq        || [];
@@ -1956,10 +2109,11 @@ async function loadAllData(useAuth = false) {
     DB.activities  = acts      || [];
 
     applyTheme(DB.prefs.theme || 'default');
+    loadSettings();
     renderAll();
     // Refresh sponsor landing if open
     if (document.getElementById('sponsor-landing')?.classList.contains('on')) {
-      populateSponsorLanding();
+      await populateSponsorLanding();
     }
 
     // Show warning if tables are missing (migration not run yet)
@@ -2171,6 +2325,8 @@ function updateAuthButtons() {
   set('save-btn', ow);
   set('export-btn', ow);
   setF('theme-switcher', ow);
+  setF('nav-setari-drawer', ow, 'flex');
+  setF('nav-setari-sidebar', ow, 'flex');
   setF('m-login-btn', !li, 'flex');
   setF('m-logout-btn', li, 'flex');
   loadDashTitle();
@@ -2233,6 +2389,10 @@ async function setTheme(name) {
 //  RENDER ALL
 // ══════════════════════════════════════════════════════
 function renderAll() {
+  // Refresh settings page if visible
+  if (document.getElementById('pg-setari')?.classList.contains('on')) {
+    renderSetari();
+  }
   applyTheme(DB.prefs.theme || 'default');
   renderSidebar();
   renderDash();
@@ -4363,6 +4523,7 @@ function go(id, el) {
     const bns=document.querySelectorAll('.bn');
     if(bns[bnMap[id]]) bns[bnMap[id]].classList.add('on');
   }
+  if(id==='setari') renderSetari();
 }
 
 function goBN(id, el) {
@@ -4392,6 +4553,251 @@ function toggleBio() {
   btn.textContent=open?'Restrânge ▴':'Vezi mai mult ▾';
 }
 
+
+// ══════════════════════════════════════════════════════
+//  SETĂRI LANDING — Settings Engine
+// ══════════════════════════════════════════════════════
+
+// Default settings — used if nothing saved in DB yet
+const DEFAULT_SETTINGS = {
+  photo_url:    'https://i.imgur.com/7VqAGjI.jpeg',
+  video_url:    'https://www.youtube.com/embed/kD_nMBhmG_Y',
+  quote:        'Nu alerg să câștig. Alerg ca să demonstrez că din Bârlad se poate.',
+  hero_sub:     'Ultra-trail runner din Bârlad. Sezonul 2026 — 10 curse, 517km de munte, un singur obiectiv.',
+  story_short:  '2025: 3.000km alergați, inclusiv un challenge de 600km în decembrie — 10km dimineața + 10km seara, pe lângă muncă. 2026 vine cu 10 curse, de la 25km la 114km.',
+  contact_email:'evoluttionofall@gmail.com',
+  welcome_msg:  'Bun venit! Sunt Gabriel Balan, trail runner din Bârlad. Dacă ești aici, înseamnă că poate ne putem ajuta reciproc. Citește mai jos — îți promit că merită 3 minute.',
+  landing_active: true,
+  show_map:     true,
+  show_video:   true,
+  show_budget:  true,
+  show_faq:     true,
+  show_timeline:true,
+  show_roi:     true,
+  show_benefits:true,
+  faq: [
+    { q: 'De ce să sponsorizez un alergător necunoscut?',     a: 'Tocmai asta e oportunitatea. Când voi deveni cunoscut, sponsorii vor fi mulți și costul va fi mare. Acum ești primul — parteneriat real, nu reclamă.' },
+    { q: 'Ce vizibilitate am dacă nu ai mulți urmăritori?',   a: 'Vizibilitatea e fizică — logo pe echipament la curse cu sute de participanți. Bârladul e un oraș mic — toată lumea va ști că firma ta susține sportul local.' },
+    { q: 'Cum știu că banii se duc unde spui?',               a: 'Ești pe pagina de răspuns. Acest dashboard arată în timp real fiecare cursă, fiecare km, fiecare cheltuială planificată.' },
+    { q: 'Ce se întâmplă dacă nu termini o cursă?',           a: 'La Bucovina 2025 am ajuns la km 130 când furtuna a oprit cursa. Sponsorizarea e pe prezență și determinare, nu pe rezultate.' },
+    { q: 'Suma minimă de sponsorizare?',                      a: 'Nu există minim. 200 RON e la fel de apreciat ca 2.000 RON — și tratat cu același respect.' },
+  ],
+  packages: [
+    { min:0,    icon:'🏙️', title:'Reprezinți Bârladul',     desc:'Numele tău la 10 curse naționale' },
+    { min:0,    icon:'👕', title:'Logo pe echipament',      desc:'La start și finish la toate cele 10 curse' },
+    { min:300,  icon:'📊', title:'Dashboard live',          desc:'Link la tracker — arată că investești în sport local' },
+    { min:600,  icon:'📸', title:'Fotografie dedicată',     desc:'Foto la finish line cu logo vizibil, după fiecare cursă' },
+    { min:1000, icon:'🔗', title:'Mențiune publică',        desc:'Menționat pe orice platformă, cu link' },
+    { min:2000, icon:'🏆', title:'Sponsor principal',       desc:'Primul menționat, cel mai vizibil' },
+    { min:3500, icon:'🌱', title:'Ambasador sport Bârlad',  desc:'Eveniment/alergare locală cu brandul tău' },
+  ],
+};
+
+// Runtime settings object (merged from DB)
+let SETTINGS = { ...DEFAULT_SETTINGS };
+
+// ── Load settings from user_prefs.landing_settings ──
+function loadSettings() {
+  const raw = DB.prefs?.landing_settings;
+  if (raw) {
+    try {
+      const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+      SETTINGS = { ...DEFAULT_SETTINGS, ...parsed };
+    } catch(e) { SETTINGS = { ...DEFAULT_SETTINGS }; }
+  } else {
+    SETTINGS = { ...DEFAULT_SETTINGS };
+  }
+}
+
+// ── Render settings form ────────────────────────────
+function renderSetari() {
+  loadSettings();
+  const s = SETTINGS;
+
+  // Media
+  const photoEl = document.getElementById('set-photo-url');
+  if (photoEl) {
+    photoEl.value = s.photo_url || '';
+    photoEl.addEventListener('input', function() {
+      const prev = document.getElementById('set-photo-preview');
+      const img  = document.getElementById('set-photo-img');
+      if (this.value && prev && img) {
+        img.src = this.value;
+        img.onload = () => prev.style.display = 'block';
+        img.onerror = () => prev.style.display = 'none';
+      } else if (prev) prev.style.display = 'none';
+    });
+    if (s.photo_url) {
+      const prev = document.getElementById('set-photo-preview');
+      const img  = document.getElementById('set-photo-img');
+      if (img) { img.src = s.photo_url; if(prev) prev.style.display='block'; }
+    }
+  }
+  const videoEl = document.getElementById('set-video-url');
+  if (videoEl) videoEl.value = s.video_url || '';
+
+  // Texts
+  const setVal = (id, val) => { const e=document.getElementById(id); if(e) e.value = val||''; };
+  setVal('set-quote',         s.quote);
+  setVal('set-hero-sub',      s.hero_sub);
+  setVal('set-welcome-msg',   s.welcome_msg);
+  setVal('set-story-short',   s.story_short);
+  setVal('set-contact-email', s.contact_email);
+  setVal('set-target-km',     DB.prefs?.target_km || 5000);
+  setVal('set-dash-title',    DB.prefs?.dash_title || 'SEZONUL BESTIEI');
+
+  // Toggles
+  const setChk = (id, val) => { const e=document.getElementById(id); if(e) e.checked = val !== false; };
+  setChk('set-landing-active', s.landing_active !== false);
+  setChk('set-show-map',      s.show_map);
+  setChk('set-show-video',    s.show_video);
+  setChk('set-show-budget',   s.show_budget);
+  setChk('set-show-faq',      s.show_faq);
+  setChk('set-show-timeline', s.show_timeline);
+  setChk('set-show-roi',      s.show_roi !== false);
+  setChk('set-show-benefits', s.show_benefits !== false);
+
+  // Packages
+  renderSetPackages();
+
+  // FAQ
+  renderSetFaq();
+
+  // Sponsor link
+  const linkEl = document.getElementById('set-sponsor-link');
+  if (linkEl) linkEl.textContent = window.location.origin + window.location.pathname + '?sponsor=1';
+}
+
+// ── Packages ────────────────────────────────────────
+function renderSetPackages() {
+  const el = document.getElementById('set-packages-list');
+  if (!el) return;
+  el.innerHTML = (SETTINGS.packages || []).map((p, i) => `
+    <div class="set-pkg-row" style="background:var(--s2);border-radius:8px;padding:10px;margin-bottom:8px">
+      <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px">
+        <input value="${p.icon||''}" style="width:36px;font-size:18px;text-align:center;padding:4px;background:var(--s3);border:1px solid var(--border);border-radius:6px" onchange="setUpdPkg(${i},'icon',this.value)">
+        <input value="${p.title||''}" placeholder="Titlu" style="flex:1;font-size:12px;font-weight:600" onchange="setUpdPkg(${i},'title',this.value)">
+        <input type="number" value="${p.min||0}" placeholder="RON min" style="width:80px;font-size:12px" onchange="setUpdPkg(${i},'min',parseInt(this.value)||0)">
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="setDelPkg(${i})" style="color:var(--red);flex-shrink:0">🗑</button>
+      </div>
+      <input value="${p.desc||''}" placeholder="Descriere" style="width:100%;font-size:11px;color:var(--t2)" onchange="setUpdPkg(${i},'desc',this.value)">
+    </div>`).join('');
+}
+
+function setUpdPkg(i, key, val) {
+  if (!SETTINGS.packages[i]) return;
+  SETTINGS.packages[i][key] = val;
+}
+function setDelPkg(i) {
+  SETTINGS.packages.splice(i, 1);
+  renderSetPackages();
+}
+function setAddPackage() {
+  SETTINGS.packages.push({ min:0, icon:'🎁', title:'Nivel nou', desc:'Descriere beneficiu' });
+  renderSetPackages();
+}
+
+// ── FAQ ─────────────────────────────────────────────
+function renderSetFaq() {
+  const el = document.getElementById('set-faq-list');
+  if (!el) return;
+  el.innerHTML = (SETTINGS.faq || []).map((f, i) => `
+    <div style="background:var(--s2);border-radius:8px;padding:10px;margin-bottom:8px">
+      <div style="display:flex;gap:6px;align-items:flex-start;margin-bottom:6px">
+        <input value="${(f.q||'').replace(/"/g,'&quot;')}" placeholder="Întrebare" style="flex:1;font-size:12px;font-weight:600" onchange="setUpdFaq(${i},'q',this.value)">
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="setDelFaq(${i})" style="color:var(--red);flex-shrink:0">🗑</button>
+      </div>
+      <textarea rows="2" style="width:100%;font-size:11px;color:var(--t2);resize:vertical" onchange="setUpdFaq(${i},'a',this.value)">${f.a||''}</textarea>
+    </div>`).join('');
+}
+
+function setUpdFaq(i, key, val) {
+  if (!SETTINGS.faq[i]) return;
+  SETTINGS.faq[i][key] = val;
+}
+function setDelFaq(i) {
+  SETTINGS.faq.splice(i, 1);
+  renderSetFaq();
+}
+function setAddFaq() {
+  SETTINGS.faq.push({ q: 'Întrebare nouă', a: 'Răspuns...' });
+  renderSetFaq();
+}
+
+// ── Save all settings ────────────────────────────────
+async function saveSettings() {
+  // Read all form values back into SETTINGS
+  const g = id => { const e=document.getElementById(id); return e ? e.value.trim() : ''; };
+  const gc = id => { const e=document.getElementById(id); return e ? e.checked : true; };
+
+  SETTINGS.photo_url     = g('set-photo-url');
+  SETTINGS.video_url     = g('set-video-url');
+  SETTINGS.quote         = g('set-quote');
+  SETTINGS.hero_sub      = g('set-hero-sub');
+  SETTINGS.welcome_msg   = g('set-welcome-msg');
+  SETTINGS.story_short   = g('set-story-short');
+  SETTINGS.contact_email = g('set-contact-email');
+  SETTINGS.landing_active= gc('set-landing-active');
+  SETTINGS.show_map      = gc('set-show-map');
+  SETTINGS.show_video    = gc('set-show-video');
+  SETTINGS.show_budget   = gc('set-show-budget');
+  SETTINGS.show_faq      = gc('set-show-faq');
+  SETTINGS.show_timeline = gc('set-show-timeline');
+  SETTINGS.show_roi      = gc('set-show-roi');
+  SETTINGS.show_benefits = gc('set-show-benefits');
+
+  // Read packages & FAQ from DOM (in case user typed without triggering onchange)
+  document.querySelectorAll('#set-packages-list .set-pkg-row').forEach((row, i) => {
+    if (!SETTINGS.packages[i]) return;
+    const inputs = row.querySelectorAll('input');
+    if (inputs[0]) SETTINGS.packages[i].icon  = inputs[0].value;
+    if (inputs[1]) SETTINGS.packages[i].title = inputs[1].value;
+    if (inputs[2]) SETTINGS.packages[i].min   = parseInt(inputs[2].value)||0;
+    const desc = row.querySelector('input:last-of-type');
+    if (inputs[3]) SETTINGS.packages[i].desc  = inputs[3].value;
+  });
+  document.querySelectorAll('#set-faq-list > div').forEach((row, i) => {
+    if (!SETTINGS.faq[i]) return;
+    const q = row.querySelector('input');
+    const a = row.querySelector('textarea');
+    if (q) SETTINGS.faq[i].q = q.value;
+    if (a) SETTINGS.faq[i].a = a.value;
+  });
+
+  // Save landing_settings to user_prefs
+  const landingJson = JSON.stringify(SETTINGS);
+  const targetKm    = parseInt(g('set-target-km')) || 5000;
+  const dashTitle   = g('set-dash-title') || 'SEZONUL BESTIEI';
+
+  try {
+    await sbUpsert('user_prefs', {
+      user_id:          currentUser.id,
+      landing_settings: landingJson,
+      target_km:        targetKm,
+      dash_title:       dashTitle,
+    }, 'user_id');
+
+    DB.prefs.landing_settings = landingJson;
+    DB.prefs.target_km        = targetKm;
+    DB.prefs.dash_title       = dashTitle;
+
+    toast('✅ Setări salvate!', 'ok');
+  } catch(e) {
+    toast('❌ Eroare salvare: ' + e.message, 'err');
+  }
+}
+
+// ── Copy sponsor link ────────────────────────────────
+function setCopyLink() {
+  const link = window.location.origin + window.location.pathname + '?sponsor=1';
+  navigator.clipboard?.writeText(link).then(() => toast('📋 Link copiat!', 'ok'))
+    .catch(() => toast('Link: ' + link, 'info'));
+}
+
+// ── Preview sponsor page ─────────────────────────────
+function previewSponsorPage() {
+  window.open(window.location.origin + window.location.pathname + '?sponsor=1', '_blank');
+}
 
 // ══════════════════════════════════════════════════════
 //  SPONSOR LANDING v2
@@ -4433,7 +4839,7 @@ function slAnimateCards() {
 }
 
 // ── Populate all sections from DB ──────────────────
-function populateSponsorLanding() {
+async function populateSponsorLanding() {
   const races = DB.races || [];
   const acts  = DB.activities || [];
   const year  = new Date().getFullYear();
@@ -4471,8 +4877,8 @@ function populateSponsorLanding() {
     setSL('sl-next-race-date', d.toLocaleDateString('ro-RO',{day:'numeric',month:'long',year:'numeric'}));
   }
 
-  // Photo — set URL here when you have one
-  const PHOTO_URL = 'https://i.imgur.com/7VqAGjI.jpeg';
+  // Photo & video from SETTINGS
+  const PHOTO_URL = SETTINGS.photo_url || '';
   if (PHOTO_URL) {
     const img = document.getElementById('sl-avatar-img');
     const emoji = document.getElementById('sl-avatar-emoji');
@@ -4481,13 +4887,79 @@ function populateSponsorLanding() {
   }
 
   // Video — set YouTube/Vimeo URL here
-  const VIDEO_URL = 'https://www.youtube.com/embed/kD_nMBhmG_Y';
+  const VIDEO_URL = SETTINGS.video_url || '';
   if (VIDEO_URL) {
     const card = document.getElementById('sl-video-card');
     const iframe = document.getElementById('sl-video-iframe');
     if (card) card.style.display = 'block';
     if (iframe) iframe.src = VIDEO_URL;
   }
+
+  // Section visibility — from SETTINGS
+  const showHide = (sel, show) => {
+    const e = typeof sel === 'string' ? document.querySelector(sel) : sel;
+    if (e) e.style.display = show ? '' : 'none';
+  };
+
+  // Landing active guard
+  if (SETTINGS.landing_active === false) {
+    const landing = document.getElementById('sponsor-landing');
+    if (landing) {
+      landing.innerHTML = '<div style="text-align:center;padding:80px 20px;color:var(--t3)"><div style="font-size:48px;margin-bottom:16px">🔒</div><div style="font-size:16px">Pagina nu este disponibilă momentan.</div></div>';
+      return;
+    }
+  }
+
+  // Welcome message
+  const welcomeEl = document.getElementById('sl-welcome-text');
+  if (welcomeEl && SETTINGS.welcome_msg) welcomeEl.textContent = SETTINGS.welcome_msg;
+  showHide('#sl-welcome-card', true); // always visible if landing_active
+
+  // Quote
+  const quoteEl = document.querySelector('.sl-quote-text');
+  if (quoteEl && SETTINGS.quote) quoteEl.textContent = '"' + SETTINGS.quote + '"';
+
+  // Hero sub
+  const subEl = document.querySelector('.sl-sub');
+  if (subEl && SETTINGS.hero_sub) subEl.textContent = SETTINGS.hero_sub;
+
+  // Sections
+  showHide('#sponsor-landing .sl-map-wrap', SETTINGS.show_map !== false);
+  showHide('#sl-video-card',                SETTINGS.show_video !== false);
+
+  // Budget card — find parent card of breakdown
+  const budgetCard = document.getElementById('sl-budget-breakdown')?.closest('.sl-card');
+  showHide(budgetCard, SETTINGS.show_budget !== false);
+
+  // FAQ card
+  const faqCard = document.getElementById('sl-faq-list')?.closest('.sl-card');
+  showHide(faqCard, SETTINGS.show_faq !== false);
+
+  // Timeline card
+  const tlCard = document.getElementById('sl-timeline')?.closest('.sl-card');
+  showHide(tlCard, SETTINGS.show_timeline !== false);
+
+  // ROI card
+  const roiCard = document.querySelector('#sponsor-landing .sl-roi-slider')?.closest('.sl-card');
+  showHide(roiCard, SETTINGS.show_roi !== false);
+
+  // Benefits card
+  const benefitsCards = document.querySelectorAll('#sponsor-landing .sl-benefit');
+  const benefitsCard  = benefitsCards[0]?.closest('.sl-card');
+  showHide(benefitsCard, SETTINGS.show_benefits !== false);
+
+  // FAQ from settings
+  const faqEl = document.getElementById('sl-faq-list');
+  if (faqEl && SETTINGS.faq?.length) {
+    faqEl.innerHTML = SETTINGS.faq.map(f => `
+      <div class="sl-faq-item">
+        <button class="sl-faq-q" onclick="slToggleFaq(this)">${f.q} <span class="sl-faq-arr">▾</span></button>
+        <div class="sl-faq-a">${f.a}</div>
+      </div>`).join('');
+  }
+
+  // Packages from settings into ROI simulator
+  slUpdateROI(500);
 
   // Budget breakdown from DB
   slRenderBudget();
@@ -4630,27 +5102,31 @@ function slDrawMap(races) {
   if (!svg) return;
 
   const W=340, H=240, pad=14;
-  const latMin=43.6, latMax=48.3, lngMin=20.2, lngMax=30.0;
+  const latMin=43.6, latMax=48.4, lngMin=21.0, lngMax=29.4;
   const toX = lng => pad + (lng - lngMin) / (lngMax - lngMin) * (W - pad*2);
   const toY = lat => pad + (latMax - lat) / (latMax - latMin) * (H - pad*2);
   const p2s = ([la,ln]) => toX(ln).toFixed(1) + ',' + toY(la).toFixed(1);
 
-  // Verified Romania border — 64 points clockwise
+  // Natural Earth Romania border — 84 points
   const RO = [
-    [48.15,22.18],[48.26,22.58],[48.07,22.83],[47.97,23.27],[47.72,23.54],
-    [47.98,24.10],[48.22,24.35],[48.18,24.80],[47.86,25.29],[47.97,25.63],
-    [48.20,26.00],[47.97,26.38],[47.63,26.62],[47.28,26.93],[47.04,27.24],
-    [46.86,27.61],[46.44,27.91],[46.19,28.22],[45.93,28.48],[45.65,28.77],
-    [45.32,28.74],[45.09,29.05],[44.83,29.30],
-    [44.51,28.94],[44.22,28.64],[43.87,28.57],[43.74,28.25],[43.67,27.90],
-    [43.74,27.55],
-    [44.07,27.15],[44.20,26.80],[44.05,26.48],[43.90,26.10],[43.79,25.71],
-    [43.96,25.39],[44.20,25.01],[44.19,24.48],[44.05,24.10],[43.90,23.68],
-    [43.86,23.26],[44.07,22.87],[44.22,22.46],
-    [44.49,22.18],[44.72,22.37],[45.02,22.19],[45.14,21.79],[45.43,21.58],
-    [45.74,21.31],[45.98,21.50],[46.22,21.57],
-    [46.52,21.46],[46.77,21.11],[47.05,21.53],[47.33,21.89],[47.67,21.89],
-    [47.93,22.09],[48.15,22.18]
+    [48.15,22.14],[48.22,22.38],[48.32,22.64],[48.10,22.84],[47.95,22.97],
+    [47.98,23.27],[47.73,23.54],[47.78,23.80],[47.92,24.07],[48.15,24.32],
+    [48.20,24.55],[48.25,24.83],[48.03,25.09],[47.90,25.32],[47.97,25.55],
+    [48.05,25.82],[48.22,26.05],[48.00,26.33],[47.63,26.59],[47.47,26.77],
+    [47.28,26.89],[47.08,27.19],[46.87,27.54],[46.68,27.68],[46.47,27.87],
+    [46.20,28.18],[45.97,28.43],[45.72,28.68],[45.47,28.72],[45.25,28.81],
+    [45.10,28.98],[44.98,29.22],[44.82,29.28],
+    [44.65,29.13],[44.51,28.98],[44.35,28.81],[44.20,28.65],
+    [43.97,28.55],[43.80,28.45],[43.72,28.19],[43.69,27.91],[43.74,27.55],
+    [43.84,27.28],[44.02,26.95],[44.15,26.73],[44.08,26.48],[43.93,26.20],
+    [43.83,25.82],[43.80,25.56],[43.93,25.32],[44.15,25.08],[44.18,24.73],
+    [44.07,24.32],[43.92,24.07],[43.89,23.72],[43.87,23.38],[43.93,23.08],
+    [44.07,22.85],[44.20,22.55],[44.35,22.28],
+    [44.48,22.18],[44.63,22.27],[44.75,22.37],[44.92,22.21],[45.10,22.05],
+    [45.20,21.83],[45.32,21.63],[45.52,21.47],[45.72,21.28],[45.92,21.42],
+    [46.17,21.52],[46.35,21.47],[46.52,21.45],[46.68,21.22],[46.78,21.11],
+    [46.90,21.20],[47.08,21.47],[47.22,21.70],[47.40,21.85],[47.58,21.89],
+    [47.73,21.94],[47.93,22.09],[48.05,22.11],[48.15,22.14]
   ];
 
   const acc = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ccff00';
@@ -4746,7 +5222,7 @@ function slUpdateROI(amount) {
   const el = document.getElementById('sl-roi-amount');
   if (el) el.textContent = amount.toLocaleString() + ' RON';
 
-  const tiers = [
+  const tiers = (LC.packages && LC.packages.length) ? LC.packages : [
     { min:0,    icon:'🏙️', title:'Reprezinți Bârladul',    desc:'Numele tău la 10 curse naționale — Bârladul pe harta trail-ului' },
     { min:0,    icon:'👕', title:'Logo pe echipament',     desc:'La start și finish la toate cele 10 curse ale sezonului' },
     { min:300,  icon:'📊', title:'Dashboard live',         desc:'Link la acest tracker — arată clienților tăi că investești în sport local' },
@@ -4786,7 +5262,8 @@ function slEnterDash() {
 }
 
 function slContact() {
-  window.location.href = 'mailto:evoluttionofall@gmail.com?subject=Sponsorizare Trail 2026&body=Buna ziua, sunt interesat de un parteneriat pentru sezonul 2026.';
+  const email = SETTINGS.contact_email || 'evoluttionofall@gmail.com';
+  window.location.href = 'mailto:' + email + '?subject=Sponsorizare Trail 2026&body=Buna ziua, sunt interesat de un parteneriat pentru sezonul 2026.';
 }
 
 function checkSponsorParam() {
@@ -4794,6 +5271,239 @@ function checkSponsorParam() {
   if (params.get('sponsor') === '1') {
     initSponsorLanding();
   }
+}
+
+
+// ══════════════════════════════════════════════════════
+//  SETTINGS PAGE — LANDING CONFIG
+// ══════════════════════════════════════════════════════
+
+// In-memory config — loaded from user_prefs.landing_config JSON
+let LC = {}; // landing config
+
+const LC_DEFAULTS = {
+  photo_url:      'https://i.imgur.com/7VqAGjI.jpeg',
+  video_url:      'https://www.youtube.com/embed/kD_nMBhmG_Y',
+  quote:          'Nu alerg să câștig. Alerg ca să demonstrez că din Bârlad se poate.',
+  hero_sub:       'Ultra-trail runner din Bârlad. Sezonul 2026 — 10 curse, 517km de munte, un singur obiectiv.',
+  story:          'Totul a început în mai 2024. De la primele km pe străzile Bârladului, la primul trail, la km 130 din Bucovina prin furtună. La km 130 cursa s-a oprit. Eu nu m-am oprit.',
+  contact_email:  'evoluttionofall@gmail.com',
+  landing_active: true,
+  show_map:       true,
+  show_video:     true,
+  show_budget:    true,
+  show_faq:       true,
+  show_timeline:  true,
+  faq: [
+    { q: 'De ce să sponsorizez un alergător necunoscut?', a: 'Tocmai asta e oportunitatea. Când voi deveni cunoscut, sponsorii vor fi mulți și costul va fi mare. Acum ești primul — parteneriat real, nu reclamă.' },
+    { q: 'Ce vizibilitate am dacă nu ai mulți urmăritori?', a: 'Vizibilitatea principală e fizică — logo pe echipament la curse cu sute de participanți. Dashboard-ul live e un instrument de credibilitate. Iar Bârladul e mic — toată lumea va ști că firma ta susține sportul local.' },
+    { q: 'Cum știu că banii se duc unde spui?', a: 'Ești pe pagina de răspuns. Acest dashboard arată în timp real fiecare cursă, fiecare km, fiecare cheltuială planificată.' },
+    { q: 'Ce se întâmplă dacă nu termini o cursă?', a: 'La Bucovina 2025 am ajuns la km 130 când furtuna a oprit cursa. Am continuat sezonul. Sponsorizarea nu e pe rezultate — e pe prezență și determinare.' },
+    { q: 'Suma minimă de sponsorizare?', a: 'Nu există minim. O contribuție de 200 RON e la fel de apreciată ca una de 2.000 RON. Folosește simulatorul să vezi ce primești în schimb.' },
+  ],
+  packages: [
+    { min: 0,    icon: '🏙️', title: 'Reprezinți Bârladul',      desc: 'Numele tău la 10 curse naționale — Bârladul pe harta trail-ului' },
+    { min: 0,    icon: '👕', title: 'Logo pe echipament',        desc: 'La start și finish la toate cele 10 curse ale sezonului' },
+    { min: 300,  icon: '📊', title: 'Dashboard live',            desc: 'Link la acest tracker — arată clienților că investești în sport local' },
+    { min: 600,  icon: '📸', title: 'Fotografie dedicată',       desc: 'Foto la finish line cu logo-ul tău vizibil, trimisă după fiecare cursă' },
+    { min: 1000, icon: '🔗', title: 'Mențiune publică',          desc: 'Menționat pe orice platformă — cu link activ' },
+    { min: 2000, icon: '🏆', title: 'Sponsor principal Bârlad', desc: 'Primul menționat, cel mai vizibil — adevărat parteneriat' },
+    { min: 3500, icon: '🌱', title: 'Eveniment local Bârlad',    desc: 'Organizăm împreună o alergare locală cu brandul tău în față' },
+  ],
+};
+
+// ── Load config from DB ─────────────────────────────
+async function loadLandingConfig() {
+  try {
+    const prefs = DB.prefs || {};
+    LC = Object.assign({}, LC_DEFAULTS, prefs.landing_config || {});
+  } catch(e) {
+    LC = Object.assign({}, LC_DEFAULTS);
+  }
+}
+
+// ── Render settings page ────────────────────────────
+function renderSetari() {
+  if (!isOwnerLoggedIn()) return;
+  loadLandingConfig();
+
+  // Media
+  setVal('set-photo-url',    LC.photo_url    || '');
+  setVal('set-video-url',    LC.video_url    || '');
+  // Texts
+  setVal('set-quote',        LC.quote        || '');
+  setVal('set-hero-sub',     LC.hero_sub     || '');
+  setVal('set-story',        LC.story        || '');
+  setVal('set-contact-email',LC.contact_email|| '');
+  // Dashboard
+  setVal('set-target-km',    DB.prefs?.target_km  || 5000);
+  setVal('set-dash-title',   DB.prefs?.dash_title || 'SEZONUL BESTIEI');
+  // Toggles
+  setChk('set-show-map',      LC.show_map      !== false);
+  setChk('set-show-video',    LC.show_video    !== false);
+  setChk('set-show-budget',   LC.show_budget   !== false);
+  setChk('set-show-faq',      LC.show_faq      !== false);
+  setChk('set-show-timeline', LC.show_timeline !== false);
+
+  // Photo preview
+  previewPhoto();
+
+  // Sponsor link
+  const linkEl = document.getElementById('set-sponsor-link');
+  if (linkEl) linkEl.textContent = window.location.origin + window.location.pathname + '?sponsor=1';
+
+  // Render FAQ list
+  renderSetFaq();
+  // Render pachete
+  renderSetPackages();
+}
+
+function setVal(id, v) { const e=document.getElementById(id); if(e) e.value=v; }
+function setChk(id, v) { const e=document.getElementById(id); if(e) e.checked=!!v; }
+function getVal(id)    { const e=document.getElementById(id); return e ? e.value.trim() : ''; }
+function getChk(id)    { const e=document.getElementById(id); return e ? e.checked : true; }
+
+// ── Photo preview ───────────────────────────────────
+function previewPhoto() {
+  const url = document.getElementById('set-photo-url')?.value?.trim();
+  const wrap = document.getElementById('set-photo-preview');
+  const img  = document.getElementById('set-photo-img');
+  if (!wrap || !img) return;
+  if (url) {
+    img.src = url;
+    wrap.style.display = 'block';
+  } else {
+    wrap.style.display = 'none';
+  }
+}
+// Live preview on input
+document.addEventListener('input', e => {
+  if (e.target.id === 'set-photo-url') previewPhoto();
+});
+
+// ── FAQ editor ──────────────────────────────────────
+function renderSetFaq() {
+  const el = document.getElementById('set-faq-list');
+  if (!el) return;
+  const faqs = LC.faq || [];
+  el.innerHTML = faqs.map((f, i) => `
+    <div class="set-list-item" id="set-faq-${i}">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:11px;color:var(--t3);flex:1">Întrebare ${i+1}</span>
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="setDelFaq(${i})" style="color:var(--red)">🗑</button>
+      </div>
+      <input type="text" value="${escHtml(f.q)}" oninput="LC.faq[${i}].q=this.value"
+        style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px;margin-bottom:6px">
+      <textarea rows="2" oninput="LC.faq[${i}].a=this.value"
+        style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px;resize:vertical"
+        >${escHtml(f.a)}</textarea>
+    </div>`).join('') || '<div style="font-size:12px;color:var(--t3);padding:8px 0">Niciun FAQ. Apasă + pentru a adăuga.</div>';
+}
+
+function setAddFaq() {
+  if (!LC.faq) LC.faq = [];
+  LC.faq.push({ q: '', a: '' });
+  renderSetFaq();
+}
+
+function setDelFaq(i) {
+  LC.faq.splice(i, 1);
+  renderSetFaq();
+}
+
+// ── Pachete editor ──────────────────────────────────
+function renderSetPackages() {
+  const el = document.getElementById('set-packages-list');
+  if (!el) return;
+  const pkgs = LC.packages || [];
+  el.innerHTML = pkgs.map((p, i) => `
+    <div class="set-list-item" style="margin-bottom:10px;background:var(--s2);border-radius:8px;padding:12px;border:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <input type="text" value="${escHtml(p.icon||'')}" oninput="LC.packages[${i}].icon=this.value"
+          style="width:42px;text-align:center;background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:6px;font-size:16px;color:var(--text)">
+        <input type="text" value="${escHtml(p.title||'')}" placeholder="Titlu nivel" oninput="LC.packages[${i}].title=this.value"
+          style="flex:1;background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;font-weight:600;color:var(--text)">
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="setDelPackage(${i})" style="color:var(--red)">🗑</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <lbl style="font-size:11px;color:var(--t3);white-space:nowrap">De la (RON)</lbl>
+        <input type="number" value="${p.min||0}" oninput="LC.packages[${i}].min=parseInt(this.value)||0"
+          style="width:90px;background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--accent)">
+      </div>
+      <textarea rows="2" placeholder="Descriere beneficiu..." oninput="LC.packages[${i}].desc=this.value"
+        style="width:100%;background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:11px;resize:vertical"
+        >${escHtml(p.desc||'')}</textarea>
+    </div>`).join('') || '<div style="font-size:12px;color:var(--t3);padding:8px 0">Niciun pachet. Apasă + pentru a adăuga.</div>';
+}
+
+function setAddPackage() {
+  if (!LC.packages) LC.packages = [];
+  LC.packages.push({ min: 0, icon: '🎁', title: '', desc: '' });
+  renderSetPackages();
+}
+
+function setDelPackage(i) {
+  LC.packages.splice(i, 1);
+  renderSetPackages();
+}
+
+// ── Copy sponsor link ───────────────────────────────
+function setCopyLink() {
+  const link = window.location.origin + window.location.pathname + '?sponsor=1';
+  navigator.clipboard.writeText(link).then(() => toast('📋 Link copiat!', 'ok'));
+}
+
+// ── Preview sponsor page ────────────────────────────
+function previewSponsorPage() {
+  window.open(window.location.origin + window.location.pathname + '?sponsor=1', '_blank');
+}
+
+// ── Save all settings ───────────────────────────────
+async function saveSettings() {
+  if (!isOwnerLoggedIn()) return;
+
+  // Collect from form
+  LC.photo_url     = getVal('set-photo-url');
+  LC.video_url     = getVal('set-video-url');
+  LC.quote         = getVal('set-quote');
+  LC.hero_sub      = getVal('set-hero-sub');
+  LC.story         = getVal('set-story');
+  LC.contact_email = getVal('set-contact-email');
+  LC.show_map      = getChk('set-show-map');
+  LC.show_video    = getChk('set-show-video');
+  LC.show_budget   = getChk('set-show-budget');
+  LC.show_faq      = getChk('set-show-faq');
+  LC.show_timeline = getChk('set-show-timeline');
+  // FAQ + packages already updated live via oninput
+
+  const targetKm  = parseInt(getVal('set-target-km')) || 5000;
+  const dashTitle = getVal('set-dash-title') || 'SEZONUL BESTIEI';
+
+  try {
+    // Save landing_config into user_prefs JSON column
+    await sbUpsert('user_prefs', {
+      user_id:        currentUser.id,
+      landing_config: LC,
+      target_km:      targetKm,
+      dash_title:     dashTitle,
+    }, 'user_id');
+
+    // Update in-memory DB
+    DB.prefs.landing_config = LC;
+    DB.prefs.target_km      = targetKm;
+    DB.prefs.dash_title     = dashTitle;
+
+    applyTheme(DB.prefs.theme);
+    loadDashTitle();
+    toast('✅ Setări salvate!', 'ok');
+  } catch(e) {
+    toast('❌ Eroare salvare: ' + e.message, 'err');
+  }
+}
+
+// ── Helper ──────────────────────────────────────────
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 // Close overlays on click outside or ESC
