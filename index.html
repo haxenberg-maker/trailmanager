@@ -822,23 +822,19 @@ body.readonly label.btn { display:none !important }
     <!-- ── SCROLL KM BAR CSS ── -->
     <style>
     /* Landing = flex row: bara la stânga, conținut la dreapta */
-    #sponsor-landing {
-      display:flex !important;
-      align-items:flex-start;
-      justify-content:center;
-      overflow-y:visible;
-    }
+
     #sl-km-scrollbar {
-      position:sticky;
+      position:fixed;
       top:0;
+      left:0; /* updatat din JS lângă sl-wrap */
       height:100vh;
-      width:40px;
-      flex-shrink:0;
+      width:32px;
       display:none;
       flex-direction:column;
       align-items:center;
       padding:20px 0 16px;
-      margin-right:8px;
+      pointer-events:none;
+      z-index:10000;
     }
     #sl-km-scrollbar.visible { display:flex; }
     .sl-ksb-top-lbl {
@@ -905,21 +901,21 @@ body.readonly label.btn { display:none !important }
     }
     </style>
 
-    <!-- ── SCROLL KM BAR HTML ── -->
-    <div id="sl-km-scrollbar">
-      <div class="sl-ksb-top-lbl">0 km</div>
-      <div class="sl-ksb-track" id="sl-ksb-track">
-        <div class="sl-ksb-fill" id="sl-ksb-fill"></div>
-        <div class="sl-ksb-dot"  id="sl-ksb-dot"></div>
-        <div class="sl-ksb-live" id="sl-ksb-live">0</div>
-        <div id="sl-ksb-ms"></div>
-        <div class="sl-ksb-finish">
-          <div class="sl-ksb-flag">🏁</div>
-        </div>
-      </div>
-      <div class="sl-ksb-bot-lbl" id="sl-ksb-total">—</div>
-    </div>
     <div class="sl-wrap">
+      <!-- bara sticky în interiorul scroll-ului landing -->
+      <div id="sl-km-scrollbar">
+        <div class="sl-ksb-top-lbl">0 km</div>
+        <div class="sl-ksb-track" id="sl-ksb-track">
+          <div class="sl-ksb-fill" id="sl-ksb-fill"></div>
+          <div class="sl-ksb-dot"  id="sl-ksb-dot"></div>
+          <div class="sl-ksb-live" id="sl-ksb-live">0</div>
+          <div id="sl-ksb-ms"></div>
+          <div class="sl-ksb-finish"><div class="sl-ksb-flag">🏁</div></div>
+        </div>
+        <div class="sl-ksb-bot-lbl" id="sl-ksb-total">—</div>
+      </div>
+
+
 
     <!-- ── HERO ── -->
     <div class="sl-hero">
@@ -5442,23 +5438,29 @@ function slInitScrollBar(totalKm) {
             </div>`;
   }).join('');
 
-  const update = () => {
-    // Cât a scrollat userul în landing
-    const landingTop = landing.getBoundingClientRect().top + window.scrollY;
-    const scrolled   = Math.max(0, window.scrollY - landingTop);
-    const maxScroll  = landing.scrollHeight - window.innerHeight;
-    const pct        = maxScroll > 0 ? Math.min(1, scrolled / maxScroll) : 0;
+  const slWrap = document.querySelector('.sl-wrap');
 
-    // Fill: bottom merge de la 100% → 0% (se umple de sus în jos)
-    fill.style.bottom   = ((1 - pct) * 100).toFixed(2) + '%';
-    // Dot și live: bottom = (1-pct)*100%
-    const botPct        = ((1 - pct) * 100).toFixed(2) + '%';
-    dot.style.bottom    = botPct;
-    live.style.bottom   = botPct;
-    live.textContent    = Math.round(pct * totalKm).toLocaleString('ro-RO');
+  const update = () => {
+    // Scroll pe landing (overflow-y:auto)
+    const scrolled  = landing.scrollTop;
+    const maxScroll = landing.scrollHeight - landing.clientHeight;
+    const pct       = maxScroll > 0 ? Math.min(1, scrolled / maxScroll) : 0;
+
+    // Poziționează bara fix lângă sl-wrap
+    if (slWrap) {
+      const rect = slWrap.getBoundingClientRect();
+      bar.style.left = Math.max(0, rect.left - 38) + 'px';
+    }
+
+    // Fill de sus în jos
+    fill.style.bottom = ((1 - pct) * 100).toFixed(2) + '%';
+    const botPct      = ((1 - pct) * 100).toFixed(2) + '%';
+    dot.style.bottom  = botPct;
+    live.style.bottom = botPct;
+    live.textContent  = Math.round(pct * totalKm).toLocaleString('ro-RO');
   };
 
-  window.addEventListener('scroll', update, { passive:true });
+  landing.addEventListener('scroll', update, { passive:true });
   window.addEventListener('resize', update, { passive:true });
   // Run imediat și după un tick (când layout-ul e gata)
   update();
