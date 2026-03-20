@@ -5384,7 +5384,7 @@ function slUpdateROI(amount) {
   const el = document.getElementById('sl-roi-amount');
   if (el) el.textContent = amount.toLocaleString() + ' RON';
 
-  const tiers = (LC.packages && LC.packages.length) ? LC.packages : [
+  const tiers = (SETTINGS.packages && SETTINGS.packages.length) ? SETTINGS.packages : [
     { min:0,    icon:'🏙️', title:'Reprezinți Bârladul',    desc:'Numele tău la 10 curse naționale — Bârladul pe harta trail-ului' },
     { min:0,    icon:'👕', title:'Logo pe echipament',     desc:'La start și finish la toate cele 10 curse ale sezonului' },
     { min:300,  icon:'📊', title:'Dashboard live',         desc:'Link la acest tracker — arată clienților tăi că investești în sport local' },
