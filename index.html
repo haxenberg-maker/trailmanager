@@ -818,6 +818,74 @@ body.readonly label.btn { display:none !important }
      Vizibil doar cu ?sponsor=1 în URL
      ══════════════════════════════════════ -->
 <div id="sponsor-landing">
+
+    <!-- ── SCROLL KM BAR CSS ── -->
+    <style>
+    #sl-km-scrollbar {
+      position:fixed;left:0;top:0;bottom:0;width:36px;
+      z-index:9998;display:none;flex-direction:column;align-items:center;
+      padding:20px 0;gap:0;pointer-events:none;
+    }
+    #sl-km-scrollbar.visible { display:flex; }
+    .sl-ksb-label-top {
+      font-size:8px;color:var(--t3);letter-spacing:1px;
+      text-transform:uppercase;writing-mode:horizontal-tb;
+      margin-bottom:8px;white-space:nowrap;
+    }
+    .sl-ksb-track {
+      flex:1;width:3px;background:var(--border);border-radius:2px;
+      position:relative;overflow:visible;
+    }
+    .sl-ksb-fill {
+      position:absolute;top:0;left:0;right:0;
+      background:var(--accent);border-radius:2px;
+      transition:height .1s linear;
+      height:0%;
+    }
+    .sl-ksb-dot {
+      position:absolute;left:50%;transform:translateX(-50%);
+      width:9px;height:9px;border-radius:50%;
+      background:var(--accent);border:2px solid var(--bg);
+      bottom:0;transition:bottom .1s linear;
+      box-shadow:0 0 6px var(--accent);
+    }
+    .sl-ksb-km-live {
+      position:absolute;left:16px;
+      font-family:'Bebas Neue',var(--display);
+      font-size:11px;color:var(--accent);
+      white-space:nowrap;letter-spacing:.5px;
+      bottom:0;transition:bottom .1s linear;
+      background:var(--bg);padding:1px 3px;border-radius:3px;
+      border:1px solid var(--accent-border);line-height:1.4;
+    }
+    .sl-ksb-milestone {
+      position:absolute;left:50%;transform:translateX(-50%);
+      width:7px;height:2px;background:var(--t4);border-radius:1px;
+    }
+    .sl-ksb-milestone-lbl {
+      position:absolute;left:14px;
+      font-size:8px;color:var(--t4);white-space:nowrap;
+      line-height:1;
+    }
+    .sl-ksb-label-bot {
+      font-size:8px;color:var(--accent);letter-spacing:1px;
+      margin-top:8px;white-space:nowrap;
+      font-family:'Bebas Neue',var(--display);
+    }
+    </style>
+
+    <!-- ── SCROLL KM BAR HTML ── -->
+    <div id="sl-km-scrollbar">
+      <div class="sl-ksb-label-top">0 km</div>
+      <div class="sl-ksb-track" id="sl-ksb-track">
+        <div class="sl-ksb-fill"  id="sl-ksb-fill"></div>
+        <div class="sl-ksb-dot"   id="sl-ksb-dot"></div>
+        <div class="sl-ksb-km-live" id="sl-ksb-km-live">0</div>
+        <div id="sl-ksb-milestones"></div>
+      </div>
+      <div class="sl-ksb-label-bot" id="sl-ksb-total">—</div>
+    </div>
+
   <div class="sl-wrap">
 
     <!-- ── HERO ── -->
@@ -836,6 +904,8 @@ body.readonly label.btn { display:none !important }
       </div>
     </div>
 
+    <!-- ── COUNTDOWN
+
     <!-- ── COUNTDOWN ── -->
     <div class="sl-card sl-countdown-card">
       <div class="sl-card-title">⏱️ Până la următoarea cursă</div>
@@ -852,6 +922,8 @@ body.readonly label.btn { display:none !important }
       </div>
       <div class="sl-pulse-wrap"><div class="sl-pulse-dot"></div><div class="sl-pulse-ring"></div><div class="sl-pulse-ring sl-pulse-ring2"></div></div>
     </div>
+
+    <!-- ── PROGRES
 
     <!-- ── PROGRES KM ── -->
     <div class="sl-card">
@@ -874,16 +946,15 @@ body.readonly label.btn { display:none !important }
       </div>
     </div>
 
-    <!-- ── MESAJ BUN VENIT ── -->
-    <div class="sl-card sl-welcome-card" id="sl-welcome-card">
-      <div class="sl-welcome-text" id="sl-welcome-text">Bun venit! Sunt Gabriel Balan, trail runner din Bârlad. Dacă ești aici, înseamnă că poate ne putem ajuta reciproc. Citește mai jos — îți promit că merită 3 minute.</div>
-    </div>
+    <!-- ── MESAJ
 
     <!-- ── CITAT ── -->
     <div class="sl-card sl-quote-card">
       <div class="sl-quote-text">"Nu alerg să câștig. Alerg ca să demonstrez că din Bârlad se poate."</div>
       <div class="sl-quote-author">— Balan Gabriel</div>
     </div>
+
+    <!-- ── VIDEO
 
     <!-- ── VIDEO ── -->
     <div class="sl-card" id="sl-video-card" style="display:none">
@@ -892,6 +963,8 @@ body.readonly label.btn { display:none !important }
         <iframe id="sl-video-iframe" src="" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width:100%;aspect-ratio:9/16;max-height:480px;border-radius:8px;display:block"></iframe>
       </div>
     </div>
+
+    <!-- ── HARTA
 
     <!-- ── HARTA INTERACTIVA ── -->
     <div class="sl-card">
@@ -902,6 +975,8 @@ body.readonly label.btn { display:none !important }
       </div>
       <div class="sl-map-legend" id="sl-map-legend"></div>
     </div>
+
+    <!-- ── TIMELINE
 
     <!-- ── TIMELINE CARIERA ── -->
     <div class="sl-card">
@@ -958,6 +1033,8 @@ body.readonly label.btn { display:none !important }
       </div>
     </div>
 
+    <!-- ── SIMULATOR
+
     <!-- ── SIMULATOR ROI ── -->
     <div class="sl-card">
       <div class="sl-card-title">💰 Simulator parteneriat</div>
@@ -975,13 +1052,7 @@ body.readonly label.btn { display:none !important }
       <div class="sl-roi-summary" id="sl-roi-summary"></div>
     </div>
 
-    <!-- ── UNDE SE DUC BANII ── -->
-    <div class="sl-card">
-      <div class="sl-card-title">💸 Unde se duc banii</div>
-      <p style="font-size:12px;color:var(--t3);margin-bottom:14px;line-height:1.6">Sponsorizarea ta acoperă costuri reale de sezon. Mai jos vezi exact pe ce se duc banii — live din planificarea mea:</p>
-      <div id="sl-budget-breakdown"></div>
-      <div class="sl-budget-total" id="sl-budget-total"></div>
-    </div>
+    <!-- ── UNDE SE DUC
 
     <!-- ── CE PRIMESTI ── -->
     <div class="sl-card">
@@ -1007,21 +1078,9 @@ body.readonly label.btn { display:none !important }
           <div class="sl-benefit-desc">Echipament cu brandul tău la start și finish în fața a sute de concurenți și spectatori — la Brașov, Sibiu, Bucovina și nu numai.</div>
         </div>
       </div>
-      <div class="sl-benefit">
-        <div class="sl-benefit-icon">📊</div>
-        <div class="sl-benefit-text">
-          <div class="sl-benefit-title">Transparență totală — dashboard live</div>
-          <div class="sl-benefit-desc">Ai acces permanent la acest tracker cu fiecare cursă, fiecare km alergat. Nu cuvinte — cifre reale, în timp real.</div>
-        </div>
-      </div>
-      <div class="sl-benefit">
-        <div class="sl-benefit-icon">🤝</div>
-        <div class="sl-benefit-text">
-          <div class="sl-benefit-title">Parteneriat autentic, nu reclamă</div>
-          <div class="sl-benefit-desc">Ești primul. Nu ești la rând. Îți dedic timp, atenție și recunoștință reală — și vorbesc despre tine ca om, nu ca brand impersonal.</div>
-        </div>
-      </div>
     </div>
+
+    
 
     <!-- ── FAQ ── -->
     <div class="sl-card">
@@ -1050,6 +1109,8 @@ body.readonly label.btn { display:none !important }
       </div>
     </div>
 
+    <!-- ── PARTENERI
+
     <!-- ── PARTENERI ACTUALI — dinamic din DB ── -->
     <div class="sl-card" id="sl-current-sponsors-card" style="display:none">
       <div class="sl-card-title">✅ Parteneri actuali — Sezon 2026</div>
@@ -1058,6 +1119,8 @@ body.readonly label.btn { display:none !important }
         💡 <em>Locuri disponibile — contactează-mă pentru detalii.</em>
       </div>
     </div>
+
+    <!-- ── CTA
 
     <!-- ── CTA ── -->
     <div class="sl-cta">
@@ -5017,6 +5080,7 @@ async function populateSponsorLanding() {
 
   // Animate km counter
   slAnimateKm(ytdKm||0, targetKm);
+  slInitScrollBar(ytdKm||0);
 
   // ── Sponsori dinamici (primit:true) ─────────────────
   const confirmedSponsors = (DB.sponsors||[]).filter(s=>s.primit);
@@ -5312,6 +5376,52 @@ function slRenderBudget() {
       bar.style.width = bar.dataset.pct + '%';
     });
   }, 300);
+}
+
+
+// ── Scroll KM Bar ────────────────────────────────────
+function slInitScrollBar(totalKm) {
+  const bar   = document.getElementById('sl-km-scrollbar');
+  const fill  = document.getElementById('sl-ksb-fill');
+  const dot   = document.getElementById('sl-ksb-dot');
+  const live  = document.getElementById('sl-ksb-km-live');
+  const tot   = document.getElementById('sl-ksb-total');
+  const msWrap= document.getElementById('sl-ksb-milestones');
+  const landing = document.getElementById('sponsor-landing');
+  if (!bar||!fill||!dot||!live||!landing) return;
+
+  tot.textContent = totalKm.toLocaleString('ro-RO') + ' km';
+  bar.classList.add('visible');
+
+  // Milestones
+  const MILESTONES = [
+    { km:500,  label:'Ian 2025' },
+    { km:1000, label:'1.000 km' },
+    { km:3000, label:'Bucovina' },
+  ].filter(m => m.km < totalKm);
+
+  msWrap.innerHTML = MILESTONES.map(m => {
+    const pct = (m.km / totalKm) * 100;
+    return `<div class="sl-ksb-milestone" style="top:${pct}%"></div>
+            <div class="sl-ksb-milestone-lbl" style="top:calc(${pct}% - 6px)">${m.label}</div>`;
+  }).join('');
+
+  const onScroll = () => {
+    const landingRect = landing.getBoundingClientRect();
+    const landingH    = landing.scrollHeight;
+    const scrolled    = Math.max(0, -landingRect.top);
+    const pct         = Math.min(1, scrolled / (landingH - window.innerHeight));
+    const pctPx       = (pct * 100).toFixed(1) + '%';
+
+    fill.style.height  = pctPx;
+    dot.style.bottom   = (100 - pct * 100).toFixed(1) + '%';
+    live.style.bottom  = (100 - pct * 100).toFixed(1) + '%';
+    live.textContent   = Math.round(pct * totalKm).toLocaleString('ro-RO');
+  };
+
+  landing.addEventListener('scroll', onScroll, { passive:true });
+  window.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
 }
 
 // ── FAQ toggle ──────────────────────────────────────
