@@ -1081,7 +1081,7 @@ body.readonly label.btn { display:none !important }
     <!-- ── CTA ── -->
     <div class="sl-cta">
       <button class="sl-btn-primary" onclick="slEnterDash()">📈 Vezi dashboardul live →</button>
-      <a href="https://wa.me/40700000000?text=Buna%20Gabriel%2C%20sunt%20interesat%20de%20un%20parteneriat%20pentru%20sezonul%202026." target="_blank" rel="noopener"
+      <a id="sl-wa-btn" href="https://wa.me/40700000000?text=Buna%20Gabriel%2C%20sunt%20interesat%20de%20un%20parteneriat%20pentru%20sezonul%202026." target="_blank" rel="noopener"
          style="width:100%;padding:12px;background:rgba(37,211,102,.1);color:#25d366;font-size:13px;font-weight:600;border:1px solid rgba(37,211,102,.3);border-radius:var(--r);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         Scrie-mi pe WhatsApp
@@ -1682,9 +1682,14 @@ body.readonly label.btn { display:none !important }
     <textarea id="set-story-short" rows="3" style="font-size:12px;width:100%;resize:vertical;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text)"></textarea>
     <div style="font-size:10px;color:var(--t3);margin-top:3px">Apare în cardul "Povestea" de pe landing, după citat.</div>
   </div>
-  <div class="fi">
+  <div class="fi" style="margin-bottom:12px">
     <span class="lbl">Email contact sponsor</span>
     <input type="email" id="set-contact-email" style="font-size:12px">
+  </div>
+  <div class="fi">
+    <span class="lbl">Număr WhatsApp (format internațional, fără +)</span>
+    <input type="tel" id="set-whatsapp-phone" placeholder="ex: 40712345678" style="font-size:12px">
+    <div style="font-size:10px;color:var(--t3);margin-top:3px">Apare pe butonul de contact din landing. Ex: România → 40 urmat de număr fără 0.</div>
   </div>
 </div>
 
@@ -4604,6 +4609,7 @@ const DEFAULT_SETTINGS = {
   hero_sub:     'Ultra-trail runner din Bârlad. Sezonul 2026 — 10 curse, 517km de munte, un singur obiectiv.',
   story_short:  '2025: 3.000km alergați, inclusiv un challenge de 600km în decembrie — 10km dimineața + 10km seara, pe lângă muncă. 2026 vine cu 10 curse, de la 25km la 114km.',
   contact_email:'evoluttionofall@gmail.com',
+  whatsapp_phone:'40', // număr fără + ex: 40712345678
   welcome_msg:  'Bun venit! Sunt Gabriel Balan, trail runner din Bârlad. Dacă ești aici, înseamnă că poate ne putem ajuta reciproc. Citește mai jos — îți promit că merită 3 minute.',
   landing_active: true,
   show_map:     true,
@@ -4682,7 +4688,8 @@ function renderSetari() {
   setVal('set-hero-sub',      s.hero_sub);
   setVal('set-welcome-msg',   s.welcome_msg);
   setVal('set-story-short',   s.story_short);
-  setVal('set-contact-email', s.contact_email);
+  setVal('set-contact-email',  s.contact_email);
+  setVal('set-whatsapp-phone', s.whatsapp_phone);
   setVal('set-target-km',     DB.prefs?.target_km || 5000);
   setVal('set-dash-title',    DB.prefs?.dash_title || 'SEZONUL BESTIEI');
 
@@ -4776,7 +4783,8 @@ async function saveSettings() {
   SETTINGS.hero_sub      = g('set-hero-sub');
   SETTINGS.welcome_msg   = g('set-welcome-msg');
   SETTINGS.story_short   = g('set-story-short');
-  SETTINGS.contact_email = g('set-contact-email');
+  SETTINGS.contact_email  = g('set-contact-email');
+  SETTINGS.whatsapp_phone = g('set-whatsapp-phone');
   SETTINGS.landing_active= gc('set-landing-active');
   SETTINGS.show_map      = gc('set-show-map');
   SETTINGS.show_video    = gc('set-show-video');
@@ -4922,6 +4930,13 @@ async function populateSponsorLanding() {
 
   // Animate km counter
   slAnimateKm(ytdKm||0, targetKm);
+
+  // WhatsApp phone dinamic
+  const waBtn = document.getElementById('sl-wa-btn');
+  if (waBtn && SETTINGS.whatsapp_phone) {
+    const phone = SETTINGS.whatsapp_phone.replace(/\D/g,'');
+    waBtn.href = 'https://wa.me/' + phone + '?text=Buna%20Gabriel%2C%20sunt%20interesat%20de%20un%20parteneriat%20pentru%20sezonul%202026.';
+  }
 
   // Progress bar
   const pct = Math.min(100, ((ytdKm||0)/targetKm)*100);
@@ -5319,125 +5334,7 @@ function checkSponsorParam() {
 }
 
 
-// ══════════════════════════════════════════════════════
-//  SETTINGS PAGE — LANDING CONFIG
-// ══════════════════════════════════════════════════════
-
-// In-memory config — loaded from user_prefs.landing_settings JSON
-let LC = {}; // landing config
-
-const LC_DEFAULTS = {
-  photo_url:      'https://i.imgur.com/7VqAGjI.jpeg',
-  video_url:      'https://www.youtube.com/embed/kD_nMBhmG_Y',
-  quote:          'Nu alerg să câștig. Alerg ca să demonstrez că din Bârlad se poate.',
-  hero_sub:       'Ultra-trail runner din Bârlad. Sezonul 2026 — 10 curse, 517km de munte, un singur obiectiv.',
-  story:          'Totul a început în mai 2024. De la primele km pe străzile Bârladului, la primul trail, la km 130 din Bucovina prin furtună. La km 130 cursa s-a oprit. Eu nu m-am oprit.',
-  contact_email:  'evoluttionofall@gmail.com',
-  landing_active: true,
-  show_map:       true,
-  show_video:     true,
-  show_budget:    true,
-  show_faq:       true,
-  show_timeline:  true,
-  faq: [
-    { q: 'De ce să sponsorizez un alergător necunoscut?', a: 'Tocmai asta e oportunitatea. Când voi deveni cunoscut, sponsorii vor fi mulți și costul va fi mare. Acum ești primul — parteneriat real, nu reclamă.' },
-    { q: 'Ce vizibilitate am dacă nu ai mulți urmăritori?', a: 'Vizibilitatea principală e fizică — logo pe echipament la curse cu sute de participanți. Dashboard-ul live e un instrument de credibilitate. Iar Bârladul e mic — toată lumea va ști că firma ta susține sportul local.' },
-    { q: 'Cum știu că banii se duc unde spui?', a: 'Ești pe pagina de răspuns. Acest dashboard arată în timp real fiecare cursă, fiecare km, fiecare cheltuială planificată.' },
-    { q: 'Ce se întâmplă dacă nu termini o cursă?', a: 'La Bucovina 2025 am ajuns la km 130 când furtuna a oprit cursa. Am continuat sezonul. Sponsorizarea nu e pe rezultate — e pe prezență și determinare.' },
-    { q: 'Suma minimă de sponsorizare?', a: 'Nu există minim. O contribuție de 200 RON e la fel de apreciată ca una de 2.000 RON. Folosește simulatorul să vezi ce primești în schimb.' },
-  ],
-  packages: [
-    { min: 0,    icon: '🏙️', title: 'Reprezinți Bârladul',      desc: 'Numele tău la 10 curse naționale — Bârladul pe harta trail-ului' },
-    { min: 0,    icon: '👕', title: 'Logo pe echipament',        desc: 'La start și finish la toate cele 10 curse ale sezonului' },
-    { min: 300,  icon: '📊', title: 'Dashboard live',            desc: 'Link la acest tracker — arată clienților că investești în sport local' },
-    { min: 600,  icon: '📸', title: 'Fotografie dedicată',       desc: 'Foto la finish line cu logo-ul tău vizibil, trimisă după fiecare cursă' },
-    { min: 1000, icon: '🔗', title: 'Mențiune publică',          desc: 'Menționat pe orice platformă — cu link activ' },
-    { min: 2000, icon: '🏆', title: 'Sponsor principal Bârlad', desc: 'Primul menționat, cel mai vizibil — adevărat parteneriat' },
-    { min: 3500, icon: '🌱', title: 'Eveniment local Bârlad',    desc: 'Organizăm împreună o alergare locală cu brandul tău în față' },
-  ],
-};
-
-// ── Load config from DB ─────────────────────────────
-async function loadLandingConfig() {
-  try {
-    const prefs = DB.prefs || {};
-    LC = Object.assign({}, LC_DEFAULTS, prefs.landing_settings || {});
-  } catch(e) {
-    LC = Object.assign({}, LC_DEFAULTS);
-  }
-}
-
-// ── Render settings page ────────────────────────────
-// (duplicate renderSetari removed)
-
-// ── FAQ editor ──────────────────────────────────────
-function renderSetFaq() {
-  const el = document.getElementById('set-faq-list');
-  if (!el) return;
-  const faqs = LC.faq || [];
-  el.innerHTML = faqs.map((f, i) => `
-    <div class="set-list-item" id="set-faq-${i}">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-        <span style="font-size:11px;color:var(--t3);flex:1">Întrebare ${i+1}</span>
-        <button class="btn btn-ghost btn-sm btn-icon" onclick="setDelFaq(${i})" style="color:var(--red)">🗑</button>
-      </div>
-      <input type="text" value="${escHtml(f.q)}" oninput="LC.faq[${i}].q=this.value"
-        style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px;margin-bottom:6px">
-      <textarea rows="2" oninput="LC.faq[${i}].a=this.value"
-        style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px;resize:vertical"
-        >${escHtml(f.a)}</textarea>
-    </div>`).join('') || '<div style="font-size:12px;color:var(--t3);padding:8px 0">Niciun FAQ. Apasă + pentru a adăuga.</div>';
-}
-
-function setAddFaq() {
-  if (!LC.faq) LC.faq = [];
-  LC.faq.push({ q: '', a: '' });
-  renderSetFaq();
-}
-
-function setDelFaq(i) {
-  LC.faq.splice(i, 1);
-  renderSetFaq();
-}
-
-// ── Pachete editor ──────────────────────────────────
-function renderSetPackages() {
-  const el = document.getElementById('set-packages-list');
-  if (!el) return;
-  const pkgs = LC.packages || [];
-  el.innerHTML = pkgs.map((p, i) => `
-    <div class="set-list-item" style="margin-bottom:10px;background:var(--s2);border-radius:8px;padding:12px;border:1px solid var(--border)">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <input type="text" value="${escHtml(p.icon||'')}" oninput="LC.packages[${i}].icon=this.value"
-          style="width:42px;text-align:center;background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:6px;font-size:16px;color:var(--text)">
-        <input type="text" value="${escHtml(p.title||'')}" placeholder="Titlu nivel" oninput="LC.packages[${i}].title=this.value"
-          style="flex:1;background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;font-weight:600;color:var(--text)">
-        <button class="btn btn-ghost btn-sm btn-icon" onclick="setDelPackage(${i})" style="color:var(--red)">🗑</button>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-        <span class="lbl" style="font-size:11px;color:var(--t3);white-space:nowrap">De la (RON)</span>
-        <input type="number" value="${p.min||0}" oninput="LC.packages[${i}].min=parseInt(this.value)||0"
-          style="width:90px;background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--accent)">
-      </div>
-      <textarea rows="2" placeholder="Descriere beneficiu..." oninput="LC.packages[${i}].desc=this.value"
-        style="width:100%;background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:11px;resize:vertical"
-        >${escHtml(p.desc||'')}</textarea>
-    </div>`).join('') || '<div style="font-size:12px;color:var(--t3);padding:8px 0">Niciun pachet. Apasă + pentru a adăuga.</div>';
-}
-
-function setAddPackage() {
-  if (!LC.packages) LC.packages = [];
-  LC.packages.push({ min: 0, icon: '🎁', title: '', desc: '' });
-  renderSetPackages();
-}
-
-function setDelPackage(i) {
-  LC.packages.splice(i, 1);
-  renderSetPackages();
-}
-
-// ── Save all settings ───────────────────────────────
-// saveSettings defined above (single implementation)
+// ── Settings engine: folosește SETTINGS + funcțiile din blocul de mai sus ──
 
 // ── Helper ──────────────────────────────────────────
 function escHtml(s) {
