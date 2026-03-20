@@ -829,18 +829,10 @@ body.readonly label.btn { display:none !important }
       <div class="sl-name">BALAN GABRIEL</div>
       <span class="sl-tag">Trail Runner · HAX · Bârlad</span>
       <div class="sl-sub">Ultra-trail runner din Bârlad. Sezonul 2026 — 10 curse, 517km de munte, un singur obiectiv.</div>
-      <!-- Sponsor principal — vizibil imediat -->
-      <div style="margin-top:18px;display:flex;flex-direction:column;align-items:center;gap:6px">
+      <!-- Sponsor principal — dinamic din DB -->
+      <div id="sl-hero-sponsors" style="margin-top:18px;display:none;flex-direction:column;align-items:center;gap:6px">
         <div style="font-size:9px;color:var(--t4);letter-spacing:2px;text-transform:uppercase">Susținut de</div>
-        <a href="https://dezmembraru.ro" target="_blank" rel="noopener"
-           style="display:inline-flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--accent-border);border-radius:10px;padding:8px 16px;text-decoration:none;transition:border-color .2s,background .2s">
-          <span style="font-size:20px">🚗</span>
-          <div style="text-align:left">
-            <div style="font-family:'Bebas Neue',var(--display);font-size:16px;letter-spacing:1px;color:var(--accent)">DEZMEMBRARU.RO</div>
-            <div style="font-size:9px;color:var(--t3);letter-spacing:1px;margin-top:1px">SC PRISCOM DEZMEMBRĂRI AUTO SRL · Sponsor principal 2026</div>
-          </div>
-          <span style="font-size:10px;color:var(--t4);margin-left:4px">↗</span>
-        </a>
+        <div id="sl-hero-sponsors-list" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center"></div>
       </div>
     </div>
 
@@ -1058,23 +1050,12 @@ body.readonly label.btn { display:none !important }
       </div>
     </div>
 
-    <!-- ── PARTENERI ACTUALI ── -->
-    <div class="sl-card" id="sl-current-sponsors-card">
+    <!-- ── PARTENERI ACTUALI — dinamic din DB ── -->
+    <div class="sl-card" id="sl-current-sponsors-card" style="display:none">
       <div class="sl-card-title">✅ Parteneri actuali — Sezon 2026</div>
-      <div style="display:flex;align-items:center;gap:14px;padding:10px 0">
-        <div style="width:44px;height:44px;border-radius:10px;background:var(--accent-dim);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🚗</div>
-        <div style="flex:1">
-          <a href="https://dezmembraru.ro" target="_blank" rel="noopener"
-             style="font-family:'Bebas Neue',var(--display);font-size:18px;letter-spacing:1px;color:var(--accent);text-decoration:none">DEZMEMBRARU.RO</a>
-          <div style="font-size:11px;color:var(--t3);margin-top:2px">SC PRISCOM DEZMEMBRĂRI AUTO SRL · Bârlad</div>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-family:'Bebas Neue',var(--display);font-size:22px;color:var(--green)">5.000 RON</div>
-          <div style="font-size:9px;color:var(--t3);letter-spacing:1px;text-transform:uppercase">Sponsor principal</div>
-        </div>
-      </div>
+      <div id="sl-partners-list"></div>
       <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--t3);line-height:1.6">
-        💡 <em>Locuri disponibile pentru sponsor secundar — contactează-mă pentru detalii.</em>
+        💡 <em>Locuri disponibile — contactează-mă pentru detalii.</em>
       </div>
     </div>
 
@@ -1230,6 +1211,11 @@ body.readonly label.btn { display:none !important }
     <button class="save-btn" id="export-btn" onclick="exportJSON()" style="margin-top:6px;color:var(--t2);border-color:var(--border)">💾 Export JSON</button>
     <button class="save-btn" id="login-btn" onclick="showLoginModal()" style="margin-top:6px;color:var(--accent);border-color:var(--accent-border);background:var(--accent-dim)">🔑 Login</button>
     <button class="save-btn" id="logout-btn" onclick="doLogout()" style="margin-top:6px;color:var(--red);border-color:rgba(255,79,79,.2);background:rgba(255,79,79,.05);display:none">🚪 Deconectare</button>
+    <!-- Sponsori strip -->
+    <div id="sidebar-sponsors" style="display:none;margin-top:12px;border-top:1px solid var(--border);padding-top:10px">
+      <div style="font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Susținut de</div>
+      <div id="sidebar-sponsors-list" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center"></div>
+    </div>
     <!-- Theme switcher — owner only -->
     <div id="theme-switcher" style="display:none;margin-top:14px;border-top:1px solid var(--border);padding-top:12px">
       <div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">🎨 Temă</div>
@@ -1923,6 +1909,28 @@ body.readonly label.btn { display:none !important }
       </div>
       <div class="fi fgrow"><span class="lbl">Note</span><textarea id="sp-note" rows="2" placeholder="Condiții, termeni, observații..."></textarea></div>
     </div>
+    <div class="sl">🌐 Prezență online (opțional)</div>
+    <div class="fg">
+      <div class="fi fgrow">
+        <span class="lbl">Website</span>
+        <input id="sp-website" type="url" placeholder="ex: https://dezmembraru.ro">
+      </div>
+      <div class="fi fgrow">
+        <span class="lbl">URL Logo (imgur, drive etc.)</span>
+        <div style="display:flex;gap:6px;align-items:flex-start">
+          <input id="sp-logo-url" type="url" placeholder="https://i.imgur.com/..." style="flex:1"
+            oninput="
+              const p=document.getElementById('sp-logo-preview');
+              const img=document.getElementById('sp-logo-img');
+              if(this.value&&p&&img){img.src=this.value;img.onload=()=>p.style.display='block';img.onerror=()=>p.style.display='none';}
+              else if(p) p.style.display='none';">
+          <div id="sp-logo-preview" style="display:none;flex-shrink:0">
+            <img id="sp-logo-img" src="" style="height:36px;width:auto;max-width:80px;object-fit:contain;border-radius:4px;border:1px solid var(--border);background:white;padding:2px">
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--t3);margin-top:3px">Se va afișa în sidebar și pe landing page.</div>
+      </div>
+    </div>
     <div class="sl">Status</div>
     <div class="cb-row"><input type="checkbox" id="sp-primit"><label for="sp-primit">✅ Sumă primită / confirmată</label></div>
   </div>
@@ -2444,6 +2452,7 @@ function renderAll() {
   renderBuget();
   renderEstimare();
   renderSponsori();
+  renderSidebarSponsors();
   renderEchip();
   renderNutri();
   renderStats();
@@ -3126,17 +3135,26 @@ function renderSponsori() {
     <div class="tile"><span class="lbl">În așteptare</span><div class="tv yellow">${fmt(total-primit)} RON</div></div>
   `;
   document.getElementById('sp-cards').innerHTML = sp.map(x=>`
-    <div class="bk-card" style="padding:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-      <div style="flex:1;min-width:160px">
-        <div style="font-family:var(--display);font-size:18px;letter-spacing:1px;color:var(--text);margin-bottom:4px">${escHtml(x.denumire)}</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <span class="badge">${escHtml(x.tip||'general')}</span>
-          ${x.contact?`<span class="badge">📞 ${escHtml(x.contact)}</span>`:''}
-          ${x.data?`<span class="badge">📅 ${fd(x.data)}</span>`:''}
+    <div class="bk-card" style="padding:16px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:160px">
+        <!-- Logo sau placeholder -->
+        <div style="width:52px;height:52px;flex-shrink:0;border-radius:8px;border:1px solid var(--border);background:white;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:3px">
+          ${x.logo_url
+            ? `<img src="${esc(x.logo_url)}" style="width:100%;height:100%;object-fit:contain" onerror="this.parentNode.innerHTML='💼'">`
+            : `<span style="font-size:20px">💼</span>`}
         </div>
-        ${x.note?`<div style="margin-top:6px;font-size:11px;color:var(--t3)">${escHtml(x.note)}</div>`:''}
+        <div style="flex:1;min-width:0">
+          <div style="font-family:var(--display);font-size:18px;letter-spacing:1px;color:var(--text);margin-bottom:3px">${escHtml(x.denumire)}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+            <span class="badge">${escHtml(x.tip||'general')}</span>
+            ${x.website?`<a href="${esc(x.website)}" target="_blank" rel="noopener" style="font-size:10px;color:var(--accent);text-decoration:none;border:1px solid var(--accent-border);border-radius:10px;padding:1px 7px">🌐 Website ↗</a>`:''}
+            ${x.contact?`<span class="badge">📞 ${escHtml(x.contact)}</span>`:''}
+            ${x.data?`<span class="badge">📅 ${fd(x.data)}</span>`:''}
+          </div>
+          ${x.note?`<div style="margin-top:5px;font-size:11px;color:var(--t3)">${escHtml(x.note)}</div>`:''}
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px">
+      <div style="display:flex;align-items:center;gap:12px;flex-shrink:0">
         <div style="text-align:right">
           <div style="font-family:var(--display);font-size:22px;color:${x.primit?'var(--green)':'var(--accent)'}">${fmt(x.suma)} RON</div>
           <div style="font-size:11px;color:${x.primit?'var(--green)':'var(--yellow)'}">${x.primit?'✅ Primit':'⏳ Angajat'}</div>
@@ -3147,6 +3165,27 @@ function renderSponsori() {
         </div>
       </div>
     </div>`).join('') || '<p style="color:var(--t3)">Niciun sponsor înregistrat.</p>';
+}
+
+// ── Sidebar sponsors strip ─────────────────────────
+function renderSidebarSponsors() {
+  const confirmed = (DB.sponsors||[]).filter(s=>s.primit && s.logo_url);
+  const wrap = document.getElementById('sidebar-sponsors');
+  const list = document.getElementById('sidebar-sponsors-list');
+  if (!wrap||!list) return;
+  if (!confirmed.length) { wrap.style.display='none'; return; }
+  wrap.style.display = 'block';
+  list.innerHTML = confirmed.map(s=>`
+    <a href="${s.website?esc(s.website):'#'}" target="_blank" rel="noopener"
+       title="${escHtml(s.denumire)}"
+       style="display:inline-flex;align-items:center;justify-content:center;
+              width:44px;height:28px;border-radius:5px;border:1px solid var(--border);
+              background:white;padding:3px;text-decoration:none;transition:border-color .15s"
+       onmouseover="this.style.borderColor='var(--accent)'"
+       onmouseout="this.style.borderColor='var(--border)'">
+      <img src="${esc(s.logo_url)}" style="max-width:38px;max-height:22px;object-fit:contain"
+           onerror="this.parentNode.style.display='none'">
+    </a>`).join('');
 }
 
 // ══════════════════════════════════════════════════════
@@ -3317,8 +3356,14 @@ function openSP(id) {
   const v=(fid,val)=>{const el=document.getElementById(fid);if(el)el.value=val||'';};
   v('sp-den',x.denumire); v('sp-suma',x.suma); v('sp-data',x.data);
   v('sp-contact',x.contact); v('sp-note',x.note);
+  v('sp-website', x.website); v('sp-logo-url', x.logo_url);
   const tip=document.getElementById('sp-tip'); if(tip) tip.value=x.tip||'general';
   const pr=document.getElementById('sp-primit'); if(pr) pr.checked=!!x.primit;
+  // Preview logo dacă există
+  const lprev=document.getElementById('sp-logo-preview');
+  const limg=document.getElementById('sp-logo-img');
+  if(x.logo_url&&lprev&&limg){limg.src=x.logo_url;lprev.style.display='block';}
+  else if(lprev) lprev.style.display='none';
   document.getElementById('ov-sp').classList.add('on');
 }
 function closeSP() { document.getElementById('ov-sp').classList.remove('on'); editSPid=null; }
@@ -3335,6 +3380,8 @@ async function saveSP() {
     contact: document.getElementById('sp-contact').value.trim(),
     tip: document.getElementById('sp-tip').value,
     note: document.getElementById('sp-note').value.trim(),
+    website: document.getElementById('sp-website').value.trim()||null,
+    logo_url: document.getElementById('sp-logo-url').value.trim()||null,
     primit: document.getElementById('sp-primit').checked,
   };
   try {
@@ -4930,6 +4977,65 @@ async function populateSponsorLanding() {
 
   // Animate km counter
   slAnimateKm(ytdKm||0, targetKm);
+
+  // ── Sponsori dinamici (primit:true) ─────────────────
+  const confirmedSponsors = (DB.sponsors||[]).filter(s=>s.primit);
+
+  // Hero badge
+  const heroSp    = document.getElementById('sl-hero-sponsors');
+  const heroSpList= document.getElementById('sl-hero-sponsors-list');
+  if (heroSp && heroSpList && confirmedSponsors.length) {
+    heroSpList.innerHTML = confirmedSponsors.map(s => s.logo_url
+      ? `<a href="${s.website||'#'}" target="_blank" rel="noopener"
+           title="${escHtml(s.denumire)}"
+           style="display:inline-flex;align-items:center;justify-content:center;
+                  background:white;border:1px solid var(--accent-border);border-radius:8px;
+                  padding:5px 10px;text-decoration:none;transition:border-color .2s"
+           onmouseover="this.style.borderColor='var(--accent)'"
+           onmouseout="this.style.borderColor='var(--accent-border)'">
+           <img src="${esc(s.logo_url)}" style="height:28px;max-width:90px;object-fit:contain">
+         </a>`
+      : `<a href="${s.website||'#'}" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:6px;background:var(--s2);
+                  border:1px solid var(--accent-border);border-radius:8px;padding:6px 12px;
+                  text-decoration:none;font-size:13px;font-weight:600;color:var(--accent)">
+           💼 ${escHtml(s.denumire)}
+         </a>`
+    ).join('');
+    heroSp.style.display = 'flex';
+  }
+
+  // Card parteneri
+  const partCard = document.getElementById('sl-current-sponsors-card');
+  const partList = document.getElementById('sl-partners-list');
+  if (partCard && partList && confirmedSponsors.length) {
+    partCard.style.display = '';
+    partList.innerHTML = confirmedSponsors.map(s => `
+      <div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)">
+        <div style="width:52px;height:52px;flex-shrink:0;border-radius:8px;border:1px solid var(--border);
+                    background:white;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:4px">
+          ${s.logo_url
+            ? `<img src="${esc(s.logo_url)}" style="width:100%;height:100%;object-fit:contain"
+                    onerror="this.parentNode.innerHTML='<span style=font-size:22px>💼</span>'">`
+            : `<span style="font-size:22px">💼</span>`}
+        </div>
+        <div style="flex:1;min-width:0">
+          ${s.website
+            ? `<a href="${esc(s.website)}" target="_blank" rel="noopener"
+                  style="font-family:'Bebas Neue',var(--display);font-size:18px;letter-spacing:1px;
+                         color:var(--accent);text-decoration:none">${escHtml(s.denumire)}</a>`
+            : `<div style="font-family:'Bebas Neue',var(--display);font-size:18px;letter-spacing:1px;
+                           color:var(--accent)">${escHtml(s.denumire)}</div>`}
+          <div style="font-size:11px;color:var(--t3);margin-top:2px">${escHtml(s.tip||'general')}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-family:'Bebas Neue',var(--display);font-size:20px;color:var(--green)">${fmt(s.suma||0)} RON</div>
+          <div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px">Sponsor confirmat</div>
+        </div>
+      </div>`).join('').replace(/border-bottom[^"]*";>\s*$/, '">'); // remove last border
+  } else if (partCard) {
+    partCard.style.display = 'none';
+  }
 
   // WhatsApp phone dinamic
   const waBtn = document.getElementById('sl-wa-btn');
