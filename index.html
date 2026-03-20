@@ -916,17 +916,43 @@ body.readonly label.btn { display:none !important }
 
     /* Mobile — bara mai lată, text vizibil */
     @media(max-width:560px){
-      #sl-km-scrollbar { width:12px; }
-      .sl-ksb-live,
-      .sl-ksb-ms-lbl,
-      .sl-ksb-top-lbl,
-      .sl-ksb-bot-lbl { display:none !important; }
+      /* Bara mai îngustă pe mobil */
+      #sl-km-scrollbar { width:36px; }
       .sl-ksb-track { width:3px; }
       .sl-ksb-dot { width:9px; height:9px; }
+
+      /* Km live — deasupra dot-ului, nu lateral */
+      .sl-ksb-live {
+        left:50% !important;
+        transform:translateX(-50%);
+        font-size:10px;
+        bottom:calc(100% + 14px) !important;
+        border-radius:4px;
+        white-space:nowrap;
+      }
+
+      /* Milestone label — apare deasupra liniei, centrat */
+      .sl-ksb-ms-lbl {
+        left:50% !important;
+        transform:translateX(-50%);
+        top:-22px !important;
+        font-size:8px;
+        text-align:center;
+        background:var(--bg);
+        padding:1px 4px;
+        border-radius:3px;
+        border:1px solid var(--border);
+        white-space:nowrap;
+      }
+      .sl-ksb-ms-date { display:none; }
+
+      /* Labels sus/jos — vertical */
+      .sl-ksb-top-lbl { font-size:7px; }
+      .sl-ksb-bot-lbl { font-size:8px; }
     }
     /* Mobile: sl-wrap padding adaptat */
     @media(max-width:560px){
-      .sl-wrap { padding-left:20px !important; }
+      .sl-wrap { padding-left:22px !important; }
     }
     /* Desktop larg: bara nu mai e nevoie de padding extra */
     @media(min-width:800px){
