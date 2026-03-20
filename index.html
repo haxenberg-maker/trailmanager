@@ -52,7 +52,7 @@ document.currentScript.parentNode.appendChild(link);
 #sponsor-landing.on { display:block; }
 #sponsor-landing { padding:0; }
 #sponsor-landing.visible { opacity:1; }
-.sl-wrap { max-width:480px;margin:0 auto;padding:32px 20px 60px 44px;min-height:100vh;display:flex;flex-direction:column;gap:0; }
+.sl-wrap { max-width:480px;margin:0 auto;padding:40px 28px 80px 44px;min-height:100vh;display:flex;flex-direction:column;gap:0; }
 
 /* Hero */
 .sl-hero { text-align:center;padding:40px 0 32px;border-bottom:1px solid var(--border);margin-bottom:16px; }
@@ -466,6 +466,80 @@ select option{background:var(--s2)}
 .tl-item:last-child{border-bottom:none}
 .tl-item-lbl{color:var(--t2)}
 .tl-item-val{font-weight:600}
+
+/* ── ACTIVITY FEED ── */
+.af-card {
+  background:var(--s1);border:1px solid var(--border);border-radius:var(--r);
+  overflow:hidden;transition:border-color .15s;
+}
+.af-card:hover { border-color:var(--border2); }
+.af-head {
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  cursor:pointer;user-select:none;
+}
+.af-type-badge {
+  width:34px;height:34px;border-radius:8px;
+  background:var(--accent-dim);border:1px solid var(--accent-border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.af-info { flex:1;min-width:0; }
+.af-name {
+  font-size:13px;font-weight:600;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.af-date { font-size:10px;color:var(--t3);margin-top:2px; }
+.af-stats {
+  display:flex;gap:10px;flex-shrink:0;align-items:center;
+}
+.af-stat { text-align:center; }
+.af-stat-val {
+  font-family:var(--display);font-size:15px;color:var(--accent);
+  white-space:nowrap;line-height:1;
+}
+.af-stat-lbl { font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px; }
+.af-expand { display:none;border-top:1px solid var(--border);padding:12px 14px; }
+.af-card.open .af-expand { display:block; }
+.af-map { background:var(--s2);border-radius:8px;overflow:hidden;margin-bottom:10px; }
+.af-map svg { display:block;width:100%;height:auto; }
+.af-extra-stats {
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:8px;
+}
+.af-extra-stat {
+  background:var(--s2);border-radius:7px;padding:8px 6px;text-align:center;
+}
+.af-extra-stat-val {
+  font-family:var(--display);font-size:16px;color:var(--text);
+  line-height:1;
+}
+.af-extra-stat-lbl { font-size:9px;color:var(--t3);margin-top:2px; }
+
+/* ── WEEKLY LOAD BARS ── */
+.wl-bar-wrap {
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  position:relative;height:100%;justify-content:flex-end;
+  cursor:default;
+}
+.wl-bar-inner {
+  width:100%;border-radius:4px 4px 0 0;
+  min-height:2px;transition:height .4s cubic-bezier(.4,0,.2,1);
+  position:relative;
+}
+.wl-bar-km  { background:var(--accent);opacity:.9; }
+.wl-bar-elev { background:var(--green);opacity:.7;position:absolute;bottom:0;left:0;right:0;border-radius:4px 4px 0 0; }
+.wl-bar-lbl {
+  position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);
+  font-size:8px;color:var(--t4);white-space:nowrap;
+}
+.wl-bar-current .wl-bar-km { background:var(--accent);opacity:1;box-shadow:0 0 8px var(--accent-border); }
+.wl-bar-current .wl-bar-lbl { color:var(--accent);font-weight:600; }
+.wl-bar-tip {
+  position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:var(--s3);border:1px solid var(--border2);border-radius:6px;
+  padding:4px 7px;font-size:10px;color:var(--text);white-space:nowrap;
+  display:none;z-index:10;pointer-events:none;
+}
+.wl-bar-wrap:hover .wl-bar-tip { display:block; }
 
 /* ── READ-ONLY (guest) MODE ── */
 body.readonly .btn-primary:not(.allow-guest),
@@ -1535,6 +1609,41 @@ body.readonly label.btn { display:none !important }
       <div style="font-size:11px;color:var(--t3)" id="db-heatmap-year">2026</div>
     </div>
     <div id="db-heatmap" style="overflow-x:auto"></div>
+  </div>
+
+  <!-- WEEKLY LOAD -->
+  <div class="bk-card" style="padding:20px;margin-top:16px" id="db-weekly-load-card">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+      <div>
+        <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">📊 Weekly Load — ultimele 8 săptămâni</div>
+        <div style="font-size:11px;color:var(--t3)" id="db-wl-subtitle">km + D+ pe săptămână</div>
+      </div>
+      <div id="db-wl-delta" style="text-align:right;font-size:12px"></div>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:4px;height:120px;padding-bottom:24px;position:relative;overflow:visible" id="db-wl-bars"></div>
+    <div style="display:flex;justify-content:space-between;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+      <div style="text-align:center;flex:1">
+        <div style="font-family:var(--display);font-size:20px;color:var(--accent)" id="db-wl-avg-km">—</div>
+        <div style="font-size:10px;color:var(--t3)">km/săptămână avg</div>
+      </div>
+      <div style="text-align:center;flex:1">
+        <div style="font-family:var(--display);font-size:20px;color:var(--green)" id="db-wl-avg-elev">—</div>
+        <div style="font-size:10px;color:var(--t3)">m D+/săptămână avg</div>
+      </div>
+      <div style="text-align:center;flex:1">
+        <div style="font-family:var(--display);font-size:20px;color:var(--yellow)" id="db-wl-this-week">—</div>
+        <div style="font-size:10px;color:var(--t3)">km săptămâna asta</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIVITY FEED -->
+  <div style="margin-top:24px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">⚡ Activitate recentă</div>
+      <button onclick="go('stats',document.querySelector('.ni[onclick*=stats]'))" style="font-size:11px;color:var(--accent);background:none;border:none;cursor:pointer;padding:0">Vezi toate →</button>
+    </div>
+    <div id="db-activity-feed" style="display:flex;flex-direction:column;gap:10px"></div>
   </div>
 
 </div>
@@ -2805,6 +2914,12 @@ function renderDash() {
 
   // ── Race history ───────────────────────────────────────
   renderRaceHistory();
+
+  // ── Weekly Load ─────────────────────────────────────────
+  renderWeeklyLoad(allActs);
+
+  // ── Activity Feed ────────────────────────────────────────
+  renderActivityFeed(allActs);
 }
 
 function rcCard(c) {
@@ -4544,6 +4659,212 @@ function toggleSplits(safeId) {
 // ══════════════════════════════════════════════════════
 //  CHART HELPERS
 // ══════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════
+//  WEEKLY LOAD
+// ══════════════════════════════════════════════════════
+function renderWeeklyLoad(acts) {
+  const barsEl   = document.getElementById('db-wl-bars');
+  const deltaEl  = document.getElementById('db-wl-delta');
+  const avgKmEl  = document.getElementById('db-wl-avg-km');
+  const avgElEl  = document.getElementById('db-wl-avg-elev');
+  const thisWkEl = document.getElementById('db-wl-this-week');
+  if (!barsEl) return;
+
+  // Împarte activitățile pe săptămâni ISO (Lu-Du)
+  function getWeekKey(dateStr) {
+    const d = new Date(dateStr);
+    const day = d.getDay() || 7; // 1=Lu, 7=Du
+    d.setDate(d.getDate() - day + 1); // Luni din săptămâna asta
+    return d.toISOString().slice(0,10);
+  }
+
+  // Ultimele 8 săptămâni
+  const today = new Date(); today.setHours(0,0,0,0);
+  const weeks = [];
+  for (let i = 7; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i * 7);
+    const day = d.getDay() || 7;
+    d.setDate(d.getDate() - day + 1);
+    weeks.push(d.toISOString().slice(0,10));
+  }
+
+  // Agregă km și D+ pe săptămână
+  const weekData = {};
+  weeks.forEach(w => { weekData[w] = { km:0, elev:0, count:0 }; });
+  acts.forEach(a => {
+    if (!a.date) return;
+    const wk = getWeekKey(a.date);
+    if (weekData[wk]) {
+      weekData[wk].km    += parseFloat(a.km)   || 0;
+      weekData[wk].elev  += parseFloat(a.elev) || 0;
+      weekData[wk].count++;
+    }
+  });
+
+  const thisWeekKey = getWeekKey(today.toISOString().slice(0,10));
+  const wkArr = weeks.map(w => ({ key:w, ...weekData[w] }));
+  const maxKm  = Math.max(...wkArr.map(w => w.km), 1);
+
+  // Labels săptămână
+  const monthNames = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
+  function wkLabel(key) {
+    const d = new Date(key);
+    return `${d.getDate()} ${monthNames[d.getMonth()]}`;
+  }
+
+  // Bars HTML
+  barsEl.innerHTML = wkArr.map(w => {
+    const pct      = Math.round((w.km / maxKm) * 100);
+    const isCur    = w.key === thisWeekKey;
+    const tipText  = `${w.km.toFixed(1)} km · ${Math.round(w.elev)} m D+`;
+    return `
+    <div class="wl-bar-wrap ${isCur ? 'wl-bar-current' : ''}">
+      <div class="wl-bar-tip">${tipText}</div>
+      <div class="wl-bar-inner wl-bar-km" style="height:${pct}%">
+      </div>
+      <div class="wl-bar-lbl">${wkLabel(w.key)}</div>
+    </div>`;
+  }).join('');
+
+  // Statistici
+  const validWks = wkArr.filter(w => w.km > 0);
+  const avgKm    = validWks.length ? validWks.reduce((s,w) => s+w.km, 0) / validWks.length : 0;
+  const avgElev  = validWks.length ? validWks.reduce((s,w) => s+w.elev, 0) / validWks.length : 0;
+  const thisKm   = weekData[thisWeekKey]?.km || 0;
+  const prevKey  = weeks[weeks.length - 2];
+  const prevKm   = weekData[prevKey]?.km || 0;
+
+  if (avgKmEl)  avgKmEl.textContent  = avgKm.toFixed(0);
+  if (avgElEl)  avgElEl.textContent  = Math.round(avgElev).toLocaleString('ro-RO');
+  if (thisWkEl) thisWkEl.textContent = thisKm.toFixed(1);
+
+  // Delta față de săptămâna trecută
+  if (deltaEl && prevKm > 0) {
+    const delta = thisKm - prevKm;
+    const sign  = delta >= 0 ? '+' : '';
+    const col   = delta >= 0 ? 'var(--green)' : 'var(--red)';
+    deltaEl.innerHTML = `<span style="color:${col};font-size:13px;font-weight:600">${sign}${delta.toFixed(1)} km</span><br><span style="font-size:10px;color:var(--t3)">față de săpt. trecută</span>`;
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  ACTIVITY FEED
+// ══════════════════════════════════════════════════════
+function renderActivityFeed(acts) {
+  const feedEl = document.getElementById('db-activity-feed');
+  if (!feedEl) return;
+
+  const recent = [...acts]
+    .filter(a => a.date && a.km > 0)
+    .sort((a,b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 8);
+
+  if (!recent.length) {
+    feedEl.innerHTML = '<p style="color:var(--t3);font-size:12px">Nicio activitate importată încă.</p>';
+    return;
+  }
+
+  const typeIcon = { Run:'🏃', TrailRun:'🏔️', Ride:'🚴', Walk:'🚶', Hike:'🥾', Swim:'🏊' };
+  const typeLabel= { Run:'Alergare', TrailRun:'Trail', Ride:'Ciclism', Walk:'Mers', Hike:'Drumeție', Swim:'Înot' };
+
+  feedEl.innerHTML = recent.map((a, idx) => {
+    const icon  = typeIcon[a.type]  || '⚡';
+    const lbl   = typeLabel[a.type] || a.type || 'Activitate';
+    const dateD = a.date ? new Date(a.date).toLocaleDateString('ro-RO',{weekday:'short',day:'numeric',month:'short'}) : '—';
+    const pace  = a.km && a.dur ? fmtPace(a.dur, a.km) : null;
+    const dur   = a.dur ? fmtDur(a.dur) : null;
+    const hr    = a.hr_avg ? a.hr_avg + ' bpm' : null;
+    const elev  = a.elev ? Math.round(a.elev) + ' m' : null;
+
+    // Mini hartă SVG din polyline
+    let mapHtml = '';
+    if (a.polyline) {
+      try {
+        const pts = decodePolyline(a.polyline);
+        if (pts.length >= 2) {
+          const lats = pts.map(p=>p[0]), lngs = pts.map(p=>p[1]);
+          const minLat=Math.min(...lats), maxLat=Math.max(...lats);
+          const minLng=Math.min(...lngs), maxLng=Math.max(...lngs);
+          const W=300, H=80, pad=8;
+          const toX = lng => pad + (lng-minLng)/(maxLng-minLng||1)*(W-pad*2);
+          const toY = lat => pad + (maxLat-lat)/(maxLat-minLat||1)*(H-pad*2);
+          const pathD = 'M' + pts.map(p=>toX(p[1]).toFixed(1)+','+toY(p[0]).toFixed(1)).join('L');
+          const cs = getComputedStyle(document.documentElement);
+          const acc = cs.getPropertyValue('--accent').trim();
+          const bg2 = cs.getPropertyValue('--s2').trim();
+          mapHtml = `<div class="af-map">
+            <svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="height:80px">
+              <rect width="${W}" height="${H}" fill="${bg2}" rx="8"/>
+              <path d="${pathD}" fill="none" stroke="${acc}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>
+              <circle cx="${toX(pts[0][1]).toFixed(1)}" cy="${toY(pts[0][0]).toFixed(1)}" r="3" fill="${acc}"/>
+              <circle cx="${toX(pts[pts.length-1][1]).toFixed(1)}" cy="${toY(pts[pts.length-1][0]).toFixed(1)}" r="3" fill="${acc}" opacity=".6"/>
+            </svg>
+          </div>`;
+        }
+      } catch(e) {}
+    }
+
+    const extraStats = [
+      pace  && { val:pace,       lbl:'Pace'      },
+      dur   && { val:dur,        lbl:'Durată'    },
+      hr    && { val:hr,         lbl:'HR avg'    },
+      elev  && { val:elev,       lbl:'D+'        },
+    ].filter(Boolean);
+
+    return `
+    <div class="af-card" id="af-${idx}">
+      <div class="af-head" onclick="toggleAF(${idx})">
+        <div class="af-type-badge">${icon}</div>
+        <div class="af-info">
+          <div class="af-name">${escHtml(a.name||lbl)}</div>
+          <div class="af-date">${dateD} · ${lbl}</div>
+        </div>
+        <div class="af-stats">
+          <div class="af-stat">
+            <div class="af-stat-val">${(a.km||0).toFixed(1)}</div>
+            <div class="af-stat-lbl">km</div>
+          </div>
+          ${elev ? `<div class="af-stat">
+            <div class="af-stat-val">${Math.round(a.elev)}</div>
+            <div class="af-stat-lbl">m D+</div>
+          </div>` : ''}
+          <div style="color:var(--t3);font-size:12px;margin-left:4px">▾</div>
+        </div>
+      </div>
+      <div class="af-expand">
+        ${mapHtml}
+        ${extraStats.length ? `<div class="af-extra-stats">
+          ${extraStats.map(s=>`<div class="af-extra-stat">
+            <div class="af-extra-stat-val">${s.val}</div>
+            <div class="af-extra-stat-lbl">${s.lbl}</div>
+          </div>`).join('')}
+        </div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleAF(idx) {
+  document.getElementById('af-'+idx)?.classList.toggle('open');
+}
+
+// Decodare polyline Google format
+function decodePolyline(encoded) {
+  const pts = []; let i=0, lat=0, lng=0;
+  while (i < encoded.length) {
+    let b, shift=0, result=0;
+    do { b=encoded.charCodeAt(i++)-63; result|=(b&0x1f)<<shift; shift+=5; } while(b>=0x20);
+    lat += (result&1) ? ~(result>>1) : (result>>1);
+    shift=0; result=0;
+    do { b=encoded.charCodeAt(i++)-63; result|=(b&0x1f)<<shift; shift+=5; } while(b>=0x20);
+    lng += (result&1) ? ~(result>>1) : (result>>1);
+    pts.push([lat/1e5, lng/1e5]);
+  }
+  return pts;
+}
+
 function drawHeatmap(containerId, activities, year) {
   const el=document.getElementById(containerId);
   if(!el) return;
