@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trail Running Manager 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;1,9..40,300&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <meta name="theme-color" content="#0c0e0d">
 <script>
 // Apply theme immediately — before any rendering — to prevent flash
@@ -223,7 +223,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14
   font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;letter-spacing:.5px;
   display:flex;align-items:center;justify-content:center;gap:6px;
 }
-.save-btn:hover{background:rgba(184,255,79,.18)}
+.save-btn:hover{background:var(--accent-dim)}
 .save-btn.saved{color:var(--green);border-color:rgba(79,255,155,.3);background:rgba(79,255,155,.08)}
 
 /* ── MAIN ── */
@@ -241,7 +241,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14
 /* ── BUTTONS ── */
 .btn{padding:9px 18px;border-radius:7px;font-family:var(--body);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;border:none;letter-spacing:.3px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .btn-primary{background:var(--accent);color:#0c0e0d}
-.btn-primary:hover{background:#caff6b;transform:translateY(-1px);box-shadow:0 4px 16px rgba(184,255,79,.25)}
+.btn-primary:hover{background:#caff6b;transform:translateY(-1px);box-shadow:0 4px 16px var(--accent-border)}
 .btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--border)}
 .btn-ghost:hover{background:var(--s2);color:var(--text)}
 .btn-danger{background:rgba(255,79,79,.08);color:var(--red);border:1px solid rgba(255,79,79,.2)}
@@ -258,7 +258,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14
   padding:18px;transition:all .15s;position:relative;overflow:hidden;cursor:default;
 }
 .rc:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,0,0,.3)}
-.rc.star{border-color:rgba(184,255,79,.25)}
+.rc.star{border-color:var(--accent-border)}
 .rc.star::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--green))}
 .rc.past{opacity:.65}
 
@@ -372,6 +372,8 @@ tr:hover td{background:rgba(255,255,255,.015)}
 .fgrow{grid-column:span 2}
 .fi{display:flex;flex-direction:column;gap:4px}
 .fi lbl{font-size:11px;color:var(--t3);font-weight:500;letter-spacing:.3px}
+/* .lbl — înlocuiește tagul invalid <span class="lbl"> */
+.lbl{font-size:12px;color:var(--t3);display:block;margin-bottom:5px;font-weight:500}
 input,select,textarea{background:var(--s2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:var(--body);font-size:13px;padding:9px 12px;width:100%;transition:border-color .15s}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 select option{background:var(--s2)}
@@ -459,7 +461,7 @@ select option{background:var(--s2)}
 .tl-total.mid{color:var(--yellow)}
 .tl-total.low{color:var(--green)}
 .tl-body{padding:0 16px;max-height:0;overflow:hidden;transition:max-height .3s ease}
-.tl-body.open{max-height:400px}
+.tl-body.open{max-height:800px}
 .tl-item{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(37,43,38,.3);font-size:13px}
 .tl-item:last-child{border-bottom:none}
 .tl-item-lbl{color:var(--t2)}
@@ -548,7 +550,7 @@ body.readonly label.btn { display:none !important }
 }
 .act-name{font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .act-tag{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;
-  background:rgba(184,255,79,.1);color:var(--accent);border:1px solid var(--accent-border)}
+  background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border)}
 .act-tag.road{background:rgba(79,200,255,.1);color:#4fc8ff;border-color:rgba(79,200,255,.2)}
 .act-tag.track{background:rgba(255,200,79,.1);color:var(--yellow);border-color:rgba(255,200,79,.2)}
 .st-bar-wrap{position:absolute;bottom:0;left:0;right:0;top:0;display:flex;align-items:flex-end;gap:3px;padding:0 2px}
@@ -567,7 +569,7 @@ body.readonly label.btn { display:none !important }
 
 /* ── DASHBOARD HERO ── */
 .dash-hero{
-  background:linear-gradient(135deg,var(--s2) 0%,rgba(184,255,79,.06) 100%);
+  background:linear-gradient(135deg,var(--s2) 0%,var(--accent-dim) 100%);
   border:1px solid var(--border2);border-radius:14px;
   padding:32px 32px 28px;margin-bottom:20px;
   position:relative;overflow:hidden;
@@ -575,7 +577,7 @@ body.readonly label.btn { display:none !important }
 .dash-hero::before{
   content:'';position:absolute;top:-40px;right:-40px;
   width:200px;height:200px;border-radius:50%;
-  background:radial-gradient(circle,rgba(184,255,79,.08) 0%,transparent 70%);
+  background:radial-gradient(circle,var(--accent-dim) 0%,transparent 70%);
 }
 .dash-hero-eyebrow{font-size:10px;color:var(--t3);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
 .dash-hero-title{font-family:var(--display);font-size:52px;letter-spacing:4px;color:var(--text);line-height:1;margin-bottom:4px}
@@ -656,7 +658,7 @@ body.readonly label.btn { display:none !important }
   font-family:var(--body);font-size:14px;font-weight:700;
   border:none;cursor:pointer;transition:all .15s;letter-spacing:.3px;
 }
-.login-btn:hover{background:#caff6b;transform:translateY(-1px);box-shadow:0 4px 20px rgba(184,255,79,.3)}
+.login-btn:hover{background:#caff6b;transform:translateY(-1px);box-shadow:0 4px 20px var(--accent-border)}
 .login-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .login-err{font-size:12px;color:var(--red);text-align:center;min-height:18px;margin-top:-4px}
 .login-sep{text-align:center;font-size:12px;color:var(--t3);margin:8px 0}
@@ -713,7 +715,7 @@ body.readonly label.btn { display:none !important }
 }
 .bn .bn-ico{font-size:18px;line-height:1}
 .bn.on{color:var(--accent)}
-.bn.on .bn-ico{filter:drop-shadow(0 0 6px rgba(184,255,79,.5))}
+.bn.on .bn-ico{filter:drop-shadow(0 0 6px var(--accent-border))}
 
 /* ── RESPONSIVE ── */
 @media(max-width:700px){
@@ -1073,16 +1075,16 @@ body.readonly label.btn { display:none !important }
     </div>
     <div class="login-fields">
       <div class="fi">
-        <lbl style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Email</lbl>
+        <lbl style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Email</span>
         <input type="email" id="auth-email" placeholder="email@exemplu.com" autocomplete="email">
       </div>
       <div class="fi">
-        <lbl style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Parolă</lbl>
+        <lbl style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Parolă</span>
         <input type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password"
           onkeydown="if(event.key==='Enter') doAuth()">
       </div>
       <div class="fi" id="auth-pass2-wrap" style="display:none">
-        <lbl style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Confirmă parola</lbl>
+        <lbl style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Confirmă parola</span>
         <input type="password" id="auth-pass2" placeholder="••••••••" autocomplete="new-password"
           onkeydown="if(event.key==='Enter') doAuth()">
       </div>
@@ -1449,21 +1451,21 @@ body.readonly label.btn { display:none !important }
   <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">⚙️ Setări geluri</div>
   <div class="tiles" style="margin-bottom:28px" id="gel-settings-tiles">
     <div class="tile" style="display:flex;flex-direction:column;gap:10px">
-      <lbl>Preț set 24 geluri (RON)</lbl>
+      <span class="lbl">Preț set 24 geluri (RON)</span>
       <div style="display:flex;gap:8px;align-items:center">
         <input type="number" id="gel-pret" style="max-width:120px" placeholder="200">
         <button class="btn btn-ghost btn-sm" onclick="saveGelSettings()">Salvează</button>
       </div>
     </div>
     <div class="tile" style="display:flex;flex-direction:column;gap:10px">
-      <lbl>Geluri training lunar (buc)</lbl>
+      <span class="lbl">Geluri training lunar (buc)</span>
       <div style="display:flex;gap:8px;align-items:center">
         <input type="number" id="gel-training" style="max-width:120px" placeholder="8">
         <button class="btn btn-ghost btn-sm" onclick="saveGelSettings()">Salvează</button>
       </div>
     </div>
     <div class="tile">
-      <lbl>Preț / gel calculat</lbl>
+      <span class="lbl">Preț / gel calculat</span>
       <div class="tv accent" id="gel-pret-calc">—</div>
       <div class="ts">RON per gel</div>
     </div>
@@ -1614,7 +1616,7 @@ body.readonly label.btn { display:none !important }
 <div class="bk-card" style="padding:20px;margin-bottom:12px">
   <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">📸 Media</div>
   <div class="fi" style="margin-bottom:14px">
-    <lbl>URL Poză profil</lbl>
+    <span class="lbl">URL Poză profil</span>
     <div style="display:flex;gap:8px;align-items:center">
       <input type="url" id="set-photo-url" placeholder="https://i.imgur.com/..." style="font-size:12px;flex:1">
       <div id="set-photo-preview" style="display:none"><img id="set-photo-img" src="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)"></div>
@@ -1622,7 +1624,7 @@ body.readonly label.btn { display:none !important }
     <div style="font-size:10px;color:var(--t3);margin-top:4px">Link direct la imagine (imgur, cloudinary etc). Apare ca avatar circular în hero.</div>
   </div>
   <div class="fi">
-    <lbl>URL Video embed</lbl>
+    <span class="lbl">URL Video embed</span>
     <input type="url" id="set-video-url" placeholder="https://www.youtube.com/embed/..." style="font-size:12px">
     <div style="font-size:10px;color:var(--t3);margin-top:4px">YouTube: copiază ID-ul din link și pune-l după /embed/. Ex: youtube.com/shorts/<strong>kD_nMBhmG_Y</strong> → youtube.com/embed/<strong>kD_nMBhmG_Y</strong></div>
   </div>
@@ -1632,26 +1634,26 @@ body.readonly label.btn { display:none !important }
 <div class="bk-card" style="padding:20px;margin-bottom:12px">
   <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">💬 Texte landing</div>
   <div class="fi" style="margin-bottom:12px">
-    <lbl>Citat personal (apare bold, mare)</lbl>
+    <span class="lbl">Citat personal (apare bold, mare)</span>
     <input type="text" id="set-quote" style="font-size:13px">
   </div>
   <div class="fi" style="margin-bottom:12px">
-    <lbl>Subtitlu hero (sub nume)</lbl>
+    <span class="lbl">Subtitlu hero (sub nume)</span>
     <input type="text" id="set-hero-sub" style="font-size:12px">
     <div style="font-size:10px;color:var(--t3);margin-top:3px">Ex: "Ultra-trail runner din Bârlad. 10 curse, 517km."</div>
   </div>
   <div class="fi" style="margin-bottom:12px">
-    <lbl>Mesaj de bun-venit (primul text vizibil sub hero)</lbl>
+    <span class="lbl">Mesaj de bun-venit (primul text vizibil sub hero)</span>
     <textarea id="set-welcome-msg" rows="2" style="font-size:12px;width:100%;resize:vertical;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text)"></textarea>
     <div style="font-size:10px;color:var(--t3);margin-top:3px">Apare imediat după countdown — primul lucru pe care îl citește sponsorul.</div>
   </div>
   <div class="fi" style="margin-bottom:12px">
-    <lbl>Poveste scurtă (paragraful introductiv)</lbl>
+    <span class="lbl">Poveste scurtă (paragraful introductiv)</span>
     <textarea id="set-story-short" rows="3" style="font-size:12px;width:100%;resize:vertical;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text)"></textarea>
     <div style="font-size:10px;color:var(--t3);margin-top:3px">Apare în cardul "Povestea" de pe landing, după citat.</div>
   </div>
   <div class="fi">
-    <lbl>Email contact sponsor</lbl>
+    <span class="lbl">Email contact sponsor</span>
     <input type="email" id="set-contact-email" style="font-size:12px">
   </div>
 </div>
@@ -1718,11 +1720,11 @@ body.readonly label.btn { display:none !important }
 <div class="bk-card" style="padding:20px;margin-bottom:12px">
   <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">🎯 General dashboard</div>
   <div class="fi" style="margin-bottom:12px">
-    <lbl>Target km anual</lbl>
+    <span class="lbl">Target km anual</span>
     <input type="number" id="set-target-km" placeholder="5000" style="font-size:13px">
   </div>
   <div class="fi">
-    <lbl>Titlu dashboard</lbl>
+    <span class="lbl">Titlu dashboard</span>
     <input type="text" id="set-dash-title" placeholder="SEZONUL BESTIEI" style="font-size:13px">
   </div>
 </div>
@@ -1741,17 +1743,17 @@ body.readonly label.btn { display:none !important }
   <div class="mh"><h3 id="rc-title">CURSĂ NOUĂ</h3><button class="mx" onclick="closeRC()">✕</button></div>
   <div class="mb">
     <div class="fg">
-      <div class="fi fgrow"><lbl>Denumire cursă *</lbl><input id="f-den" placeholder="ex: Ultra Trail Apuseni"></div>
-      <div class="fi"><lbl>Distanță (km)</lbl><input type="number" id="f-dist" placeholder="42"></div>
-      <div class="fi"><lbl>Denivelare (m)</lbl><input type="number" id="f-deniv" placeholder="2400"></div>
-      <div class="fi"><lbl>Data cursei *</lbl><input type="date" id="f-dc"></div>
-      <div class="fi"><lbl>Ora start</lbl><input type="time" id="f-ora" value="09:00"></div>
-      <div class="fi"><lbl>Data plecare</lbl><input type="date" id="f-dp"></div>
-      <div class="fi"><lbl>Data întoarcere</lbl><input type="date" id="f-di"></div>
+      <div class="fi fgrow"><span class="lbl">Denumire cursă *</span><input id="f-den" placeholder="ex: Ultra Trail Apuseni"></div>
+      <div class="fi"><span class="lbl">Distanță (km)</span><input type="number" id="f-dist" placeholder="42"></div>
+      <div class="fi"><span class="lbl">Denivelare (m)</span><input type="number" id="f-deniv" placeholder="2400"></div>
+      <div class="fi"><span class="lbl">Data cursei *</span><input type="date" id="f-dc"></div>
+      <div class="fi"><span class="lbl">Ora start</span><input type="time" id="f-ora" value="09:00"></div>
+      <div class="fi"><span class="lbl">Data plecare</span><input type="date" id="f-dp"></div>
+      <div class="fi"><span class="lbl">Data întoarcere</span><input type="date" id="f-di"></div>
       
-      <div class="fi"><lbl>Nr. geluri estimat</lbl><input type="number" id="f-gel" placeholder="5"></div>
-      <div class="fi"><lbl>Cost cazare (RON)</lbl><input type="number" id="f-caz" placeholder="300"></div>
-      <div class="fi fgrow"><lbl>Cost înscriere (RON)</lbl><input type="number" id="f-ins" placeholder="200"></div>
+      <div class="fi"><span class="lbl">Nr. geluri estimat</span><input type="number" id="f-gel" placeholder="5"></div>
+      <div class="fi"><span class="lbl">Cost cazare (RON)</span><input type="number" id="f-caz" placeholder="300"></div>
+      <div class="fi fgrow"><span class="lbl">Cost înscriere (RON)</span><input type="number" id="f-ins" placeholder="200"></div>
     </div>
     <div class="sl">Status & plăți</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
@@ -1762,14 +1764,14 @@ body.readonly label.btn { display:none !important }
     <div class="sl">🔗 Dovezi plăți</div>
     <div class="fg">
       <div class="fi fgrow">
-        <lbl>Link dovadă înscriere</lbl>
+        <span class="lbl">Link dovadă înscriere</span>
         <div style="display:flex;gap:6px;align-items:center">
           <input id="f-link-ins" placeholder="https://drive.google.com/... sau orice link" style="flex:1">
           <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('f-link-ins')" title="Preview">👁</button>
         </div>
       </div>
       <div class="fi fgrow">
-        <lbl>Link dovadă cazare</lbl>
+        <span class="lbl">Link dovadă cazare</span>
         <div style="display:flex;gap:6px;align-items:center">
           <input id="f-link-caz" placeholder="https://drive.google.com/... sau orice link" style="flex:1">
           <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('f-link-caz')" title="Preview">👁</button>
@@ -1822,19 +1824,19 @@ body.readonly label.btn { display:none !important }
   <div class="mh"><h3 id="eq-title">ECHIPAMENT NOU</h3><button class="mx" onclick="closeEQ()">✕</button></div>
   <div class="mb">
     <div class="fg">
-      <div class="fi fgrow"><lbl>Denumire *</lbl><input id="eq-den" placeholder="ex: Hoka Speedgoat 7"></div>
-      <div class="fi"><lbl>Categorie</lbl>
+      <div class="fi fgrow"><span class="lbl">Denumire *</span><input id="eq-den" placeholder="ex: Hoka Speedgoat 7"></div>
+      <div class="fi"><span class="lbl">Categorie</span>
         <select id="eq-cat">
           <option>Pantofi Curse Scurte</option><option>Pantofi Curse Lungi</option>
           <option>Rucsac</option><option>Bastoane</option><option>Altele</option>
         </select>
       </div>
-      <div class="fi"><lbl>Preț (RON)</lbl><input type="number" id="eq-prt" placeholder="700"></div>
-      <div class="fi"><lbl>Km maximi</lbl><input type="number" id="eq-kmx" placeholder="800"></div>
-      <div class="fi"><lbl>Km actuali parcurși</lbl><input type="number" id="eq-kma" placeholder="0"></div>
-      <div class="fi fgrow"><lbl>Note</lbl><textarea id="eq-note" rows="2" placeholder="Observații..."></textarea></div>
+      <div class="fi"><span class="lbl">Preț (RON)</span><input type="number" id="eq-prt" placeholder="700"></div>
+      <div class="fi"><span class="lbl">Km maximi</span><input type="number" id="eq-kmx" placeholder="800"></div>
+      <div class="fi"><span class="lbl">Km actuali parcurși</span><input type="number" id="eq-kma" placeholder="0"></div>
+      <div class="fi fgrow"><span class="lbl">Note</span><textarea id="eq-note" rows="2" placeholder="Observații..."></textarea></div>
       <div class="sl">Dovadă achiziție</div>
-      <div class="fi fgrow"><lbl>Link dovadă (factură/chitanță)</lbl><input id="eq-link" placeholder="https://..."></div>
+      <div class="fi fgrow"><span class="lbl">Link dovadă (factură/chitanță)</span><input id="eq-link" placeholder="https://..."></div>
       <div style="margin-top:4px" id="eq-link-preview-wrap"></div>
       <div class="sl">Utilizare</div>
       <div class="fi fgrow">
@@ -1845,13 +1847,13 @@ body.readonly label.btn { display:none !important }
         <input type="hidden" id="eq-use-type" value="race">
         <!-- Training section -->
         <div id="eq-train-section" style="display:none">
-          <lbl>Luni de utilizare (training)</lbl>
+          <span class="lbl">Luni de utilizare (training)</span>
           <input type="number" id="eq-train-months" placeholder="ex: 6" min="1" max="24" style="margin-top:6px">
           <div style="font-size:11px;color:var(--t3);margin-top:4px">Costul va fi distribuit lunar în Estimare An</div>
         </div>
         <!-- Race section -->
         <div id="eq-race-section">
-          <lbl>Selectează cursele în care se folosește</lbl>
+          <span class="lbl">Selectează cursele în care se folosește</span>
           <div id="eq-race-checkboxes" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;max-height:280px;overflow-y:auto;padding:2px"></div>
         </div>
       </div>
@@ -1870,11 +1872,11 @@ body.readonly label.btn { display:none !important }
   <div class="mh"><h3 id="sp-title">SPONSOR NOU</h3><button class="mx" onclick="closeSP()">✕</button></div>
   <div class="mb">
     <div class="fg">
-      <div class="fi fgrow"><lbl>Nume sponsor *</lbl><input id="sp-den" placeholder="ex: SC PRISCOM SRL"></div>
-      <div class="fi"><lbl>Sumă (RON)</lbl><input type="number" id="sp-suma" placeholder="5000"></div>
-      <div class="fi"><lbl>Data acordului</lbl><input type="date" id="sp-data"></div>
-      <div class="fi fgrow"><lbl>Contact</lbl><input id="sp-contact" placeholder="Persoană / telefon / email"></div>
-      <div class="fi fgrow"><lbl>Ce acoperă</lbl>
+      <div class="fi fgrow"><span class="lbl">Nume sponsor *</span><input id="sp-den" placeholder="ex: SC PRISCOM SRL"></div>
+      <div class="fi"><span class="lbl">Sumă (RON)</span><input type="number" id="sp-suma" placeholder="5000"></div>
+      <div class="fi"><span class="lbl">Data acordului</span><input type="date" id="sp-data"></div>
+      <div class="fi fgrow"><span class="lbl">Contact</span><input id="sp-contact" placeholder="Persoană / telefon / email"></div>
+      <div class="fi fgrow"><span class="lbl">Ce acoperă</span>
         <select id="sp-tip">
           <option value="general">General (sezon întreg)</option>
           <option value="echipament">Echipament</option>
@@ -1884,7 +1886,7 @@ body.readonly label.btn { display:none !important }
           <option value="altele">Altele</option>
         </select>
       </div>
-      <div class="fi fgrow"><lbl>Note</lbl><textarea id="sp-note" rows="2" placeholder="Condiții, termeni, observații..."></textarea></div>
+      <div class="fi fgrow"><span class="lbl">Note</span><textarea id="sp-note" rows="2" placeholder="Condiții, termeni, observații..."></textarea></div>
     </div>
     <div class="sl">Status</div>
     <div class="cb-row"><input type="checkbox" id="sp-primit"><label for="sp-primit">✅ Sumă primită / confirmată</label></div>
@@ -1902,12 +1904,12 @@ body.readonly label.btn { display:none !important }
   <div class="mh"><h3 id="supl-title">SUPLIMENT NOU</h3><button class="mx" onclick="closeSupl()">✕</button></div>
   <div class="mb">
     <div class="fg">
-      <div class="fi fgrow"><lbl>Denumire *</lbl><input id="supl-den" placeholder="ex: Colagen"></div>
-      <div class="fi fgrow"><lbl>Cantitate / porții</lbl><input id="supl-cant" placeholder="ex: 500gr = 28 porții"></div>
-      <div class="fi fgrow"><lbl>Cost lunar (RON)</lbl><input type="number" id="supl-pret" placeholder="1400"></div>
-      <div class="fi fgrow"><lbl>Note</lbl><textarea id="supl-note" rows="2" placeholder="Observații..."></textarea></div>
+      <div class="fi fgrow"><span class="lbl">Denumire *</span><input id="supl-den" placeholder="ex: Colagen"></div>
+      <div class="fi fgrow"><span class="lbl">Cantitate / porții</span><input id="supl-cant" placeholder="ex: 500gr = 28 porții"></div>
+      <div class="fi fgrow"><span class="lbl">Cost lunar (RON)</span><input type="number" id="supl-pret" placeholder="1400"></div>
+      <div class="fi fgrow"><span class="lbl">Note</span><textarea id="supl-note" rows="2" placeholder="Observații..."></textarea></div>
       <div class="sl">Dovadă achiziție</div>
-      <div class="fi fgrow"><lbl>Link dovadă (factură/comandă)</lbl><input id="supl-link" placeholder="https://..."></div>
+      <div class="fi fgrow"><span class="lbl">Link dovadă (factură/comandă)</span><input id="supl-link" placeholder="https://..."></div>
       <div style="margin-top:4px" id="supl-link-preview-wrap"></div>
     </div>
   </div>
@@ -1924,9 +1926,9 @@ body.readonly label.btn { display:none !important }
   <div class="mh"><h3 id="tr-title">DESTINAȚIE NOUĂ</h3><button class="mx" onclick="closeTr()">✕</button></div>
   <div class="mb">
     <div class="fg">
-      <div class="fi fgrow"><lbl>Destinație *</lbl><input id="tr-dest" placeholder="ex: Brașov"></div>
-      <div class="fi"><lbl>Distanță dus (km)</lbl><input type="number" id="tr-km" placeholder="456"></div>
-      <div class="fi fgrow"><lbl>Cost estimat dus-întors (RON)</lbl><input type="number" id="tr-pret" placeholder="260"></div>
+      <div class="fi fgrow"><span class="lbl">Destinație *</span><input id="tr-dest" placeholder="ex: Brașov"></div>
+      <div class="fi"><span class="lbl">Distanță dus (km)</span><input type="number" id="tr-km" placeholder="456"></div>
+      <div class="fi fgrow"><span class="lbl">Cost estimat dus-întors (RON)</span><input type="number" id="tr-pret" placeholder="260"></div>
     </div>
   </div>
   <div class="mf">
@@ -2519,10 +2521,10 @@ function renderDash() {
 
   const tilesEl = setEl('db-tiles');
   if(tilesEl) tilesEl.innerHTML = `
-    <div class="tile"><lbl>Total necesar 2026</lbl><div class="tv">${fmt(tNecesar)} RON</div><div class="ts">curse + echipament + suplimente</div></div>
-    <div class="tile"><lbl>Sponsorizare angajată</lbl><div class="tv accent">${fmt(tSp)} RON</div><div class="ts" style="color:var(--yellow)">${fmt(restant)} RON neprimit</div></div>
-    <div class="tile"><lbl>${deficit>0?'Deficit':'Surplus'}</lbl><div class="tv ${deficit>0?'red':'green'}">${fmt(Math.abs(deficit))} RON</div><div class="ts">${deficit>0?'fonduri insuficiente':'fonduri suficiente'}</div></div>
-    <div class="tile"><lbl>Plăți restante</lbl><div class="tv red">${fmt((tIns-pIns)+(tCaz-pCaz))} RON</div><div class="ts">înscrieri + cazare</div></div>
+    <div class="tile"><span class="lbl">Total necesar 2026</span><div class="tv">${fmt(tNecesar)} RON</div><div class="ts">curse + echipament + suplimente</div></div>
+    <div class="tile"><span class="lbl">Sponsorizare angajată</span><div class="tv accent">${fmt(tSp)} RON</div><div class="ts" style="color:var(--yellow)">${fmt(restant)} RON neprimit</div></div>
+    <div class="tile"><span class="lbl">${deficit>0?'Deficit':'Surplus'}</span><div class="tv ${deficit>0?'red':'green'}">${fmt(Math.abs(deficit))} RON</div><div class="ts">${deficit>0?'fonduri insuficiente':'fonduri suficiente'}</div></div>
+    <div class="tile"><span class="lbl">Plăți restante</span><div class="tv red">${fmt((tIns-pIns)+(tCaz-pCaz))} RON</div><div class="ts">înscrieri + cazare</div></div>
   `;
 
   // ── Donut chart ────────────────────────────────────────
@@ -2556,7 +2558,7 @@ function renderDash() {
   if(spListEl) spListEl.innerHTML = DB.sponsors.slice(0,5).map(s=>`
     <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)">
       <div>
-        <div style="font-size:12px;color:var(--text)">${s.denumire}</div>
+        <div style="font-size:12px;color:var(--text)">${escHtml(s.denumire)}</div>
         <div style="font-size:10px;color:var(--t3)">${s.tip||'general'} · ${s.primit?'✅ Primit':'⏳ Angajat'}</div>
       </div>
       <div style="font-family:var(--display);font-size:16px;color:${s.primit?'var(--green)':'var(--accent)'}">${fmt(parseFloat(s.suma)||0)} RON</div>
@@ -2599,7 +2601,7 @@ function renderDash() {
     return `<div class="pay-card">
       <div class="pay-card-top">
         <div>
-          <div class="pay-card-name">${x.denumire}</div>
+          <div class="pay-card-name">${escHtml(x.denumire)}</div>
           <div class="pay-card-date">${fd(x.data_cursa)} · ⏳ ${Math.ceil((new Date(x.data_cursa)-today)/86400000)} zile</div>
         </div>
         <div style="font-family:var(--display);font-size:20px;color:var(--red)">${fmt(deAchitat)} RON</div>
@@ -2627,14 +2629,14 @@ function rcCard(c) {
     <div class="rc-top">
       <div>
         <div class="rc-nr">#${c.nr||'—'}</div>
-        <div class="rc-name">${c.denumire}</div>
+        <div class="rc-name">${escHtml(c.denumire)}</div>
         <div class="rc-date">${fd(c.data_cursa)}</div>
         ${days!==null&&days<=14?`<div class="rc-cd soon">🔥 ${days} zile</div>`:days!==null?`<div class="rc-cd">⏳ ${days} zile</div>`:''}
       </div>
     </div>
     <div class="rc-nums">
-      <div class="rn"><lbl>Distanță</lbl><div class="rv">${c.distanta||'—'}<span class="ru"> km</span></div></div>
-      <div class="rn"><lbl>Denivelare</lbl><div class="rv">${c.denivelare?((c.denivelare/1000).toFixed(1)):''}<span class="ru"> km D+</span></div></div>
+      <div class="rn"><span class="lbl">Distanță</span><div class="rv">${c.distanta||'—'}<span class="ru"> km</span></div></div>
+      <div class="rn"><span class="lbl">Denivelare</span><div class="rv">${c.denivelare?((c.denivelare/1000).toFixed(1)):''}<span class="ru"> km D+</span></div></div>
     </div>
     <div class="rc-foot">
       <div class="rc-cost">${fmt((c.plata_concurs||0)+(c.cazare||0))} <small>RON</small></div>
@@ -2690,15 +2692,15 @@ function rcCardFull(c) {
     <div class="rc-top">
       <div>
         <div class="rc-nr">#${c.nr||'—'}</div>
-        <div class="rc-name">${c.denumire}</div>
+        <div class="rc-name">${escHtml(c.denumire)}</div>
         <div class="rc-date">${fd(c.data_cursa)} · ${c.ora_start||''}</div>
         ${cdHtml}
       </div>
     </div>
     <div class="rc-nums">
-      <div class="rn"><lbl>Distanță</lbl><div class="rv">${c.distanta||'—'}<span class="ru"> km</span></div></div>
-      <div class="rn"><lbl>Denivelare</lbl><div class="rv">${c.denivelare?((c.denivelare/1000).toFixed(1)):''}<span class="ru"> km D+</span></div></div>
-      <div class="rn"><lbl>Geluri</lbl><div class="rv">${c.geluri||0}<span class="ru"> buc</span></div></div>
+      <div class="rn"><span class="lbl">Distanță</span><div class="rv">${c.distanta||'—'}<span class="ru"> km</span></div></div>
+      <div class="rn"><span class="lbl">Denivelare</span><div class="rv">${c.denivelare?((c.denivelare/1000).toFixed(1)):''}<span class="ru"> km D+</span></div></div>
+      <div class="rn"><span class="lbl">Geluri</span><div class="rv">${c.geluri||0}<span class="ru"> buc</span></div></div>
     </div>
     <div class="rc-tags">${tags.join('')}</div>
     <div class="rc-foot">
@@ -2710,7 +2712,7 @@ function rcCardFull(c) {
         <button class="btn btn-danger btn-sm btn-icon" onclick="delRC('${c.id}')">🗑</button>
       </div>
     </div>
-    ${c.note?`<div class="rc-note">📝 ${c.note}</div>`:''}
+    ${c.note?`<div class="rc-note">📝 ${escHtml(c.note)}</div>`:''}
     ${(c.link_dovada_ins||c.link_dovada_caz)?`
     <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
       ${c.link_dovada_ins?`<button onclick="openPreview('${c.link_dovada_ins.replace(/'/g,"\'")}','Dovadă înscriere — ${c.denumire.replace(/'/g,"\'")}')" class="btn btn-ghost btn-sm" style="font-size:11px">📄 Dovadă înscriere</button>`:''}
@@ -2731,7 +2733,7 @@ function filterC(f, el) {
 // ══════════════════════════════════════════════════════
 function renderCal() {
   const months = ['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
-  const year = 2026;
+  const year = new Date().getFullYear(); // dinamic, nu hardcodat
   const today = new Date(); today.setHours(0,0,0,0);
 
   // Build per-month events including travel periods
@@ -2785,8 +2787,8 @@ function renderCal() {
       const isPast = cur < today;
       const type = dayTypes[d];
       let bg = 'transparent', color = isPast ? 'var(--t3)' : 'var(--t2)', fw = '400', border = 'none';
-      if (type === 'race')   { bg = 'var(--accent)'; color = '#0a1a0a'; fw = '700'; border = 'none'; }
-      if (type === 'travel') { bg = 'rgba(184,255,79,.15)'; color = isPast?'var(--t3)':'var(--accent)'; border = '1px solid rgba(184,255,79,.25)'; }
+      if (type === 'race')   { bg = 'var(--accent)'; color = 'var(--bg)'; fw = '700'; border = 'none'; }
+      if (type === 'travel') { bg = 'var(--accent-dim)'; color = isPast?'var(--t3)':'var(--accent)'; border = '1px solid var(--accent-border)'; }
       gridCells += `<div style="text-align:center;padding:3px 0;border-radius:4px;font-size:11px;background:${bg};color:${color};font-weight:${fw};border:${border}">${d}</div>`;
     }
 
@@ -2803,11 +2805,11 @@ function renderCal() {
       <div style="padding:10px 0;border-top:1px solid var(--border);display:flex;gap:12px;align-items:flex-start;opacity:${past?.6:1}">
         <div style="font-family:var(--display);font-size:28px;color:${past?'var(--t3)':'var(--accent)'};line-height:1;min-width:32px;text-align:center">${raceDay}</div>
         <div style="flex:1;min-width:0">
-          <div style="font-size:14px;font-weight:600;color:${past?'var(--t3)':'var(--text)'};margin-bottom:3px">${x.denumire}</div>
+          <div style="font-size:14px;font-weight:600;color:${past?'var(--t3)':'var(--text)'};margin-bottom:3px">${escHtml(x.denumire)}</div>
           <div style="font-size:11px;color:var(--t3);margin-bottom:4px">${x.distanta||0} km · ${x.denivelare||0} m D+ · Start ${x.ora_start||'?'}</div>
           <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
-            ${dep?`<span style="font-size:10px;background:rgba(184,255,79,.1);border:1px solid rgba(184,255,79,.2);color:var(--accent);padding:2px 8px;border-radius:10px">✈️ Plecare ${dep}</span>`:''}
-            ${ret && ret!==dep?`<span style="font-size:10px;background:rgba(184,255,79,.1);border:1px solid rgba(184,255,79,.2);color:var(--accent);padding:2px 8px;border-radius:10px">🏠 Întoarcere ${ret}</span>`:''}
+            ${dep?`<span style="font-size:10px;background:var(--accent-dim);border:1px solid var(--accent-border);color:var(--accent);padding:2px 8px;border-radius:10px">✈️ Plecare ${dep}</span>`:''}
+            ${ret && ret!==dep?`<span style="font-size:10px;background:var(--accent-dim);border:1px solid var(--accent-border);color:var(--accent);padding:2px 8px;border-radius:10px">🏠 Întoarcere ${ret}</span>`:''}
             ${nights>0?`<span style="font-size:10px;color:var(--t3)">${nights} nopți</span>`:''}
             ${x.rezervat?'<span style="font-size:10px;color:var(--green)">🏨 Rezervat</span>':'<span style="font-size:10px;color:var(--yellow)">🏨 Fără rezervare</span>'}
             <span style="font-size:10px;color:${x.plata_concurs_ok?'var(--green)':'var(--red)'}">
@@ -2850,11 +2852,11 @@ function renderBuget() {
 
   const echipTotal = DB.equipment.reduce((s,x)=>s+(parseFloat(x.pret)||0),0);
   document.getElementById('bg-tiles').innerHTML = `
-    <div class="tile"><lbl>Înscrieri totale</lbl><div class="tv">${fmt(tIns)} RON</div><div class="ts" style="color:var(--red)">${fmt(restantIns)} RON restant</div><div class="pbar"><div class="pfill" style="width:${tIns?Math.round(pIns/tIns*100):0}%"></div></div></div>
-    <div class="tile"><lbl>Cazare totală</lbl><div class="tv">${fmt(tCaz)} RON</div><div class="ts" style="color:var(--red)">${fmt(restantCaz)} RON restant</div><div class="pbar"><div class="pfill" style="width:${tCaz?Math.round(pCaz/tCaz*100):0}%"></div></div></div>
-    <div class="tile"><lbl>Geluri curse (est.)</lbl><div class="tv yellow">${fmt(tGel)} RON</div><div class="ts">${gpp.toFixed(2)} RON/gel</div></div>
-    <div class="tile"><lbl>Echipament</lbl><div class="tv yellow">${fmt(echipTotal)} RON</div><div class="ts">${DB.equipment.length} item(e) înregistrate</div></div>
-    <div class="tile"><lbl>Total de achitat</lbl><div class="tv red">${fmt(restantIns+restantCaz)} RON</div><div class="ts">din ${fmt(tIns+tCaz+echipTotal)} RON total</div></div>
+    <div class="tile"><span class="lbl">Înscrieri totale</span><div class="tv">${fmt(tIns)} RON</div><div class="ts" style="color:var(--red)">${fmt(restantIns)} RON restant</div><div class="pbar"><div class="pfill" style="width:${tIns?Math.round(pIns/tIns*100):0}%"></div></div></div>
+    <div class="tile"><span class="lbl">Cazare totală</span><div class="tv">${fmt(tCaz)} RON</div><div class="ts" style="color:var(--red)">${fmt(restantCaz)} RON restant</div><div class="pbar"><div class="pfill" style="width:${tCaz?Math.round(pCaz/tCaz*100):0}%"></div></div></div>
+    <div class="tile"><span class="lbl">Geluri curse (est.)</span><div class="tv yellow">${fmt(tGel)} RON</div><div class="ts">${gpp.toFixed(2)} RON/gel</div></div>
+    <div class="tile"><span class="lbl">Echipament</span><div class="tv yellow">${fmt(echipTotal)} RON</div><div class="ts">${DB.equipment.length} item(e) înregistrate</div></div>
+    <div class="tile"><span class="lbl">Total de achitat</span><div class="tv red">${fmt(restantIns+restantCaz)} RON</div><div class="ts">din ${fmt(tIns+tCaz+echipTotal)} RON total</div></div>
   `;
 
   const sorted = [...c].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
@@ -2870,7 +2872,7 @@ function renderBuget() {
       <div class="pay-card-top">
         <div>
           <div style="font-size:10px;color:var(--t3);margin-bottom:2px">#${x.nr||'—'} · ${fd(x.data_cursa)}</div>
-          <div class="pay-card-name">${x.denumire}</div>
+          <div class="pay-card-name">${escHtml(x.denumire)}</div>
           <div style="font-size:11px;color:var(--t3);margin-top:2px">${x.distanta}km · ${x.denivelare}m D+</div>
         </div>
         <div style="text-align:right">
@@ -2901,12 +2903,12 @@ function renderBuget() {
           <div class="pay-row-left"><span class="pay-row-icon">🍯</span><span class="pay-row-lbl">Geluri (est. ${x.geluri||0} buc)</span></div>
           <span class="pay-row-amount" style="color:var(--yellow)">${fmt(gelCost)} RON</span>
         </div>
-        <div class="pay-row" style="background:rgba(184,255,79,.04);border:1px solid var(--accent-border)">
+        <div class="pay-row" style="background:var(--accent-dim);border:1px solid var(--accent-border)">
           <div class="pay-row-left"><span class="pay-row-icon">Σ</span><span class="pay-row-lbl" style="color:var(--text);font-weight:600">Total cursă</span></div>
           <span class="pay-row-amount" style="color:var(--accent)">${fmt(totCursa)} RON</span>
         </div>
       </div>
-      ${x.note?`<div style="margin-top:8px;font-size:11px;color:var(--t3);font-style:italic">📝 ${x.note}</div>`:''}
+      ${x.note?`<div style="margin-top:8px;font-size:11px;color:var(--t3);font-style:italic">📝 ${escHtml(x.note)}</div>`:''}
       ${(x.link_dovada_ins||x.link_dovada_caz)?`
       <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:6px">
         ${x.link_dovada_ins?`<button onclick="openPreview('${esc(x.link_dovada_ins)}','Dovadă înscriere — ${esc(x.denumire)}')" class="btn btn-ghost btn-sm" style="font-size:11px">📄 Dovadă înscriere</button>`:''}
@@ -2943,11 +2945,11 @@ function renderEstimare() {
 
   // Tiles
   document.getElementById('est-tiles').innerHTML = `
-    <div class="tile"><lbl>Costuri curse</lbl><div class="tv red">${fmt(totCurse)} RON</div><div class="ts">Înscrisuri + cazare + geluri</div></div>
-    <div class="tile"><lbl>Costuri recurente</lbl><div class="tv yellow">${fmt(totRecur)} RON</div><div class="ts">${fmt(suplLunar+gelTrainLunar)} RON/lună × 12</div></div>
-    <div class="tile"><lbl>Echipament</lbl><div class="tv yellow">${fmt(echipTotal)} RON</div><div class="ts">${DB.equipment.length} item(e)</div></div>
-    <div class="tile"><lbl>TOTAL AN 2026</lbl><div class="tv red">${fmt(totalAn)} RON</div><div class="ts">Curse + recurente + echipament</div></div>
-    <div class="tile"><lbl>Sponsorizare</lbl><div class="tv green">${fmt(spTotal)} RON</div><div class="ts" style="color:${deficit>0?'var(--red)':'var(--green)'}">
+    <div class="tile"><span class="lbl">Costuri curse</span><div class="tv red">${fmt(totCurse)} RON</div><div class="ts">Înscrisuri + cazare + geluri</div></div>
+    <div class="tile"><span class="lbl">Costuri recurente</span><div class="tv yellow">${fmt(totRecur)} RON</div><div class="ts">${fmt(suplLunar+gelTrainLunar)} RON/lună × 12</div></div>
+    <div class="tile"><span class="lbl">Echipament</span><div class="tv yellow">${fmt(echipTotal)} RON</div><div class="ts">${DB.equipment.length} item(e)</div></div>
+    <div class="tile"><span class="lbl">TOTAL AN 2026</span><div class="tv red">${fmt(totalAn)} RON</div><div class="ts">Curse + recurente + echipament</div></div>
+    <div class="tile"><span class="lbl">Sponsorizare</span><div class="tv green">${fmt(spTotal)} RON</div><div class="ts" style="color:${deficit>0?'var(--red)':'var(--green)'}">
       ${deficit>0?'Deficit: '+fmt(deficit)+' RON':'Surplus: '+fmt(-deficit)+' RON'}</div>
       <div class="pbar"><div class="pfill" style="width:${totalAn>0?Math.min(100,Math.round(spTotal/totalAn*100)):0}%;background:${spTotal>=totalAn?'var(--green)':spTotal>totalAn*.6?'var(--yellow)':'var(--red)'}"></div></div>
     </div>
@@ -3084,20 +3086,20 @@ function renderSponsori() {
   const total = sp.reduce((s,x)=>s+(x.suma||0),0);
   const primit = sp.filter(x=>x.primit).reduce((s,x)=>s+(x.suma||0),0);
   document.getElementById('sp-tiles').innerHTML = `
-    <div class="tile"><lbl>Total angajat</lbl><div class="tv accent">${fmt(total)} RON</div></div>
-    <div class="tile"><lbl>Primit</lbl><div class="tv green">${fmt(primit)} RON</div></div>
-    <div class="tile"><lbl>În așteptare</lbl><div class="tv yellow">${fmt(total-primit)} RON</div></div>
+    <div class="tile"><span class="lbl">Total angajat</span><div class="tv accent">${fmt(total)} RON</div></div>
+    <div class="tile"><span class="lbl">Primit</span><div class="tv green">${fmt(primit)} RON</div></div>
+    <div class="tile"><span class="lbl">În așteptare</span><div class="tv yellow">${fmt(total-primit)} RON</div></div>
   `;
   document.getElementById('sp-cards').innerHTML = sp.map(x=>`
     <div class="bk-card" style="padding:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
       <div style="flex:1;min-width:160px">
-        <div style="font-family:var(--display);font-size:18px;letter-spacing:1px;color:var(--text);margin-bottom:4px">${x.denumire}</div>
+        <div style="font-family:var(--display);font-size:18px;letter-spacing:1px;color:var(--text);margin-bottom:4px">${escHtml(x.denumire)}</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <span class="badge">${x.tip||'general'}</span>
-          ${x.contact?`<span class="badge">📞 ${x.contact}</span>`:''}
+          <span class="badge">${escHtml(x.tip||'general')}</span>
+          ${x.contact?`<span class="badge">📞 ${escHtml(x.contact)}</span>`:''}
           ${x.data?`<span class="badge">📅 ${fd(x.data)}</span>`:''}
         </div>
-        ${x.note?`<div style="margin-top:6px;font-size:11px;color:var(--t3)">${x.note}</div>`:''}
+        ${x.note?`<div style="margin-top:6px;font-size:11px;color:var(--t3)">${escHtml(x.note)}</div>`:''}
       </div>
       <div style="display:flex;align-items:center;gap:12px">
         <div style="text-align:right">
@@ -3124,16 +3126,16 @@ function renderEchip() {
     <div class="bk-card" style="padding:16px;margin-bottom:10px${warn?';border-color:rgba(255,124,59,.3)':''}">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap">
         <div style="flex:1;min-width:160px">
-          <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">${x.categorie||'—'}</div>
-          <div style="font-family:var(--display);font-size:18px;letter-spacing:1px;color:var(--text);margin-bottom:6px">${x.denumire}</div>
+          <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">${escHtml(x.categorie||'—')}</div>
+          <div style="font-family:var(--display);font-size:18px;letter-spacing:1px;color:var(--text);margin-bottom:6px">${escHtml(x.denumire)}</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
             <span class="badge">💰 ${fmt(x.pret)} RON</span>
             <span class="badge">🏃 ${x.km_actuali||0} / ${x.km_max||0} km</span>
             ${warn?`<span class="badge" style="color:var(--orange);border-color:rgba(255,124,59,.3)">⚠️ Aproape de limită</span>`:''}
           </div>
           <div class="pbar"><div class="pfill" style="width:${pct}%;${warn?'background:var(--orange)':''}"></div></div>
-          ${x.note?`<div style="margin-top:6px;font-size:11px;color:var(--t3)">${x.note}</div>`:''}
-          ${assignedRaces.length?`<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px">${assignedRaces.map(r=>`<span class="badge" style="color:var(--accent);border-color:var(--accent-border)">🏁 ${r.denumire}</span>`).join('')}</div>`:''}
+          ${x.note?`<div style="margin-top:6px;font-size:11px;color:var(--t3)">${escHtml(x.note)}</div>`:''}
+          ${assignedRaces.length?`<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px">${assignedRaces.map(r=>`<span class="badge" style="color:var(--accent);border-color:var(--accent-border)">🏁 ${escHtml(r.denumire)}</span>`).join('')}</div>`:''}
           ${x.link_dovada?`<div style="margin-top:8px"><button class="btn btn-ghost btn-sm" onclick="openPreview('${(x.link_dovada||'').replace(/'/g,"\'")}','Dovadă — ${(x.denumire||'').replace(/'/g,"\'")}')">📄 Dovadă achiziție</button></div>`:''}
         </div>
         <div style="display:flex;gap:4px">
@@ -3160,9 +3162,9 @@ function renderNutri() {
   document.getElementById('supl-list').innerHTML = DB.supplements.map(x=>`
     <div class="bk-card" style="padding:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
       <div style="flex:1">
-        <div style="font-size:13px;color:var(--text)">${x.denumire}</div>
-        ${x.cantitate?`<div style="font-size:11px;color:var(--t3)">${x.cantitate}</div>`:''}
-        ${x.note?`<div style="font-size:11px;color:var(--t3)">${x.note}</div>`:''}
+        <div style="font-size:13px;color:var(--text)">${escHtml(x.denumire)}</div>
+        ${x.cantitate?`<div style="font-size:11px;color:var(--t3)">${escHtml(x.cantitate)}</div>`:''}
+        ${x.note?`<div style="font-size:11px;color:var(--t3)">${escHtml(x.note)}</div>`:''}
         ${x.link_dovada?`<button class="btn btn-ghost btn-sm" style="margin-top:4px;font-size:11px" onclick="openPreview('${(x.link_dovada||'').replace(/'/g,"\'")}','Dovadă — ${(x.denumire||'').replace(/'/g,"\'")}')">📄 Dovadă achiziție</button>`:''}
       </div>
       <div style="display:flex;align-items:center;gap:8px">
@@ -3175,7 +3177,7 @@ function renderNutri() {
   document.getElementById('tr-list').innerHTML = DB.transport.map(x=>`
     <div class="bk-card" style="padding:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
       <div style="flex:1">
-        <div style="font-size:13px;color:var(--text)">📍 ${x.dest}</div>
+        <div style="font-size:13px;color:var(--text)">📍 ${escHtml(x.dest)}</div>
         <div style="font-size:11px;color:var(--t3)">${x.km||0} km dus-întors</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
@@ -3358,7 +3360,7 @@ function openEQ(id) {
       return `<label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;border-radius:8px;border:1px solid ${chk?'rgba(79,255,155,.3)':'var(--border)'};background:${chk?'rgba(79,255,155,.06)':'var(--s1)'};transition:all .15s;opacity:${isPast?.55:1}" onchange="this.style.borderColor=this.querySelector('input').checked?'rgba(79,255,155,.3)':'var(--border)';this.style.background=this.querySelector('input').checked?'rgba(79,255,155,.06)':'var(--s1)'">
         <input type="checkbox" value="${r.id}" ${chk} style="accent-color:var(--accent);width:16px;height:16px;flex-shrink:0">
         <div style="flex:1;min-width:0">
-          <div style="font-size:13px;color:var(--text);font-weight:600">${r.denumire}</div>
+          <div style="font-size:13px;color:var(--text);font-weight:600">${escHtml(r.denumire)}</div>
           <div style="font-size:11px;color:var(--t3);margin-top:1px">${fd(r.data_cursa)} · ${r.distanta||0} km · ${r.denivelare||0} m D+</div>
         </div>
         ${isPast?'<span style="font-size:9px;color:var(--t3);background:var(--s3);padding:2px 6px;border-radius:10px">trecut</span>':''}
@@ -3886,10 +3888,10 @@ function renderStats() {
   const totalDur   = filtered.reduce((s,a)=>s+(a.dur||0),0);
   const totalActs  = filtered.length;
   document.getElementById('st-tiles').innerHTML = `
-    <div class="tile"><lbl>Total km</lbl><div class="tv accent">${fmt(totalKm)}</div><div class="ts">km alergați</div></div>
-    <div class="tile"><lbl>D+ total</lbl><div class="tv">${fmt(totalElev)}</div><div class="ts">m urcare</div></div>
-    <div class="tile"><lbl>Timp total</lbl><div class="tv">${fmtDur(totalDur)}</div><div class="ts">ore alergare</div></div>
-    <div class="tile"><lbl>Activități</lbl><div class="tv">${totalActs}</div><div class="ts">antrenamente</div></div>
+    <div class="tile"><span class="lbl">Total km</span><div class="tv accent">${fmt(totalKm)}</div><div class="ts">km alergați</div></div>
+    <div class="tile"><span class="lbl">D+ total</span><div class="tv">${fmt(totalElev)}</div><div class="ts">m urcare</div></div>
+    <div class="tile"><span class="lbl">Timp total</span><div class="tv">${fmtDur(totalDur)}</div><div class="ts">ore alergare</div></div>
+    <div class="tile"><span class="lbl">Activități</span><div class="tv">${totalActs}</div><div class="ts">antrenamente</div></div>
   `;
 
   // Target block
@@ -3939,7 +3941,7 @@ function renderStats() {
       const prev=yearStats[i+1];
       const g=prev.km?Math.round((y.km-prev.km)/prev.km*100):0;
       return `<div class="tile" style="text-align:center">
-        <lbl>${prev.y} → ${y.y}</lbl>
+        <span class="lbl">${prev.y} → ${y.y}</span>
         <div class="tv ${g>=0?'green':'red'}">${g>=0?'+':''}${g}%</div>
         <div class="ts">${g>=0?'creștere':'scădere'}</div>
       </div>`;
@@ -4002,10 +4004,10 @@ function renderStats() {
   document.getElementById('st-records').innerHTML = `
     <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">🏆 Recorduri personale</div>
     <div class="tiles">
-      <div class="tile"><lbl>Cea mai lungă alergare</lbl><div class="tv accent">${longestRun?fmt(longestRun.km)+' km':'—'}</div><div class="ts">${longestRun?fd(longestRun.date):'—'}</div></div>
-      <div class="tile"><lbl>Max D+ într-o zi</lbl><div class="tv">${maxElevRun?fmt(maxElevRun.elev)+' m':'—'}</div><div class="ts">${maxElevRun?fd(maxElevRun.date):'—'}</div></div>
-      <div class="tile"><lbl>Cea mai bună lună (km)</lbl><div class="tv">${bestMonthKm.v?fmt(bestMonthKm.v)+' km':'—'}</div><div class="ts">${bestMonthKm.label||'—'}</div></div>
-      <div class="tile"><lbl>Streak maxim</lbl><div class="tv">${streak.best} zile</div><div class="ts">zile consecutive</div></div>
+      <div class="tile"><span class="lbl">Cea mai lungă alergare</span><div class="tv accent">${longestRun?fmt(longestRun.km)+' km':'—'}</div><div class="ts">${longestRun?fd(longestRun.date):'—'}</div></div>
+      <div class="tile"><span class="lbl">Max D+ într-o zi</span><div class="tv">${maxElevRun?fmt(maxElevRun.elev)+' m':'—'}</div><div class="ts">${maxElevRun?fd(maxElevRun.date):'—'}</div></div>
+      <div class="tile"><span class="lbl">Cea mai bună lună (km)</span><div class="tv">${bestMonthKm.v?fmt(bestMonthKm.v)+' km':'—'}</div><div class="ts">${bestMonthKm.label||'—'}</div></div>
+      <div class="tile"><span class="lbl">Streak maxim</span><div class="tv">${streak.best} zile</div><div class="ts">zile consecutive</div></div>
     </div>`;
 
   // Heatmap
@@ -4988,8 +4990,8 @@ async function populateSponsorLanding() {
   if (faqEl && SETTINGS.faq?.length) {
     faqEl.innerHTML = SETTINGS.faq.map(f => `
       <div class="sl-faq-item">
-        <button class="sl-faq-q" onclick="slToggleFaq(this)">${f.q} <span class="sl-faq-arr">▾</span></button>
-        <div class="sl-faq-a">${f.a}</div>
+        <button class="sl-faq-q" onclick="slToggleFaq(this)">${escHtml(f.q)} <span class="sl-faq-arr">▾</span></button>
+        <div class="sl-faq-a">${escHtml(f.a)}</div>
       </div>`).join('');
   }
 
@@ -5383,7 +5385,7 @@ function renderSetPackages() {
         <button class="btn btn-ghost btn-sm btn-icon" onclick="setDelPackage(${i})" style="color:var(--red)">🗑</button>
       </div>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-        <lbl style="font-size:11px;color:var(--t3);white-space:nowrap">De la (RON)</lbl>
+        <lbl style="font-size:11px;color:var(--t3);white-space:nowrap">De la (RON)</span>
         <input type="number" value="${p.min||0}" oninput="LC.packages[${i}].min=parseInt(this.value)||0"
           style="width:90px;background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--accent)">
       </div>
@@ -5404,17 +5406,6 @@ function setDelPackage(i) {
   renderSetPackages();
 }
 
-// ── Copy sponsor link ───────────────────────────────
-function setCopyLink() {
-  const link = window.location.origin + window.location.pathname + '?sponsor=1';
-  navigator.clipboard.writeText(link).then(() => toast('📋 Link copiat!', 'ok'));
-}
-
-// ── Preview sponsor page ────────────────────────────
-function previewSponsorPage() {
-  window.open(window.location.origin + window.location.pathname + '?sponsor=1', '_blank');
-}
-
 // ── Save all settings ───────────────────────────────
 // saveSettings defined above (single implementation)
 
@@ -5422,6 +5413,8 @@ function previewSponsorPage() {
 function escHtml(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+// Alias scurt — folosit în template literals din renderBuget etc.
+const esc = escHtml;
 
 // Close overlays on click outside or ESC
 ['ov-rc','ov-eq','ov-sp','ov-supl','ov-tr','ov-preview'].forEach(id=>{
