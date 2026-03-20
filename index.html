@@ -904,7 +904,7 @@ body.readonly label.btn { display:none !important }
     <div class="sl-wrap">
       <!-- bara sticky în interiorul scroll-ului landing -->
       <div id="sl-km-scrollbar">
-        <div class="sl-ksb-top-lbl">0 km</div>
+        <div class="sl-ksb-top-lbl">Mai 2024</div>
         <div class="sl-ksb-track" id="sl-ksb-track">
           <div class="sl-ksb-fill" id="sl-ksb-fill"></div>
           <div class="sl-ksb-dot"  id="sl-ksb-dot"></div>
@@ -5109,7 +5109,9 @@ async function populateSponsorLanding() {
 
   // Animate km counter
   slAnimateKm(ytdKm||0, targetKm);
-  slInitScrollBar(ytdKm||0);
+  // Bara scroll = TOȚI km de când a început să alerge (mai 2024 → azi)
+  const allTimeKm = Math.round(acts.reduce((s,a)=>s+(a.km||0),0));
+  slInitScrollBar(allTimeKm||0);
 
   // ── Sponsori dinamici (primit:true) ─────────────────
   const confirmedSponsors = (DB.sponsors||[]).filter(s=>s.primit);
@@ -5421,14 +5423,15 @@ function slInitScrollBar(totalKm) {
   const landing= document.getElementById('sponsor-landing');
   if (!bar||!fill||!dot||!live||!landing) return;
 
-  tot.innerHTML = totalKm.toLocaleString('ro-RO') + '<br>km';
+  tot.innerHTML = totalKm.toLocaleString('ro-RO') + '<br>km<br>azi';
   bar.classList.add('visible');
 
-  // Milestones — poziționare pe track în %
+  // Milestones — momente cheie din carieră
   const MILESTONES = [
-    { km:500,  label:'Ian 2025' },
-    { km:1000, label:'1.000 km' },
-    { km:3000, label:'Bucovina' },
+    { km:10,   label:'Primul km' },
+    { km:500,  label:'Ian 2025'  },
+    { km:1000, label:'1.000 km'  },
+    { km:3000, label:'Bucovina'  },
   ].filter(m => m.km <= totalKm);
 
   msWrap.innerHTML = MILESTONES.map(m => {
