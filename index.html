@@ -821,104 +821,103 @@ body.readonly label.btn { display:none !important }
 
     <!-- ── SCROLL KM BAR CSS ── -->
     <style>
-    /* Landing devine flex — bara lângă conținut */
-    #sponsor-landing > .sl-landing-inner {
-      display:flex;
+    /* Landing = flex row: bara la stânga, conținut la dreapta */
+    #sponsor-landing {
+      display:flex !important;
       align-items:flex-start;
       justify-content:center;
-      width:100%;
+      overflow-y:visible;
     }
     #sl-km-scrollbar {
-      /* sticky — rămâne lipit de viewport pe măsură ce scrollezi */
       position:sticky;
       top:0;
       height:100vh;
-      width:32px;
+      width:40px;
       flex-shrink:0;
       display:none;
       flex-direction:column;
       align-items:center;
-      padding:16px 0;
-      margin-right:6px;
+      padding:20px 0 16px;
+      margin-right:8px;
     }
     #sl-km-scrollbar.visible { display:flex; }
-    .sl-ksb-label-top {
+    .sl-ksb-top-lbl {
       font-size:7px;color:var(--t3);letter-spacing:1px;
-      text-transform:uppercase;margin-bottom:6px;
-      white-space:nowrap;
+      text-transform:uppercase;margin-bottom:8px;
+      writing-mode:vertical-rl;transform:rotate(180deg);
     }
     .sl-ksb-track {
-      flex:1;width:3px;background:var(--border);border-radius:2px;
-      position:relative;overflow:visible;
+      flex:1;width:4px;background:var(--s3);border-radius:2px;
+      position:relative;overflow:visible;min-height:0;
     }
     .sl-ksb-fill {
-      position:absolute;top:0;left:0;right:0;
-      background:linear-gradient(to bottom, var(--t4), var(--accent));
+      position:absolute;top:0;left:0;right:0;bottom:100%;
+      background:linear-gradient(to bottom,var(--t4) 0%,var(--accent) 100%);
       border-radius:2px;
-      height:0%;
+      transition:bottom .08s linear;
     }
     .sl-ksb-dot {
-      position:absolute;left:50%;transform:translate(-50%,50%);
-      width:10px;height:10px;border-radius:50%;
+      position:absolute;bottom:100%;
+      left:50%;transform:translate(-50%,50%);
+      width:11px;height:11px;border-radius:50%;
       background:var(--accent);border:2px solid var(--bg);
-      bottom:100%;
       box-shadow:0 0 8px var(--accent);
       transition:bottom .08s linear;
     }
-    .sl-ksb-km-live {
-      position:absolute;right:14px;
-      font-family:'Bebas Neue',var(--display);
-      font-size:10px;color:var(--accent);
-      white-space:nowrap;letter-spacing:.5px;
-      bottom:100%;
+    .sl-ksb-live {
+      position:absolute;bottom:100%;
+      right:calc(100% + 6px);
+      font-family:'Bebas Neue',sans-serif;
+      font-size:11px;color:var(--accent);letter-spacing:.5px;
+      white-space:nowrap;line-height:1.5;
+      background:var(--bg);padding:1px 4px;
+      border:1px solid var(--accent-border);border-radius:3px;
       transition:bottom .08s linear;
-      background:var(--bg);padding:1px 4px;border-radius:3px;
-      border:1px solid var(--accent-border);line-height:1.5;
       pointer-events:none;
     }
-    .sl-ksb-milestone {
-      position:absolute;left:50%;transform:translateX(-50%);
-      width:8px;height:2px;background:var(--border2);border-radius:1px;
+    .sl-ksb-ms {
+      position:absolute;left:-3px;right:-3px;height:2px;
+      background:var(--border2);border-radius:1px;
     }
-    .sl-ksb-milestone-lbl {
-      position:absolute;right:8px;
-      font-size:7px;color:var(--t4);white-space:nowrap;line-height:1;
+    .sl-ksb-ms-lbl {
+      position:absolute;right:calc(100% + 10px);
+      font-size:7px;color:var(--t4);white-space:nowrap;
+      top:-4px;line-height:1;
     }
-    /* Finish line jos */
     .sl-ksb-finish {
       position:absolute;bottom:0;left:-4px;right:-4px;
-      height:2px;background:var(--accent);border-radius:1px;
+      height:3px;background:var(--accent);border-radius:2px;
     }
-    .sl-ksb-finish-flag {
-      position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);
-      font-size:10px;line-height:1;
+    .sl-ksb-flag {
+      position:absolute;bottom:2px;left:50%;
+      transform:translateX(-50%);
+      font-size:12px;line-height:1;
     }
-    .sl-ksb-label-bot {
-      font-size:8px;color:var(--accent);letter-spacing:.5px;
-      margin-top:6px;white-space:nowrap;
-      font-family:'Bebas Neue',var(--display);font-size:9px;
-      text-align:center;line-height:1.3;
+    .sl-ksb-bot-lbl {
+      font-family:'Bebas Neue',sans-serif;
+      font-size:9px;color:var(--accent);
+      margin-top:8px;text-align:center;
+      line-height:1.3;letter-spacing:.5px;
     }
-    @media(max-width:560px){
-      #sl-km-scrollbar { width:24px;margin-right:4px; }
-      .sl-ksb-km-live,.sl-ksb-milestone-lbl { display:none; }
+    @media(max-width:520px){
+      #sl-km-scrollbar { width:28px; margin-right:4px; }
+      .sl-ksb-live, .sl-ksb-ms-lbl { display:none; }
     }
     </style>
 
     <!-- ── SCROLL KM BAR HTML ── -->
-  <div class="sl-landing-inner">
     <div id="sl-km-scrollbar">
-      <div class="sl-ksb-label-top">0 km</div>
+      <div class="sl-ksb-top-lbl">0 km</div>
       <div class="sl-ksb-track" id="sl-ksb-track">
-        <div class="sl-ksb-fill"    id="sl-ksb-fill"></div>
-        <div class="sl-ksb-dot"     id="sl-ksb-dot"></div>
-        <div class="sl-ksb-km-live" id="sl-ksb-km-live">0</div>
-        <div id="sl-ksb-milestones"></div>
+        <div class="sl-ksb-fill" id="sl-ksb-fill"></div>
+        <div class="sl-ksb-dot"  id="sl-ksb-dot"></div>
+        <div class="sl-ksb-live" id="sl-ksb-live">0</div>
+        <div id="sl-ksb-ms"></div>
         <div class="sl-ksb-finish">
-          <div class="sl-ksb-finish-flag">🏁</div>
+          <div class="sl-ksb-flag">🏁</div>
         </div>
       </div>
-      <div class="sl-ksb-label-bot" id="sl-ksb-total">—</div>
+      <div class="sl-ksb-bot-lbl" id="sl-ksb-total">—</div>
     </div>
     <div class="sl-wrap">
 
@@ -1166,7 +1165,6 @@ body.readonly label.btn { display:none !important }
       </a>
     </div>
     <div style="text-align:center;margin-top:24px;font-size:10px;color:var(--t4);letter-spacing:1px">TRAIL MANAGER 2026 · BALAN GABRIEL · HAX</div>
-    </div>
   </div>
 </div>
 
@@ -5417,54 +5415,57 @@ function slRenderBudget() {
 // ── Scroll KM Bar ────────────────────────────────────
 function slInitScrollBar(totalKm) {
   if (!totalKm || totalKm <= 0) return;
+
   const bar    = document.getElementById('sl-km-scrollbar');
   const fill   = document.getElementById('sl-ksb-fill');
   const dot    = document.getElementById('sl-ksb-dot');
-  const live   = document.getElementById('sl-ksb-km-live');
+  const live   = document.getElementById('sl-ksb-live');
   const tot    = document.getElementById('sl-ksb-total');
-  const msWrap = document.getElementById('sl-ksb-milestones');
+  const msWrap = document.getElementById('sl-ksb-ms');
   const landing= document.getElementById('sponsor-landing');
   if (!bar||!fill||!dot||!live||!landing) return;
 
   tot.innerHTML = totalKm.toLocaleString('ro-RO') + '<br>km';
   bar.classList.add('visible');
 
-  // Milestones pe track
+  // Milestones — poziționare pe track în %
   const MILESTONES = [
     { km:500,  label:'Ian 2025' },
-    { km:1000, label:'1k km'    },
+    { km:1000, label:'1.000 km' },
     { km:3000, label:'Bucovina' },
-  ].filter(m => m.km < totalKm);
+  ].filter(m => m.km <= totalKm);
 
   msWrap.innerHTML = MILESTONES.map(m => {
-    const pct = (m.km / totalKm) * 100;
-    return `<div class="sl-ksb-milestone" style="top:${pct.toFixed(1)}%"></div>
-            <div class="sl-ksb-milestone-lbl" style="top:calc(${pct.toFixed(1)}% - 5px)">${m.label}</div>`;
+    const pct = ((m.km / totalKm) * 100).toFixed(1);
+    return `<div class="sl-ksb-ms" style="top:${pct}%">
+              <div class="sl-ksb-ms-lbl">${m.label}</div>
+            </div>`;
   }).join('');
 
   const update = () => {
-    // Scroll față de începutul landing-ului
-    const landingTop    = landing.getBoundingClientRect().top + window.scrollY;
-    const landingHeight = landing.scrollHeight;
-    const scrolled      = Math.max(0, window.scrollY - landingTop);
-    const maxScroll     = landingHeight - window.innerHeight;
-    // La bottom absolut → pct = 1
-    const pct = maxScroll > 0 ? Math.min(1, scrolled / maxScroll) : 0;
+    // Cât a scrollat userul în landing
+    const landingTop = landing.getBoundingClientRect().top + window.scrollY;
+    const scrolled   = Math.max(0, window.scrollY - landingTop);
+    const maxScroll  = landing.scrollHeight - window.innerHeight;
+    const pct        = maxScroll > 0 ? Math.min(1, scrolled / maxScroll) : 0;
 
-    fill.style.height = (pct * 100).toFixed(2) + '%';
-
-    // Dot și label se mișcă de la bottom:100% (sus) la bottom:0% (jos)
-    const botPct = ((1 - pct) * 100).toFixed(2) + '%';
-    dot.style.bottom  = botPct;
-    live.style.bottom = botPct;
-    live.textContent  = Math.round(pct * totalKm).toLocaleString('ro-RO');
+    // Fill: bottom merge de la 100% → 0% (se umple de sus în jos)
+    fill.style.bottom   = ((1 - pct) * 100).toFixed(2) + '%';
+    // Dot și live: bottom = (1-pct)*100%
+    const botPct        = ((1 - pct) * 100).toFixed(2) + '%';
+    dot.style.bottom    = botPct;
+    live.style.bottom   = botPct;
+    live.textContent    = Math.round(pct * totalKm).toLocaleString('ro-RO');
   };
 
   window.addEventListener('scroll', update, { passive:true });
-  // Recalculează și la resize (înălțimea paginii se poate schimba)
   window.addEventListener('resize', update, { passive:true });
+  // Run imediat și după un tick (când layout-ul e gata)
   update();
+  setTimeout(update, 100);
+  setTimeout(update, 500);
 }
+
 
 // ── FAQ toggle ──────────────────────────────────────
 function slToggleFaq(btn) {
