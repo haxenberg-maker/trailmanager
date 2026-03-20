@@ -916,14 +916,17 @@ body.readonly label.btn { display:none !important }
 
     /* Mobile — bara mai lată, text vizibil */
     @media(max-width:560px){
-      #sl-km-scrollbar { width:40px; }
-      .sl-ksb-live { font-size:10px; left:calc(100% + 4px); }
-      .sl-ksb-ms-lbl { font-size:8px; left:calc(100% + 5px); }
-      .sl-ksb-ms-date { display:none; }
+      #sl-km-scrollbar { width:12px; }
+      .sl-ksb-live,
+      .sl-ksb-ms-lbl,
+      .sl-ksb-top-lbl,
+      .sl-ksb-bot-lbl { display:none !important; }
+      .sl-ksb-track { width:3px; }
+      .sl-ksb-dot { width:9px; height:9px; }
     }
     /* Mobile: sl-wrap padding adaptat */
     @media(max-width:560px){
-      .sl-wrap { padding-left:60px !important; }
+      .sl-wrap { padding-left:20px !important; }
     }
     /* Desktop larg: bara nu mai e nevoie de padding extra */
     @media(min-width:800px){
@@ -5485,8 +5488,13 @@ function slInitScrollBar(totalKm) {
     // Poziționează bara fix lângă sl-wrap
     if (slWrap) {
       const rect = slWrap.getBoundingClientRect();
-      const barWidth = window.innerWidth > 560 ? 58 : 48;
-      bar.style.left = Math.max(0, rect.left - barWidth) + 'px';
+      if (window.innerWidth > 560) {
+        // Desktop: bara la stânga, cu toate labelele în spațiul liber
+        bar.style.left = Math.max(0, rect.left - 130) + 'px';
+      } else {
+        // Mobile: bara lipită de marginea stângă a ecranului
+        bar.style.left = '2px';
+      }
       // Ascunde bara dacă nu e loc (ecran foarte mic sau landing nu e vizibil)
       bar.style.display = (rect.width > 0 && landing.classList.contains('on')) ? 'flex' : 'none';
     }
