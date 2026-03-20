@@ -3297,6 +3297,14 @@ function closeRC() { document.getElementById('ov-rc').classList.remove('on'); ed
 
 async function saveRC() {
   if (!isOwnerLoggedIn()) return;
+  // Încearcă să restaureze tokenul din localStorage dacă lipsește
+  if (!authToken) {
+    try {
+      const saved = localStorage.getItem('sb_session');
+      if (saved) { const s = JSON.parse(saved); authToken = s.access_token; }
+    } catch(e) {}
+  }
+  if (!authToken) { toast('🔒 Sesiunea a expirat — reconectează-te.','err'); showLoginModal(); return; }
   const den = document.getElementById('f-den').value.trim();
   if (!den) { toast('⚠️ Introduceți denumirea cursei!','err'); return; }
   const payload = {
@@ -3370,6 +3378,14 @@ function closeSP() { document.getElementById('ov-sp').classList.remove('on'); ed
 
 async function saveSP() {
   if (!isOwnerLoggedIn()) return;
+  // Încearcă să restaureze tokenul din localStorage dacă lipsește
+  if (!authToken) {
+    try {
+      const saved = localStorage.getItem('sb_session');
+      if (saved) { const s = JSON.parse(saved); authToken = s.access_token; }
+    } catch(e) {}
+  }
+  if (!authToken) { toast('🔒 Sesiunea a expirat — reconectează-te.','err'); showLoginModal(); return; }
   const den = document.getElementById('sp-den').value.trim();
   if (!den) { toast('⚠️ Introduceți denumirea!','err'); return; }
   const payload = {
@@ -3474,6 +3490,14 @@ function closeEQ() { document.getElementById('ov-eq').classList.remove('on'); ed
 
 async function saveEQ() {
   if (!isOwnerLoggedIn()) return;
+  // Încearcă să restaureze tokenul din localStorage dacă lipsește
+  if (!authToken) {
+    try {
+      const saved = localStorage.getItem('sb_session');
+      if (saved) { const s = JSON.parse(saved); authToken = s.access_token; }
+    } catch(e) {}
+  }
+  if (!authToken) { toast('🔒 Sesiunea a expirat — reconectează-te.','err'); showLoginModal(); return; }
   const den = document.getElementById('eq-den').value.trim();
   if (!den) { toast('⚠️ Introduceți denumirea!','err'); return; }
   const raceChecks = document.querySelectorAll('#eq-race-checkboxes input[type=checkbox]:checked');
@@ -3533,6 +3557,14 @@ function closeSupl() { document.getElementById('ov-supl').classList.remove('on')
 
 async function saveSupl() {
   if (!isOwnerLoggedIn()) return;
+  // Încearcă să restaureze tokenul din localStorage dacă lipsește
+  if (!authToken) {
+    try {
+      const saved = localStorage.getItem('sb_session');
+      if (saved) { const s = JSON.parse(saved); authToken = s.access_token; }
+    } catch(e) {}
+  }
+  if (!authToken) { toast('🔒 Sesiunea a expirat — reconectează-te.','err'); showLoginModal(); return; }
   const den=document.getElementById('supl-den').value.trim();
   if (!den) { toast('⚠️ Introduceți denumirea!','err'); return; }
   const payload={
@@ -3581,6 +3613,14 @@ function closeTr() { document.getElementById('ov-tr').classList.remove('on'); ed
 
 async function saveTr() {
   if (!isOwnerLoggedIn()) return;
+  // Încearcă să restaureze tokenul din localStorage dacă lipsește
+  if (!authToken) {
+    try {
+      const saved = localStorage.getItem('sb_session');
+      if (saved) { const s = JSON.parse(saved); authToken = s.access_token; }
+    } catch(e) {}
+  }
+  if (!authToken) { toast('🔒 Sesiunea a expirat — reconectează-te.','err'); showLoginModal(); return; }
   const dest=document.getElementById('tr-dest').value.trim();
   if (!dest) { toast('⚠️ Introduceți destinația!','err'); return; }
   const payload={
@@ -4993,7 +5033,7 @@ async function populateSponsorLanding() {
                   padding:5px 10px;text-decoration:none;transition:border-color .2s"
            onmouseover="this.style.borderColor='var(--accent)'"
            onmouseout="this.style.borderColor='var(--accent-border)'">
-           <img src="${esc(s.logo_url)}" style="height:28px;max-width:90px;object-fit:contain">
+           <img src="${esc(s.logo_url)}" style="height:42px;max-width:135px;object-fit:contain">
          </a>`
       : `<a href="${s.website||'#'}" target="_blank" rel="noopener"
            style="display:inline-flex;align-items:center;gap:6px;background:var(--s2);
@@ -5012,7 +5052,7 @@ async function populateSponsorLanding() {
     partCard.style.display = '';
     partList.innerHTML = confirmedSponsors.map(s => `
       <div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)">
-        <div style="width:52px;height:52px;flex-shrink:0;border-radius:8px;border:1px solid var(--border);
+        <div style="width:78px;height:78px;flex-shrink:0;border-radius:8px;border:1px solid var(--border);
                     background:white;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:4px">
           ${s.logo_url
             ? `<img src="${esc(s.logo_url)}" style="width:100%;height:100%;object-fit:contain"
