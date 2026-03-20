@@ -5412,7 +5412,7 @@ function setDelPackage(i) {
 function escHtml(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-const esc = escHtml; // alias — folosit în renderBuget etc.
+
 
 // Close overlays on click outside or ESC
 ['ov-rc','ov-eq','ov-sp','ov-supl','ov-tr','ov-preview'].forEach(id=>{
