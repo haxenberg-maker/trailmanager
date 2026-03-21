@@ -516,6 +516,15 @@ select option{background:var(--s2)}
 
 
 
+/* ── MOD SPONSOR — ascunde elemente interne ── */
+.sponsor-mode .bk-card[id="db-race-card"],
+.sponsor-mode #db-race-pagination,
+.sponsor-mode #db-unpaid-label,
+.sponsor-mode #db-unpaid-list,
+.sponsor-mode .ph { display:none !important; }
+.sponsor-mode .dash-hero { margin-bottom:32px; }
+.sponsor-mode #db-tiles .tile:nth-child(4) { display:none; } /* plăți restante */
+
 /* ── READ-ONLY (guest) MODE ── */
 body.readonly .btn-primary:not(.allow-guest),
 body.readonly button[onclick*="open"],
@@ -1337,6 +1346,7 @@ body.readonly label.btn { display:none !important }
     <div class="ni" onclick="go('nutri',this);closeDrawer()"><span class="ico">🍌</span>Nutriție</div>
     <div class="nav-group">Performanță</div>
     <div class="ni" onclick="go('stats',this);closeDrawer()"><span class="ico">📈</span>Statistici</div>
+    <div class="ni owner-only" id="nav-profil-drawer" onclick="go('profil',this);closeDrawer()" style="display:none"><span class="ico">👤</span>Setări Profil</div>
     <div class="ni owner-only" id="nav-setari-drawer" onclick="go('setari',this);closeDrawer()" style="display:none"><span class="ico">⚙️</span>Setări Landing</div>
   </div>
   <div class="drawer-kpi">
@@ -1384,6 +1394,7 @@ body.readonly label.btn { display:none !important }
     <div class="ni" onclick="go('nutri',this)"><span class="ico">🍌</span>Nutriție & Transport</div>
     <div class="nav-group">Performanță</div>
     <div class="ni" onclick="go('stats',this)"><span class="ico">📈</span>Statistici Alergări</div>
+    <div class="ni owner-only" id="nav-profil-sidebar" onclick="go('profil',this)" style="display:none"><span class="ico">👤</span>Setări Profil</div>
     <div class="ni owner-only" id="nav-setari-sidebar" onclick="go('setari',this)" style="display:none"><span class="ico">⚙️</span>Setări Landing</div>
   </nav>
   <div class="sidebar-bottom">
@@ -1403,6 +1414,12 @@ body.readonly label.btn { display:none !important }
     </div>
     <div style="font-size:11px;color:var(--t3);margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="user-email-display"></div>
     <button class="save-btn" id="save-btn" onclick="saveData()">☁️ Salvează</button>
+    <!-- Mod Sponsor toggle — owner only -->
+    <button class="save-btn owner-only" id="sponsor-mode-btn"
+      onclick="toggleSponsorMode()"
+      style="display:none;margin-top:6px;color:var(--t2);border-color:var(--border)">
+      👔 Mod Sponsor
+    </button>
     <button class="save-btn" id="export-btn" onclick="exportJSON()" style="margin-top:6px;color:var(--t2);border-color:var(--border)">💾 Export JSON</button>
     <button class="save-btn" id="login-btn" onclick="showLoginModal()" style="margin-top:6px;color:var(--accent);border-color:var(--accent-border);background:var(--accent-dim)">🔑 Login</button>
     <button class="save-btn" id="logout-btn" onclick="doLogout()" style="margin-top:6px;color:var(--red);border-color:rgba(255,79,79,.2);background:rgba(255,79,79,.05);display:none">🚪 Deconectare</button>
@@ -1814,6 +1831,112 @@ body.readonly label.btn { display:none !important }
   </div>
 </div>
 
+
+<!-- ── SETĂRI PROFIL ── (owner only) -->
+<div class="page" id="pg-profil">
+<div class="ph">
+  <div class="ph-left"><h2>👤 SETĂRI PROFIL</h2><p>Informații personale afișate în Hero și Landing</p></div>
+  <div class="ph-right">
+    <button class="btn btn-primary" onclick="saveProfile()">💾 Salvează profil</button>
+  </div>
+</div>
+
+<!-- IDENTITATE -->
+<div class="bk-card" style="padding:20px;margin-bottom:12px">
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">🏃 Identitate</div>
+  <div class="fg">
+    <div class="fi fgrow">
+      <span class="lbl">Nume complet</span>
+      <input type="text" id="prof-name" placeholder="Balan Gabriel">
+    </div>
+    <div class="fi">
+      <span class="lbl">Poreclă / Alias</span>
+      <input type="text" id="prof-nickname" placeholder="HAX">
+    </div>
+    <div class="fi fgrow">
+      <span class="lbl">Oraș / Club</span>
+      <input type="text" id="prof-city" placeholder="Bârlad · HAX Running">
+    </div>
+    <div class="fi">
+      <span class="lbl">An debut alergare</span>
+      <input type="number" id="prof-year" placeholder="2024" min="2000" max="2030">
+    </div>
+  </div>
+</div>
+
+<!-- FOTO PROFIL -->
+<div class="bk-card" style="padding:20px;margin-bottom:12px">
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">📸 Foto profil</div>
+  <div class="fi">
+    <span class="lbl">URL poză profil</span>
+    <div style="display:flex;gap:8px;align-items:center">
+      <input type="url" id="prof-photo" placeholder="https://i.imgur.com/..." style="flex:1"
+        oninput="const p=document.getElementById('prof-photo-prev');const i=document.getElementById('prof-photo-img');if(this.value&&p&&i){i.src=this.value;i.onload=()=>p.style.display='block';i.onerror=()=>p.style.display='none';}else if(p)p.style.display='none';">
+      <div id="prof-photo-prev" style="display:none">
+        <img id="prof-photo-img" src="" style="width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)">
+      </div>
+    </div>
+    <div style="font-size:10px;color:var(--t3);margin-top:4px">Apare ca avatar în Hero și pe landing. Imgur, Cloudinary etc.</div>
+  </div>
+</div>
+
+<!-- BIO -->
+<div class="bk-card" style="padding:20px;margin-bottom:12px">
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">📝 Bio</div>
+  <div class="fi" style="margin-bottom:12px">
+    <span class="lbl">Preview bio (1 rând — apare sub nume în Hero)</span>
+    <input type="text" id="prof-bio-short" placeholder="Totul a început cu o simplă întrebare, în mai 2024...">
+  </div>
+  <div class="fi">
+    <span class="lbl">Bio complet (apare la "Vezi mai mult" în Hero)</span>
+    <textarea id="prof-bio-full" rows="8" style="resize:vertical" placeholder="Scrie povestea ta..."></textarea>
+    <div style="font-size:10px;color:var(--t3);margin-top:4px">Suportă <strong>bold</strong> și <em>italic</em> ca HTML.</div>
+  </div>
+</div>
+
+<!-- PLATFORME -->
+<div class="bk-card" style="padding:20px;margin-bottom:12px">
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">🔗 Platforme sportive</div>
+  <div class="fg">
+    <div class="fi fgrow">
+      <span class="lbl">Strava Athlete ID</span>
+      <input type="text" id="prof-strava-id" placeholder="136130375">
+      <div style="font-size:10px;color:var(--t3);margin-top:3px">Din URL-ul profilului tău Strava: strava.com/athletes/<strong>ID</strong></div>
+    </div>
+    <div class="fi fgrow">
+      <span class="lbl">ITRA Profile URL</span>
+      <input type="url" id="prof-itra-url" placeholder="https://itra.run/RunnerSpace/...">
+    </div>
+    <div class="fi">
+      <span class="lbl">ITRA Performance Index (manual)</span>
+      <input type="number" id="prof-itra-pi" placeholder="536" min="0" max="1000">
+      <div style="font-size:10px;color:var(--t3);margin-top:3px">Se actualizează manual după fiecare cursă ITRA.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SOCIAL -->
+<div class="bk-card" style="padding:20px;margin-bottom:12px">
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">📱 Social & Contact</div>
+  <div class="fg">
+    <div class="fi fgrow">
+      <span class="lbl">Instagram (username fără @)</span>
+      <input type="text" id="prof-instagram" placeholder="gabriel.hax">
+    </div>
+    <div class="fi fgrow">
+      <span class="lbl">Facebook (URL profil sau pagină)</span>
+      <input type="url" id="prof-facebook" placeholder="https://facebook.com/...">
+    </div>
+    <div class="fi fgrow">
+      <span class="lbl">WhatsApp (număr internațional fără +)</span>
+      <input type="tel" id="prof-whatsapp" placeholder="40712345678">
+      <div style="font-size:10px;color:var(--t3);margin-top:3px">Ex: 40 urmat de numărul fără 0. Folosit pe landing.</div>
+    </div>
+  </div>
+</div>
+
+<button class="btn btn-primary" onclick="saveProfile()" style="width:100%;padding:14px;font-size:14px;margin-bottom:24px">💾 Salvează toate setările profil</button>
+</div>
 
 <!-- ── SETĂRI PAGINA SPONSOR ── (owner only) -->
 <div class="page" id="pg-setari">
@@ -2367,6 +2490,8 @@ async function loadAllData(useAuth = false) {
 
     applyTheme(DB.prefs.theme || 'default');
     loadSettings();
+    loadProfile();
+    applyProfileToHero();
     renderAll();
     // Refresh sponsor landing if open
     if (document.getElementById('sponsor-landing')?.classList.contains('on')) {
@@ -2584,6 +2709,9 @@ function updateAuthButtons() {
   setF('theme-switcher', ow);
   setF('nav-setari-drawer', ow, 'flex');
   setF('nav-setari-sidebar', ow, 'flex');
+  setF('nav-profil-sidebar', ow, 'flex');
+  setF('nav-profil-drawer',  ow, 'flex');
+  setF('sponsor-mode-btn',   ow);
   setF('m-login-btn', !li, 'flex');
   setF('m-logout-btn', li, 'flex');
   loadDashTitle();
@@ -4980,6 +5108,7 @@ function go(id, el) {
     if(bns[bnMap[id]]) bns[bnMap[id]].classList.add('on');
   }
   if(id==='setari') renderSetari();
+  if(id==='profil') renderProfileForm();
 }
 
 function goBN(id, el) {
@@ -5049,6 +5178,178 @@ const DEFAULT_SETTINGS = {
     { min:3500, icon:'🌱', title:'Ambasador sport Bârlad',  desc:'Eveniment/alergare locală cu brandul tău' },
   ],
 };
+
+
+// ══════════════════════════════════════════════════════
+//  SETĂRI PROFIL
+// ══════════════════════════════════════════════════════
+
+const DEFAULT_PROFILE = {
+  name:        'Balan Gabriel',
+  nickname:    'HAX',
+  city:        'Bârlad',
+  year:        2024,
+  photo:       'https://i.imgur.com/7VqAGjI.jpeg',
+  bio_short:   'Totul a început cu o simplă întrebare, în mai 2024 — de la primele alergări pe străzile Bârladului, la Bucharest 10K terminat în pragul de a vomita cu spargere de PR, și de acolo... n-am mai oprit.',
+  bio_full:    '',
+  strava_id:   '136130375',
+  itra_url:    'https://itra.run/RunnerSpace/BALAN.Gabriel%20Zaharia/5688809',
+  itra_pi:     536,
+  instagram:   '',
+  facebook:    '',
+  whatsapp:    '40',
+};
+
+let PROFILE = { ...DEFAULT_PROFILE };
+
+function loadProfile() {
+  try {
+    let raw = DB.prefs?.profile_settings;
+    if (!raw) { PROFILE = { ...DEFAULT_PROFILE }; return; }
+    if (typeof raw === 'string') raw = JSON.parse(raw);
+    PROFILE = { ...DEFAULT_PROFILE, ...raw };
+  } catch(e) {
+    PROFILE = { ...DEFAULT_PROFILE };
+  }
+}
+
+function renderProfileForm() {
+  loadProfile();
+  const setV = (id, val) => { const e=document.getElementById(id); if(e) e.value=val||''; };
+  setV('prof-name',       PROFILE.name);
+  setV('prof-nickname',   PROFILE.nickname);
+  setV('prof-city',       PROFILE.city);
+  setV('prof-year',       PROFILE.year);
+  setV('prof-photo',      PROFILE.photo);
+  setV('prof-bio-short',  PROFILE.bio_short);
+  setV('prof-bio-full',   PROFILE.bio_full);
+  setV('prof-strava-id',  PROFILE.strava_id);
+  setV('prof-itra-url',   PROFILE.itra_url);
+  setV('prof-itra-pi',    PROFILE.itra_pi);
+  setV('prof-instagram',  PROFILE.instagram);
+  setV('prof-facebook',   PROFILE.facebook);
+  setV('prof-whatsapp',   PROFILE.whatsapp);
+
+  // Preview foto
+  if (PROFILE.photo) {
+    const prev = document.getElementById('prof-photo-prev');
+    const img  = document.getElementById('prof-photo-img');
+    if (img) { img.src = PROFILE.photo; if(prev) prev.style.display='block'; }
+  }
+}
+
+async function saveProfile() {
+  if (!isOwnerLoggedIn()) return;
+  if (!authToken) {
+    try { const s=JSON.parse(localStorage.getItem('sb_session')||'{}'); authToken=s.access_token; } catch(e) {}
+  }
+  if (!authToken) { toast('🔒 Sesiunea a expirat — reconectează-te.','err'); showLoginModal(); return; }
+
+  const gV = id => { const e=document.getElementById(id); return e ? e.value.trim() : ''; };
+
+  PROFILE = {
+    name:       gV('prof-name')      || DEFAULT_PROFILE.name,
+    nickname:   gV('prof-nickname')  || DEFAULT_PROFILE.nickname,
+    city:       gV('prof-city'),
+    year:       parseInt(gV('prof-year'))||2024,
+    photo:      gV('prof-photo'),
+    bio_short:  gV('prof-bio-short'),
+    bio_full:   gV('prof-bio-full'),
+    strava_id:  gV('prof-strava-id'),
+    itra_url:   gV('prof-itra-url'),
+    itra_pi:    parseInt(gV('prof-itra-pi'))||0,
+    instagram:  gV('prof-instagram'),
+    facebook:   gV('prof-facebook'),
+    whatsapp:   gV('prof-whatsapp'),
+  };
+
+  try {
+    const r = await fetch(`${SB_URL}/rest/v1/user_prefs`, {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'apikey':        SB_KEY,
+        'Authorization': 'Bearer ' + authToken,
+        'Prefer':        'resolution=merge-duplicates,return=representation',
+        'on-conflict':   'user_id',
+      },
+      body: JSON.stringify({ user_id: currentUser.id, profile_settings: PROFILE }),
+    });
+    if (!r.ok) throw new Error(await r.text());
+    DB.prefs.profile_settings = PROFILE;
+    toast('✅ Profil salvat!', 'ok');
+    // Aplică în Hero dacă e vizibil
+    applyProfileToHero();
+    // Sync whatsapp în SETTINGS
+    if (SETTINGS) SETTINGS.whatsapp_phone = PROFILE.whatsapp;
+  } catch(e) {
+    toast('❌ Eroare: ' + e.message, 'err');
+  }
+}
+
+function applyProfileToHero() {
+  // Aplică PROFILE în Hero (dash-hero)
+  const titleEl = document.querySelector('.dash-hero-title');
+  const akaEl   = document.querySelector('.dash-hero-aka');
+  if (titleEl && PROFILE.name) titleEl.textContent = PROFILE.name.toUpperCase();
+  if (akaEl   && PROFILE.nickname) akaEl.textContent = PROFILE.nickname + ' · 2026';
+
+  // Bio card
+  const bioNameEl = document.querySelector('.bio-name');
+  if (bioNameEl) {
+    bioNameEl.innerHTML = escHtml(PROFILE.name) +
+      ' <span class="bio-tag">' + escHtml(PROFILE.nickname) + '</span>';
+  }
+  const bioSubEl = document.querySelector('.bio-sub');
+  if (bioSubEl && PROFILE.city) {
+    bioSubEl.textContent = 'Alergător · ' + PROFILE.city + ' · Din ' + (PROFILE.year ? 'mai ' + PROFILE.year : '—');
+  }
+  const bioPreviewEl = document.querySelector('.bio-preview');
+  if (bioPreviewEl && PROFILE.bio_short) bioPreviewEl.textContent = PROFILE.bio_short;
+
+  // Strava link
+  const stravaLink = document.querySelector('.bio-link.strava-link');
+  if (stravaLink && PROFILE.strava_id) {
+    stravaLink.href = 'https://www.strava.com/athletes/' + PROFILE.strava_id;
+  }
+
+  // ITRA link
+  const itraLink = document.querySelector('.bio-link.itra-link');
+  if (itraLink && PROFILE.itra_url) itraLink.href = PROFILE.itra_url;
+
+  // ITRA PI
+  const itraPI = document.getElementById('itra-pi-val');
+  if (itraPI && PROFILE.itra_pi) itraPI.textContent = PROFILE.itra_pi;
+
+  // WhatsApp pe landing
+  const waBtn = document.getElementById('sl-wa-btn');
+  if (waBtn && PROFILE.whatsapp) {
+    const phone = PROFILE.whatsapp.replace(/\D/g,'');
+    waBtn.href = 'https://wa.me/' + phone + '?text=Buna%20Gabriel%2C%20sunt%20interesat%20de%20un%20parteneriat%20pentru%20sezonul%202026.';
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  MOD SPONSOR
+// ══════════════════════════════════════════════════════
+let _sponsorMode = false;
+
+function toggleSponsorMode() {
+  _sponsorMode = !_sponsorMode;
+  const btn = document.getElementById('sponsor-mode-btn');
+  const dash = document.getElementById('pg-dash');
+  if (!dash) return;
+
+  if (_sponsorMode) {
+    dash.classList.add('sponsor-mode');
+    if (btn) { btn.textContent = '📊 Mod Normal'; btn.style.color = 'var(--accent)'; btn.style.borderColor = 'var(--accent-border)'; }
+    toast('👔 Mod Sponsor activ', 'info');
+  } else {
+    dash.classList.remove('sponsor-mode');
+    if (btn) { btn.textContent = '👔 Mod Sponsor'; btn.style.color = 'var(--t2)'; btn.style.borderColor = 'var(--border)'; }
+    toast('📊 Mod Normal', 'info');
+  }
+}
 
 // Runtime settings object (merged from DB)
 let SETTINGS = { ...DEFAULT_SETTINGS };
