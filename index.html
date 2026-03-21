@@ -5988,18 +5988,22 @@ function openSponsorPrez() {
   const prez = document.getElementById('sp-prez');
   if (!prez) return;
 
-  // Aplică ordinea din SETTINGS
-  spApplySlideOrder();
-
   prez.classList.add('on');
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    prez.classList.add('vis');
-    spPopulateAll();
-    spGoSlide(0, false);
-    spInitSwipe();
-    document.removeEventListener('keydown', spKeyHandler);
-    document.addEventListener('keydown', spKeyHandler);
-  }));
+
+  // rAF 1: browser vede display:flex pe #sp-prez
+  requestAnimationFrame(() => {
+    spApplySlideOrder(); // reordonează DOM după ce prez e vizibil
+
+    // rAF 2+3: browser procesează layout-ul nou înainte de tranziție
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      prez.classList.add('vis');
+      spPopulateAll();
+      spGoSlide(0);
+      spInitSwipe();
+      document.removeEventListener('keydown', spKeyHandler);
+      document.addEventListener('keydown', spKeyHandler);
+    }));
+  });
 }
 
 function spApplySlideOrder() {
