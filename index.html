@@ -1169,6 +1169,40 @@ body.readonly label.btn { display:none !important }
   font-family:'Inter',sans-serif;line-height:1.5;
 }
 
+/* ── ROI Slider dark ── */
+#sp-roi-slider::-webkit-slider-thumb {
+  -webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+  background:var(--accent);cursor:pointer;border:none;
+}
+#sp-roi-slider::-moz-range-thumb {
+  width:22px;height:22px;border-radius:50%;
+  background:var(--accent);cursor:pointer;border:none;
+}
+.sp-roi-item {
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;padding:10px;
+}
+.sp-roi-item.on { border-color:var(--accent);background:rgba(204,255,0,.08); }
+.sp-roi-item-icon { font-size:18px;margin-bottom:4px; }
+.sp-roi-item-title { font-size:11px;font-weight:600;color:#fff;margin-bottom:2px; }
+.sp-roi-item-desc  { font-size:10px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;line-height:1.3; }
+.sp-cd-block {
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;padding:12px 10px;min-width:56px;text-align:center;
+}
+.sp-cd-val { font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--accent);line-height:1;letter-spacing:1px; }
+.sp-cd-lbl { font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-top:2px;font-family:'Inter',sans-serif; }
+.sp-cd-sep { font-family:'Bebas Neue',sans-serif;font-size:28px;color:rgba(255,255,255,.3);padding-bottom:16px; }
+.sp-cd-stat { background:rgba(255,255,255,.06);border-radius:8px;padding:10px;text-align:center; }
+.sp-cd-stat-val { font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent);display:block; }
+.sp-cd-stat-lbl { font-size:9px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;text-transform:uppercase;letter-spacing:1px; }
+.sp-budget-row { display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06); }
+.sp-budget-row:last-child { border-bottom:none; }
+.sp-budget-icon { font-size:16px;flex-shrink:0; }
+.sp-budget-label { flex:1;font-size:12px;color:rgba(255,255,255,.6);font-family:'Inter',sans-serif; }
+.sp-budget-bar-wrap { flex:1;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden; }
+.sp-budget-bar-fill { height:100%;background:var(--accent);border-radius:2px;transition:width 1s ease;width:0%; }
+.sp-budget-amount { font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--accent);white-space:nowrap; }
 /* Animații controlate de JS */
 
 @media(max-width:600px){
@@ -1693,13 +1727,16 @@ body.readonly label.btn { display:none !important }
   <!-- Dots -->
   <div id="sp-counter">
     <div class="sp-dot on" data-s="0"></div>
-    <div class="sp-dot"    data-s="1"></div>
-    <div class="sp-dot"    data-s="2"></div>
-    <div class="sp-dot"    data-s="3"></div>
-    <div class="sp-dot"    data-s="4"></div>
-    <div class="sp-dot"    data-s="5"></div>
-    <div class="sp-dot"    data-s="6"></div>
-    <div class="sp-dot"    data-s="7"></div>
+    <div class="sp-dot" data-s="1"></div>
+    <div class="sp-dot" data-s="2"></div>
+    <div class="sp-dot" data-s="3"></div>
+    <div class="sp-dot" data-s="4"></div>
+    <div class="sp-dot" data-s="5"></div>
+    <div class="sp-dot" data-s="6"></div>
+    <div class="sp-dot" data-s="7"></div>
+    <div class="sp-dot" data-s="8"></div>
+    <div class="sp-dot" data-s="9"></div>
+    <div class="sp-dot" data-s="10"></div>
   </div>
 
   <!-- Close -->
@@ -1807,8 +1844,29 @@ body.readonly label.btn { display:none !important }
       </div>
     </div>
 
-    <!-- ── SLIDE 6 — LIVE TRAINING ── -->
+
+    <!-- ── SLIDE 6 — COUNTDOWN ── -->
     <div class="sp-slide" id="sp-s6">
+      <div class="sp-bg" style="background:linear-gradient(135deg,#050a14 0%,#0a1628 100%)"></div>
+      <div class="sp-s2-title">⏱️ URMEAZĂ</div>
+      <div style="width:100%;max-width:480px;text-align:center">
+        <div id="sp-cd-race" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,4vw,32px);color:#fff;letter-spacing:2px;margin-bottom:4px">—</div>
+        <div id="sp-cd-date" style="font-size:12px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;margin-bottom:28px">—</div>
+        <div style="display:flex;justify-content:center;align-items:center;gap:8px;margin-bottom:28px">
+          <div class="sp-cd-block"><div class="sp-cd-val" id="sp-cd-d">—</div><div class="sp-cd-lbl">zile</div></div>
+          <div class="sp-cd-sep">:</div>
+          <div class="sp-cd-block"><div class="sp-cd-val" id="sp-cd-h">—</div><div class="sp-cd-lbl">ore</div></div>
+          <div class="sp-cd-sep">:</div>
+          <div class="sp-cd-block"><div class="sp-cd-val" id="sp-cd-m">—</div><div class="sp-cd-lbl">min</div></div>
+          <div class="sp-cd-sep">:</div>
+          <div class="sp-cd-block"><div class="sp-cd-val" id="sp-cd-s">—</div><div class="sp-cd-lbl">sec</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;max-width:360px;margin:0 auto" id="sp-cd-stats"></div>
+      </div>
+    </div>
+
+    <!-- ── SLIDE 9 — LIVE TRAINING ── -->
+    <div class="sp-slide" id="sp-s9">
       <div class="sp-bg" style="background:linear-gradient(135deg,#0a0a1a 0%,#0d1a0d 100%)"></div>
       <div class="sp-s2-title">⚡ ULTIMA ALERGARE</div>
       <div style="width:100%;max-width:600px">
@@ -1826,8 +1884,27 @@ body.readonly label.btn { display:none !important }
       </div>
     </div>
 
-    <!-- ── SLIDE 7 — DE CE EU ── -->
+    <!-- ── SLIDE 7 — ROI SIMULATOR ── -->
     <div class="sp-slide" id="sp-s7">
+      <div class="sp-bg" style="background:linear-gradient(135deg,#0a0800 0%,#141000 100%)"></div>
+      <div class="sp-s2-title">💰 CÂT INVESTEȘTI, CE PRIMEȘTI</div>
+      <div style="width:100%;max-width:500px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+          <span style="font-size:13px;color:rgba(255,255,255,.5);font-family:'Inter',sans-serif">Buget sponsorizare</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--accent)" id="sp-roi-amount">500 RON</span>
+        </div>
+        <input type="range" id="sp-roi-slider" min="100" max="5000" step="100" value="500"
+          style="width:100%;height:6px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.15);border-radius:3px;outline:none;cursor:pointer;margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.3);font-family:'Inter',sans-serif;margin-bottom:20px">
+          <span>100 RON</span><span>5.000 RON</span>
+        </div>
+        <div id="sp-roi-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px"></div>
+        <div id="sp-roi-summary" style="background:rgba(204,255,0,.07);border:1px solid rgba(204,255,0,.2);border-radius:8px;padding:12px;font-size:12px;color:#fff;text-align:center;font-family:'Inter',sans-serif;line-height:1.6"></div>
+      </div>
+    </div>
+
+    <!-- ── SLIDE 10 — DE CE EU ── -->
+    <div class="sp-slide" id="sp-s10">
       <div class="sp-bg" style="background:linear-gradient(135deg,#0f0a00 0%,#1a0a00 100%)"></div>
       <div class="sp-s2-title">🤝 DE CE SĂ NE PARTENERIĂM</div>
       <div style="display:flex;flex-direction:column;gap:16px;width:100%;max-width:560px" id="sp-why-list">
@@ -1855,8 +1932,22 @@ body.readonly label.btn { display:none !important }
       </div>
     </div>
 
-    <!-- ── SLIDE 8 — TESTIMONIAL ── -->
+    <!-- ── SLIDE 8 — BUGET ── -->
     <div class="sp-slide" id="sp-s8">
+      <div class="sp-bg" style="background:linear-gradient(135deg,#0a0014 0%,#08000a 100%)"></div>
+      <div class="sp-s2-title">📊 UNDE SE DUC BANII</div>
+      <div style="width:100%;max-width:480px">
+        <p style="font-size:12px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;margin-bottom:16px;text-align:center">Sponsorizarea ta acoperă costuri reale. Live din planificarea mea:</p>
+        <div id="sp-budget-list" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="sp-budget-total" style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:12px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif">Total sezon 2026</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent)" id="sp-budget-total-val">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SLIDE 11 — TESTIMONIAL ── -->
+    <div class="sp-slide" id="sp-s11">
       <div class="sp-bg" style="background:linear-gradient(135deg,#0a0500 0%,#1a0800 100%)"></div>
       <div class="sp-s2-title">💬 CE SPUN PARTENERII</div>
       <div style="width:100%;max-width:520px;text-align:center">
@@ -5851,7 +5942,7 @@ function applyProfileToHero() {
 //  PREZENTARE SPONSOR
 // ══════════════════════════════════════════════════════
 let _spSlide = 0;
-const SP_TOTAL = 8;
+const SP_TOTAL = 11;
 
 function openSponsorPrez() {
   const prez = document.getElementById('sp-prez');
@@ -5874,6 +5965,8 @@ function closeSponsorPrez() {
   prez.classList.remove('vis');
   setTimeout(() => prez.classList.remove('on'), 500);
   document.removeEventListener('keydown', spKeyHandler);
+  if (_spMapTimer) { clearInterval(_spMapTimer); _spMapTimer = null; }
+  if (_spCdTimer)  { clearInterval(_spCdTimer);  _spCdTimer  = null; }
 }
 
 function spKeyHandler(e) {
@@ -5905,10 +5998,9 @@ function spGoSlide(idx) {
   if (prev) prev.style.opacity = idx === 0 ? '0.3' : '1';
   if (next) next.style.opacity = idx === SP_TOTAL - 1 ? '0.3' : '1';
 
-  // Oprește animația hărții dacă trecem de pe slide 5
-  if (_spSlide === 4 && idx !== 4 && _spMapTimer) {
-    clearInterval(_spMapTimer); _spMapTimer = null;
-  }
+  // Oprește timere la schimbare slide
+  if (_spSlide === 3 && idx !== 3 && _spMapTimer) { clearInterval(_spMapTimer); _spMapTimer = null; }
+  if (_spSlide === 5 && idx !== 5 && _spCdTimer)  { clearInterval(_spCdTimer);  _spCdTimer  = null; }
   document.querySelectorAll('.sp-slide').forEach(s => s.classList.remove('on'));
 
   const target = document.getElementById('sp-s' + (idx + 1));
@@ -5918,7 +6010,10 @@ function spGoSlide(idx) {
     target.classList.add('on');
     if (idx === 0) setTimeout(spAnimateCounters, 350);
     if (idx === 2) setTimeout(spAnimateBars, 350);
-    if (idx === 4) setTimeout(spStartMapAnimation, 300);
+    if (idx === 3) setTimeout(spStartMapAnimation, 300);
+    if (idx === 5) spStartCountdown();
+    if (idx === 6) spInitROI();
+    if (idx === 7) spAnimateBudget();
   });
 }
 
@@ -6052,8 +6147,39 @@ function spPopulateAll() {
     if (btn && waPhone) btn.href = waUrl;
   });
 
-  // ── Slide 5 — Hartă animată ──────────────────────────
+  // ── Slide 4 — Hartă animată (idx=3) ────────────────────
   spDrawMapAnimated(races);
+
+  // ── Slide 6 — Countdown (idx=5) ─────────────────────────
+  const nextRaceForCd = [...races]
+    .filter(r=>r.data_cursa && new Date(r.data_cursa) >= today)
+    .sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa))[0];
+  if (nextRaceForCd) {
+    const el = document.getElementById('sp-cd-race');
+    const elD= document.getElementById('sp-cd-date');
+    if (el) el.textContent = nextRaceForCd.denumire || '—';
+    if (elD) elD.textContent = nextRaceForCd.data_cursa
+      ? new Date(nextRaceForCd.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'long',year:'numeric'})
+      : '—';
+    // Stats curse
+    const cdStats = document.getElementById('sp-cd-stats');
+    if (cdStats) cdStats.innerHTML = [
+      { val: (nextRaceForCd.distanta||'?')+' km', lbl: 'Distanță' },
+      { val: nextRaceForCd.denivelare ? Math.round(nextRaceForCd.denivelare/1000)+'k D+' : '—', lbl: 'Denivelare' },
+      { val: nextRaceForCd.geluri||0, lbl: 'Geluri' },
+    ].map(s=>`<div class="sp-cd-stat"><span class="sp-cd-stat-val">${s.val}</span><span class="sp-cd-stat-lbl">${s.lbl}</span></div>`).join('');
+    window._spCdTarget = new Date(nextRaceForCd.data_cursa);
+  }
+
+  // ── Slide 7 — ROI (idx=6) ────────────────────────────────
+  const roiSlider = document.getElementById('sp-roi-slider');
+  if (roiSlider) {
+    roiSlider.oninput = function() { spUpdateROI(parseInt(this.value)); };
+    spUpdateROI(500);
+  }
+
+  // ── Slide 8 — Budget (idx=7) ─────────────────────────────
+  spPopulateBudget();
 
   // ── Slide 6 — Ultima alergare ─────────────────────────
   spPopulateLastRun(acts);
@@ -6077,6 +6203,82 @@ function spPopulateAll() {
 let _spMapRaces = [];
 let _spMapTimer = null;
 let _spMapIdx   = 0;
+
+// ── Slide 6: Countdown ───────────────────────────────
+let _spCdTimer = null;
+function spStartCountdown() {
+  if (_spCdTimer) clearInterval(_spCdTimer);
+  const tick = () => {
+    const target = window._spCdTarget;
+    if (!target) return;
+    const diff = target - new Date();
+    if (diff <= 0) { ['sp-cd-d','sp-cd-h','sp-cd-m','sp-cd-s'].forEach(id=>{ const e=document.getElementById(id); if(e) e.textContent='0'; }); return; }
+    const d=Math.floor(diff/86400000), h=Math.floor((diff%86400000)/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
+    const set=(id,v)=>{ const e=document.getElementById(id); if(e) e.textContent=String(v).padStart(2,'0'); };
+    set('sp-cd-d',d); set('sp-cd-h',h); set('sp-cd-m',m); set('sp-cd-s',s);
+  };
+  tick();
+  _spCdTimer = setInterval(tick, 1000);
+}
+
+// ── Slide 7: ROI ─────────────────────────────────────
+function spInitROI() {
+  const slider = document.getElementById('sp-roi-slider');
+  if (slider) spUpdateROI(parseInt(slider.value)||500);
+}
+
+function spUpdateROI(amount) {
+  const amEl = document.getElementById('sp-roi-amount');
+  if (amEl) amEl.textContent = amount.toLocaleString('ro-RO') + ' RON';
+  const tiers = SETTINGS.packages || [];
+  const grid = document.getElementById('sp-roi-grid');
+  if (grid) grid.innerHTML = tiers.map(t => {
+    const on = amount >= (t.min||0);
+    return `<div class="sp-roi-item ${on?'on':''}">
+      <div class="sp-roi-item-icon">${t.icon||'🎁'}</div>
+      <div class="sp-roi-item-title">${escHtml(t.title||'')}</div>
+      <div class="sp-roi-item-desc">${escHtml(t.desc||'')}</div>
+    </div>`;
+  }).join('');
+  const sum = document.getElementById('sp-roi-summary');
+  if (sum) {
+    const active = tiers.filter(t=>amount>=(t.min||0));
+    const next   = tiers.find(t=>amount<(t.min||0));
+    sum.innerHTML = next
+      ? `✅ <strong>${active.length} beneficii</strong> · +${((next.min||0)-amount).toLocaleString()} RON → <strong>${next.icon} ${next.title}</strong>`
+      : `🏆 <strong>Pachet complet — toate ${active.length} beneficiile!</strong>`;
+  }
+}
+
+// ── Slide 8: Budget ──────────────────────────────────
+function spPopulateBudget() {
+  const races=DB.races||[], eq=DB.equipment||[], supls=DB.supplements||[];
+  const gpp=(DB.nutri?.gel_pret_set24||0)/24;
+  const items=[
+    {icon:'🏁',label:'Taxe de înscriere', val:Math.round(races.reduce((s,r)=>s+(r.plata_concurs||0),0))},
+    {icon:'🏨',label:'Cazare curse',       val:Math.round(races.reduce((s,r)=>s+(r.cazare||0),0))},
+    {icon:'🧃',label:'Nutriție (geluri)',   val:Math.round(races.reduce((s,r)=>s+(r.geluri||0)*gpp,0))},
+    {icon:'👟',label:'Echipament',          val:Math.round(eq.reduce((s,e)=>s+(parseFloat(e.pret)||0),0))},
+    {icon:'💊',label:'Suplimente anuale',   val:Math.round(supls.reduce((s,x)=>s+((x.pret_lunar||0)*12),0))},
+  ];
+  const total=items.reduce((s,i)=>s+i.val,0);
+  const maxVal=Math.max(...items.map(i=>i.val),1);
+  const list=document.getElementById('sp-budget-list');
+  if(list) list.innerHTML=items.map(i=>`
+    <div class="sp-budget-row">
+      <span class="sp-budget-icon">${i.icon}</span>
+      <span class="sp-budget-label">${i.label}</span>
+      <div class="sp-budget-bar-wrap"><div class="sp-budget-bar-fill" data-pct="${Math.round(i.val/maxVal*100)}"></div></div>
+      <span class="sp-budget-amount">${i.val.toLocaleString('ro-RO')} RON</span>
+    </div>`).join('');
+  const totEl=document.getElementById('sp-budget-total-val');
+  if(totEl) totEl.textContent=total.toLocaleString('ro-RO')+' RON';
+}
+
+function spAnimateBudget() {
+  spPopulateBudget();
+  setTimeout(()=>{ document.querySelectorAll('.sp-budget-bar-fill').forEach(b=>{ b.style.width=b.dataset.pct+'%'; }); }, 200);
+}
 
 function spDrawMapAnimated(races) {
   _spMapRaces = [...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
@@ -7223,8 +7425,13 @@ function slContact() {
 
 function checkSponsorParam() {
   const params = new URLSearchParams(window.location.search);
-  if (params.get('sponsor') === '1') initSponsorLanding();
-  if (params.get('prez')    === '1') openSponsorPrez();
+  // ?sponsor=1 redirectat spre prezentare
+  if (params.get('sponsor') === '1') {
+    window.history.replaceState({}, '', '?prez=1');
+    openSponsorPrez();
+    return;
+  }
+  if (params.get('prez') === '1') openSponsorPrez();
 }
 
 
