@@ -942,15 +942,14 @@ body.readonly label.btn { display:none !important }
 /* Slide base */
 .sp-slide {
   position:absolute;inset:0;
-  display:flex;flex-direction:column;
+  display:none;
+  flex-direction:column;
   align-items:center;justify-content:center;
   padding:60px 40px 40px;
-  opacity:0;pointer-events:none;
-  transition:opacity .5s ease;
   overflow:hidden;
 }
 .sp-slide.on {
-  opacity:1;pointer-events:all;
+  display:flex;
 }
 
 /* Blur BG */
@@ -5756,22 +5755,15 @@ function spGoSlide(idx) {
   if (prev) prev.style.opacity = idx === 0 ? '0.3' : '1';
   if (next) next.style.opacity = idx === SP_TOTAL - 1 ? '0.3' : '1';
 
-  // Ascunde toate, arată doar targetul
-  document.querySelectorAll('.sp-slide').forEach(s => {
-    s.style.opacity = '0';
-    s.style.pointerEvents = 'none';
-  });
+  // Ascunde toate cu display:none, arată targetul cu display:flex
+  document.querySelectorAll('.sp-slide').forEach(s => s.classList.remove('on'));
 
   const target = document.getElementById('sp-s' + (idx + 1));
   if (!target) return;
+  target.classList.add('on');
 
-  // Fade in simplu — elementele sunt vizibile by default din CSS
-  target.style.transition = 'opacity .4s ease';
-  target.style.opacity    = '1';
-  target.style.pointerEvents = 'all';
-
-  if (idx === 0) setTimeout(spAnimateCounters, 200);
-  if (idx === 2) setTimeout(spAnimateBars, 200);
+  if (idx === 0) setTimeout(spAnimateCounters, 100);
+  if (idx === 2) setTimeout(spAnimateBars, 100);
 }
 
 function spPopulateAll() {
