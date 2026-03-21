@@ -942,14 +942,20 @@ body.readonly label.btn { display:none !important }
 /* Slide base */
 .sp-slide {
   position:absolute;inset:0;
-  display:none;
+  display:flex;
   flex-direction:column;
   align-items:center;justify-content:center;
   padding:60px 40px 40px;
   overflow:hidden;
+  opacity:0;
+  transform:scale(.97);
+  pointer-events:none;
+  transition:opacity .45s ease, transform .45s ease;
 }
 .sp-slide.on {
-  display:flex;
+  opacity:1;
+  transform:scale(1);
+  pointer-events:all;
 }
 
 /* Blur BG */
@@ -5759,15 +5765,16 @@ function spGoSlide(idx) {
   if (prev) prev.style.opacity = idx === 0 ? '0.3' : '1';
   if (next) next.style.opacity = idx === SP_TOTAL - 1 ? '0.3' : '1';
 
-  // Ascunde toate cu display:none, arată targetul cu display:flex
   document.querySelectorAll('.sp-slide').forEach(s => s.classList.remove('on'));
 
   const target = document.getElementById('sp-s' + (idx + 1));
   if (!target) return;
-  target.classList.add('on');
-
-  if (idx === 0) setTimeout(spAnimateCounters, 100);
-  if (idx === 2) setTimeout(spAnimateBars, 100);
+  // rAF ca browserul să proceseze remove înainte de add
+  requestAnimationFrame(() => {
+    target.classList.add('on');
+    if (idx === 0) setTimeout(spAnimateCounters, 350);
+    if (idx === 2) setTimeout(spAnimateBars, 350);
+  });
 }
 
 function spPopulateAll() {
@@ -5829,9 +5836,18 @@ function spPopulateAll() {
   if (pRuns)   { pRuns.dataset.target   = acts.length; pRuns.textContent = '0'; }
   if (pElev)   { pElev.dataset.target   = totalElev; pElev.textContent = '0'; }
 
-  // Streak din DB
-  const streakEl = document.getElementById('db-streak-best');
-  if (pStreak) pStreak.textContent = streakEl?.textContent || '—';
+  // Streak calculat direct din activități
+  const streakDates = new Set(acts.map(a=>a.date).filter(Boolean));
+  let bestStreak = 0, cur = 0, prevD = null;
+  [...streakDates].sort().forEach(d => {
+    if (prevD) {
+      const diff = (new Date(d) - new Date(prevD)) / 86400000;
+      cur = diff === 1 ? cur + 1 : 1;
+    } else { cur = 1; }
+    if (cur > bestStreak) bestStreak = cur;
+    prevD = d;
+  });
+  if (pStreak) { pStreak.dataset.target = bestStreak; pStreak.textContent = '0'; }
 
   // Bar chart pe ani
   const years = ['2024','2025','2026'];
@@ -5895,7 +5911,7 @@ function spPopulateAll() {
 function spAnimateCounters() {
   document.querySelectorAll('#sp-s1 [data-target]').forEach(el => {
     const target = parseInt(el.dataset.target) || 0;
-    if (!target) return;
+    if (target === 0) { el.textContent = '0'; return; }
     const duration = 1200;
     const start = performance.now();
     const tick = now => {
@@ -5914,7 +5930,7 @@ function spAnimateBars() {
   // Counter pe slide 3
   document.querySelectorAll('#sp-s3 [data-target]').forEach(el => {
     const target = parseInt(el.dataset.target) || 0;
-    if (!target) return;
+    if (target === 0) { el.textContent = '0'; return; }
     const duration = 1000;
     const start = performance.now();
     const tick = now => {
