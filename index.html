@@ -1010,10 +1010,8 @@ body.readonly label.btn { display:none !important }
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.1);
   border-radius:10px;padding:12px 14px;
-  opacity:0;transform:translateY(16px);
-  transition:all .4s ease;
 }
-.sp-race-card.on { opacity:1;transform:translateY(0); }
+
 .sp-race-nr {
   font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:4px;
 }
@@ -1037,11 +1035,9 @@ body.readonly label.btn { display:none !important }
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.1);
   border-radius:12px;padding:20px;
-  opacity:0;transform:translateY(20px);
-  transition:all .5s ease;
   text-align:center;
 }
-.sp-proof-card.on { opacity:1;transform:translateY(0); }
+
 .sp-proof-val {
   font-size:clamp(32px,6vw,56px);color:var(--accent);
   letter-spacing:2px;line-height:1;display:block;
@@ -1087,7 +1083,7 @@ body.readonly label.btn { display:none !important }
   margin-bottom:24px;
   
 }
-.sp-partner-logo.on { opacity:1;transform:scale(1); }
+
 .sp-partner-title {
   font-size:clamp(22px,4vw,38px);color:#fff;letter-spacing:4px;
   margin-bottom:6px;text-align:center;
@@ -1101,7 +1097,6 @@ body.readonly label.btn { display:none !important }
 .sp-packages {
   display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
   max-width:600px;margin-bottom:32px;
-  opacity:0;transition:all .5s ease .5s;
 }
 .sp-pkg {
   background:rgba(255,255,255,.07);
@@ -5770,22 +5765,13 @@ function spGoSlide(idx) {
   const target = document.getElementById('sp-s' + (idx + 1));
   if (!target) return;
 
-  // Toate elementele din slide sunt vizibile imediat, fără animații
-  target.querySelectorAll('*').forEach(el => {
-    el.style.opacity   = '1';
-    el.style.transform = 'none';
-    el.style.transition = 'none';
-  });
+  // Fade in simplu — elementele sunt vizibile by default din CSS
+  target.style.transition = 'opacity .4s ease';
+  target.style.opacity    = '1';
+  target.style.pointerEvents = 'all';
 
-  // Fade in slide-ul (doar slide-ul, nu elementele din el)
-  setTimeout(() => {
-    target.style.transition  = 'opacity .4s ease';
-    target.style.opacity     = '1';
-    target.style.pointerEvents = 'all';
-    // Counter animat pe slide 1
-    if (idx === 0) setTimeout(spAnimateCounters, 100);
-    if (idx === 2) setTimeout(spAnimateBars, 100);
-  }, 50);
+  if (idx === 0) setTimeout(spAnimateCounters, 200);
+  if (idx === 2) setTimeout(spAnimateBars, 200);
 }
 
 function spPopulateAll() {
