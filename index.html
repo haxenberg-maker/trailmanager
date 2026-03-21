@@ -1127,6 +1127,48 @@ body.readonly label.btn { display:none !important }
   font-family:'Bebas Neue',sans-serif;
 }
 
+
+/* ── SLIDE 5 — Hartă ── */
+/* folosește clasele existente din landing slDrawMap */
+
+/* ── SLIDE 6 — Last run ── */
+.sp-last-stat {
+  background:rgba(255,255,255,.07);border-radius:8px;
+  padding:10px 6px;text-align:center;
+}
+.sp-last-stat-val {
+  font-family:'Bebas Neue',sans-serif;font-size:22px;
+  color:var(--accent);line-height:1;display:block;
+}
+.sp-last-stat-lbl {
+  font-size:9px;color:rgba(255,255,255,.4);
+  text-transform:uppercase;letter-spacing:1px;
+  display:block;margin-top:3px;font-family:'Inter',sans-serif;
+}
+
+/* ── SLIDE 7 — De ce eu ── */
+.sp-why-item {
+  display:flex;align-items:flex-start;gap:16px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-left:3px solid var(--accent);
+  border-radius:0 10px 10px 0;
+  padding:14px 16px;
+}
+.sp-why-nr {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px;color:var(--accent);opacity:.4;
+  line-height:1;flex-shrink:0;min-width:36px;
+}
+.sp-why-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;color:#fff;letter-spacing:1px;margin-bottom:4px;
+}
+.sp-why-desc {
+  font-size:12px;color:rgba(255,255,255,.5);
+  font-family:'Inter',sans-serif;line-height:1.5;
+}
+
 /* Animații controlate de JS */
 
 @media(max-width:600px){
@@ -1650,10 +1692,14 @@ body.readonly label.btn { display:none !important }
 
   <!-- Dots -->
   <div id="sp-counter">
-    <div class="sp-dot on"  data-s="0"></div>
-    <div class="sp-dot"     data-s="1"></div>
-    <div class="sp-dot"     data-s="2"></div>
-    <div class="sp-dot"     data-s="3"></div>
+    <div class="sp-dot on" data-s="0"></div>
+    <div class="sp-dot"    data-s="1"></div>
+    <div class="sp-dot"    data-s="2"></div>
+    <div class="sp-dot"    data-s="3"></div>
+    <div class="sp-dot"    data-s="4"></div>
+    <div class="sp-dot"    data-s="5"></div>
+    <div class="sp-dot"    data-s="6"></div>
+    <div class="sp-dot"    data-s="7"></div>
   </div>
 
   <!-- Close -->
@@ -1742,6 +1788,100 @@ body.readonly label.btn { display:none !important }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         CONTACTEAZĂ-NE
       </a>
+    </div>
+
+
+    <!-- ── SLIDE 5 — UNDE APAR (hartă animată) ── -->
+    <div class="sp-slide" id="sp-s5">
+      <div class="sp-bg" style="background:linear-gradient(135deg,#050e05 0%,#0a1628 100%)"></div>
+      <div class="sp-s2-title">📍 UNDE APARE BRANDUL TĂU</div>
+      <div style="position:relative;width:100%;max-width:500px;margin:0 auto">
+        <svg id="sp-map-svg" viewBox="0 0 460 340" style="width:100%;height:auto;display:block;border-radius:12px;overflow:hidden"></svg>
+        <div id="sp-map-info" style="position:absolute;bottom:12px;left:12px;right:12px;background:rgba(0,0,0,.7);border:1px solid var(--accent);border-radius:8px;padding:10px 14px;font-size:13px;color:#fff;min-height:44px;backdrop-filter:blur(6px);display:flex;align-items:center;gap:10px">
+          <span style="font-size:18px">🏁</span>
+          <div>
+            <div id="sp-map-race-name" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:var(--accent)">—</div>
+            <div id="sp-map-race-meta" style="font-size:10px;color:rgba(255,255,255,.5);margin-top:1px">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SLIDE 6 — LIVE TRAINING ── -->
+    <div class="sp-slide" id="sp-s6">
+      <div class="sp-bg" style="background:linear-gradient(135deg,#0a0a1a 0%,#0d1a0d 100%)"></div>
+      <div class="sp-s2-title">⚡ ULTIMA ALERGARE</div>
+      <div style="width:100%;max-width:600px">
+        <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden">
+          <div id="sp-last-map" style="height:160px;background:rgba(255,255,255,.03)"></div>
+          <div style="padding:16px 20px">
+            <div id="sp-last-name" style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:#fff;letter-spacing:1px;margin-bottom:4px">—</div>
+            <div id="sp-last-date" style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:14px">—</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px" id="sp-last-stats"></div>
+          </div>
+        </div>
+        <div style="margin-top:12px;font-size:11px;color:rgba(255,255,255,.3);text-align:center;font-family:'Inter',sans-serif">
+          Live din Strava · actualizat automat după fiecare alergare
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SLIDE 7 — DE CE EU ── -->
+    <div class="sp-slide" id="sp-s7">
+      <div class="sp-bg" style="background:linear-gradient(135deg,#0f0a00 0%,#1a0a00 100%)"></div>
+      <div class="sp-s2-title">🤝 DE CE SĂ NE PARTENERIĂM</div>
+      <div style="display:flex;flex-direction:column;gap:16px;width:100%;max-width:560px" id="sp-why-list">
+        <div class="sp-why-item">
+          <div class="sp-why-nr">01</div>
+          <div>
+            <div class="sp-why-title">BÂRLADUL PE HARTA TRAIL-ULUI</div>
+            <div class="sp-why-desc">La fiecare dintre cele 10 curse — Brașov, Sibiu, Bucovina — brandul tău reprezintă orașul. Sute de concurenți și spectatori la fiecare start.</div>
+          </div>
+        </div>
+        <div class="sp-why-item">
+          <div class="sp-why-nr">02</div>
+          <div>
+            <div class="sp-why-title">TRANSPARENȚĂ TOTALĂ</div>
+            <div class="sp-why-desc">Nu cuvinte — dashboard live cu fiecare km alergat, fiecare cursă, fiecare cheltuială. Singurul atlet cu un nivel de transparență ca acesta.</div>
+          </div>
+        </div>
+        <div class="sp-why-item">
+          <div class="sp-why-nr">03</div>
+          <div>
+            <div class="sp-why-title">PARTENERIATUL AUTENTIC</div>
+            <div class="sp-why-desc">Ești primul. Înainte să fie scump. Înainte să fie coadă. Un parteneriat real — nu o reclamă.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SLIDE 8 — TESTIMONIAL ── -->
+    <div class="sp-slide" id="sp-s8">
+      <div class="sp-bg" style="background:linear-gradient(135deg,#0a0500 0%,#1a0800 100%)"></div>
+      <div class="sp-s2-title">💬 CE SPUN PARTENERII</div>
+      <div style="width:100%;max-width:520px;text-align:center">
+        <div style="font-size:80px;margin-bottom:16px;line-height:1">❝</div>
+        <div id="sp-testimonial-text" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,3.5vw,32px);color:#fff;letter-spacing:1px;line-height:1.3;margin-bottom:24px">
+          Am ales să susținem pentru că Gabriel nu promite — el arată. Fiecare km e live, fiecare cursă e documentată. Asta e transparența în care credem și noi.
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:14px">
+          <div id="sp-test-logo" style="height:36px;max-width:100px;object-fit:contain;background:white;border-radius:6px;padding:4px 8px;display:flex;align-items:center">
+            <img id="sp-test-logo-img" src="" style="max-height:28px;max-width:88px;object-fit:contain;display:none">
+            <span id="sp-test-logo-text" style="font-size:11px;font-weight:700;color:#333">PRISCOM</span>
+          </div>
+          <div>
+            <div id="sp-test-name" style="font-size:13px;color:#fff;font-family:'Bebas Neue',sans-serif;letter-spacing:1px">SC PRISCOM DEZMEMBRĂRI AUTO SRL</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif">Sponsor principal · Sezon 2026</div>
+          </div>
+        </div>
+        <div style="margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,.1)">
+          <div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:12px;font-family:'Inter',sans-serif;letter-spacing:1px;text-transform:uppercase">Vrei să fii alături de ei?</div>
+          <a id="sp-test-wa" class="sp-cta-btn" href="#" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            CONTACTEAZĂ-NE
+          </a>
+        </div>
+      </div>
     </div>
 
   </div><!-- /sp-slides -->
@@ -5711,7 +5851,7 @@ function applyProfileToHero() {
 //  PREZENTARE SPONSOR
 // ══════════════════════════════════════════════════════
 let _spSlide = 0;
-const SP_TOTAL = 4;
+const SP_TOTAL = 8;
 
 function openSponsorPrez() {
   const prez = document.getElementById('sp-prez');
@@ -5765,6 +5905,10 @@ function spGoSlide(idx) {
   if (prev) prev.style.opacity = idx === 0 ? '0.3' : '1';
   if (next) next.style.opacity = idx === SP_TOTAL - 1 ? '0.3' : '1';
 
+  // Oprește animația hărții dacă trecem de pe slide 5
+  if (_spSlide === 4 && idx !== 4 && _spMapTimer) {
+    clearInterval(_spMapTimer); _spMapTimer = null;
+  }
   document.querySelectorAll('.sp-slide').forEach(s => s.classList.remove('on'));
 
   const target = document.getElementById('sp-s' + (idx + 1));
@@ -5774,6 +5918,7 @@ function spGoSlide(idx) {
     target.classList.add('on');
     if (idx === 0) setTimeout(spAnimateCounters, 350);
     if (idx === 2) setTimeout(spAnimateBars, 350);
+    if (idx === 4) setTimeout(spStartMapAnimation, 300);
   });
 }
 
@@ -5899,12 +6044,185 @@ function spPopulateAll() {
     }).join('');
   }
 
-  // WhatsApp CTA
-  const waBtn = document.getElementById('sp-cta-wa');
-  if (waBtn && PROFILE.whatsapp) {
-    const phone = (PROFILE.whatsapp||'').replace(/\D/g,'');
-    waBtn.href = 'https://wa.me/'+phone+'?text=Buna%20ziua%2C%20sunt%20interesat%20de%20un%20parteneriat%20Trail%20Running%202026.';
+  // WhatsApp CTA (slide 4 + slide 8)
+  const waPhone = (PROFILE.whatsapp||'').replace(/\D/g,'');
+  const waUrl   = 'https://wa.me/'+waPhone+'?text=Buna%20ziua%2C%20sunt%20interesat%20de%20un%20parteneriat%20Trail%20Running%202026.';
+  ['sp-cta-wa','sp-test-wa'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn && waPhone) btn.href = waUrl;
+  });
+
+  // ── Slide 5 — Hartă animată ──────────────────────────
+  spDrawMapAnimated(races);
+
+  // ── Slide 6 — Ultima alergare ─────────────────────────
+  spPopulateLastRun(acts);
+
+  // ── Slide 8 — Testimonial ─────────────────────────────
+  const testLogo    = document.getElementById('sp-test-logo-img');
+  const testLogoTxt = document.getElementById('sp-test-logo-text');
+  if (mainSponsor) {
+    if (mainSponsor.logo_url && testLogo) {
+      testLogo.src = mainSponsor.logo_url;
+      testLogo.style.display = 'block';
+      if (testLogoTxt) testLogoTxt.style.display = 'none';
+    }
+    const testName = document.getElementById('sp-test-name');
+    if (testName) testName.textContent = (mainSponsor.denumire||'').toUpperCase();
   }
+}
+
+
+// ── Slide 5: Hartă Romania animată ───────────────────
+let _spMapRaces = [];
+let _spMapTimer = null;
+let _spMapIdx   = 0;
+
+function spDrawMapAnimated(races) {
+  _spMapRaces = [...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+  const svg = document.getElementById('sp-map-svg');
+  if (!svg) return;
+
+  const COUNTIES = ["M163.4,38.0L169.8,47.4L162.0,53.5L157.0,52.6L152.6,53.4L152.7,55.3L157.5,57.4L157.7,59.6L153.6,66.4L151.4,66.6L147.3,63.6L140.2,72.6L141.5,74.4L145.7,75.2L146.6,77.0L143.7,81.1L137.7,77.3L132.7,76.0L122.8,80.7L121.7,77.1L118.4,74.8L112.5,75.1L104.3,62.7L106.1,57.5L109.0,54.2L114.5,53.4L115.8,50.4L117.2,50.0L122.0,52.0L125.4,51.1L130.5,47.4L131.0,44.3L139.3,38.2L138.2,35.7L141.8,37.2L145.7,35.7L147.5,29.8L152.0,30.8L157.8,36.5L163.4,38.0Z","M70.9,124.3L74.0,125.1L89.0,124.3L95.8,127.2L101.0,127.6L103.6,129.7L106.2,135.0L114.4,139.5L115.6,141.9L128.5,143.3L130.6,145.6L127.7,147.8L124.6,153.2L118.5,153.2L116.8,154.6L114.8,168.1L111.0,172.9L107.0,174.6L102.7,173.8L99.9,170.9L94.8,168.7L92.8,169.0L91.8,171.8L89.0,171.1L88.5,173.8L84.3,170.9L82.0,174.0L78.1,168.1L75.5,167.7L74.7,165.4L72.5,165.0L68.2,169.5L66.0,168.3L63.2,169.6L60.4,166.2L58.9,166.9L58.3,169.1L56.9,169.2L55.1,166.2L48.3,165.1L45.7,161.2L38.7,155.7L40.5,154.9L40.3,151.9L42.9,149.9L51.9,151.0L53.4,152.3L58.4,148.9L60.0,142.3L64.5,140.2L62.9,136.2L65.4,127.8L69.7,126.4L70.9,124.3Z","M104.3,62.7L112.5,75.1L118.4,74.8L122.1,77.9L122.4,82.5L119.0,89.9L123.3,97.9L129.0,103.2L127.6,107.0L130.9,108.7L130.9,110.6L126.7,116.0L133.0,126.8L132.8,130.9L129.4,130.7L127.8,134.2L128.5,143.3L115.6,141.9L114.4,139.5L106.2,135.0L103.6,129.7L101.0,127.6L95.8,127.2L89.0,124.3L74.0,125.1L70.9,124.3L74.4,121.3L73.0,118.7L74.5,114.6L78.1,111.8L78.4,107.8L81.0,105.5L82.0,102.2L80.3,100.3L86.2,94.9L88.7,90.4L90.6,82.2L96.9,75.9L97.1,67.8L104.3,62.7Z"];
+  const W=460, H=340, lngMin=20.24, lngMax=29.70, latMin=43.65, latMax=48.27, pad=18;
+  const toX = lng => pad + (lng-lngMin)/(lngMax-lngMin)*(W-pad*2);
+  const toY = lat => pad + (latMax-lat)/(latMax-latMin)*(H-pad*2);
+
+  const LOCS = {
+    'Transylvania':[46.54,25.08],'Brasov':[45.65,25.61],'Brașov':[45.65,25.61],
+    'Skyrace':[45.36,25.56],'Nemirei':[46.10,26.65],'Predeal':[45.50,25.57],
+    'Bucovina':[47.55,25.93],'UTMB':[47.55,25.93],'2X2':[45.40,23.82],
+    'Ciucas':[45.53,26.08],'Ciucaș':[45.53,26.08],'Azuga':[45.43,25.57],
+    'Istrita':[44.88,26.82],'Istrița':[44.88,26.82],
+  };
+  const findLoc = d => {
+    if (!d) return null;
+    const dl = d.toLowerCase();
+    for (const [k,v] of Object.entries(LOCS)) if (dl.includes(k.toLowerCase())) return v;
+    return null;
+  };
+
+  const acc = 'var(--accent)';
+  let inner = `<rect width="${W}" height="${H}" fill="#050e05" rx="8"/>`;
+  COUNTIES.forEach(d => {
+    inner += `<path d="${d}" fill="#0d1f0d" stroke="#1a3a1a" stroke-width="0.5"/>`;
+  });
+
+  // HOME Bârlad
+  const hx=toX(27.67).toFixed(1), hy=toY(46.23).toFixed(1);
+  inner += `<circle cx="${hx}" cy="${hy}" r="4" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity=".8"/>`;
+  inner += `<text x="${hx}" y="${(parseFloat(hy)-7).toFixed(1)}" font-size="7" fill="var(--accent)" text-anchor="middle" font-weight="bold">HOME</text>`;
+
+  // Toate punctele race (gri inițial, se activează animat)
+  _spMapRaces.forEach((r,i) => {
+    const loc = findLoc(r.denumire);
+    if (!loc) return;
+    const x = toX(loc[1]).toFixed(1), y = toY(loc[0]).toFixed(1);
+    inner += `<circle cx="${x}" cy="${y}" r="6" fill="#1a3a1a" stroke="#2a4a2a" stroke-width="1" id="sp-map-dot-${i}" opacity=".4"/>`;
+    inner += `<circle cx="${x}" cy="${y}" r="14" fill="transparent" id="sp-map-hit-${i}"/>`;
+  });
+
+  svg.innerHTML = inner;
+}
+
+function spStartMapAnimation() {
+  if (_spMapTimer) clearInterval(_spMapTimer);
+  _spMapIdx = 0;
+  spActivateMapRace(0);
+  _spMapTimer = setInterval(() => {
+    _spMapIdx = (_spMapIdx + 1) % Math.max(_spMapRaces.length, 1);
+    spActivateMapRace(_spMapIdx);
+  }, 1800);
+}
+
+function spActivateMapRace(i) {
+  const r = _spMapRaces[i];
+  if (!r) return;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const past  = r.data_cursa && new Date(r.data_cursa) < today;
+  const days  = r.data_cursa ? Math.ceil((new Date(r.data_cursa)-today)/86400000) : null;
+
+  // Reset toate dot-urile
+  _spMapRaces.forEach((_,j) => {
+    const dot = document.getElementById('sp-map-dot-'+j);
+    if (dot) {
+      dot.setAttribute('fill', '#1a3a1a');
+      dot.setAttribute('stroke', '#2a4a2a');
+      dot.setAttribute('r', '6');
+      dot.setAttribute('opacity', '.4');
+    }
+  });
+
+  // Activează dot-ul curent
+  const dot = document.getElementById('sp-map-dot-'+i);
+  if (dot) {
+    dot.setAttribute('fill', past ? '#666' : 'var(--accent)');
+    dot.setAttribute('stroke', past ? '#888' : 'var(--accent)');
+    dot.setAttribute('r', '8');
+    dot.setAttribute('opacity', '1');
+  }
+
+  // Update info box
+  const nameEl = document.getElementById('sp-map-race-name');
+  const metaEl = document.getElementById('sp-map-race-meta');
+  if (nameEl) nameEl.textContent = r.denumire || '—';
+  if (metaEl) metaEl.textContent =
+    (r.distanta||'?') + ' km · ' + (r.denivelare ? Math.round(r.denivelare/1000)+'k D+' : '') +
+    (past ? ' · ✅ Finalizat' : days !== null ? ` · ${days} zile` : '');
+}
+
+// ── Slide 6: Ultima alergare ──────────────────────────
+function spPopulateLastRun(acts) {
+  const last = acts.filter(a=>a.date&&a.km>0)
+    .sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
+  if (!last) return;
+
+  const nameEl = document.getElementById('sp-last-name');
+  const dateEl = document.getElementById('sp-last-date');
+  const statsEl= document.getElementById('sp-last-stats');
+  const mapEl  = document.getElementById('sp-last-map');
+
+  if (nameEl) nameEl.textContent = last.name || 'Alergare';
+  if (dateEl) dateEl.textContent = last.date
+    ? new Date(last.date).toLocaleDateString('ro-RO',{weekday:'long',day:'numeric',month:'long',year:'numeric'})
+    : '—';
+
+  const items = [
+    { val: last.km?.toFixed(1)||'—',          lbl: 'km' },
+    { val: last.elev ? Math.round(last.elev)+'m' : '—', lbl: 'D+' },
+    { val: last.dur  ? fmtDur(last.dur)       : '—',  lbl: 'Timp' },
+    { val: last.hr_avg ? last.hr_avg+' bpm'   : '—',  lbl: 'HR avg' },
+  ];
+  if (statsEl) statsEl.innerHTML = items.map(s=>`
+    <div class="sp-last-stat">
+      <span class="sp-last-stat-val">${s.val}</span>
+      <span class="sp-last-stat-lbl">${s.lbl}</span>
+    </div>`).join('');
+
+  // Mini hartă din polyline
+  if (mapEl && last.polyline) {
+    try {
+      const pts = decodePolyline(last.polyline);
+      if (pts.length >= 2) {
+        const lats=pts.map(p=>p[0]), lngs=pts.map(p=>p[1]);
+        const minLat=Math.min(...lats),maxLat=Math.max(...lats);
+        const minLng=Math.min(...lngs),maxLng=Math.max(...lngs);
+        const W=600,H=160,pad=12;
+        const toX=lng=>pad+(lng-minLng)/(maxLng-minLng||1)*(W-pad*2);
+        const toY=lat=>pad+(maxLat-lat)/(maxLat-minLat||1)*(H-pad*2);
+        const pathD='M'+pts.map(p=>toX(p[1]).toFixed(1)+','+toY(p[0]).toFixed(1)).join('L');
+        mapEl.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:160px;display:block">
+          <rect width="${W}" height="${H}" fill="#0a0a1a"/>
+          <path d="${pathD}" fill="none" stroke="var(--accent)" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>
+          <circle cx="${toX(pts[0][1]).toFixed(1)}" cy="${toY(pts[0][0]).toFixed(1)}"
+            r="4" fill="var(--accent)"/>
+          <circle cx="${toX(pts[pts.length-1][1]).toFixed(1)}" cy="${toY(pts[pts.length-1][0]).toFixed(1)}"
+            r="4" fill="var(--green)"/>
+        </svg>`;
+      } else { mapEl.style.display='none'; }
+    } catch(e) { mapEl.style.display='none'; }
+  } else if (mapEl) { mapEl.style.display='none'; }
 }
 
 // ── Counter animat ────────────────────────────────────
@@ -6905,9 +7223,8 @@ function slContact() {
 
 function checkSponsorParam() {
   const params = new URLSearchParams(window.location.search);
-  if (params.get('sponsor') === '1') {
-    initSponsorLanding();
-  }
+  if (params.get('sponsor') === '1') initSponsorLanding();
+  if (params.get('prez')    === '1') openSponsorPrez();
 }
 
 
