@@ -514,32 +514,7 @@ select option{background:var(--s2)}
 }
 .af-extra-stat-lbl { font-size:9px;color:var(--t3);margin-top:2px; }
 
-/* ── WEEKLY LOAD BARS ── */
-.wl-bar-wrap {
-  flex:1;display:flex;flex-direction:column;align-items:center;
-  position:relative;height:100%;justify-content:flex-end;
-  cursor:default;
-}
-.wl-bar-inner {
-  width:100%;border-radius:4px 4px 0 0;
-  min-height:2px;transition:height .4s cubic-bezier(.4,0,.2,1);
-  position:relative;
-}
-.wl-bar-km  { background:var(--accent);opacity:.9; }
-.wl-bar-elev { background:var(--green);opacity:.7;position:absolute;bottom:0;left:0;right:0;border-radius:4px 4px 0 0; }
-.wl-bar-lbl {
-  position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);
-  font-size:8px;color:var(--t4);white-space:nowrap;
-}
-.wl-bar-current .wl-bar-km { background:var(--accent);opacity:1;box-shadow:0 0 8px var(--accent-border); }
-.wl-bar-current .wl-bar-lbl { color:var(--accent);font-weight:600; }
-.wl-bar-tip {
-  position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
-  background:var(--s3);border:1px solid var(--border2);border-radius:6px;
-  padding:4px 7px;font-size:10px;color:var(--text);white-space:nowrap;
-  display:none;z-index:10;pointer-events:none;
-}
-.wl-bar-wrap:hover .wl-bar-tip { display:block; }
+
 
 /* ── READ-ONLY (guest) MODE ── */
 body.readonly .btn-primary:not(.allow-guest),
@@ -1611,31 +1586,7 @@ body.readonly label.btn { display:none !important }
     <div id="db-heatmap" style="overflow-x:auto"></div>
   </div>
 
-  <!-- WEEKLY LOAD -->
-  <div class="bk-card" style="padding:20px;margin-top:16px" id="db-weekly-load-card">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
-      <div>
-        <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">📊 Weekly Load — ultimele 8 săptămâni</div>
-        <div style="font-size:11px;color:var(--t3)" id="db-wl-subtitle">km + D+ pe săptămână</div>
-      </div>
-      <div id="db-wl-delta" style="text-align:right;font-size:12px"></div>
-    </div>
-    <div style="display:flex;align-items:flex-end;gap:4px;height:120px;padding-bottom:24px;position:relative;overflow:visible" id="db-wl-bars"></div>
-    <div style="display:flex;justify-content:space-between;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
-      <div style="text-align:center;flex:1">
-        <div style="font-family:var(--display);font-size:20px;color:var(--accent)" id="db-wl-avg-km">—</div>
-        <div style="font-size:10px;color:var(--t3)">km/săptămână avg</div>
-      </div>
-      <div style="text-align:center;flex:1">
-        <div style="font-family:var(--display);font-size:20px;color:var(--green)" id="db-wl-avg-elev">—</div>
-        <div style="font-size:10px;color:var(--t3)">m D+/săptămână avg</div>
-      </div>
-      <div style="text-align:center;flex:1">
-        <div style="font-family:var(--display);font-size:20px;color:var(--yellow)" id="db-wl-this-week">—</div>
-        <div style="font-size:10px;color:var(--t3)">km săptămâna asta</div>
-      </div>
-    </div>
-  </div>
+
 
   <!-- ACTIVITY FEED -->
   <div style="margin-top:24px">
@@ -2914,9 +2865,6 @@ function renderDash() {
 
   // ── Race history ───────────────────────────────────────
   renderRaceHistory();
-
-  // ── Weekly Load ─────────────────────────────────────────
-  renderWeeklyLoad(allActs);
 
   // ── Activity Feed ────────────────────────────────────────
   renderActivityFeed(allActs);
@@ -4659,95 +4607,6 @@ function toggleSplits(safeId) {
 // ══════════════════════════════════════════════════════
 //  CHART HELPERS
 // ══════════════════════════════════════════════════════
-
-// ══════════════════════════════════════════════════════
-//  WEEKLY LOAD
-// ══════════════════════════════════════════════════════
-function renderWeeklyLoad(acts) {
-  const barsEl   = document.getElementById('db-wl-bars');
-  const deltaEl  = document.getElementById('db-wl-delta');
-  const avgKmEl  = document.getElementById('db-wl-avg-km');
-  const avgElEl  = document.getElementById('db-wl-avg-elev');
-  const thisWkEl = document.getElementById('db-wl-this-week');
-  if (!barsEl) return;
-
-  // Împarte activitățile pe săptămâni ISO (Lu-Du)
-  function getWeekKey(dateStr) {
-    const d = new Date(dateStr);
-    const day = d.getDay() || 7; // 1=Lu, 7=Du
-    d.setDate(d.getDate() - day + 1); // Luni din săptămâna asta
-    return d.toISOString().slice(0,10);
-  }
-
-  // Ultimele 8 săptămâni
-  const today = new Date(); today.setHours(0,0,0,0);
-  const weeks = [];
-  for (let i = 7; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i * 7);
-    const day = d.getDay() || 7;
-    d.setDate(d.getDate() - day + 1);
-    weeks.push(d.toISOString().slice(0,10));
-  }
-
-  // Agregă km și D+ pe săptămână
-  const weekData = {};
-  weeks.forEach(w => { weekData[w] = { km:0, elev:0, count:0 }; });
-  acts.forEach(a => {
-    if (!a.date) return;
-    const wk = getWeekKey(a.date);
-    if (weekData[wk]) {
-      weekData[wk].km    += parseFloat(a.km)   || 0;
-      weekData[wk].elev  += parseFloat(a.elev) || 0;
-      weekData[wk].count++;
-    }
-  });
-
-  const thisWeekKey = getWeekKey(today.toISOString().slice(0,10));
-  const wkArr = weeks.map(w => ({ key:w, ...weekData[w] }));
-  const maxKm  = Math.max(...wkArr.map(w => w.km), 1);
-
-  // Labels săptămână
-  const monthNames = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
-  function wkLabel(key) {
-    const d = new Date(key);
-    return `${d.getDate()} ${monthNames[d.getMonth()]}`;
-  }
-
-  // Bars HTML
-  barsEl.innerHTML = wkArr.map(w => {
-    const pct      = Math.round((w.km / maxKm) * 100);
-    const isCur    = w.key === thisWeekKey;
-    const tipText  = `${w.km.toFixed(1)} km · ${Math.round(w.elev)} m D+`;
-    return `
-    <div class="wl-bar-wrap ${isCur ? 'wl-bar-current' : ''}">
-      <div class="wl-bar-tip">${tipText}</div>
-      <div class="wl-bar-inner wl-bar-km" style="height:${pct}%">
-      </div>
-      <div class="wl-bar-lbl">${wkLabel(w.key)}</div>
-    </div>`;
-  }).join('');
-
-  // Statistici
-  const validWks = wkArr.filter(w => w.km > 0);
-  const avgKm    = validWks.length ? validWks.reduce((s,w) => s+w.km, 0) / validWks.length : 0;
-  const avgElev  = validWks.length ? validWks.reduce((s,w) => s+w.elev, 0) / validWks.length : 0;
-  const thisKm   = weekData[thisWeekKey]?.km || 0;
-  const prevKey  = weeks[weeks.length - 2];
-  const prevKm   = weekData[prevKey]?.km || 0;
-
-  if (avgKmEl)  avgKmEl.textContent  = avgKm.toFixed(0);
-  if (avgElEl)  avgElEl.textContent  = Math.round(avgElev).toLocaleString('ro-RO');
-  if (thisWkEl) thisWkEl.textContent = thisKm.toFixed(1);
-
-  // Delta față de săptămâna trecută
-  if (deltaEl && prevKm > 0) {
-    const delta = thisKm - prevKm;
-    const sign  = delta >= 0 ? '+' : '';
-    const col   = delta >= 0 ? 'var(--green)' : 'var(--red)';
-    deltaEl.innerHTML = `<span style="color:${col};font-size:13px;font-weight:600">${sign}${delta.toFixed(1)} km</span><br><span style="font-size:10px;color:var(--t3)">față de săpt. trecută</span>`;
-  }
-}
 
 // ══════════════════════════════════════════════════════
 //  ACTIVITY FEED
