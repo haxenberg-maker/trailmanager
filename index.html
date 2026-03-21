@@ -1203,6 +1203,38 @@ body.readonly label.btn { display:none !important }
 .sp-budget-bar-wrap { flex:1;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden; }
 .sp-budget-bar-fill { height:100%;background:var(--accent);border-radius:2px;transition:width 1s ease;width:0%; }
 .sp-budget-amount { font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--accent);white-space:nowrap; }
+/* ── Slide order editor ── */
+.slide-order-item {
+  display:flex;align-items:center;gap:10px;
+  background:var(--s2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 12px;
+  cursor:grab;user-select:none;
+  transition:background .15s,border-color .15s;
+}
+.slide-order-item:hover { background:var(--s3);border-color:var(--border2); }
+.slide-order-item.dragging { opacity:.5;cursor:grabbing; }
+.slide-order-item.drag-over { border-color:var(--accent);background:var(--accent-dim); }
+.slide-order-handle { color:var(--t4);font-size:14px;cursor:grab;flex-shrink:0; }
+.slide-order-icon { font-size:18px;flex-shrink:0;width:24px;text-align:center; }
+.slide-order-label { flex:1;font-size:13px;color:var(--text); }
+.slide-order-arrows { display:flex;flex-direction:column;gap:2px;flex-shrink:0; }
+.slide-order-btn {
+  background:none;border:none;color:var(--t3);cursor:pointer;
+  font-size:11px;padding:1px 4px;border-radius:3px;line-height:1;
+}
+.slide-order-btn:hover { color:var(--text);background:var(--s3); }
+.slide-order-toggle {
+  width:36px;height:20px;border-radius:10px;border:none;cursor:pointer;
+  position:relative;transition:background .2s;flex-shrink:0;
+}
+.slide-order-toggle.on  { background:var(--accent); }
+.slide-order-toggle.off { background:var(--t4); }
+.slide-order-toggle::after {
+  content:'';position:absolute;top:3px;width:14px;height:14px;
+  border-radius:50%;background:white;transition:left .2s;
+}
+.slide-order-toggle.on::after  { left:19px; }
+.slide-order-toggle.off::after { left:3px; }
 /* Animații controlate de JS */
 
 @media(max-width:600px){
@@ -2546,9 +2578,9 @@ body.readonly label.btn { display:none !important }
 <!-- ── SETĂRI PAGINA SPONSOR ── (owner only) -->
 <div class="page" id="pg-setari">
 <div class="ph">
-  <div class="ph-left"><h2>⚙️ SETĂRI LANDING</h2><p>Configurează pagina publică pentru sponsori</p></div>
+  <div class="ph-left"><h2>⚙️ SETĂRI PREZENTARE</h2><p>Configurează prezentarea și pagina publică</p></div>
   <div class="ph-right">
-    <button class="btn btn-ghost btn-sm" onclick="previewSponsorPage()" style="color:var(--accent);border-color:var(--accent-border)">👁 Preview sponsor</button>
+    <button class="btn btn-ghost btn-sm" onclick="openSponsorPrez()" style="color:var(--accent);border-color:var(--accent-border)">▶ Deschide prezentarea</button>
   </div>
 </div>
 
@@ -2684,9 +2716,17 @@ body.readonly label.btn { display:none !important }
   </div>
 </div>
 
+<!-- ── ORDINE SLIDE-URI PREZENTARE ── -->
+<div class="bk-card" style="padding:20px;margin-bottom:12px">
+  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px">🎞️ Ordine slide-uri prezentare</div>
+  <div style="font-size:11px;color:var(--t3);margin-bottom:14px">Trage sau folosește ↑↓ pentru a reordona. Dezactivează slide-urile pe care nu le vrei.</div>
+  <div id="set-slides-order" style="display:flex;flex-direction:column;gap:6px"></div>
+  <button class="btn btn-ghost btn-sm" onclick="resetSlideOrder()" style="margin-top:10px;font-size:11px">↺ Resetează la ordinea implicită</button>
+</div>
+
 <div style="display:flex;gap:10px;margin-bottom:24px">
   <button class="btn btn-primary" onclick="saveSettings()" style="flex:1;padding:14px;font-size:14px">💾 Salvează toate setările</button>
-  <button class="btn btn-ghost" onclick="previewSponsorPage()" style="padding:14px">👁</button>
+  <button class="btn btn-ghost" onclick="openSponsorPrez()" style="padding:14px">▶</button>
 </div>
 </div>
 
@@ -5942,21 +5982,54 @@ function applyProfileToHero() {
 //  PREZENTARE SPONSOR
 // ══════════════════════════════════════════════════════
 let _spSlide = 0;
-const SP_TOTAL = 11;
+const SP_TOTAL = 11; // default; suprascris dinamic de spApplySlideOrder
 
 function openSponsorPrez() {
   const prez = document.getElementById('sp-prez');
   if (!prez) return;
+
+  // Aplică ordinea din SETTINGS
+  spApplySlideOrder();
+
   prez.classList.add('on');
   requestAnimationFrame(() => requestAnimationFrame(() => {
     prez.classList.add('vis');
     spPopulateAll();
     spGoSlide(0, false);
     spInitSwipe();
-    // Elimină listener vechi înainte să adaugi unul nou
     document.removeEventListener('keydown', spKeyHandler);
     document.addEventListener('keydown', spKeyHandler);
   }));
+}
+
+function spApplySlideOrder() {
+  const order = getSlideOrder().filter(s => s.active !== false);
+  const container = document.getElementById('sp-slides');
+  if (!container || !order.length) return;
+
+  // Update SP_TOTAL dinamic
+  window._spTotalDynamic = order.length;
+
+  // Reordonează DOM
+  order.forEach(item => {
+    const el = document.getElementById(item.id);
+    if (el) container.appendChild(el);
+  });
+
+  // Ascunde slide-urile inactive
+  ALL_SLIDES.forEach(s => {
+    const el = document.getElementById(s.id);
+    const isActive = order.some(o => o.id === s.id);
+    if (el) el.style.display = isActive ? '' : 'none';
+  });
+
+  // Update dots
+  const dotsEl = document.getElementById('sp-counter');
+  if (dotsEl) {
+    dotsEl.innerHTML = order.map((_, i) =>
+      `<div class="sp-dot${i===0?' on':''}" data-s="${i}"></div>`
+    ).join('');
+  }
 }
 
 function closeSponsorPrez() {
@@ -5976,7 +6049,8 @@ function spKeyHandler(e) {
 }
 
 function spNav(dir) {
-  const next = Math.max(0, Math.min(SP_TOTAL - 1, _spSlide + dir));
+  const total = window._spTotalDynamic || SP_TOTAL;
+  const next = Math.max(0, Math.min(total - 1, _spSlide + dir));
   if (next !== _spSlide) spGoSlide(next);
 }
 
@@ -5995,8 +6069,9 @@ function spGoSlide(idx) {
   // Arrows
   const prev = document.getElementById('sp-prev');
   const next = document.getElementById('sp-next');
+  const _total = window._spTotalDynamic || SP_TOTAL;
   if (prev) prev.style.opacity = idx === 0 ? '0.3' : '1';
-  if (next) next.style.opacity = idx === SP_TOTAL - 1 ? '0.3' : '1';
+  if (next) next.style.opacity = idx === _total - 1 ? '0.3' : '1';
 
   // Oprește timere la schimbare slide
   if (_spSlide === 3 && idx !== 3 && _spMapTimer) { clearInterval(_spMapTimer); _spMapTimer = null; }
@@ -6518,6 +6593,115 @@ function loadSettings() {
 }
 
 // ── Render settings form ────────────────────────────
+
+// ══════════════════════════════════════════════════════
+//  ORDINE SLIDE-URI PREZENTARE
+// ══════════════════════════════════════════════════════
+
+const ALL_SLIDES = [
+  { id:'sp-s1',  icon:'🏃', label:'Atletul — km, ITRA, carieră' },
+  { id:'sp-s2',  icon:'🏁', label:'Sezonul 2026 — toate cursele' },
+  { id:'sp-s3',  icon:'📊', label:'Dovada — numere reale' },
+  { id:'sp-s4',  icon:'📍', label:'Unde apar — hartă România' },
+  { id:'sp-s5',  icon:'⚡', label:'Ultima alergare — live Strava' },
+  { id:'sp-s6',  icon:'⏱️', label:'Countdown — next race' },
+  { id:'sp-s7',  icon:'💰', label:'ROI Simulator — buget → beneficii' },
+  { id:'sp-s8',  icon:'📈', label:'Unde se duc banii — buget' },
+  { id:'sp-s9',  icon:'🤝', label:'De ce eu — 3 motive' },
+  { id:'sp-s10', icon:'💬', label:'Testimonial + CTA' },
+  { id:'sp-s11', icon:'🌐', label:'Dashboard live → CTA final' },
+];
+
+// Ordinea curentă — array de id-uri, salvat în SETTINGS
+function getSlideOrder() {
+  const saved = SETTINGS.slide_order;
+  if (saved && Array.isArray(saved) && saved.length >= ALL_SLIDES.length) return saved;
+  return ALL_SLIDES.map(s => ({ id:s.id, active:true }));
+}
+
+function renderSlideOrderEditor() {
+  const el = document.getElementById('set-slides-order');
+  if (!el) return;
+  const order = getSlideOrder();
+
+  el.innerHTML = order.map((item, i) => {
+    const def = ALL_SLIDES.find(s => s.id === item.id) || { icon:'🎞️', label: item.id };
+    const active = item.active !== false;
+    return `<div class="slide-order-item" data-id="${item.id}" data-i="${i}"
+        draggable="true"
+        ondragstart="slOrderDragStart(event,${i})"
+        ondragover="slOrderDragOver(event,${i})"
+        ondragleave="slOrderDragLeave(event)"
+        ondrop="slOrderDrop(event,${i})">
+      <span class="slide-order-handle">⠿</span>
+      <span class="slide-order-icon">${def.icon}</span>
+      <span class="slide-order-label" style="${active?'':'color:var(--t4);text-decoration:line-through'}">${def.label}</span>
+      <div class="slide-order-arrows">
+        <button class="slide-order-btn" onclick="slOrderMove(${i},-1)" title="Sus">▲</button>
+        <button class="slide-order-btn" onclick="slOrderMove(${i},1)" title="Jos">▼</button>
+      </div>
+      <button class="slide-order-toggle ${active?'on':'off'}" onclick="slOrderToggle(${i})" title="${active?'Dezactivează':'Activează'}"></button>
+    </div>`;
+  }).join('');
+}
+
+// ── Drag & Drop ───────────────────────────────────────
+let _dragIdx = null;
+
+function slOrderDragStart(e, i) {
+  _dragIdx = i;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function slOrderDragOver(e, i) {
+  e.preventDefault();
+  if (_dragIdx === null || _dragIdx === i) return;
+  e.currentTarget.classList.add('drag-over');
+}
+
+function slOrderDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function slOrderDrop(e, i) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (_dragIdx === null || _dragIdx === i) { _dragIdx = null; return; }
+  const order = getSlideOrder();
+  const [moved] = order.splice(_dragIdx, 1);
+  order.splice(i, 0, moved);
+  SETTINGS.slide_order = order;
+  _dragIdx = null;
+  renderSlideOrderEditor();
+}
+
+// ── Move cu butoane ───────────────────────────────────
+function slOrderMove(i, dir) {
+  const order = getSlideOrder();
+  const j = i + dir;
+  if (j < 0 || j >= order.length) return;
+  [order[i], order[j]] = [order[j], order[i]];
+  SETTINGS.slide_order = order;
+  renderSlideOrderEditor();
+}
+
+// ── Toggle activ/inactiv ──────────────────────────────
+function slOrderToggle(i) {
+  const order = getSlideOrder();
+  order[i].active = order[i].active === false ? true : false;
+  SETTINGS.slide_order = order;
+  renderSlideOrderEditor();
+}
+
+// ── Reset ─────────────────────────────────────────────
+function resetSlideOrder() {
+  if (!confirm('Resetezi la ordinea implicită?')) return;
+  SETTINGS.slide_order = ALL_SLIDES.map(s => ({ id:s.id, active:true }));
+  renderSlideOrderEditor();
+  toast('↺ Ordine resetată', 'info');
+}
+
 function renderSetari() {
   loadSettings();
   const s = SETTINGS;
@@ -6574,7 +6758,10 @@ function renderSetari() {
 
   // Sponsor link
   const linkEl = document.getElementById('set-sponsor-link');
-  if (linkEl) linkEl.textContent = window.location.origin + window.location.pathname + '?sponsor=1';
+  if (linkEl) linkEl.textContent = window.location.origin + window.location.pathname + '?prez=1';
+
+  // Ordine slide-uri
+  renderSlideOrderEditor();
 }
 
 // ── Packages ────────────────────────────────────────
@@ -6654,7 +6841,8 @@ async function saveSettings() {
   SETTINGS.show_faq      = gc('set-show-faq');
   SETTINGS.show_timeline = gc('set-show-timeline');
   SETTINGS.show_roi      = gc('set-show-roi');
-  SETTINGS.show_benefits = gc('set-show-benefits');
+  SETTINGS.show_benefits  = gc('set-show-benefits');
+  // slide_order e updatat direct în SETTINGS de editor — nu citim din DOM
 
   // Read packages & FAQ from DOM (in case user typed without triggering onchange)
   document.querySelectorAll('#set-packages-list .set-pkg-row').forEach((row, i) => {
