@@ -966,26 +966,18 @@ body.readonly label.btn { display:none !important }
 .sp-s1-eyebrow {
   font-size:11px;letter-spacing:6px;color:var(--accent);
   text-transform:uppercase;margin-bottom:16px;
-  opacity:0;transform:translateY(20px);
-  transition:all .6s ease .1s;
 }
 .sp-s1-name {
   font-size:clamp(52px,10vw,96px);letter-spacing:4px;
   color:#fff;line-height:.9;text-align:center;
   margin-bottom:6px;
-  opacity:0;transform:translateY(30px);
-  transition:all .7s ease .2s;
 }
 .sp-s1-aka {
   font-size:clamp(18px,4vw,32px);letter-spacing:8px;
   color:var(--accent);margin-bottom:40px;
-  opacity:0;transform:translateY(20px);
-  transition:all .6s ease .35s;
 }
 .sp-s1-stats {
   display:flex;gap:clamp(24px,5vw,60px);
-  opacity:0;transform:translateY(20px);
-  transition:all .6s ease .5s;
 }
 .sp-s1-stat { text-align:center; }
 .sp-s1-val {
@@ -1008,8 +1000,7 @@ body.readonly label.btn { display:none !important }
 .sp-s2-title {
   font-size:clamp(28px,5vw,48px);color:#fff;letter-spacing:4px;
   margin-bottom:28px;text-align:center;
-  opacity:0;transform:translateY(20px);
-  transition:all .6s ease .1s;
+  
 }
 .sp-races-grid {
   display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
@@ -1094,21 +1085,18 @@ body.readonly label.btn { display:none !important }
   max-height:80px;max-width:220px;object-fit:contain;
   background:white;border-radius:12px;padding:12px 20px;
   margin-bottom:24px;
-  opacity:0;transform:scale(.9);
-  transition:all .6s ease .1s;
+  
 }
 .sp-partner-logo.on { opacity:1;transform:scale(1); }
 .sp-partner-title {
   font-size:clamp(22px,4vw,38px);color:#fff;letter-spacing:4px;
   margin-bottom:6px;text-align:center;
-  opacity:0;transform:translateY(20px);
-  transition:all .5s ease .25s;
+  
 }
 .sp-partner-sub {
   font-size:13px;color:rgba(255,255,255,.5);
   font-family:'Inter',sans-serif;margin-bottom:32px;
-  opacity:0;transform:translateY(20px);
-  transition:all .5s ease .35s;
+  
 }
 .sp-packages {
   display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
@@ -1131,25 +1119,11 @@ body.readonly label.btn { display:none !important }
   font-size:16px;letter-spacing:2px;
   padding:16px 36px;border-radius:12px;
   border:none;cursor:pointer;text-decoration:none;
-  opacity:0;transform:translateY(20px);
-  transition:all .5s ease .65s;
+  
   font-family:'Bebas Neue',sans-serif;
 }
 
-/* Animate-in class */
-.sp-slide.on .sp-s1-eyebrow,
-.sp-slide.on .sp-s1-name,
-.sp-slide.on .sp-s1-aka,
-.sp-slide.on .sp-s1-stats,
-.sp-slide.on .sp-s2-title,
-.sp-slide.on .sp-proof-card,
-.sp-slide.on .sp-partner-logo,
-.sp-slide.on .sp-partner-title,
-.sp-slide.on .sp-partner-sub,
-.sp-slide.on .sp-packages,
-.sp-slide.on .sp-cta-btn {
-  opacity:1;transform:none;
-}
+/* Animații controlate de JS */
 
 @media(max-width:600px){
   .sp-proof-grid { grid-template-columns:1fr; }
@@ -1688,7 +1662,7 @@ body.readonly label.btn { display:none !important }
   <div id="sp-slides">
 
     <!-- ── SLIDE 1 — ATLETUL ── -->
-    <div class="sp-slide on" id="sp-s1">
+    <div class="sp-slide" id="sp-s1">
       <div class="sp-bg" id="sp-s1-bg"></div>
       <div class="sp-s1-eyebrow">⛰️ SEZON 2026 · TRAIL RUNNING</div>
       <div class="sp-s1-name" id="sp-s1-name">BALAN GABRIEL</div>
@@ -5769,41 +5743,72 @@ function spNav(dir) {
   if (next !== _spSlide) spGoSlide(next);
 }
 
-function spGoSlide(idx, animate = true) {
-  // Ascunde slide curent
-  document.querySelectorAll('.sp-slide').forEach(s => s.classList.remove('on'));
-  document.querySelectorAll('.sp-dot').forEach(d => d.classList.remove('on'));
-  document.querySelectorAll('.sp-race-card, .sp-proof-card').forEach(c => c.classList.remove('on'));
-
+function spGoSlide(idx) {
   _spSlide = idx;
 
-  // Actualizează progress
+  // Progress + dots (fără tranziție, instant)
   const fill = document.getElementById('sp-progress-fill');
   if (fill) fill.style.width = ((idx + 1) / SP_TOTAL * 100) + '%';
-
-  // Actualizează dot
+  document.querySelectorAll('.sp-dot').forEach(d => d.classList.remove('on'));
   const dot = document.querySelector(`.sp-dot[data-s="${idx}"]`);
   if (dot) dot.classList.add('on');
 
-  // Arată slide-ul nou
-  const slide = document.getElementById('sp-s' + (idx + 1));
-  if (slide) {
-    slide.classList.add('on');
-    // Animează carduri cu stagger
-    setTimeout(() => {
-      slide.querySelectorAll('.sp-race-card, .sp-proof-card').forEach((c, i) => {
-        setTimeout(() => c.classList.add('on'), i * 80);
-      });
-    }, 300);
-    // Counter animat pe slide 1
-    if (idx === 0) spAnimateCounters();
-    // Bar chart pe slide 3
-    if (idx === 2) spAnimateBars();
-  }
-
   // Nav arrows
-  document.getElementById('sp-prev').style.opacity = idx === 0 ? '0.2' : '1';
-  document.getElementById('sp-next').style.opacity = idx === SP_TOTAL - 1 ? '0.2' : '1';
+  const prev = document.getElementById('sp-prev');
+  const next = document.getElementById('sp-next');
+  if (prev) prev.style.opacity = idx === 0 ? '0.2' : '1';
+  if (next) next.style.opacity = idx === SP_TOTAL - 1 ? '0.2' : '1';
+
+  // Fade out toate slide-urile active
+  const slides = document.querySelectorAll('.sp-slide');
+  slides.forEach(s => {
+    s.style.transition = 'opacity .3s ease';
+    s.style.opacity    = '0';
+    s.style.pointerEvents = 'none';
+  });
+
+  // Fade in slide-ul nou după 300ms
+  setTimeout(() => {
+    // Resetează copiii (vor fi re-animați)
+    const target = document.getElementById('sp-s' + (idx + 1));
+    if (!target) return;
+
+    // Ascunde copiii animabili instant (fără tranziție)
+    target.querySelectorAll(
+      '.sp-s1-eyebrow,.sp-s1-name,.sp-s1-aka,.sp-s1-stats,' +
+      '.sp-s2-title,.sp-race-card,.sp-proof-card,' +
+      '.sp-partner-logo,.sp-partner-title,.sp-partner-sub,.sp-packages,.sp-cta-btn'
+    ).forEach(el => {
+      el.style.transition = 'none';
+      el.style.opacity    = '0';
+      el.style.transform  = 'translateY(18px)';
+    });
+
+    // Arată slide-ul
+    slides.forEach(s => { s.style.opacity = '0'; s.style.pointerEvents = 'none'; });
+    target.style.transition = 'opacity .35s ease';
+    target.style.opacity    = '1';
+    target.style.pointerEvents = 'all';
+
+    // Animează copiii cu stagger
+    const animEls = target.querySelectorAll(
+      '.sp-s1-eyebrow,.sp-s1-name,.sp-s1-aka,.sp-s1-stats,' +
+      '.sp-s2-title,.sp-race-card,.sp-proof-card,' +
+      '.sp-partner-logo,.sp-partner-title,.sp-partner-sub,.sp-packages,.sp-cta-btn'
+    );
+    animEls.forEach((el, i) => {
+      setTimeout(() => {
+        el.style.transition = 'opacity .5s ease, transform .5s ease';
+        el.style.opacity    = '1';
+        el.style.transform  = 'none';
+      }, 60 + i * 70);
+    });
+
+    // Counter animat pe slide 1
+    if (idx === 0) setTimeout(spAnimateCounters, 200);
+    // Bar chart pe slide 3
+    if (idx === 2) setTimeout(spAnimateBars, 300);
+  }, 300);
 }
 
 // ── Populare date ─────────────────────────────────────
