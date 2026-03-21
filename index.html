@@ -6321,6 +6321,51 @@ function spUpdateROI(amount) {
 }
 
 // ── Slide 8: Budget ──────────────────────────────────
+
+// ── Slide 8: Ultima alergare ─────────────────────────
+function spPopulateLastRun(acts) {
+  const last = acts.filter(a=>a.date&&a.km>0)
+    .sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
+  if (!last) return;
+  const nameEl=document.getElementById('sp-last-name');
+  const dateEl=document.getElementById('sp-last-date');
+  const statsEl=document.getElementById('sp-last-stats');
+  const mapEl=document.getElementById('sp-last-map');
+  if(nameEl) nameEl.textContent=last.name||'Alergare';
+  if(dateEl) dateEl.textContent=last.date?new Date(last.date).toLocaleDateString('ro-RO',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'—';
+  const items=[
+    {val:(last.km||0).toFixed(1),lbl:'km'},
+    {val:last.elev?Math.round(last.elev)+'m':'—',lbl:'D+'},
+    {val:last.dur?fmtDur(last.dur):'—',lbl:'Timp'},
+    {val:last.hr_avg?last.hr_avg+' bpm':'—',lbl:'HR avg'},
+  ];
+  if(statsEl) statsEl.innerHTML=items.map(s=>`
+    <div class="sp-last-stat">
+      <span class="sp-last-stat-val">${s.val}</span>
+      <span class="sp-last-stat-lbl">${s.lbl}</span>
+    </div>`).join('');
+  if(mapEl&&last.polyline){
+    try{
+      const pts=decodePolyline(last.polyline);
+      if(pts.length>=2){
+        const lats=pts.map(p=>p[0]),lngs=pts.map(p=>p[1]);
+        const minLat=Math.min(...lats),maxLat=Math.max(...lats);
+        const minLng=Math.min(...lngs),maxLng=Math.max(...lngs);
+        const W=560,H=150,pad=10;
+        const toX=lng=>pad+(lng-minLng)/(maxLng-minLng||1)*(W-pad*2);
+        const toY=lat=>pad+(maxLat-lat)/(maxLat-minLat||1)*(H-pad*2);
+        const pathD='M'+pts.map(p=>toX(p[1]).toFixed(1)+','+toY(p[0]).toFixed(1)).join('L');
+        mapEl.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:150px;display:block">
+          <rect width="${W}" height="${H}" fill="#0a0a1a"/>
+          <path d="${pathD}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="${toX(pts[0][1]).toFixed(1)}" cy="${toY(pts[0][0]).toFixed(1)}" r="4" fill="var(--accent)"/>
+          <circle cx="${toX(pts[pts.length-1][1]).toFixed(1)}" cy="${toY(pts[pts.length-1][0]).toFixed(1)}" r="4" fill="var(--green)"/>
+        </svg>`;
+      } else { mapEl.style.display='none'; }
+    } catch(e){ mapEl.style.display='none'; }
+  } else if(mapEl){ mapEl.style.display='none'; }
+}
+
 function spPopulateBudget() {
   const races=DB.races||[], eq=DB.equipment||[], supls=DB.supplements||[];
   const gpp=(DB.nutri?.gel_pret_set24||0)/24;
@@ -6348,6 +6393,124 @@ function spPopulateBudget() {
 function spAnimateBudget() {
   spPopulateBudget();
   setTimeout(()=>{ document.querySelectorAll('.sp-budget-bar-fill').forEach(b=>{ b.style.width=b.dataset.pct+'%'; }); }, 200);
+}
+
+
+// ── spPopulateAll — populează toate slide-urile ──────
+function spPopulateAll() {
+  const acts   = DB.activities || [];
+  const races  = DB.races      || [];
+  const today  = new Date(); today.setHours(0,0,0,0);
+  const curYear= String(today.getFullYear());
+
+  // ── Slide 1 ──────────────────────────────────────────
+  const kmYear  = Math.round(acts.filter(a=>a.date?.startsWith(curYear)).reduce((s,a)=>s+(a.km||0),0));
+  const kmTotal = Math.round(acts.reduce((s,a)=>s+(a.km||0),0));
+  const s1km=document.getElementById('sp-s1-km'), s1tot=document.getElementById('sp-s1-total');
+  const s1curse=document.getElementById('sp-s1-curse'), s1itra=document.getElementById('sp-s1-itra');
+  const s1name=document.getElementById('sp-s1-name'), s1aka=document.getElementById('sp-s1-aka');
+  if(s1km)    { s1km.dataset.target=kmYear; s1km.textContent='0'; }
+  if(s1tot)   { s1tot.dataset.target=kmTotal; s1tot.textContent='0'; }
+  if(s1curse) s1curse.textContent=races.length;
+  if(s1itra)  s1itra.textContent=PROFILE.itra_pi||536;
+  if(s1name)  s1name.textContent=(PROFILE.name||'BALAN GABRIEL').toUpperCase();
+  if(s1aka)   s1aka.textContent=(PROFILE.nickname||'HAX')+' · '+(PROFILE.city||'BÂRLAD').toUpperCase();
+  const bg1=document.getElementById('sp-s1-bg');
+  if(bg1&&PROFILE.photo) bg1.style.backgroundImage=`url('${PROFILE.photo}')`;
+
+  // ── Slide 2 ──────────────────────────────────────────
+  const s2nr=document.getElementById('sp-s2-nr');
+  if(s2nr) s2nr.textContent=races.length;
+  const grid=document.getElementById('sp-races-grid');
+  if(grid) {
+    const sorted=[...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+    const nextRace=sorted.find(r=>r.data_cursa&&new Date(r.data_cursa)>=today);
+    grid.innerHTML=sorted.map((r,i)=>{
+      const past=r.data_cursa&&new Date(r.data_cursa)<today;
+      const isNext=r.id===nextRace?.id;
+      const days=r.data_cursa?Math.ceil((new Date(r.data_cursa)-today)/86400000):null;
+      return `<div class="sp-race-card ${past?'past':''} ${isNext?'next':''}">
+        <div class="sp-race-nr">#${r.nr||i+1} ${isNext?'· 🔥 NEXT':''}${past?'· ✅ DONE':''}</div>
+        <div class="sp-race-name">${escHtml(r.denumire||'—')}</div>
+        <div class="sp-race-meta">${r.distanta||'?'} km${r.denivelare?' · '+Math.round(r.denivelare/1000)+'k D+':''}${days!==null&&!past?' · '+days+'z':''}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Slide 3 ──────────────────────────────────────────
+  const pTotal=document.getElementById('sp-p-total'), pRuns=document.getElementById('sp-p-runs');
+  const pElev=document.getElementById('sp-p-elev'), pStreak=document.getElementById('sp-p-streak');
+  const totalElev=Math.round(acts.reduce((s,a)=>s+(a.elev||0),0));
+  if(pTotal) { pTotal.dataset.target=kmTotal; pTotal.textContent='0'; }
+  if(pRuns)  { pRuns.dataset.target=acts.length; pRuns.textContent='0'; }
+  if(pElev)  { pElev.dataset.target=totalElev; pElev.textContent='0'; }
+  const streakDates=new Set(acts.map(a=>a.date).filter(Boolean));
+  let bestStreak=0,cur=0,prevD=null;
+  [...streakDates].sort().forEach(d=>{
+    if(prevD){ const diff=(new Date(d)-new Date(prevD))/86400000; cur=diff===1?cur+1:1; }
+    else cur=1;
+    if(cur>bestStreak) bestStreak=cur;
+    prevD=d;
+  });
+  if(pStreak){ pStreak.dataset.target=bestStreak; pStreak.textContent='0'; }
+  const years=['2024','2025','2026'];
+  const kmByYear=years.map(y=>({y,km:Math.round(acts.filter(a=>a.date?.startsWith(y)).reduce((s,a)=>s+(a.km||0),0))}));
+  const maxKm=Math.max(...kmByYear.map(d=>d.km),1);
+  const chart=document.getElementById('sp-bar-chart');
+  if(chart) chart.innerHTML=kmByYear.map(d=>`
+    <div class="sp-bar-yr">
+      <div class="sp-bar-yr-val">${d.km>0?d.km.toLocaleString('ro-RO'):''}</div>
+      <div class="sp-bar-yr-bar ${d.y===curYear?'cur':''}" data-h="${Math.round(d.km/maxKm*100)}" style="height:4px"></div>
+      <div class="sp-bar-yr-lbl">${d.y}</div>
+    </div>`).join('');
+
+  // ── Slide 4 — Parteneriat + ROI ──────────────────────
+  const mainSponsor=(DB.sponsors||[]).filter(s=>s.primit).sort((a,b)=>(b.suma||0)-(a.suma||0))[0];
+  const logo=document.getElementById('sp-partner-logo');
+  const partName=document.getElementById('sp-partner-name'), partSub=document.getElementById('sp-partner-tagline');
+  if(mainSponsor){
+    if(logo&&mainSponsor.logo_url){ logo.src=mainSponsor.logo_url; logo.style.display='block'; }
+    if(partName) partName.textContent=(mainSponsor.denumire||'').toUpperCase();
+    if(partSub)  partSub.textContent='Sponsor principal · Sezon 2026 · '+fmt(mainSponsor.suma||0)+' RON';
+  }
+  const roiSlider=document.getElementById('sp-roi-slider');
+  if(roiSlider){ roiSlider.oninput=function(){ spUpdateROI(parseInt(this.value)); }; spUpdateROI(500); }
+
+  // ── Slide 5 — Hartă animată ───────────────────────────
+  spDrawMapAnimated(races);
+
+  // ── Slide 6 — Countdown ──────────────────────────────
+  const nextRaceForCd=[...races].filter(r=>r.data_cursa&&new Date(r.data_cursa)>=today)
+    .sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa))[0];
+  if(nextRaceForCd){
+    const e1=document.getElementById('sp-cd-race'), e2=document.getElementById('sp-cd-date');
+    if(e1) e1.textContent=nextRaceForCd.denumire||'—';
+    if(e2) e2.textContent=nextRaceForCd.data_cursa?new Date(nextRaceForCd.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'long',year:'numeric'}):'—';
+    const cdStats=document.getElementById('sp-cd-stats');
+    if(cdStats) cdStats.innerHTML=[
+      {val:(nextRaceForCd.distanta||'?')+' km',lbl:'Distanță'},
+      {val:nextRaceForCd.denivelare?Math.round(nextRaceForCd.denivelare/1000)+'k D+':'—',lbl:'Denivelare'},
+      {val:nextRaceForCd.geluri||0,lbl:'Geluri'},
+    ].map(s=>`<div class="sp-cd-stat"><span class="sp-cd-stat-val">${s.val}</span><span class="sp-cd-stat-lbl">${s.lbl}</span></div>`).join('');
+    window._spCdTarget=new Date(nextRaceForCd.data_cursa);
+  }
+
+  // ── Slide 7 — Budget ─────────────────────────────────
+  spPopulateBudget();
+
+  // ── Slide 8 — Ultima alergare ─────────────────────────
+  spPopulateLastRun(acts);
+
+  // ── Slide 10 — Testimonial ────────────────────────────
+  const testLogo=document.getElementById('sp-test-logo-img'), testLogoTxt=document.getElementById('sp-test-logo-text');
+  if(mainSponsor&&mainSponsor.logo_url&&testLogo){ testLogo.src=mainSponsor.logo_url; testLogo.style.display='block'; if(testLogoTxt) testLogoTxt.style.display='none'; }
+  const testName=document.getElementById('sp-test-name');
+  if(testName&&mainSponsor) testName.textContent=(mainSponsor.denumire||'').toUpperCase();
+
+  // WhatsApp buttons
+  const waPhone=(PROFILE.whatsapp||'').replace(/\D/g,'');
+  const waUrl='https://wa.me/'+waPhone+'?text=Buna%20ziua%2C%20sunt%20interesat%20de%20un%20parteneriat%20Trail%20Running%202026.';
+  ['sp-cta-wa','sp-test-wa'].forEach(id=>{ const btn=document.getElementById(id); if(btn&&waPhone) btn.href=waUrl; });
 }
 
 function spDrawMapAnimated(races) {
