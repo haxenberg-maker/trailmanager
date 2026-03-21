@@ -5988,6 +5988,16 @@ function openSponsorPrez() {
   const prez = document.getElementById('sp-prez');
   if (!prez) return;
 
+  // Reset complet la fiecare deschidere
+  _spSlide = 0;
+  if (_spMapTimer) { clearInterval(_spMapTimer); _spMapTimer = null; }
+  if (_spCdTimer)  { clearInterval(_spCdTimer);  _spCdTimer  = null; }
+  // Forțăm toate slide-urile invizibile înainte de animație
+  document.querySelectorAll('.sp-slide').forEach(s => {
+    s.classList.remove('on');
+    s.style.opacity = '';
+  });
+
   prez.classList.add('on');
 
   // rAF 1: browser vede display:flex pe #sp-prez
@@ -6060,6 +6070,13 @@ function spNav(dir) {
 
 function spGoSlide(idx) {
   _spSlide = idx;
+
+  // Reset explicit toate slide-urile la opacity:0 (elimină orice inline style rămas)
+  document.querySelectorAll('.sp-slide').forEach(s => {
+    s.classList.remove('on');
+    s.style.opacity = '';
+    s.style.transform = '';
+  });
 
   // Progress
   const fill = document.getElementById('sp-progress-fill');
@@ -6153,7 +6170,8 @@ function spUpdateROI(amount) {
 function spPopulateLastRun(acts) {
   const last = acts.filter(a=>a.date&&a.km>0)
     .sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
-  if (!last) return;
+  if (!last) { console.warn('[spPopulateLastRun] No activities found', acts?.length); return; }
+  console.log('[spPopulateLastRun] Last:', last.name, last.date, last.km+'km');
   const nameEl=document.getElementById('sp-last-name');
   const dateEl=document.getElementById('sp-last-date');
   const statsEl=document.getElementById('sp-last-stats');
@@ -6307,7 +6325,8 @@ function spPopulateAll() {
   spDrawMapAnimated(races);
 
   // ── Slide 6 — Countdown ──────────────────────────────
-  const nextRaceForCd=[...races].filter(r=>r.data_cursa&&new Date(r.data_cursa)>=today)
+  const ieri = new Date(today); ieri.setDate(ieri.getDate()-1);
+  const nextRaceForCd=[...races].filter(r=>r.data_cursa&&new Date(r.data_cursa)>ieri)
     .sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa))[0];
   if(nextRaceForCd){
     const e1=document.getElementById('sp-cd-race'), e2=document.getElementById('sp-cd-date');
@@ -6320,6 +6339,8 @@ function spPopulateAll() {
       {val:nextRaceForCd.geluri||0,lbl:'Geluri'},
     ].map(s=>`<div class="sp-cd-stat"><span class="sp-cd-stat-val">${s.val}</span><span class="sp-cd-stat-lbl">${s.lbl}</span></div>`).join('');
     window._spCdTarget=new Date(nextRaceForCd.data_cursa);
+    // Pornește countdown imediat dacă suntem pe slide 6
+    if (_spSlide === 5) spStartCountdown();
   }
 
   // ── Slide 7 — Budget ─────────────────────────────────
@@ -6593,6 +6614,17 @@ function slUpdateROI(amount) {
   });
 
   svg.innerHTML = inner;
+
+  // Click handlers pe dots
+  _spMapRaces.forEach((r, i) => {
+    const dot = document.getElementById('sp-map-dot-'+i);
+    if (!dot) return;
+    dot.style.cursor = 'pointer';
+    dot.setAttribute('pointer-events', 'all');
+    const activate = () => spActivateMapRace(i);
+    dot.addEventListener('click', activate);
+    dot.addEventListener('touchstart', e => { e.preventDefault(); activate(); }, { passive:false });
+  });
 }
 
 // ── ROI Simulator ───────────────────────────────────
