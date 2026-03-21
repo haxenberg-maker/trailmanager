@@ -5746,72 +5746,48 @@ function spNav(dir) {
 function spGoSlide(idx) {
   _spSlide = idx;
 
-  // Progress + dots (fără tranziție, instant)
+  // Progress
   const fill = document.getElementById('sp-progress-fill');
   if (fill) fill.style.width = ((idx + 1) / SP_TOTAL * 100) + '%';
+
+  // Dots
   document.querySelectorAll('.sp-dot').forEach(d => d.classList.remove('on'));
-  const dot = document.querySelector(`.sp-dot[data-s="${idx}"]`);
+  const dot = document.querySelector('.sp-dot[data-s="' + idx + '"]');
   if (dot) dot.classList.add('on');
 
-  // Nav arrows
+  // Arrows
   const prev = document.getElementById('sp-prev');
   const next = document.getElementById('sp-next');
-  if (prev) prev.style.opacity = idx === 0 ? '0.2' : '1';
-  if (next) next.style.opacity = idx === SP_TOTAL - 1 ? '0.2' : '1';
+  if (prev) prev.style.opacity = idx === 0 ? '0.3' : '1';
+  if (next) next.style.opacity = idx === SP_TOTAL - 1 ? '0.3' : '1';
 
-  // Fade out toate slide-urile active
-  const slides = document.querySelectorAll('.sp-slide');
-  slides.forEach(s => {
-    s.style.transition = 'opacity .3s ease';
-    s.style.opacity    = '0';
+  // Ascunde toate, arată doar targetul
+  document.querySelectorAll('.sp-slide').forEach(s => {
+    s.style.opacity = '0';
     s.style.pointerEvents = 'none';
   });
 
-  // Fade in slide-ul nou după 300ms
+  const target = document.getElementById('sp-s' + (idx + 1));
+  if (!target) return;
+
+  // Toate elementele din slide sunt vizibile imediat, fără animații
+  target.querySelectorAll('*').forEach(el => {
+    el.style.opacity   = '1';
+    el.style.transform = 'none';
+    el.style.transition = 'none';
+  });
+
+  // Fade in slide-ul (doar slide-ul, nu elementele din el)
   setTimeout(() => {
-    // Resetează copiii (vor fi re-animați)
-    const target = document.getElementById('sp-s' + (idx + 1));
-    if (!target) return;
-
-    // Ascunde copiii animabili instant (fără tranziție)
-    target.querySelectorAll(
-      '.sp-s1-eyebrow,.sp-s1-name,.sp-s1-aka,.sp-s1-stats,' +
-      '.sp-s2-title,.sp-race-card,.sp-proof-card,' +
-      '.sp-partner-logo,.sp-partner-title,.sp-partner-sub,.sp-packages,.sp-cta-btn'
-    ).forEach(el => {
-      el.style.transition = 'none';
-      el.style.opacity    = '0';
-      el.style.transform  = 'translateY(18px)';
-    });
-
-    // Arată slide-ul
-    slides.forEach(s => { s.style.opacity = '0'; s.style.pointerEvents = 'none'; });
-    target.style.transition = 'opacity .35s ease';
-    target.style.opacity    = '1';
+    target.style.transition  = 'opacity .4s ease';
+    target.style.opacity     = '1';
     target.style.pointerEvents = 'all';
-
-    // Animează copiii cu stagger
-    const animEls = target.querySelectorAll(
-      '.sp-s1-eyebrow,.sp-s1-name,.sp-s1-aka,.sp-s1-stats,' +
-      '.sp-s2-title,.sp-race-card,.sp-proof-card,' +
-      '.sp-partner-logo,.sp-partner-title,.sp-partner-sub,.sp-packages,.sp-cta-btn'
-    );
-    animEls.forEach((el, i) => {
-      setTimeout(() => {
-        el.style.transition = 'opacity .5s ease, transform .5s ease';
-        el.style.opacity    = '1';
-        el.style.transform  = 'none';
-      }, 60 + i * 70);
-    });
-
     // Counter animat pe slide 1
-    if (idx === 0) setTimeout(spAnimateCounters, 200);
-    // Bar chart pe slide 3
-    if (idx === 2) setTimeout(spAnimateBars, 300);
-  }, 300);
+    if (idx === 0) setTimeout(spAnimateCounters, 100);
+    if (idx === 2) setTimeout(spAnimateBars, 100);
+  }, 50);
 }
 
-// ── Populare date ─────────────────────────────────────
 function spPopulateAll() {
   const acts   = DB.activities || [];
   const races  = DB.races      || [];
