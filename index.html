@@ -6341,7 +6341,7 @@ function spPopulateAll() {
 }
 
 function spDrawMapAnimated(races) {
-  _spMapRaces = [...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+  _spMapRaces = [...races].sort((a,b) => new Date(a.data_cursa) - new Date(b.data_cursa));
   const svg = document.getElementById('sp-map-svg');
   if (!svg) return;
 
@@ -6555,6 +6555,61 @@ function slUpdateROI(amount) {
     { min:3500, icon:'🌱', title:'Ambasador sport în Bârlad', desc:'Organizăm împreună un eveniment/alergare locală la Bârlad cu brandul tău în față' },
   ];
 
+  const W=460, H=340, pad=18;
+  const lngMin=20.24, lngMax=29.70, latMin=43.65, latMax=48.27;
+  const toX = lng => pad + (lng-lngMin)/(lngMax-lngMin)*(W-pad*2);
+  const toY = lat => pad + (latMax-lat)/(latMax-latMin)*(H-pad*2);
+
+  let inner = '<rect width="'+W+'" height="'+H+'" fill="#020a02" rx="8"/>';
+  COUNTIES.forEach(d => {
+    inner += '<path d="'+d+'" fill="#0d1f0d" stroke="#1a3a1a" stroke-width="0.5"/>';
+  });
+
+  const LOCS = {
+    'Transylvania':[46.54,25.08],'Brasov':[45.65,25.61],'Brașov':[45.65,25.61],
+    'Skyrace':[45.36,25.56],'Nemirei':[46.10,26.65],'Predeal':[45.50,25.57],
+    'Bucovina':[47.55,25.93],'UTMB':[47.55,25.93],'2X2':[45.40,23.82],
+    'Ciucas':[45.53,26.08],'Ciucaș':[45.53,26.08],'Azuga':[45.43,25.57],
+    'Istrita':[44.88,26.82],'Istrița':[44.88,26.82],
+  };
+  const findLoc = d => {
+    if (!d) return null;
+    const dl = d.toLowerCase();
+    for (const [k,v] of Object.entries(LOCS)) if (dl.includes(k.toLowerCase())) return v;
+    return null;
+  };
+
+  // HOME Bârlad
+  const hx = toX(27.67).toFixed(1), hy = toY(46.23).toFixed(1);
+  inner += '<circle cx="'+hx+'" cy="'+hy+'" r="3" fill="none" stroke="#ccff00" stroke-width="1.5" opacity=".8"/>';
+  inner += '<text x="'+hx+'" y="'+(parseFloat(hy)-6).toFixed(1)+'" font-size="7" fill="#ccff00" text-anchor="middle" font-weight="bold">HOME</text>';
+
+  // Dots curse (gri inițial)
+  _spMapRaces.forEach((r, i) => {
+    const loc = findLoc(r.denumire);
+    if (!loc) return;
+    const x = toX(loc[1]).toFixed(1), y = toY(loc[0]).toFixed(1);
+    inner += '<circle cx="'+x+'" cy="'+y+'" r="6" fill="#1a3a1a" stroke="#2a4a2a" stroke-width="1" id="sp-map-dot-'+i+'" opacity=".5"/>';
+  });
+
+  svg.innerHTML = inner;
+}
+
+// ── ROI Simulator ───────────────────────────────────
+function slUpdateROI(amount) {
+  const el = document.getElementById('sl-roi-amount');
+  if (el) el.textContent = amount.toLocaleString() + ' RON';
+
+  const tiers = (SETTINGS.packages && SETTINGS.packages.length) ? SETTINGS.packages : [
+    { min:0,    icon:'🏙️', title:'Reprezinți Bârladul',    desc:'Numele tău la 10 curse naționale — Bârladul pe harta trail-ului' },
+    { min:0,    icon:'👕', title:'Logo pe echipament',     desc:'La start și finish la toate cele 10 curse ale sezonului' },
+    { min:300,  icon:'📊', title:'Dashboard live',         desc:'Link la acest tracker — arată clienților tăi că investești în sport local' },
+    { min:600,  icon:'📸', title:'Fotografie dedicată',    desc:'Foto la finish line cu echipament cu logo-ul tău vizibil, trimisă după fiecare cursă' },
+    { min:1000, icon:'🔗', title:'Mențiune publică',       desc:'Menționat pe orice platformă pe care o voi folosi vreodată — cu link' },
+    { min:2000, icon:'🏆', title:'Sponsor principal Bârlad', desc:'Singurul sponsor principal — primul menționat, cel mai vizibil, adevărat parteneriat' },
+    { min:3500, icon:'🌱', title:'Ambasador sport în Bârlad', desc:'Organizăm împreună un eveniment/alergare locală la Bârlad cu brandul tău în față' },
+  ];
+
   if (statsEl) statsEl.innerHTML = items.map(s=>`
     <div class="sp-last-stat">
       <span class="sp-last-stat-val">${s.val}</span>
@@ -6585,6 +6640,57 @@ function slUpdateROI(amount) {
       } else { mapEl.style.display='none'; }
     } catch(e) { mapEl.style.display='none'; }
   } else if (mapEl) { mapEl.style.display='none'; }
+}
+
+
+function spStartMapAnimation() {
+  if (_spMapTimer) clearInterval(_spMapTimer);
+  _spMapIdx = 0;
+  spActivateMapRace(0);
+  const total = _spMapRaces.length;
+  if (total > 1) {
+    _spMapTimer = setInterval(() => {
+      _spMapIdx = (_spMapIdx + 1) % total;
+      spActivateMapRace(_spMapIdx);
+    }, 1800);
+  }
+}
+
+function spActivateMapRace(i) {
+  const r = _spMapRaces[i];
+  if (!r) return;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const past  = r.data_cursa && new Date(r.data_cursa) < today;
+  const days  = r.data_cursa ? Math.ceil((new Date(r.data_cursa)-today)/86400000) : null;
+
+  // Reset toate dots
+  _spMapRaces.forEach((_, j) => {
+    const dot = document.getElementById('sp-map-dot-'+j);
+    if (dot) {
+      dot.setAttribute('fill', '#1a3a1a');
+      dot.setAttribute('stroke', '#2a4a2a');
+      dot.setAttribute('r', '6');
+      dot.setAttribute('opacity', '.5');
+    }
+  });
+
+  // Activează dot-ul curent
+  const dot = document.getElementById('sp-map-dot-'+i);
+  if (dot) {
+    dot.setAttribute('fill', past ? '#555' : '#ccff00');
+    dot.setAttribute('stroke', past ? '#888' : '#ccff00');
+    dot.setAttribute('r', '9');
+    dot.setAttribute('opacity', '1');
+  }
+
+  // Info box
+  const nameEl = document.getElementById('sp-map-race-name');
+  const metaEl = document.getElementById('sp-map-race-meta');
+  if (nameEl) nameEl.textContent = r.denumire || '—';
+  if (metaEl) metaEl.textContent =
+    (r.distanta||'?') + ' km' +
+    (r.denivelare ? ' · ' + Math.round(r.denivelare/1000) + 'k D+' : '') +
+    (past ? ' · ✅ Finalizat' : days !== null ? ' · ' + days + ' zile' : '');
 }
 
 // ── Counter animat ────────────────────────────────────
