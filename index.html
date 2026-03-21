@@ -1237,11 +1237,105 @@ body.readonly label.btn { display:none !important }
 .slide-order-toggle.off::after { left:3px; }
 /* Animații controlate de JS */
 
+/* ═══════════════════════════════════════
+   MOBILE PORTRAIT — prezentare optimizată
+   ═══════════════════════════════════════ */
 @media(max-width:600px){
-  .sp-proof-grid { grid-template-columns:1fr; }
-  .sp-races-grid { grid-template-columns:1fr 1fr; }
-  .sp-slide { padding:56px 16px 24px; }
-  #sp-prev { left:8px; } #sp-next { right:8px; }
+
+  /* Slide base - padding mai mic, text mai mic */
+  .sp-slide {
+    padding:52px 14px 20px;
+    justify-content:flex-start;
+    overflow-y:auto;
+  }
+
+  /* Titluri slide-uri */
+  .sp-s2-title {
+    font-size:clamp(18px,5vw,26px);
+    margin-bottom:14px;
+    letter-spacing:2px;
+  }
+
+  /* S1 — Atletul */
+  .sp-s1-name  { font-size:clamp(36px,12vw,64px); margin-bottom:4px; }
+  .sp-s1-aka   { font-size:clamp(14px,4vw,22px); margin-bottom:20px; letter-spacing:4px; }
+  .sp-s1-stats { gap:12px; flex-wrap:wrap; justify-content:center; }
+  .sp-s1-stat  { min-width:70px; }
+  .sp-s1-val   { font-size:clamp(24px,8vw,40px); }
+  .sp-s1-lbl   { font-size:9px; }
+  .sp-s1-divider { display:none; }
+
+  /* S2 — Curse: 1 coloana pe mobil */
+  .sp-races-grid {
+    grid-template-columns:1fr;
+    max-height:55vh;
+    gap:8px;
+  }
+  .sp-race-name { font-size:16px; }
+  .sp-race-meta { font-size:12px; }
+
+  /* S3 — Dovada: 2x2 grid */
+  .sp-proof-grid {
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  .sp-proof-val { font-size:clamp(22px,7vw,38px); }
+  .sp-proof-lbl { font-size:9px; }
+  .sp-bar-chart { height:60px; }
+
+  /* S4 — Parteneriat: coloana unica */
+  #sp-s4 > div[style*="grid"] {
+    grid-template-columns:1fr !important;
+    gap:14px !important;
+    max-width:100% !important;
+  }
+  .sp-roi-item { padding:8px; }
+  .sp-roi-item-title { font-size:12px; }
+  .sp-roi-item-desc  { font-size:11px; }
+  #sp-roi-grid { grid-template-columns:1fr 1fr; }
+
+  /* S5 — Hartă */
+  #sp-s5 > div { max-width:100%; }
+
+  /* S6 — Countdown */
+  .sp-cd-block { min-width:44px; padding:8px 6px; }
+  .sp-cd-val   { font-size:28px; }
+  .sp-cd-sep   { font-size:22px; padding-bottom:12px; }
+  .sp-cd-stat  { padding:8px 6px; }
+
+  /* S7 — Buget */
+  .sp-budget-label { font-size:11px; }
+  .sp-budget-amount { font-size:13px; }
+  #sp-budget-total-val { font-size:22px; }
+
+  /* S8 — Last run */
+  #sp-last-map { height:110px; }
+  .sp-last-stat-val { font-size:18px; }
+  .sp-last-stat-lbl { font-size:8px; }
+
+  /* S9 — De ce eu */
+  .sp-why-item  { padding:10px 12px; gap:10px; }
+  .sp-why-nr    { font-size:24px; min-width:28px; }
+  .sp-why-title { font-size:14px; }
+  .sp-why-desc  { font-size:11px; }
+
+  /* S10 — Testimonial */
+  #sp-testimonial-text { font-size:clamp(15px,4.5vw,22px); }
+
+  /* Nav arrows mai mici, mai aproape de margine */
+  .sp-nav { width:36px; height:36px; font-size:16px; }
+  #sp-prev { left:4px; }
+  #sp-next { right:4px; }
+
+  /* Dots mai mici */
+  .sp-dot { width:5px; height:5px; }
+  .sp-dot.on { width:18px; }
+
+  /* Close button */
+  #sp-close { top:12px; right:12px; width:30px; height:30px; font-size:15px; }
+
+  /* Counter slide top */
+  #sp-counter { top:16px; gap:5px; }
 }
 
 </style>
@@ -1850,7 +1944,7 @@ body.readonly label.btn { display:none !important }
     <div class="sp-slide" id="sp-s4">
       <div class="sp-bg" style="background:linear-gradient(135deg,#080e08 0%,#141000 100%)"></div>
       <div class="sp-s2-title">🤝 PARTENERIAT 2026</div>
-      <div style="display:grid;grid-template-columns:2fr 3fr;gap:24px;width:100%;max-width:940px;align-items:start">
+      <div id="sp-s4-grid" style="display:grid;grid-template-columns:2fr 3fr;gap:24px;width:100%;max-width:940px;align-items:start">
 
         <!-- Stânga: Sponsor + CTA -->
         <div style="display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;padding:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px">
@@ -1880,7 +1974,7 @@ body.readonly label.btn { display:none !important }
       </div>
 
       <!-- Mobile: stack vertical -->
-      <style>@media(max-width:600px){#sp-s4 .sp-s4-grid{grid-template-columns:1fr!important}}</style>
+      <style>@media(max-width:600px){#sp-s4-grid{grid-template-columns:1fr!important;max-width:100%!important}}</style>
     </div>
 
     <!-- ── SLIDE 5 — HARTĂ ROMÂNIA ── -->
