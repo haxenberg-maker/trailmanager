@@ -6287,6 +6287,7 @@ function openSponsorPrez() {
 
   // rAF1: prez e in DOM cu display:flex
   requestAnimationFrame(() => {
+    loadSettings();        // ← citeste slide_order din DB.prefs înainte de apply
     spApplySlideOrder();
     spPopulateAll();
 
@@ -6362,7 +6363,8 @@ function spGoSlide(idx) {
 
   // Progress
   const fill = document.getElementById('sp-progress-fill');
-  if (fill) fill.style.width = ((idx + 1) / SP_TOTAL * 100) + '%';
+  const _tot = window._spTotalDynamic || SP_TOTAL;
+  if (fill) fill.style.width = ((idx + 1) / _tot * 100) + '%';
 
   // Dots
   document.querySelectorAll('.sp-dot').forEach(d => d.classList.remove('on'));
