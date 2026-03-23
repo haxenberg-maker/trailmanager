@@ -1236,6 +1236,38 @@ body.readonly label.btn { display:none !important }
 .slide-order-toggle.on::after  { left:19px; }
 .slide-order-toggle.off::after { left:3px; }
 
+
+/* ── STORY SETTINGS ── */
+.set-story-block { border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden; }
+.set-story-header {
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;
+  color:var(--text);background:var(--s2);user-select:none;
+}
+.set-story-header:hover { background:var(--s3); }
+.set-story-arrow { transition:transform .2s;font-size:12px;color:var(--t3); }
+.set-story-block.open .set-story-arrow { transform:rotate(180deg); }
+.set-story-body {
+  display:none;padding:14px 16px;
+  display:none;flex-direction:column;gap:8px;background:var(--s1);
+}
+.set-story-block.open .set-story-body { display:flex; }
+.set-story-inp {
+  width:100%;background:var(--s2);border:1px solid var(--border);
+  border-radius:7px;padding:8px 10px;font-size:12px;color:var(--text);
+  font-family:inherit;resize:vertical;
+}
+.set-story-sel {
+  background:var(--s2);border:1px solid var(--border);border-radius:7px;
+  padding:6px 10px;font-size:12px;color:var(--text);flex:1;
+}
+.set-story-preview {
+  width:100%;height:80px;border-radius:7px;overflow:hidden;
+  background:var(--s2);margin-bottom:4px;display:none;
+}
+.set-story-preview img { width:100%;height:100%;object-fit:cover; }
+.set-story-preview iframe { width:100%;height:100%;border:none; }
+
 /* ── STORY SLIDES — SPLIT SCREEN ── */
 .sp-split {
   display:grid;grid-template-columns:1fr 1fr;
@@ -3120,7 +3152,136 @@ body.readonly label.btn { display:none !important }
 </div>
 
 <div style="display:flex;gap:10px;margin-bottom:24px">
-  <button class="btn btn-primary" onclick="saveSettings()" style="flex:1;padding:14px;font-size:14px">💾 Salvează toate setările</button>
+  
+<!-- ── STORY SLIDES EDITOR ── -->
+<div class="set-section" style="margin-top:24px">
+  <div class="set-section-title">📖 Slide-uri Poveste (S11-S14)</div>
+  <div style="font-size:11px;color:var(--t3);margin-bottom:16px">Editează textele și media pentru fiecare slide de poveste.</div>
+
+  <div id="set-story-accordion">
+    <!-- S11 -->
+    <div class="set-story-block" data-slide="s11">
+      <div class="set-story-header" onclick="this.parentElement.classList.toggle('open')">
+        <span>🏃 Slide A — Originea</span><span class="set-story-arrow">▾</span>
+      </div>
+      <div class="set-story-body">
+        <div class="set-story-media">
+          <label class="set-lbl">Media stânga</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px">
+            <select id="s11-left-type" class="set-story-sel" onchange="storyPreviewMedia('s11')">
+              <option value="gradient">Gradient (default)</option>
+              <option value="image">Imagine (URL)</option>
+              <option value="video">Video embed (YouTube)</option>
+            </select>
+          </div>
+          <input id="s11-left-url" placeholder="URL imagine sau embed YouTube..." class="set-story-inp" oninput="storyPreviewMedia('s11')">
+          <div id="s11-preview" class="set-story-preview"></div>
+        </div>
+        <label class="set-lbl">Eyebrow</label>
+        <input id="s11-eyebrow" class="set-story-inp" placeholder="ex: 🏃 ORIGINEA">
+        <label class="set-lbl">Titlu (fiecare rând = Enter)</label>
+        <textarea id="s11-title" class="set-story-inp" rows="3" placeholder="O SINGURĂ
+DECIZIE
+PROPRIE."></textarea>
+        <label class="set-lbl">Paragraf 1</label>
+        <textarea id="s11-line0" class="set-story-inp" rows="2"></textarea>
+        <label class="set-lbl">Paragraf 2</label>
+        <textarea id="s11-line1" class="set-story-inp" rows="2"></textarea>
+        <label class="set-lbl">Paragraf 3 (accent)</label>
+        <textarea id="s11-line2" class="set-story-inp" rows="2"></textarea>
+        <label class="set-lbl">Citat stânga</label>
+        <input id="s11-left-quote" class="set-story-inp" placeholder='"Nimic nu mai era al meu."'>
+        <label class="set-lbl">Label pill stânga</label>
+        <input id="s11-left-label" class="set-story-inp" placeholder="Km 0">
+      </div>
+    </div>
+    <!-- S12 -->
+    <div class="set-story-block" data-slide="s12">
+      <div class="set-story-header" onclick="this.parentElement.classList.toggle('open')">
+        <span>⛰️ Slide B — Primul munte</span><span class="set-story-arrow">▾</span>
+      </div>
+      <div class="set-story-body">
+        <div class="set-story-media">
+          <label class="set-lbl">Media stânga</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px">
+            <select id="s12-left-type" class="set-story-sel" onchange="storyPreviewMedia('s12')">
+              <option value="gradient">Gradient (default)</option>
+              <option value="image">Imagine (URL)</option>
+              <option value="video">Video embed (YouTube)</option>
+            </select>
+          </div>
+          <input id="s12-left-url" placeholder="URL imagine sau embed YouTube..." class="set-story-inp" oninput="storyPreviewMedia('s12')">
+          <div id="s12-preview" class="set-story-preview"></div>
+        </div>
+        <label class="set-lbl">Eyebrow</label>
+        <input id="s12-eyebrow" class="set-story-inp">
+        <label class="set-lbl">Titlu</label>
+        <textarea id="s12-title" class="set-story-inp" rows="3"></textarea>
+        <label class="set-lbl">Paragraf 1</label><textarea id="s12-line0" class="set-story-inp" rows="2"></textarea>
+        <label class="set-lbl">Paragraf 2</label><textarea id="s12-line1" class="set-story-inp" rows="2"></textarea>
+        <label class="set-lbl">Paragraf 3 (accent)</label><textarea id="s12-line2" class="set-story-inp" rows="2"></textarea>
+        <label class="set-lbl">Citat stânga</label><input id="s12-left-quote" class="set-story-inp">
+        <label class="set-lbl">Label pill stânga</label><input id="s12-left-label" class="set-story-inp">
+      </div>
+    </div>
+    <!-- S13 -->
+    <div class="set-story-block" data-slide="s13">
+      <div class="set-story-header" onclick="this.parentElement.classList.toggle('open')">
+        <span>🌩️ Slide C — Km 130</span><span class="set-story-arrow">▾</span>
+      </div>
+      <div class="set-story-body">
+        <div class="set-story-media">
+          <label class="set-lbl">Media stânga</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px">
+            <select id="s13-left-type" class="set-story-sel" onchange="storyPreviewMedia('s13')">
+              <option value="gradient">Gradient (default)</option>
+              <option value="image">Imagine (URL)</option>
+              <option value="video">Video embed (YouTube)</option>
+            </select>
+          </div>
+          <input id="s13-left-url" placeholder="URL imagine sau embed YouTube..." class="set-story-inp" oninput="storyPreviewMedia('s13')">
+          <div id="s13-preview" class="set-story-preview"></div>
+        </div>
+        <label class="set-lbl">Eyebrow</label><input id="s13-eyebrow" class="set-story-inp">
+        <label class="set-lbl">Titlu</label><textarea id="s13-title" class="set-story-inp" rows="3"></textarea>
+        <label class="set-lbl">Paragraf 1</label><textarea id="s13-line0" class="set-story-inp" rows="2"></textarea>
+        <label class="set-lbl">Paragraf 2</label><textarea id="s13-line1" class="set-story-inp" rows="2"></textarea>
+        <label class="set-lbl">Paragraf 3 (accent)</label><textarea id="s13-line2" class="set-story-inp" rows="2"></textarea>
+        <label class="set-lbl">Citat stânga</label><input id="s13-left-quote" class="set-story-inp">
+        <label class="set-lbl">Label pill stânga</label><input id="s13-left-label" class="set-story-inp">
+      </div>
+    </div>
+    <!-- S14 -->
+    <div class="set-story-block" data-slide="s14">
+      <div class="set-story-header" onclick="this.parentElement.classList.toggle('open')">
+        <span>📈 Slide D — 5km → 5000km</span><span class="set-story-arrow">▾</span>
+      </div>
+      <div class="set-story-body">
+        <div class="set-story-media">
+          <label class="set-lbl">Media stânga</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px">
+            <select id="s14-left-type" class="set-story-sel" onchange="storyPreviewMedia('s14')">
+              <option value="gradient">Gradient (default)</option>
+              <option value="image">Imagine (URL)</option>
+              <option value="video">Video embed (YouTube)</option>
+            </select>
+          </div>
+          <input id="s14-left-url" placeholder="URL imagine sau embed YouTube..." class="set-story-inp" oninput="storyPreviewMedia('s14')">
+          <div id="s14-preview" class="set-story-preview"></div>
+        </div>
+        <label class="set-lbl">Eyebrow</label><input id="s14-eyebrow" class="set-story-inp">
+        <label class="set-lbl">Titlu</label><textarea id="s14-title" class="set-story-inp" rows="3"></textarea>
+        <label class="set-lbl">Paragraf 1</label><textarea id="s14-line0" class="set-story-inp" rows="2"></textarea>
+        <label class="set-lbl">Paragraf 2</label><textarea id="s14-line1" class="set-story-inp" rows="2"></textarea>
+        <label class="set-lbl">Paragraf 3 (accent)</label><textarea id="s14-line2" class="set-story-inp" rows="2"></textarea>
+        <label class="set-lbl">Citat stânga</label><input id="s14-left-quote" class="set-story-inp">
+        <label class="set-lbl">Label pill stânga</label><input id="s14-left-label" class="set-story-inp">
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="btn btn-primary" onclick="saveSettings()" style="flex:1;padding:14px;font-size:14px">💾 Salvează toate setările</button>
   <button class="btn btn-ghost" onclick="openSponsorPrez()" style="padding:14px">▶</button>
 </div>
 </div>
@@ -6244,6 +6405,72 @@ const DEFAULT_SETTINGS = {
     { min:2000, icon:'🏆', title:'Sponsor principal',       desc:'Primul menționat, cel mai vizibil' },
     { min:3500, icon:'🌱', title:'Ambasador sport Bârlad',  desc:'Eveniment/alergare locală cu brandul tău' },
   ],
+  story_slides: {
+    s11: {
+      left_type: 'gradient',
+      left_url: '',
+      eyebrow: '🏃 ORIGINEA',
+      title: 'O SINGURĂ\nDECIZIE\nPROPRIE.',
+      lines: [
+        'Într-o perioadă în care simțeam că nimic nu mai îmi aparține — am luat singura decizie care era a mea.',
+        'Fără plan. Fără echipament. Fără experiență.',
+        'Doar eu și asfaltul Bârladului.'
+      ],
+      stat: 'Km 0 → 5.000 km',
+      badge: '',
+      left_quote: '"Nimic nu\nmai era\nal meu."',
+      left_label: 'Km 0',
+      left_year: 'MAI\n2024'
+    },
+    s12: {
+      left_type: 'gradient',
+      left_url: '',
+      eyebrow: '⛰️ PRIMUL MUNTE',
+      title: 'CHIN.\nMĂREȚIE.\nTOP 50.',
+      lines: [
+        'Prima cursă de trail. Pe urcare simțeam un chin pe care nu îl mai cunoscusem.',
+        'Dar în același timp — mă simțeam mai puternic ca niciodată în viața mea.',
+        'Am terminat în Top 50. La prima mea cursă de munte. Ceva s-a schimbat pentru totdeauna.'
+      ],
+      stat: '',
+      badge: 'Top 50 finiseri',
+      left_quote: '"Un chin.\nO măreție."',
+      left_label: 'Top 50',
+      left_year: 'TRIPLE\nCROWN'
+    },
+    s13: {
+      left_type: 'gradient',
+      left_url: '',
+      eyebrow: '🌩️ KM 130 · FURTUNA',
+      title: 'AM VRUT\nSĂ RENUNȚ.',
+      lines: [
+        'Înainte să aflu că furtuna a oprit cursa, voiam să abandonez. Prietenii m-au ținut pe linia de plutire.',
+        'Când am auzit că nu mai putem continua — m-am simțit dărâmat.',
+        'Nu pentru mine. Pentru ei. Voiam să termin pentru ei.'
+      ],
+      stat: 'Km 130 din 161 planificați',
+      badge: '',
+      left_quote: '"Nu pentru\nmine.\nPentru ei."',
+      left_label: 'Km 130/161',
+      left_year: 'BUCO-\nVINA\n2025'
+    },
+    s14: {
+      left_type: 'gradient',
+      left_url: '',
+      eyebrow: '📈 REZILIENȚĂ · CONTINUITATE',
+      title: 'DE LA 5 KM\nLA 5.000 KM.',
+      lines: [
+        'Ianuarie 2025 — 500km într-o lună, zi de zi după muncă. Decembrie — 600km, 20km dimineața și seara.',
+        'Bucovina 2026 mă așteaptă. De data asta știu ce e un Ultra adevărat.',
+        'Și nu m-am oprit nicio zi.'
+      ],
+      stat: '',
+      badge: '',
+      left_quote: '"Nu mă\nopresc."',
+      left_label: '🔥 streak activ',
+      left_year: '2024\n→\nAZI'
+    }
+  }
 };
 
 
@@ -6800,6 +7027,9 @@ function spPopulateAll() {
   const testName=document.getElementById('sp-test-name');
   if(testName&&mainSponsor) testName.textContent=(mainSponsor.denumire||'').toUpperCase();
 
+  // Story slides — aplica textele si media din setari
+  applyStorySlides();
+
   // WhatsApp buttons
   const waPhone=(PROFILE.whatsapp||'').replace(/\D/g,'');
   const waUrl='https://wa.me/'+waPhone+'?text=Buna%20ziua%2C%20sunt%20interesat%20de%20un%20parteneriat%20Trail%20Running%202026.';
@@ -6963,6 +7193,148 @@ function spActivateMapRace(i) {
     (past ? ' · ✅ Finalizat' : days !== null ? ' · ' + days + ' zile' : '');
 }
 
+
+
+// ── Story Slides Settings ─────────────────────────────
+const STORY_SLIDES_IDS = ['s11','s12','s13','s14'];
+
+function renderStorySettings() {
+  const ss = SETTINGS.story_slides || DEFAULT_SETTINGS.story_slides;
+  if (!ss) return;
+  STORY_SLIDES_IDS.forEach(sid => {
+    const d = ss[sid] || {};
+    const g = id => document.getElementById(id);
+    const set = (id, val) => { const el = g(id); if(el) el.value = val || ''; };
+    set(sid+'-left-type',  d.left_type || 'gradient');
+    set(sid+'-left-url',   d.left_url  || '');
+    set(sid+'-eyebrow',    d.eyebrow   || '');
+    // title: newlines → textarea
+    set(sid+'-title',      (d.title||'').split('\\n').join('\n'));
+    const lines = d.lines || ['','',''];
+    set(sid+'-line0', lines[0]||'');
+    set(sid+'-line1', lines[1]||'');
+    set(sid+'-line2', lines[2]||'');
+    set(sid+'-left-quote', d.left_quote || '');
+    set(sid+'-left-label', d.left_label || '');
+    storyPreviewMedia(sid);
+  });
+}
+
+function storyPreviewMedia(sid) {
+  const typeEl  = document.getElementById(sid+'-left-type');
+  const urlEl   = document.getElementById(sid+'-left-url');
+  const prevEl  = document.getElementById(sid+'-preview');
+  if (!typeEl || !urlEl || !prevEl) return;
+  const type = typeEl.value;
+  const url  = urlEl.value.trim();
+  if (!url || type === 'gradient') { prevEl.style.display='none'; prevEl.innerHTML=''; return; }
+  prevEl.style.display = 'block';
+  if (type === 'image') {
+    prevEl.innerHTML = `<img src="${url}" onerror="this.parentElement.style.display='none'">`;
+  } else if (type === 'video') {
+    // Convert YouTube watch URL to embed
+    const embedUrl = url.replace('watch?v=','embed/').replace('youtu.be/','www.youtube.com/embed/');
+    prevEl.innerHTML = `<iframe src="${embedUrl}" allow="autoplay" allowfullscreen></iframe>`;
+  }
+}
+
+function readStorySettings() {
+  const ss = {};
+  STORY_SLIDES_IDS.forEach(sid => {
+    const g = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+    ss[sid] = {
+      left_type:   g(sid+'-left-type'),
+      left_url:    g(sid+'-left-url'),
+      eyebrow:     g(sid+'-eyebrow'),
+      title:       g(sid+'-title').split('\n').join('\\n'),
+      lines:       [g(sid+'-line0'), g(sid+'-line1'), g(sid+'-line2')],
+      left_quote:  g(sid+'-left-quote'),
+      left_label:  g(sid+'-left-label'),
+      left_year:   (SETTINGS.story_slides?.[sid]?.left_year) || DEFAULT_SETTINGS.story_slides[sid].left_year,
+    };
+  });
+  return ss;
+}
+
+// ── Aplica story settings pe slide-urile din DOM ─────
+function applyStorySlides() {
+  const ss = SETTINGS.story_slides || DEFAULT_SETTINGS.story_slides;
+  if (!ss) return;
+
+  const GRADIENTS = {
+    s11: 'linear-gradient(160deg,#0a0015 0%,#1a0530 50%,#000 100%)',
+    s12: 'linear-gradient(160deg,#001408 0%,#003010 50%,#000 100%)',
+    s13: 'linear-gradient(160deg,#140800 0%,#2a1000 50%,#000 100%)',
+    s14: 'linear-gradient(160deg,#000a00 0%,#001f08 50%,#000 100%)',
+  };
+
+  STORY_SLIDES_IDS.forEach(sid => {
+    const d   = ss[sid] || DEFAULT_SETTINGS.story_slides[sid] || {};
+    const el  = document.getElementById('sp-'+sid);
+    if (!el) return;
+
+    // ── Titlu
+    const titleEl = el.querySelector('.sp-split-title');
+    if (titleEl && d.title) {
+      titleEl.innerHTML = d.title.split('\n').join('<br>');
+      // S14: highlight ultimul rand in accent
+      if (sid === 's14') {
+        const parts = d.title.split('\n');
+        if (parts.length >= 2) {
+          titleEl.innerHTML = parts.slice(0,-1).join('<br>') +
+            '<br><span style="color:#ccff00">'+ parts[parts.length-1] +'</span>';
+        }
+      }
+    }
+
+    // ── Eyebrow
+    const eyeEl = el.querySelector('.sp-split-eyebrow');
+    if (eyeEl && d.eyebrow) eyeEl.textContent = d.eyebrow;
+
+    // ── Paragraphs
+    const pEls = el.querySelectorAll('.sp-split-lines p');
+    const lines = d.lines || [];
+    pEls.forEach((p, i) => { if(lines[i] !== undefined) p.innerHTML = lines[i]; });
+
+    // ── Left quote & label
+    const quoteEl = el.querySelector('.sp-split-quote');
+    if (quoteEl && d.left_quote) quoteEl.innerHTML = d.left_quote.replace(/\n/g,'<br>');
+    const pillEl = el.querySelector('.sp-split-km-pill:not(#sp-s14-streak-pill)');
+    if (pillEl && d.left_label && sid !== 's14') pillEl.textContent = d.left_label;
+
+    // ── Media stânga
+    const imgEl = el.querySelector('.sp-split-img');
+    if (!imgEl) return;
+
+    // Curata media anterioara
+    imgEl.querySelectorAll('iframe,.story-img-cover').forEach(e => e.remove());
+
+    const type = d.left_type || 'gradient';
+    const url  = (d.left_url || '').trim();
+
+    if (type === 'gradient' || !url) {
+      imgEl.style.background = GRADIENTS[sid] || '#000';
+      imgEl.style.backgroundSize = '';
+    } else if (type === 'image') {
+      imgEl.style.background = `url('${url}') center/cover no-repeat`;
+      // Overlay intunecat deasupra imaginii
+      if (!imgEl.querySelector('.story-img-cover')) {
+        const ov = document.createElement('div');
+        ov.className = 'story-img-cover';
+        ov.style.cssText = 'position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.3) 100%);z-index:0';
+        imgEl.insertBefore(ov, imgEl.firstChild);
+      }
+    } else if (type === 'video') {
+      imgEl.style.background = '#000';
+      const embedUrl = url.replace('watch?v=','embed/').replace('youtu.be/','www.youtube.com/embed/');
+      const iframe = document.createElement('iframe');
+      iframe.src = embedUrl + (embedUrl.includes('?') ? '&' : '?') + 'autoplay=0&mute=1&loop=1&controls=0';
+      iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;z-index:0;pointer-events:none';
+      iframe.allow = 'autoplay';
+      imgEl.insertBefore(iframe, imgEl.firstChild);
+    }
+  });
+}
 
 // ── Slide 14: Grafic km pe luni ─────────────────────
 function spDrawKmChart() {
@@ -7326,6 +7698,9 @@ function renderSetari() {
 
   // Ordine slide-uri
   renderSlideOrderEditor();
+
+  // Story slides settings
+  renderStorySettings();
 }
 
 // ── Packages ────────────────────────────────────────
@@ -7407,6 +7782,8 @@ async function saveSettings() {
   SETTINGS.show_roi      = gc('set-show-roi');
   SETTINGS.show_benefits  = gc('set-show-benefits');
   // slide_order e updatat direct în SETTINGS de editor — nu citim din DOM
+  // Story slides — citim din formulare
+  SETTINGS.story_slides = readStorySettings();
 
   // Read packages & FAQ from DOM (in case user typed without triggering onchange)
   document.querySelectorAll('#set-packages-list .set-pkg-row').forEach((row, i) => {
