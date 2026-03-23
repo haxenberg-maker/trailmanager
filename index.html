@@ -7004,7 +7004,17 @@ const ALL_SLIDES = [
 // Ordinea curentă — array de id-uri, salvat în SETTINGS
 function getSlideOrder() {
   const saved = SETTINGS.slide_order;
-  if (saved && Array.isArray(saved) && saved.length >= ALL_SLIDES.length) return saved;
+  if (saved && Array.isArray(saved) && saved.length > 0) {
+    // Merge: pastreaza ordinea salvata + adauga slide-uri noi la final
+    const merged = [...saved];
+    ALL_SLIDES.forEach(s => {
+      if (!merged.find(o => o.id === s.id)) {
+        merged.push({ id: s.id, active: true });
+      }
+    });
+    // Elimina slide-uri sterse din ALL_SLIDES
+    return merged.filter(o => ALL_SLIDES.find(s => s.id === o.id));
+  }
   return ALL_SLIDES.map(s => ({ id:s.id, active:true }));
 }
 
