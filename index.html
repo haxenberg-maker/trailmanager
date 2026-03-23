@@ -1236,7 +1236,105 @@ body.readonly label.btn { display:none !important }
 .slide-order-toggle.on::after  { left:19px; }
 .slide-order-toggle.off::after { left:3px; }
 
-/* ── STORY SLIDES ── */
+/* ── STORY SLIDES — SPLIT SCREEN ── */
+.sp-split {
+  display:grid;grid-template-columns:1fr 1fr;
+  width:100%;height:100%;position:absolute;inset:0;
+}
+.sp-split-img {
+  position:relative;display:flex;flex-direction:column;
+  align-items:flex-start;justify-content:flex-end;
+  padding:40px 32px;overflow:hidden;
+}
+.sp-split-img::after {
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent 60%,#000 100%);
+}
+.sp-split-year {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(48px,8vw,96px);
+  color:rgba(255,255,255,.08);letter-spacing:4px;
+  line-height:.85;position:absolute;top:32px;left:28px;
+  z-index:1;pointer-events:none;
+}
+.sp-split-quote {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(22px,3.5vw,36px);
+  color:rgba(255,255,255,.7);letter-spacing:2px;
+  line-height:1.1;position:relative;z-index:2;
+  text-shadow:0 2px 20px rgba(0,0,0,.8);
+}
+.sp-split-km-pill {
+  margin-top:16px;position:relative;z-index:2;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:20px;padding:6px 16px;
+  font-size:13px;font-family:'Inter',sans-serif;
+  color:rgba(255,255,255,.7);font-weight:600;
+  letter-spacing:.5px;
+}
+.sp-split-content {
+  display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(28px,5vw,60px) clamp(24px,4vw,56px);
+  overflow-y:auto;
+}
+.sp-split-eyebrow {
+  font-size:10px;color:var(--accent);letter-spacing:3px;
+  text-transform:uppercase;margin-bottom:16px;
+  font-family:'Inter',sans-serif;font-weight:600;
+}
+.sp-split-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(32px,5.5vw,68px);
+  color:#fff;letter-spacing:2px;line-height:.9;
+  margin:0 0 24px;
+}
+.sp-split-lines p {
+  font-family:'Inter',sans-serif;
+  font-size:clamp(13px,1.6vw,17px);
+  color:rgba(255,255,255,.6);line-height:1.7;
+  margin:0 0 12px;
+}
+.sp-split-lines p strong { color:#fff; }
+.sp-accent-line { color:rgba(255,255,255,.85)!important; }
+.sp-split-stat {
+  display:flex;align-items:center;gap:12px;
+  margin-top:4px;
+  font-family:'Bebas Neue',sans-serif;
+}
+.sp-split-stat-val { font-size:clamp(20px,3vw,32px);color:#fff;letter-spacing:1px; }
+.sp-split-stat-arrow { font-size:18px;color:rgba(255,255,255,.3); }
+.sp-green { color:#4ade80!important; }
+.sp-split-badges { display:flex;gap:8px;flex-wrap:wrap;margin-top:4px; }
+.sp-badge {
+  padding:6px 14px;border-radius:20px;font-size:11px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.7);font-family:'Inter',sans-serif;font-weight:600;
+}
+.sp-badge-accent {
+  background:rgba(204,255,0,.1);border-color:rgba(204,255,0,.3);
+  color:#ccff00;
+}
+
+/* ── REVEAL ANIMATION ── */
+.sp-reveal {
+  opacity:0;transform:translateY(18px);
+  transition:opacity .55s ease, transform .55s ease;
+}
+.sp-slide.on .sp-reveal { opacity:1;transform:none; }
+
+/* ── MOBILE ── */
+@media(max-width:600px){
+  .sp-split { grid-template-columns:1fr;grid-template-rows:200px 1fr; }
+  .sp-split-img { padding:20px; }
+  .sp-split-year { font-size:48px;top:16px;left:16px; }
+  .sp-split-quote { font-size:20px; }
+  .sp-split-title { font-size:clamp(28px,9vw,46px); }
+  .sp-split-content { padding:20px 18px; }
+  .sp-split-lines p { font-size:13px; }
+}
+
+/* ── STORY SLIDES (vechi, pastrat pentru compatibilitate) ── */
 .sp-story-wrap {
   display:flex;flex-direction:column;
   align-items:flex-start;
@@ -1993,6 +2091,11 @@ body.readonly label.btn { display:none !important }
           <span class="sp-s1-val" id="sp-s1-itra">536</span>
           <span class="sp-s1-lbl">ITRA PI</span>
         </div>
+        <div class="sp-s1-divider"></div>
+        <div class="sp-s1-stat sp-s1-streak">
+          <span class="sp-s1-val" id="sp-s1-streak" style="color:#ff6b35">0🔥</span>
+          <span class="sp-s1-lbl">zile streak activ</span>
+        </div>
       </div>
     </div>
 
@@ -2195,74 +2298,106 @@ body.readonly label.btn { display:none !important }
     </div>
 
 
-    <!-- ── SLIDE 11 — POVESTE A: ORIGINEA ── -->
+        <!-- ── SLIDE 11 — POVESTE A: ORIGINEA ── -->
     <div class="sp-slide" id="sp-s11">
-      <div class="sp-bg" style="background:linear-gradient(135deg,#050008 0%,#0a0518 100%)"></div>
-      <div class="sp-story-wrap">
-        <div class="sp-story-eyebrow">🏃 MAI 2024 · BÂRLAD</div>
-        <div class="sp-story-title">O SINGURĂ<br>DECIZIE PROPRIE</div>
-        <div class="sp-story-body">
-          Într-un moment în care simțeam că nimic nu mai este al meu, că nimic nu îmi mai aparține — am luat singura decizie care îmi aparținea complet.
-          <br><br>
-          Am început să alerg. Fără plan, fără experiență, fără echipament. Doar eu și asfaltul Bârladului.
+      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-split">
+        <!-- Stanga: imagine / background vizual -->
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#0a0015 0%,#1a0530 50%,#000 100%)">
+          <div class="sp-split-year">MAI<br>2024</div>
+          <div class="sp-split-quote">&ldquo;Nimic nu<br>mai era<br>al meu.&rdquo;</div>
+          <div class="sp-split-km-pill">Km 0</div>
         </div>
-        <div class="sp-story-stat">
-          <span class="sp-story-stat-val">Mai 2024</span>
-          <span class="sp-story-stat-lbl">primul km</span>
+        <!-- Dreapta: text reveal -->
+        <div class="sp-split-content">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🏃 ORIGINEA</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="150">O SINGURĂ<br>DECIZIE<br>PROPRIE.</h2>
+          <div class="sp-split-lines">
+            <p class="sp-reveal" data-delay="400">Într-o perioadă în care simțeam că nimic nu mai îmi aparține — am luat singura decizie care era a mea.</p>
+            <p class="sp-reveal" data-delay="650">Fără plan. Fără echipament. Fără experiență.</p>
+            <p class="sp-reveal sp-accent-line" data-delay="900">Doar eu și asfaltul Bârladului.</p>
+          </div>
+          <div class="sp-split-stat sp-reveal" data-delay="1100">
+            <span class="sp-split-stat-val">Km 0</span>
+            <span class="sp-split-stat-arrow">→</span>
+            <span class="sp-split-stat-val sp-green">5.000 km</span>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- ── SLIDE 12 — POVESTE B: PRIMUL MUNTE ── -->
     <div class="sp-slide" id="sp-s12">
-      <div class="sp-bg" style="background:linear-gradient(135deg,#00080a 0%,#001408 100%)"></div>
-      <div class="sp-story-wrap">
-        <div class="sp-story-eyebrow">⛰️ TRIPLE CROWN CHALLENGE</div>
-        <div class="sp-story-title">CHIN.<br>MĂREȚIE.<br>TOP 50.</div>
-        <div class="sp-story-body">
-          Prima cursă de trail. Pe urcare simțeam un chin pe care nu îl mai cunoscusem. Dar în același timp mă simțeam mai puternic ca niciodată.
-          <br><br>
-          Am terminat în top 50. La prima mea cursă de munte. Ceva s-a schimbat pentru totdeauna.
+      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-split">
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#001408 0%,#003010 50%,#000 100%)">
+          <div class="sp-split-year">TRIPLE<br>CROWN</div>
+          <div class="sp-split-quote">&ldquo;Un chin.<br>O măreție.&rdquo;</div>
+          <div class="sp-split-km-pill" style="background:rgba(204,255,0,.15);color:#ccff00">Top 50</div>
         </div>
-        <div class="sp-story-stat">
-          <span class="sp-story-stat-val">Top 50</span>
-          <span class="sp-story-stat-lbl">prima cursă de trail</span>
+        <div class="sp-split-content">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">⛰️ PRIMUL MUNTE</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="150">CHIN.<br>MĂREȚIE.<br>TOP 50.</h2>
+          <div class="sp-split-lines">
+            <p class="sp-reveal" data-delay="400">Prima cursă de trail. Pe urcare simțeam un chin pe care nu îl mai cunoscusem.</p>
+            <p class="sp-reveal" data-delay="650">Dar în același timp — mă simțeam mai puternic ca niciodată în viața mea.</p>
+            <p class="sp-reveal sp-accent-line" data-delay="900">Am terminat în <strong>Top 50</strong>. La prima mea cursă de munte. Ceva s-a schimbat pentru totdeauna.</p>
+          </div>
+          <div class="sp-split-badges sp-reveal" data-delay="1100">
+            <div class="sp-badge">Prima cursă de munte</div>
+            <div class="sp-badge sp-badge-accent">Top 50 finiseri</div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- ── SLIDE 13 — POVESTE C: KM 130 ── -->
     <div class="sp-slide" id="sp-s13">
-      <div class="sp-bg" style="background:linear-gradient(135deg,#080400 0%,#140800 100%)"></div>
-      <div class="sp-story-wrap">
-        <div class="sp-story-eyebrow">🌩️ BUCOVINA ULTRA ROCKS 2025 · KM 130</div>
-        <div class="sp-story-title">AM VRUT<br>SĂ RENUNȚ.</div>
-        <div class="sp-story-body">
-          Înainte să aflu că furtuna a oprit cursa, voiam să abandonez. Prietenii m-au ținut pe linia de plutire.
-          <br><br>
-          Când am auzit că nu mai putem continua — m-am simțit dărâmat. Nu pentru mine. <strong style="color:#fff">Pentru ei.</strong>
-          <br><br>
-          <span style="color:rgba(255,255,255,.4);font-size:13px;font-family:'Inter',sans-serif">161 km planificați · oprit la km 130 · furtună</span>
+      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-split">
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#140800 0%,#2a1000 50%,#000 100%)">
+          <div class="sp-split-year">BUCO-<br>VINA<br>2025</div>
+          <div class="sp-split-quote">&ldquo;Nu pentru<br>mine.<br>Pentru ei.&rdquo;</div>
+          <div class="sp-split-km-pill" style="background:rgba(255,100,0,.15);color:#ff6400">Km 130/161</div>
         </div>
-        <div class="sp-story-stat">
-          <span class="sp-story-stat-val">Km 130</span>
-          <span class="sp-story-stat-lbl">din 161 · cursa oprită</span>
+        <div class="sp-split-content">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🌩️ KM 130 · FURTUNA</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="150">AM VRUT<br>SĂ RENUNȚ.</h2>
+          <div class="sp-split-lines">
+            <p class="sp-reveal" data-delay="400">Înainte să aflu că furtuna a oprit cursa, voiam să abandonez. Prietenii m-au ținut pe linia de plutire.</p>
+            <p class="sp-reveal" data-delay="650">Când am auzit că nu mai putem continua — m-am simțit dărâmat.</p>
+            <p class="sp-reveal sp-accent-line" data-delay="900">Nu pentru mine. <strong>Pentru ei.</strong> Voiam să termin pentru ei.</p>
+          </div>
+          <div class="sp-split-stat sp-reveal" data-delay="1100">
+            <span class="sp-split-stat-val" style="color:#ff6400">Km 130</span>
+            <span class="sp-split-stat-arrow">din</span>
+            <span class="sp-split-stat-val">161 planificați</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ── SLIDE 14 — POVESTE D: 5KM → 5000KM ── -->
+    <!-- ── SLIDE 14 — POVESTE D: 5KM → 5000KM + STREAK ── -->
     <div class="sp-slide" id="sp-s14">
-      <div class="sp-bg" style="background:linear-gradient(135deg,#000a00 0%,#001a08 100%)"></div>
-      <div class="sp-story-wrap" style="width:100%;max-width:680px">
-        <div class="sp-story-eyebrow">📈 MAI 2024 → AZI</div>
-        <div class="sp-story-title" style="font-size:clamp(32px,7vw,64px)">DE LA 5 KM<br>LA <span style="color:var(--accent)">5.000 KM</span></div>
-        <div class="sp-story-body" style="margin-bottom:16px">
-          Ianuarie 2025 — 500km, zi de zi după muncă. Decembrie — 600km, 20km dimineața și seara. Bucovina 2026 mă așteaptă. De data asta știu ce e un Ultra adevărat.
+      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-split">
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#000a00 0%,#001f08 50%,#000 100%)">
+          <div class="sp-split-year">2024<br>→<br>AZI</div>
+          <div class="sp-split-quote">&ldquo;Nu mă<br>opresc.&rdquo;</div>
+          <div class="sp-split-km-pill" style="background:rgba(204,255,0,.15);color:#ccff00" id="sp-s14-streak-pill">🔥 — zile</div>
         </div>
-        <!-- Grafic km pe luni -->
-        <div style="width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px">
-          <canvas id="sp-km-chart" height="120" style="width:100%;display:block"></canvas>
+        <div class="sp-split-content">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">📈 REZILIENTĂ · CONTINUITATE</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="150">DE LA 5 KM<br>LA <span style="color:#ccff00">5.000 KM.</span></h2>
+          <div class="sp-split-lines">
+            <p class="sp-reveal" data-delay="400">Ianuarie 2025 — <strong>500km</strong> într-o lună, zi de zi după muncă. Decembrie — <strong>600km</strong>, 20km dimineața și seara.</p>
+            <p class="sp-reveal" data-delay="650">Bucovina 2026 mă așteaptă. De data asta știu ce e un Ultra adevărat.</p>
+            <p class="sp-reveal sp-accent-line" data-delay="900">Și nu m-am oprit nicio zi. <span id="sp-s14-streak-inline" style="color:#ff6b35;font-weight:700">— zile</span> consecutive de alergare.</p>
+          </div>
+          <!-- Grafic km -->
+          <div class="sp-reveal" data-delay="1100" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px;margin-top:8px">
+            <canvas id="sp-km-chart" height="80" style="width:100%;display:block"></canvas>
+          </div>
         </div>
       </div>
     </div>
@@ -6281,7 +6416,11 @@ function openSponsorPrez() {
   _spSlide = 0;
 
   // Curata clase on de pe toate slide-urile
-  document.querySelectorAll('.sp-slide').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.sp-slide').forEach(s => {
+    s.classList.remove('on');
+    // Reset reveal delays
+    s.querySelectorAll('.sp-reveal').forEach(el => el.style.transitionDelay = '');
+  });
 
   prez.classList.add('on');
 
@@ -6385,6 +6524,13 @@ function spGoSlide(idx) {
 
   requestAnimationFrame(() => {
     target.classList.add('on');
+    // Reveal animatii pentru story slides
+    if (['sp-s11','sp-s12','sp-s13','sp-s14'].includes(targetId)) {
+      target.querySelectorAll('.sp-reveal').forEach(el => {
+        const delay = parseInt(el.dataset.delay)||0;
+        el.style.transitionDelay = delay + 'ms';
+      });
+    }
     // Animatii bazate pe ID-ul slide-ului activ, nu pe index fix
     if (targetId === 'sp-s1')  setTimeout(spAnimateCounters, 350);
     if (targetId === 'sp-s3')  setTimeout(spAnimateBars, 350);
@@ -6547,6 +6693,8 @@ function spPopulateAll() {
   if(s1aka)   s1aka.textContent=(PROFILE.nickname||'HAX')+' · '+(PROFILE.city||'BÂRLAD').toUpperCase();
   const bg1=document.getElementById('sp-s1-bg');
   if(bg1&&PROFILE.photo) bg1.style.backgroundImage=`url('${PROFILE.photo}')`;
+  const s1streak = document.getElementById('sp-s1-streak');
+  if(s1streak){ const st=calcStreak(acts); s1streak.dataset.target=st.current; s1streak.textContent='0🔥'; }
 
   // ── Slide 2 ──────────────────────────────────────────
   const s2nr=document.getElementById('sp-s2-nr');
@@ -6638,6 +6786,13 @@ function spPopulateAll() {
 
   // ── Slide 8 — Ultima alergare ─────────────────────────
   spPopulateLastRun(acts);
+
+  // ── Slide 14 — Streak pe S14 ─────────────────────────
+  const st14 = calcStreak(acts);
+  const streakPill = document.getElementById('sp-s14-streak-pill');
+  const streakInline = document.getElementById('sp-s14-streak-inline');
+  if(streakPill) streakPill.textContent = '🔥 ' + st14.current + ' zile';
+  if(streakInline) streakInline.textContent = st14.current + ' zile';
 
   // ── Slide 10 — Testimonial ────────────────────────────
   const testLogo=document.getElementById('sp-test-logo-img'), testLogoTxt=document.getElementById('sp-test-logo-text');
@@ -6890,6 +7045,19 @@ function spDrawKmChart() {
 
 // ── Counter animat ────────────────────────────────────
 function spAnimateCounters() {
+  // Streak: animatie speciala cu emoji
+  const streakEl = document.getElementById('sp-s1-streak');
+  if(streakEl && streakEl.dataset.target) {
+    const target = parseInt(streakEl.dataset.target)||0;
+    const dur = 1000; const start = performance.now();
+    const tick = now => {
+      const pct = Math.min(1,(now-start)/dur);
+      const eased = 1-Math.pow(1-pct,3);
+      streakEl.textContent = Math.round(eased*target)+'🔥';
+      if(pct<1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
   document.querySelectorAll('#sp-s1 [data-target]').forEach(el => {
     const target = parseInt(el.dataset.target) || 0;
     if (target === 0) { el.textContent = '0'; return; }
