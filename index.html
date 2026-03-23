@@ -1338,9 +1338,51 @@ body.readonly label.btn { display:none !important }
   #sp-counter { top:16px; gap:5px; }
 }
 
+
+/* ── SPLASH PREZ ── */
+#sp-splash {
+  position:fixed;inset:0;z-index:99998;
+  background:#000;
+  display:none;
+  flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:20px;
+}
+#sp-splash.on { display:flex; }
+.sp-splash-name {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(32px,8vw,64px);
+  color:#fff;letter-spacing:4px;
+  opacity:0;transform:translateY(20px);
+  transition:all .6s ease .1s;
+}
+.sp-splash-sub {
+  font-size:12px;color:rgba(255,255,255,.4);
+  letter-spacing:3px;text-transform:uppercase;
+  font-family:'Inter',sans-serif;
+  opacity:0;transition:all .6s ease .3s;
+}
+.sp-splash-bar {
+  width:120px;height:2px;
+  background:rgba(255,255,255,.1);border-radius:1px;
+  overflow:hidden;
+}
+.sp-splash-bar-fill {
+  height:100%;width:0%;
+  background:var(--accent);border-radius:1px;
+  transition:width .05s linear;
+}
+#sp-splash.vis .sp-splash-name,
+#sp-splash.vis .sp-splash-sub { opacity:1;transform:none; }
+
 </style>
 </head>
 <body class="readonly">
+<div id="sp-splash">
+  <div class="sp-splash-name" id="sp-splash-name">BALAN GABRIEL</div>
+  <div class="sp-splash-sub">⛰️ SEZON 2026 · TRAIL RUNNING</div>
+  <div class="sp-splash-bar"><div class="sp-splash-bar-fill" id="sp-splash-fill"></div></div>
+</div>
 
 <!-- ══════════════════════════════════════
      SPONSOR LANDING PAGE  v2
@@ -3459,6 +3501,31 @@ function updateAuthButtons() {
 // ── Auto-login on page load ───────────────────────────
 window.addEventListener('load', async () => {
   document.body.classList.add('readonly');
+
+  // Dacă ?prez=1, arată splash imediat
+  const _isPrez = new URLSearchParams(window.location.search).get('prez') === '1';
+  const _isSponsor = new URLSearchParams(window.location.search).get('sponsor') === '1';
+  if (_isPrez || _isSponsor) {
+    const splash = document.getElementById('sp-splash');
+    const splashName = document.getElementById('sp-splash-name');
+    const fill = document.getElementById('sp-splash-fill');
+    if (splash) {
+      splash.classList.add('on');
+      // Aplica PROFILE.name daca e disponibil
+      if (splashName && PROFILE?.name) splashName.textContent = PROFILE.name.toUpperCase();
+      requestAnimationFrame(() => splash.classList.add('vis'));
+      // Animam progress bar simulat
+      let pct = 0;
+      const fillTimer = setInterval(() => {
+        pct = Math.min(90, pct + Math.random() * 8 + 2);
+        if (fill) fill.style.width = pct + '%';
+      }, 120);
+      window._splashFillTimer = fillTimer;
+      window._splashEl = splash;
+      window._splashFillEl = fill;
+    }
+  }
+
   const saved = localStorage.getItem('sb_session');
   if (saved) {
     try {
@@ -3479,6 +3546,8 @@ window.addEventListener('load', async () => {
   }
   await loadAllData(false);
   updateAuthButtons();
+  // Nu randa dashboard daca suntem in modul prezentare
+  if (!_isPrez && !_isSponsor) renderDash();
   checkSponsorParam();
 });
 
@@ -7690,13 +7759,27 @@ function slContact() {
 
 function checkSponsorParam() {
   const params = new URLSearchParams(window.location.search);
-  // ?sponsor=1 redirectat spre prezentare
-  if (params.get('sponsor') === '1') {
-    window.history.replaceState({}, '', '?prez=1');
+  const isPrez = params.get('prez') === '1' || params.get('sponsor') === '1';
+  if (!isPrez) return;
+
+  if (params.get('sponsor') === '1') window.history.replaceState({}, '', '?prez=1');
+
+  // Completeaza progress bar la 100%
+  const fill = window._splashFillEl;
+  if (fill) fill.style.width = '100%';
+
+  setTimeout(() => {
+    // Inchide splash cu fade
+    const splash = window._splashEl;
+    if (splash) {
+      splash.style.transition = 'opacity .4s ease';
+      splash.style.opacity = '0';
+      setTimeout(() => { splash.classList.remove('on'); splash.style.opacity = ''; }, 400);
+    }
+    if (window._splashFillTimer) clearInterval(window._splashFillTimer);
+    // Deschide prezentarea
     openSponsorPrez();
-    return;
-  }
-  if (params.get('prez') === '1') openSponsorPrez();
+  }, 300);
 }
 
 
