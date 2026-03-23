@@ -6306,26 +6306,18 @@ function openSponsorPrez() {
 }
 
 function spApplySlideOrder() {
-  console.log('[spApplySlideOrder] called');
   const order = getSlideOrder().filter(s => s.active !== false);
-  console.log('[spApplySlideOrder] active slides:', order.map(o=>o.id).join(', '));
   const container = document.getElementById('sp-slides');
-  if (!container || !order.length) { console.warn('[spApplySlideOrder] no container or empty order'); return; }
+  if (!container || !order.length) return;
 
-  // Update SP_TOTAL dinamic
+  // Salveaza ordinea activa global — spGoSlide o foloseste
+  window._spActiveOrder = order.map(o => o.id);
   window._spTotalDynamic = order.length;
 
-  // Reordonează DOM
-  order.forEach(item => {
-    const el = document.getElementById(item.id);
-    if (el) container.appendChild(el);
-  });
-
-  // Ascunde slide-urile inactive
+  // Ascunde slide-urile inactive (nu mai conteaza pozitia in DOM)
   ALL_SLIDES.forEach(s => {
     const el = document.getElementById(s.id);
-    const isActive = order.some(o => o.id === s.id);
-    if (el) el.style.display = isActive ? '' : 'none';
+    if (el) el.style.display = order.some(o => o.id === s.id) ? '' : 'none';
   });
 
   // Update dots
@@ -6385,18 +6377,22 @@ function spGoSlide(idx) {
   if (_spSlide === 5 && idx !== 5 && _spCdTimer)  { clearInterval(_spCdTimer);  _spCdTimer  = null; }
   document.querySelectorAll('.sp-slide').forEach(s => s.classList.remove('on'));
 
-  const target = document.getElementById('sp-s' + (idx + 1));
+  // Folosim ordinea activa, nu ID-ul hardcodat
+  const activeOrder = window._spActiveOrder || ALL_SLIDES.map(s => s.id);
+  const targetId = activeOrder[idx];
+  const target = targetId ? document.getElementById(targetId) : null;
   if (!target) return;
-  // rAF ca browserul să proceseze remove înainte de add
+
   requestAnimationFrame(() => {
     target.classList.add('on');
-    if (idx === 0) setTimeout(spAnimateCounters, 350);
-    if (idx === 2) setTimeout(spAnimateBars, 350);
-    if (idx === 13) setTimeout(spDrawKmChart, 300);
-    if (idx === 3) spInitROI();
-    if (idx === 4) setTimeout(spStartMapAnimation, 300);
-    if (idx === 5) spStartCountdown();
-    if (idx === 6) spAnimateBudget();
+    // Animatii bazate pe ID-ul slide-ului activ, nu pe index fix
+    if (targetId === 'sp-s1')  setTimeout(spAnimateCounters, 350);
+    if (targetId === 'sp-s3')  setTimeout(spAnimateBars, 350);
+    if (targetId === 'sp-s4')  spInitROI();
+    if (targetId === 'sp-s5')  setTimeout(spStartMapAnimation, 300);
+    if (targetId === 'sp-s6')  spStartCountdown();
+    if (targetId === 'sp-s7')  spAnimateBudget();
+    if (targetId === 'sp-s14') setTimeout(spDrawKmChart, 300);
   });
 }
 
@@ -6971,12 +6967,10 @@ let SETTINGS = { ...DEFAULT_SETTINGS };
 function loadSettings() {
   try {
     let raw = DB.prefs?.landing_settings;
-    console.log('[loadSettings] raw type:', typeof raw, '| has slide_order:', !!(raw && (typeof raw === 'object' ? raw.slide_order : JSON.stringify(raw).includes('slide_order'))));
-    if (!raw) { SETTINGS = { ...DEFAULT_SETTINGS }; console.log('[loadSettings] no prefs, using default'); return; }
+      if (!raw) { SETTINGS = { ...DEFAULT_SETTINGS }; return; }
     if (typeof raw === 'string') raw = JSON.parse(raw);
     if (typeof raw === 'string') raw = JSON.parse(raw);
     SETTINGS = { ...DEFAULT_SETTINGS, ...raw };
-    console.log('[loadSettings] SETTINGS.slide_order after load:', SETTINGS.slide_order ? 'has '+SETTINGS.slide_order.length+' items, first='+SETTINGS.slide_order[0]?.id : 'MISSING');
   } catch(e) {
     console.warn('[loadSettings] error:', e);
     SETTINGS = { ...DEFAULT_SETTINGS };
@@ -7009,14 +7003,12 @@ const ALL_SLIDES = [
 // Ordinea curentă — array de id-uri, salvat în SETTINGS
 function getSlideOrder() {
   const saved = SETTINGS.slide_order;
-  console.log('[getSlideOrder] SETTINGS.slide_order:', saved ? JSON.stringify(saved.slice(0,3))+'...' : 'NULL/undefined');
   if (saved && Array.isArray(saved) && saved.length > 0) {
     const merged = [...saved];
     ALL_SLIDES.forEach(s => {
       if (!merged.find(o => o.id === s.id)) merged.push({ id: s.id, active: true });
     });
     const result = merged.filter(o => ALL_SLIDES.find(s => s.id === o.id));
-    console.log('[getSlideOrder] returning merged:', result.map(o=>o.id+':'+(o.active!==false?'ON':'off')).join(', '));
     return result;
   }
   console.log('[getSlideOrder] no saved order, returning default');
@@ -7087,7 +7079,6 @@ function slOrderMove(i, dir) {
   if (j < 0 || j >= order.length) return;
   [order[i], order[j]] = [order[j], order[i]];
   SETTINGS.slide_order = order;
-  console.log('[slOrderMove] moved', i, '->', j, '| new order[0]:', order[0]?.id);
   renderSlideOrderEditor();
 }
 
@@ -7309,8 +7300,6 @@ async function saveSettings() {
     DB.prefs.target_km        = targetKm;
     DB.prefs.dash_title       = dashTitle;
 
-    console.log('[saveSettings] ✅ Saved. slide_order in SETTINGS:', SETTINGS.slide_order ? SETTINGS.slide_order.length+' items, first='+SETTINGS.slide_order[0]?.id : 'MISSING');
-    console.log('[saveSettings] Full slide_order:', JSON.stringify(SETTINGS.slide_order));
     toast('✅ Setări salvate!', 'ok');
   } catch(e) {
     toast('❌ Eroare salvare: ' + e.message, 'err');
