@@ -1295,32 +1295,66 @@ body.readonly label.btn { display:none !important }
 
 /* ── S2: Race rows ── */
 .sp-race-row {
-  display:flex;align-items:center;justify-content:space-between;
-  padding:8px 10px;border-radius:7px;cursor:pointer;
-  border:1px solid transparent;
-  transition:background .15s, border-color .15s;
+  display:flex;align-items:stretch;justify-content:space-between;
+  border-radius:9px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.07);
+  background:rgba(255,255,255,.03);
+  transition:background .15s, border-color .15s, transform .1s;
+  overflow:hidden;position:relative;
 }
-.sp-race-row:hover { background:rgba(255,255,255,.05); }
+.sp-race-row:hover { background:rgba(255,255,255,.07);transform:translateX(2px); }
 .sp-race-row.active {
   background:rgba(204,255,0,.07);
-  border-color:rgba(204,255,0,.3);
+  border-color:rgba(204,255,0,.35);
 }
-.sp-race-row.past { opacity:.55; }
-.sp-race-row-left { display:flex;align-items:center;gap:8px;min-width:0; }
+.sp-race-row.past { opacity:.5; }
+
+/* Bara dificultate colorata stanga */
+.sp-race-diff-bar {
+  width:4px;flex-shrink:0;border-radius:0;
+}
+
+/* Continut */
+.sp-race-row-body {
+  flex:1;padding:10px 10px 10px 10px;min-width:0;
+  display:flex;flex-direction:column;gap:3px;
+}
+.sp-race-row-top { display:flex;align-items:center;gap:8px; }
 .sp-race-row-nr {
-  font-family:'Bebas Neue',sans-serif;font-size:14px;
-  color:rgba(255,255,255,.3);flex-shrink:0;width:24px;text-align:right;
+  font-family:'Bebas Neue',sans-serif;font-size:13px;
+  color:rgba(255,255,255,.3);flex-shrink:0;min-width:20px;
 }
 .sp-race-row.active .sp-race-row-nr { color:var(--accent); }
 .sp-race-row-name {
-  font-size:12px;font-weight:600;color:#fff;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;
+  font-size:13px;font-weight:700;color:#fff;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sp-race-row-badge {
+  flex-shrink:0;font-size:9px;font-weight:700;letter-spacing:.5px;
+  padding:2px 6px;border-radius:4px;text-transform:uppercase;
+  font-family:'Inter',sans-serif;
 }
 .sp-race-row-meta {
   font-size:10px;color:rgba(255,255,255,.4);
-  font-family:'Inter',sans-serif;margin-top:1px;
+  font-family:'Inter',sans-serif;line-height:1.3;
 }
-.sp-race-row-right { flex-shrink:0; }
+.sp-race-row-right {
+  flex-shrink:0;display:flex;align-items:center;
+  padding:0 10px;
+}
+
+/* Difficulty levels */
+.diff-easy   .sp-race-diff-bar { background:#4ade80; }
+.diff-medium .sp-race-diff-bar { background:#facc15; }
+.diff-hard   .sp-race-diff-bar { background:#f97316; }
+.diff-ultra  .sp-race-diff-bar { background:#ef4444; }
+.diff-beast  .sp-race-diff-bar { background:linear-gradient(180deg,#ef4444,#7c3aed); }
+
+.badge-easy   { background:rgba(74,222,128,.15);color:#4ade80; }
+.badge-medium { background:rgba(250,204,21,.12);color:#facc15; }
+.badge-hard   { background:rgba(249,115,22,.15);color:#f97316; }
+.badge-ultra  { background:rgba(239,68,68,.15);color:#ef4444; }
+.badge-beast  { background:linear-gradient(90deg,rgba(239,68,68,.2),rgba(124,58,237,.2));color:#f87171;border:1px solid rgba(239,68,68,.3); }
 
 /* ── STORY SLIDES — SPLIT SCREEN ── */
 .sp-split {
@@ -7769,20 +7803,23 @@ function spPopulateS2(races, acts) {
       const past = r.data_cursa && new Date(r.data_cursa) < today;
       const days = r.data_cursa ? Math.ceil((new Date(r.data_cursa)-today)/86400000) : null;
       const hasLoc = !!spFindRaceLoc(r.denumire);
-      return `<div class="sp-race-row ${past?'past':''}" data-i="${i}" onclick="spSelectRace(${i}); spOpenRaceDetail(${i})">
-        <div class="sp-race-row-left">
-          <div class="sp-race-row-nr">#${r.nr||i+1}</div>
-          <div>
-            <div class="sp-race-row-name">${escHtml(r.denumire||'—')}</div>
-            <div class="sp-race-row-meta">
-              ${r.distanta?r.distanta+'km':'?km'}
-              ${r.denivelare?' · '+Math.round(r.denivelare/1000)+'kD+':''}
-              ${past?' · ✅':days!==null?' · '+days+'z':''}
-            </div>
+      const diff = spCalcDifficulty(r);
+      const dateStr = r.data_cursa ? new Date(r.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'short'}) : '';
+      return `<div class="sp-race-row ${past?'past':''} ${diff.barClass}" data-i="${i}"
+                   onclick="spSelectRace(${i}); spOpenRaceDetail(${i})">
+        <div class="sp-race-diff-bar"></div>
+        <div class="sp-race-row-body">
+          <div class="sp-race-row-top">
+            <span class="sp-race-row-nr">#${r.nr||i+1}</span>
+            <span class="sp-race-row-name">${escHtml(r.denumire||'—')}</span>
+            <span class="sp-race-row-badge ${diff.badgeClass}">${diff.label}</span>
+          </div>
+          <div class="sp-race-row-meta">
+            ${r.distanta?'<strong style="color:rgba(255,255,255,.7)">'+r.distanta+'km</strong>':'?km'}${r.denivelare?' · '+Math.round(r.denivelare/1000)+'k D+':''}${dateStr?' · '+dateStr:''}${past?' · ✅':days!==null&&days<=30?' · <span style="color:#facc15">'+days+'z</span>':days!==null?' · '+days+'z':''}
           </div>
         </div>
         <div class="sp-race-row-right">
-          ${hasLoc?'<span style="color:rgba(204,255,0,.6);font-size:10px">📍</span>':''}
+          ${past?'<span style="font-size:14px">✅</span>':hasLoc?'<span style="color:rgba(204,255,0,.5);font-size:16px">›</span>':''}
         </div>
       </div>`;
     }).join('');
@@ -7792,6 +7829,30 @@ function spPopulateS2(races, acts) {
   spDrawMapS2(sorted, today);
 
   // Fara auto-selectie — userul alege
+}
+
+function spCalcDifficulty(r) {
+  const km = parseFloat(r.distanta)||0;
+  const dplus = parseFloat(r.denivelare)||0;
+  const name = (r.denumire||'').toLowerCase();
+  // Beast: Bucovina UTMB, Transylvania 100+
+  if (name.includes('bucovina') || name.includes('utmb') ||
+      (name.includes('transylvania') && km >= 100)) {
+    return { level:'beast', label:'BEAST 💀', barClass:'diff-beast', badgeClass:'badge-beast' };
+  }
+  // Ultra: 80km+ sau D+5000+
+  if (km >= 80 || dplus >= 5000) {
+    return { level:'ultra', label:'ULTRA 🔥', barClass:'diff-ultra', badgeClass:'badge-ultra' };
+  }
+  // Hard: 40-80km sau D+2500+
+  if (km >= 40 || dplus >= 2500) {
+    return { level:'hard', label:'HARD ⚡', barClass:'diff-hard', badgeClass:'badge-hard' };
+  }
+  // Medium: 20-40km
+  if (km >= 20) {
+    return { level:'medium', label:'MEDIUM', barClass:'diff-medium', badgeClass:'badge-medium' };
+  }
+  return { level:'easy', label:'EASY', barClass:'diff-easy', badgeClass:'badge-easy' };
 }
 
 function spFindRaceLoc(denumire) {
