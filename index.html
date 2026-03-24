@@ -1357,13 +1357,17 @@ body.readonly label.btn { display:none !important }
 
 /* ── MOBILE ── */
 @media(max-width:600px){
-  .sp-split { grid-template-columns:1fr;grid-template-rows:200px 1fr; }
-  .sp-split-img { padding:20px; }
-  .sp-split-year { font-size:48px;top:16px;left:16px; }
-  .sp-split-quote { font-size:20px; }
-  .sp-split-title { font-size:clamp(28px,9vw,46px); }
-  .sp-split-content { padding:20px 18px; }
+  .sp-split { grid-template-columns:1fr;grid-template-rows:160px 1fr; }
+  .sp-split-img { padding:16px 20px; }
+  .sp-split-year { font-size:36px;top:12px;left:14px; }
+  .sp-split-quote { font-size:16px; }
+  .sp-split-km-pill { font-size:11px;padding:4px 12px; }
+  .sp-split-title { font-size:clamp(24px,8vw,40px);margin-bottom:14px; }
+  .sp-split-content { padding:16px 16px;overflow-y:auto; }
   .sp-split-lines p { font-size:13px; }
+  .sp-split-eyebrow { font-size:9px;margin-bottom:10px; }
+  .sp-s1-stats { gap:12px!important;flex-wrap:wrap; }
+  .sp-s1-val { font-size:clamp(24px,6vw,36px)!important; }
 }
 
 /* ── STORY SLIDES (vechi, pastrat pentru compatibilitate) ── */
@@ -2097,240 +2101,279 @@ body.readonly label.btn { display:none !important }
 
   <div id="sp-slides">
 
+    
     <!-- ── SLIDE 1 — ATLETUL ── -->
     <div class="sp-slide" id="sp-s1">
-      <div class="sp-bg" id="sp-s1-bg"></div>
-      <div class="sp-s1-eyebrow">⛰️ SEZON 2026 · TRAIL RUNNING</div>
-      <div class="sp-s1-name" id="sp-s1-name">BALAN GABRIEL</div>
-      <div class="sp-s1-aka" id="sp-s1-aka">HAX · BÂRLAD</div>
-      <div class="sp-s1-stats">
-        <div class="sp-s1-stat">
-          <span class="sp-s1-val" id="sp-s1-km" data-target="0">0</span>
-          <span class="sp-s1-lbl">km alergați 2026</span>
-        </div>
-        <div class="sp-s1-divider"></div>
-        <div class="sp-s1-stat">
-          <span class="sp-s1-val" id="sp-s1-total" data-target="0">0</span>
-          <span class="sp-s1-lbl">km total carieră</span>
-        </div>
-        <div class="sp-s1-divider"></div>
-        <div class="sp-s1-stat">
-          <span class="sp-s1-val" id="sp-s1-curse">0</span>
-          <span class="sp-s1-lbl">curse 2026</span>
-        </div>
-        <div class="sp-s1-divider"></div>
-        <div class="sp-s1-stat">
-          <span class="sp-s1-val" id="sp-s1-itra">536</span>
-          <span class="sp-s1-lbl">ITRA PI</span>
-        </div>
-        <div class="sp-s1-divider"></div>
-        <div class="sp-s1-stat sp-s1-streak">
-          <span class="sp-s1-val" id="sp-s1-streak" style="color:#ff6b35">0🔥</span>
-          <span class="sp-s1-lbl">zile streak activ</span>
-        </div>
+      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-split">
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#000510 0%,#001030 50%,#000 100%)">
+          <div id="sp-s1-bg-img" style="position:absolute;inset:0;background-size:cover;background-position:center;z-index:0;opacity:.5"></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,20,.7) 0%,rgba(0,10,0,.4) 100%);z-index:1"></div>
+          <div class="sp-split-year" style="z-index:2">2026</div>
+          <div style="position:relative;z-index:2">
+            <div class="sp-split-quote" id="sp-s1-aka-left">HAX · BÂRLAD</div>
+            <div class="sp-split-km-pill" style="background:rgba(204,255,0,.15);color:#ccff00">
+              <span id="sp-s1-streak-pill">🔥 —</span> zile streak
+            </div>
+          </div></div>
+        <div class="sp-split-content">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">⛰️ SEZON 2026 · TRAIL RUNNING</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="100" id="sp-s1-name" style="font-size:clamp(38px,7vw,80px)">BALAN GABRIEL</h2>
+          <div class="sp-s1-stats sp-reveal" data-delay="300" style="flex-wrap:wrap;gap:clamp(12px,3vw,32px);margin-bottom:0">
+            <div class="sp-s1-stat">
+              <span class="sp-s1-val" id="sp-s1-km" data-target="0">0</span>
+              <span class="sp-s1-lbl">km 2026</span>
+            </div>
+            <div class="sp-s1-divider"></div>
+            <div class="sp-s1-stat">
+              <span class="sp-s1-val" id="sp-s1-total" data-target="0">0</span>
+              <span class="sp-s1-lbl">km carieră</span>
+            </div>
+            <div class="sp-s1-divider"></div>
+            <div class="sp-s1-stat">
+              <span class="sp-s1-val" id="sp-s1-curse">0</span>
+              <span class="sp-s1-lbl">curse 2026</span>
+            </div>
+            <div class="sp-s1-divider"></div>
+            <div class="sp-s1-stat">
+              <span class="sp-s1-val" id="sp-s1-itra">536</span>
+              <span class="sp-s1-lbl">ITRA PI</span>
+            </div>
+            <div class="sp-s1-divider"></div>
+            <div class="sp-s1-stat sp-s1-streak">
+              <span class="sp-s1-val" id="sp-s1-streak" style="color:#ff6b35">0🔥</span>
+              <span class="sp-s1-lbl">streak zile</span>
+            </div>
+          </div></div>
       </div>
     </div>
 
     <!-- ── SLIDE 2 — SEZONUL ── -->
     <div class="sp-slide" id="sp-s2">
-      <div class="sp-bg" style="background:linear-gradient(135deg,#0a1628 0%,#0d1f0d 100%)"></div>
-      <div class="sp-s2-title">🏁 SEZONUL 2026 — <span style="color:var(--accent)" id="sp-s2-nr">0</span> CURSE</div>
-      <div class="sp-races-grid" id="sp-races-grid"></div>
+      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-split">
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#020a1a 0%,#040d1f 50%,#000 100%)">
+          <div class="sp-split-year">SEZON<br>2026</div>
+          <div style="position:relative;z-index:2">
+            <div class="sp-split-quote">🏁 Curse<br>planificate</div>
+            <div class="sp-split-km-pill" style="background:rgba(204,255,0,.15);color:#ccff00">
+              <span id="sp-s2-nr-left">—</span> curse
+            </div>
+          </div></div>
+        <div class="sp-split-content">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🏁 CALENDAR COMPETIȚIONAL</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="100">SEZONUL<br>2026</h2>
+          <div class="sp-races-grid sp-reveal" data-delay="250" id="sp-races-grid" style="max-height:52vh"></div></div>
+      </div>
     </div>
 
     <!-- ── SLIDE 3 — DOVADA ── -->
     <div class="sp-slide" id="sp-s3">
-      <div class="sp-bg" style="background:linear-gradient(135deg,#0d0a1a 0%,#0a1a0a 100%)"></div>
-      <div class="sp-s2-title">📊 DOVADA — NUMERE REALE</div>
-      <div class="sp-proof-grid" id="sp-proof-grid">
-        <div class="sp-proof-card">
-          <span class="sp-proof-val" id="sp-p-total">0</span>
-          <span class="sp-proof-lbl">km total alergați</span>
-          <span class="sp-proof-sub">din mai 2024</span>
-          <!-- Mini bar chart ani -->
-          <div class="sp-bar-chart" id="sp-bar-chart"></div>
-        </div>
-        <div class="sp-proof-card">
-          <span class="sp-proof-val" id="sp-p-streak">0</span>
-          <span class="sp-proof-lbl">🔥 streak maxim</span>
-          <span class="sp-proof-sub">zile consecutive</span>
-        </div>
-        <div class="sp-proof-card">
-          <span class="sp-proof-val" id="sp-p-runs">0</span>
-          <span class="sp-proof-lbl">alergări totale</span>
-          <span class="sp-proof-sub">înregistrate Strava</span>
-        </div>
-        <div class="sp-proof-card">
-          <span class="sp-proof-val" id="sp-p-elev">0</span>
-          <span class="sp-proof-lbl">m D+ total</span>
-          <span class="sp-proof-sub">denivelare cumulată</span>
-        </div>
+      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-split">
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#080018 0%,#0a001a 50%,#000 100%)">
+          <div class="sp-split-year">DO-<br>VA-<br>DA</div>
+          <div style="position:relative;z-index:2">
+            <div class="sp-split-quote">Numere<br>reale.<br>Nu povești.</div>
+            <div class="sp-split-km-pill">din mai 2024</div>
+          </div></div>
+        <div class="sp-split-content">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">📊 STATISTICI LIVE DIN STRAVA</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(28px,4.5vw,52px)">NUMERE<br>REALE.</h2>
+          <div class="sp-proof-grid sp-reveal" data-delay="250" id="sp-proof-grid" style="grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+            <div class="sp-proof-card"><span class="sp-proof-val" id="sp-p-total">0</span><span class="sp-proof-lbl">km total</span></div>
+            <div class="sp-proof-card"><span class="sp-proof-val" id="sp-p-streak">0</span><span class="sp-proof-lbl">streak max</span></div>
+            <div class="sp-proof-card"><span class="sp-proof-val" id="sp-p-runs">0</span><span class="sp-proof-lbl">alergări</span></div>
+            <div class="sp-proof-card"><span class="sp-proof-val" id="sp-p-elev">0</span><span class="sp-proof-lbl">m D+ total</span></div>
+          </div>
+          <div class="sp-bar-chart sp-reveal" data-delay="450" id="sp-bar-chart" style="display:flex;gap:16px;align-items:flex-end;height:80px;width:100%"></div></div>
       </div>
     </div>
 
-    <!-- ── SLIDE 4 — PARTENERIAT + ROI ── -->
+    <!-- ── SLIDE 4 — PARTENERIAT ── -->
     <div class="sp-slide" id="sp-s4">
-      <div class="sp-bg" style="background:linear-gradient(135deg,#080e08 0%,#141000 100%)"></div>
-      <div class="sp-s2-title">🤝 PARTENERIAT 2026</div>
-      <div id="sp-s4-grid" style="display:grid;grid-template-columns:2fr 3fr;gap:24px;width:100%;max-width:940px;align-items:start">
-
-        <!-- Stânga: Sponsor + CTA -->
-        <div style="display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;padding:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px">
-          <a id="sp-partner-logo-link" href="#" target="_blank" rel="noopener"
-            style="display:none;background:white;border-radius:8px;padding:8px 14px;text-decoration:none;transition:opacity .2s"
-            onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <img id="sp-partner-logo" src="" alt="Sponsor"
-              style="max-height:64px;max-width:160px;object-fit:contain;display:block">
-          </a>
-          <div id="sp-partner-name" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(16px,2.5vw,26px);color:#fff;letter-spacing:2px;line-height:1.2">FII SPONSORUL NOSTRU</div>
-          <div id="sp-partner-tagline" style="font-size:13px;color:rgba(255,255,255,.5);font-family:'Inter',sans-serif;line-height:1.6">Brandul tău la 10 curse naționale · 2026</div>
-          <!-- WhatsApp mutat pe S10 -->
-        </div>
-
-        <!-- Dreapta: ROI -->
-        <div style="padding:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px">
-          <div style="font-size:13px;color:rgba(255,255,255,.6);letter-spacing:1px;text-transform:uppercase;margin-bottom:16px;font-family:'Inter',sans-serif;font-weight:600">💰 Cât investești → ce primești</div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-            <span style="font-size:14px;color:rgba(255,255,255,.6);font-family:'Inter',sans-serif">Buget ales</span>
-            <span style="font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--accent)" id="sp-roi-amount">500 RON</span>
+      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-split">
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#000a00 0%,#041400 50%,#000 100%)">
+          <div class="sp-split-year" style="opacity:.06">ROI</div>
+          <div style="position:relative;z-index:2;display:flex;flex-direction:column;gap:16px;align-items:flex-start">
+            <a id="sp-partner-logo-link" href="#" target="_blank" rel="noopener"
+              style="display:none;background:white;border-radius:10px;padding:10px 16px;text-decoration:none;transition:opacity .2s"
+              onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+              <img id="sp-partner-logo" src="" alt="Sponsor" style="max-height:56px;max-width:140px;object-fit:contain;display:block">
+            </a>
+            <div class="sp-split-quote" id="sp-partner-name" style="font-size:clamp(20px,3.5vw,36px)">FII PRIMUL</div>
+            <div class="sp-split-km-pill" id="sp-partner-tagline">Parteneriat 2026</div>
+          </div></div>
+        <div class="sp-split-content">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🤝 ROI SIMULATOR</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(26px,4vw,48px)">CÂT<br>INVESTEȘTI →<br>CE PRIMEȘTI</h2>
+          <div class="sp-reveal" data-delay="250" style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <span style="font-size:12px;color:rgba(255,255,255,.5);font-family:'Inter',sans-serif">Buget ales</span>
+              <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent)" id="sp-roi-amount">500 RON</span>
+            </div>
+            <input type="range" id="sp-roi-slider" min="100" max="5000" step="100" value="500"
+              style="width:100%;height:5px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.12);border-radius:3px;outline:none;cursor:pointer;margin-bottom:14px">
           </div>
-          <input type="range" id="sp-roi-slider" min="100" max="5000" step="100" value="500"
-            style="width:100%;height:6px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.12);border-radius:3px;outline:none;cursor:pointer;margin-bottom:16px">
-          <div id="sp-roi-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px"></div>
-          <div id="sp-roi-summary" style="background:rgba(204,255,0,.06);border:1px solid rgba(204,255,0,.15);border-radius:8px;padding:10px 12px;font-size:13px;color:rgba(255,255,255,.85);text-align:center;font-family:'Inter',sans-serif;line-height:1.7"></div>
-        </div>
+          <div id="sp-roi-grid" class="sp-reveal" data-delay="400" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px"></div>
+          <div id="sp-roi-summary" class="sp-reveal" data-delay="550" style="background:rgba(204,255,0,.06);border:1px solid rgba(204,255,0,.15);border-radius:8px;padding:10px 12px;font-size:12px;color:rgba(255,255,255,.8);text-align:center;font-family:'Inter',sans-serif;line-height:1.6"></div></div>
       </div>
-
-      <!-- Mobile: stack vertical -->
-      <style>@media(max-width:600px){#sp-s4-grid{grid-template-columns:1fr!important;max-width:100%!important}}</style>
     </div>
 
-    <!-- ── SLIDE 5 — HARTĂ ROMÂNIA ── -->
+    <!-- ── SLIDE 5 — HARTĂ ── -->
     <div class="sp-slide" id="sp-s5">
-      <div class="sp-bg" style="background:linear-gradient(135deg,#020a02 0%,#04100a 100%)"></div>
-      <div class="sp-s2-title">📍 UNDE APARE BRANDUL TĂU</div>
-      <div style="position:relative;width:100%;max-width:520px;margin:0 auto">
-        <svg id="sp-map-svg" viewBox="0 0 460 340" style="width:100%;height:auto;display:block;border-radius:12px"></svg>
-        <div id="sp-map-info" style="margin-top:10px;background:rgba(0,0,0,.6);border:1px solid var(--accent);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;backdrop-filter:blur(8px)">
-          <span style="font-size:20px">🏁</span>
-          <div>
-            <div id="sp-map-race-name" style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--accent)">—</div>
-            <div id="sp-map-race-meta" style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;font-family:'Inter',sans-serif">—</div>
-          </div>
-        </div>
+      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-split">
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#000800 0%,#001200 50%,#000 100%)">
+          <div class="sp-split-year">RO-<br>MÂ-<br>NIA</div>
+          <div style="position:relative;z-index:2">
+            <div class="sp-split-quote">Brandul tău<br>pe harta<br>trail-ului.</div>
+            <div class="sp-split-km-pill" style="background:rgba(204,255,0,.15);color:#ccff00">10 curse naționale</div>
+          </div></div>
+        <div class="sp-split-content">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">📍 PREZENȚĂ FIZICĂ LA CURSE</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(26px,4vw,48px)">UNDE APARE<br>BRANDUL TĂU</h2>
+          <div class="sp-reveal" data-delay="250" style="position:relative;width:100%">
+            <svg id="sp-map-svg" viewBox="0 0 460 340" style="width:100%;height:auto;display:block;border-radius:10px"></svg>
+            <div id="sp-map-info" style="margin-top:8px;background:rgba(0,0,0,.6);border:1px solid var(--accent);border-radius:8px;padding:8px 12px;min-height:36px">
+              <span id="sp-map-race-name" style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;letter-spacing:1px">—</span>
+              <span id="sp-map-race-meta" style="font-size:11px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;margin-left:8px"></span>
+            </div>
+          </div></div>
       </div>
     </div>
 
     <!-- ── SLIDE 6 — COUNTDOWN ── -->
     <div class="sp-slide" id="sp-s6">
-      <div class="sp-bg" style="background:linear-gradient(135deg,#030810 0%,#080314 100%)"></div>
-      <div class="sp-s2-title">⏱️ URMEAZĂ</div>
-      <div style="width:100%;max-width:440px;text-align:center">
-        <div id="sp-cd-race" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(18px,4vw,30px);color:#fff;letter-spacing:2px;margin-bottom:4px">—</div>
-        <div id="sp-cd-date" style="font-size:12px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;margin-bottom:28px;letter-spacing:.5px">—</div>
-        <div style="display:flex;justify-content:center;align-items:center;gap:10px;margin-bottom:28px">
-          <div class="sp-cd-block"><div class="sp-cd-val" id="sp-cd-d">—</div><div class="sp-cd-lbl">zile</div></div>
-          <div class="sp-cd-sep">:</div>
-          <div class="sp-cd-block"><div class="sp-cd-val" id="sp-cd-h">—</div><div class="sp-cd-lbl">ore</div></div>
-          <div class="sp-cd-sep">:</div>
-          <div class="sp-cd-block"><div class="sp-cd-val" id="sp-cd-m">—</div><div class="sp-cd-lbl">min</div></div>
-          <div class="sp-cd-sep">:</div>
-          <div class="sp-cd-block"><div class="sp-cd-val" id="sp-cd-s">—</div><div class="sp-cd-lbl">sec</div></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px" id="sp-cd-stats"></div>
+      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-split">
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#020010 0%,#050018 50%,#000 100%)">
+          <div class="sp-split-year">NEXT<br>RACE</div>
+          <div style="position:relative;z-index:2">
+            <div class="sp-split-quote" id="sp-cd-race-left" style="font-size:clamp(18px,3vw,30px)">—</div>
+            <div class="sp-split-km-pill" id="sp-cd-date-left">—</div>
+          </div></div>
+        <div class="sp-split-content">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">⏱️ COUNTDOWN</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(26px,4vw,48px)">URMEAZĂ<br>PROVOCAREA.</h2>
+          <div class="sp-reveal" data-delay="250" style="display:flex;gap:10px;align-items:center;justify-content:flex-start;margin-bottom:20px">
+            <div class="sp-cd-block"><span class="sp-cd-val" id="sp-cd-d">—</span><span class="sp-cd-lbl">zile</span></div>
+            <div class="sp-cd-sep">:</div>
+            <div class="sp-cd-block"><span class="sp-cd-val" id="sp-cd-h">—</span><span class="sp-cd-lbl">ore</span></div>
+            <div class="sp-cd-sep">:</div>
+            <div class="sp-cd-block"><span class="sp-cd-val" id="sp-cd-m">—</span><span class="sp-cd-lbl">min</span></div>
+            <div class="sp-cd-sep">:</div>
+            <div class="sp-cd-block"><span class="sp-cd-val" id="sp-cd-s">—</span><span class="sp-cd-lbl">sec</span></div>
+          </div>
+          <div id="sp-cd-stats" class="sp-reveal" data-delay="400" style="display:flex;gap:10px;flex-wrap:wrap"></div></div>
       </div>
     </div>
 
     <!-- ── SLIDE 7 — BUGET ── -->
     <div class="sp-slide" id="sp-s7">
-      <div class="sp-bg" style="background:linear-gradient(135deg,#06030e 0%,#06060e 100%)"></div>
-      <div class="sp-s2-title">📊 UNDE SE DUC BANII</div>
-      <div style="width:100%;max-width:480px">
-        <p style="font-size:13px;color:rgba(255,255,255,.45);font-family:'Inter',sans-serif;margin-bottom:18px;text-align:center;line-height:1.6">Sponsorizarea acoperă costuri reale. Live din planificarea mea:</p>
-        <div id="sp-budget-list" style="display:flex;flex-direction:column;gap:10px"></div>
-        <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;align-items:baseline">
-          <span style="font-size:13px;color:rgba(255,255,255,.45);font-family:'Inter',sans-serif">Total sezon 2026</span>
-          <span style="font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--accent)" id="sp-budget-total-val">—</span>
-        </div>
+      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-split">
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#060008 0%,#0a000e 50%,#000 100%)">
+          <div class="sp-split-year">BU-<br>GET</div>
+          <div style="position:relative;z-index:2">
+            <div class="sp-split-quote">Fiecare<br>leu — real<br>și justificat.</div>
+            <div class="sp-split-km-pill">live din planificare</div>
+          </div></div>
+        <div class="sp-split-content">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">📊 TRANSPARENȚĂ TOTALĂ</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(26px,4vw,48px)">UNDE SE<br>DUC BANII.</h2>
+          <p class="sp-reveal" data-delay="200" style="font-size:13px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;margin-bottom:14px;line-height:1.6">Sponsorizarea acoperă costuri reale:</p>
+          <div id="sp-budget-list" class="sp-reveal" data-delay="300" style="display:flex;flex-direction:column;gap:8px;width:100%"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.1);margin-top:12px;padding-top:10px" class="sp-reveal" data-delay="500">
+            <span style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;font-family:'Inter',sans-serif">Total sezon 2026</span>
+            <span style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--accent)" id="sp-budget-total-val">—</span>
+          </div></div>
       </div>
     </div>
 
     <!-- ── SLIDE 8 — ULTIMA ALERGARE ── -->
     <div class="sp-slide" id="sp-s8">
-      <div class="sp-bg" style="background:linear-gradient(135deg,#030a03 0%,#080e03 100%)"></div>
-      <div class="sp-s2-title">⚡ ULTIMA ALERGARE</div>
-      <div style="width:100%;max-width:560px">
-        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden">
-          <div id="sp-last-map" style="height:150px;background:rgba(255,255,255,.03)"></div>
-          <div style="padding:18px 20px">
-            <div id="sp-last-name" style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:#fff;letter-spacing:1px;margin-bottom:4px">—</div>
-            <div id="sp-last-date" style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:16px;font-family:'Inter',sans-serif">—</div>
-            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px" id="sp-last-stats"></div>
-          </div>
-        </div>
-        <div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,.25);text-align:center;font-family:'Inter',sans-serif;letter-spacing:.5px">
-          Live din Strava · actualizat automat
-        </div>
+      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-split">
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#000a02 0%,#001404 50%,#000 100%)">
+          <div class="sp-split-year">LIVE<br>STRA-<br>VA</div>
+          <div style="position:relative;z-index:2">
+            <div class="sp-split-quote" id="sp-last-name-left">—</div>
+            <div class="sp-split-km-pill" id="sp-last-date-left">—</div>
+          </div></div>
+        <div class="sp-split-content">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">⚡ DATE REALE · STRAVA SYNC</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(26px,4vw,48px)">ULTIMA<br>ALERGARE.</h2>
+          <div id="sp-last-map" class="sp-reveal" data-delay="200" style="height:130px;background:rgba(255,255,255,.03);border-radius:10px;overflow:hidden;margin-bottom:14px"></div>
+          <div id="sp-last-stats" class="sp-reveal" data-delay="350" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px"></div></div>
       </div>
     </div>
 
     <!-- ── SLIDE 9 — DE CE EU ── -->
     <div class="sp-slide" id="sp-s9">
-      <div class="sp-bg" style="background:linear-gradient(135deg,#0a0600 0%,#140a00 100%)"></div>
-      <div class="sp-s2-title">🤝 DE CE SĂ NE PARTENERIĂM</div>
-      <div style="display:flex;flex-direction:column;gap:18px;width:100%;max-width:560px">
-        <div class="sp-why-item">
-          <div class="sp-why-nr">01</div>
-          <div>
-            <div class="sp-why-title">BÂRLADUL PE HARTA TRAIL-ULUI</div>
-            <div class="sp-why-desc">La fiecare dintre cele 10 curse — Brașov, Sibiu, Bucovina — brandul tău reprezintă orașul. Sute de concurenți și spectatori la fiecare start.</div>
-          </div>
-        </div>
-        <div class="sp-why-item">
-          <div class="sp-why-nr">02</div>
-          <div>
-            <div class="sp-why-title">TRANSPARENȚĂ TOTALĂ</div>
-            <div class="sp-why-desc">Nu cuvinte — dashboard live cu fiecare km alergat, fiecare cursă, fiecare cheltuială. Singurul atlet cu acest nivel de transparență.</div>
-          </div>
-        </div>
-        <div class="sp-why-item">
-          <div class="sp-why-nr">03</div>
-          <div>
-            <div class="sp-why-title">PARTENERIATUL AUTENTIC</div>
-            <div class="sp-why-desc">Ești primul. Înainte să fie scump, înainte să fie coadă. Un parteneriat real — nu o reclamă.</div>
-          </div>
-        </div>
+      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-split">
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#0a0400 0%,#180800 50%,#000 100%)">
+          <div class="sp-split-year">DE<br>CE<br>EU</div>
+          <div style="position:relative;z-index:2">
+            <div class="sp-split-quote">Autenticitate.<br>Constanță.<br>Impact local.</div>
+            <div class="sp-split-km-pill">Bârlad · 2026</div>
+          </div></div>
+        <div class="sp-split-content">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🧩 3 MOTIVE REALE</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(26px,4vw,48px)">DE CE SĂ NE<br>PARTENERIĂM.</h2>
+          <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px">
+            <div class="sp-why-item sp-reveal" data-delay="250">
+              <div class="sp-why-nr">01</div>
+              <div><div class="sp-why-title">BÂRLADUL PE HARTA TRAIL-ULUI</div>
+              <div class="sp-why-desc">La fiecare dintre cele 10 curse — Brașov, Sinaia, Bucovina — logo-ul tău e prezent fizic, în mișcare, în fața a mii de oameni.</div></div>
+            </div>
+            <div class="sp-why-item sp-reveal" data-delay="400">
+              <div class="sp-why-nr">02</div>
+              <div><div class="sp-why-title">TRANSPARENȚĂ TOTALĂ</div>
+              <div class="sp-why-desc">Ești pe pagina de răspuns. Fiecare km, fiecare cursă, fiecare cheltuială — live, în timp real.</div></div>
+            </div>
+            <div class="sp-why-item sp-reveal" data-delay="550">
+              <div class="sp-why-nr">03</div>
+              <div><div class="sp-why-title">PARTENERIATUL AUTENTIC</div>
+              <div class="sp-why-desc">Nu reclamă. Asociere reală cu un om real din Bârlad care demonstrează că se poate.</div></div>
+            </div>
+          </div></div>
       </div>
     </div>
 
-    <!-- ── SLIDE 10 — TESTIMONIAL + CTA ── -->
+    <!-- ── SLIDE 10 — TESTIMONIAL ── -->
     <div class="sp-slide" id="sp-s10">
-      <div class="sp-bg" style="background:linear-gradient(135deg,#08040a 0%,#0a0800 100%)"></div>
-      <div class="sp-s2-title">💬 CE SPUN PARTENERII</div>
-      <div style="width:100%;max-width:500px;text-align:center">
-        <div style="font-size:64px;line-height:1;margin-bottom:14px;opacity:.6">❝</div>
-        <div id="sp-testimonial-text" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(18px,3vw,28px);color:#fff;letter-spacing:1px;line-height:1.4;margin-bottom:24px">
-          Am ales să susținem pentru că Gabriel nu promite — el arată. Fiecare km live, fiecare cursă documentată. Asta e transparența în care credem.
-        </div>
-        <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:28px">
-          <div style="background:white;border-radius:8px;padding:6px 12px;display:flex;align-items:center;min-width:80px;min-height:36px;justify-content:center">
-            <img id="sp-test-logo-img" src="" style="max-height:24px;max-width:80px;object-fit:contain;display:none">
-            <span id="sp-test-logo-text" style="font-size:11px;font-weight:700;color:#333">PRISCOM</span>
+      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-split">
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#080005 0%,#12000a 50%,#000 100%)">
+          <div class="sp-split-year" style="opacity:.05">❝</div>
+          <div style="position:relative;z-index:2;display:flex;flex-direction:column;gap:16px">
+            <div style="font-size:72px;line-height:1;color:rgba(255,255,255,.3)">❝</div>
+            <div class="sp-split-quote" id="sp-test-name-left" style="font-size:clamp(18px,3vw,28px)">PRISCOM</div>
+            <div class="sp-split-km-pill">Partener confirmat</div>
+            <div id="sp-test-logo-wrap" style="display:none;background:white;border-radius:8px;padding:8px 14px;width:fit-content">
+              <img id="sp-test-logo-img" src="" style="max-height:40px;max-width:120px;object-fit:contain;display:block">
+            </div>
+          </div></div>
+        <div class="sp-split-content">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">💬 CE SPUN PARTENERII</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(26px,4vw,48px)">REZULTATE<br>REALE.</h2>
+          <div class="sp-reveal" data-delay="250" style="margin-bottom:24px">
+            <p id="sp-testimonial-text" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(16px,2.5vw,24px);color:#fff;letter-spacing:1px;line-height:1.4">
+              „Susținem această inițiativă pentru că reprezintă exact valorile noastre: perseverență, autenticitate și mândrie locală."
+            </p>
+            <p id="sp-test-logo-text" style="font-size:12px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;margin-top:10px">— PRISCOM, Bârlad</p>
           </div>
-          <div style="text-align:left">
-            <div id="sp-test-name" style="font-size:13px;color:#fff;font-family:'Bebas Neue',sans-serif;letter-spacing:1px">SC PRISCOM DEZMEMBRĂRI AUTO SRL</div>
-            <div style="font-size:10px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif">Sponsor principal · Sezon 2026</div>
-          </div>
-        </div>
-        <a id="sp-test-wa" class="sp-cta-btn" href="#" target="_blank" rel="noopener">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          CONTACTEAZĂ-NE
-        </a>
+          <a id="sp-test-wa" href="#" target="_blank" rel="noopener" class="sp-cta-btn sp-reveal" data-delay="400"
+            style="font-size:14px;padding:12px 24px;border-radius:10px;display:inline-flex;align-items:center;gap:8px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            CONTACTEAZĂ-NE
+          </a></div>
       </div>
     </div>
-
-
-        <!-- ── SLIDE 11 — POVESTE A: ORIGINEA ── -->
+<!-- ── SLIDE 11 — POVESTE A: ORIGINEA ── -->
     <div class="sp-slide" id="sp-s11">
       <div class="sp-bg" style="background:#000"></div>
       <div class="sp-split">
@@ -6835,7 +6878,9 @@ function spPopulateLastRun(acts) {
   const statsEl=document.getElementById('sp-last-stats');
   const mapEl=document.getElementById('sp-last-map');
   if(nameEl) nameEl.textContent=last.name||'Alergare';
+  const lastL=document.getElementById('sp-last-name-left');if(lastL)lastL.textContent=last.name||'Alergare';
   if(dateEl) dateEl.textContent=last.date?new Date(last.date).toLocaleDateString('ro-RO',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'—';
+  const dateL=document.getElementById('sp-last-date-left');if(dateL&&last.date)dateL.textContent=new Date(last.date).toLocaleDateString('ro-RO',{day:'numeric',month:'long'});
   const items=[
     {val:(last.km||0).toFixed(1),lbl:'km'},
     {val:last.elev?Math.round(last.elev)+'m':'—',lbl:'D+'},
@@ -6919,13 +6964,17 @@ function spPopulateAll() {
   if(s1name)  s1name.textContent=(PROFILE.name||'BALAN GABRIEL').toUpperCase();
   if(s1aka)   s1aka.textContent=(PROFILE.nickname||'HAX')+' · '+(PROFILE.city||'BÂRLAD').toUpperCase();
   const bg1=document.getElementById('sp-s1-bg');
-  if(bg1&&PROFILE.photo) bg1.style.backgroundImage=`url('${PROFILE.photo}')`;
+  const bg1img=document.getElementById('sp-s1-bg-img');
+  if(bg1img&&PROFILE.photo) bg1img.style.backgroundImage=`url('${PROFILE.photo}')`;
+  const aka1L=document.getElementById('sp-s1-aka-left');
+  if(aka1L) aka1L.textContent=(PROFILE.nickname||'HAX')+' · '+(PROFILE.city||'BÂRLAD').toUpperCase();
   const s1streak = document.getElementById('sp-s1-streak');
   if(s1streak){ const st=calcStreak(acts); s1streak.dataset.target=st.current; s1streak.textContent='0🔥'; }
 
   // ── Slide 2 ──────────────────────────────────────────
   const s2nr=document.getElementById('sp-s2-nr');
   if(s2nr) s2nr.textContent=races.length;
+  const s2nrL=document.getElementById('sp-s2-nr-left'); if(s2nrL) s2nrL.textContent=races.length;
   const grid=document.getElementById('sp-races-grid');
   if(grid) {
     const sorted=[...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
@@ -6996,7 +7045,8 @@ function spPopulateAll() {
   if(nextRaceForCd){
     const e1=document.getElementById('sp-cd-race'), e2=document.getElementById('sp-cd-date');
     if(e1) e1.textContent=nextRaceForCd.denumire||'—';
-    if(e2) e2.textContent=nextRaceForCd.data_cursa?new Date(nextRaceForCd.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'long',year:'numeric'}):'—';
+    const cdL=document.getElementById('sp-cd-race-left');if(cdL)cdL.textContent=nextRaceForCd.denumire||'—';
+    const __noop=nextRaceForCd.data_cursa?new Date(nextRaceForCd.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'long',year:'numeric'}):'—';
     const cdStats=document.getElementById('sp-cd-stats');
     if(cdStats) cdStats.innerHTML=[
       {val:(nextRaceForCd.distanta||'?')+' km',lbl:'Distanță'},
@@ -7019,6 +7069,7 @@ function spPopulateAll() {
   const streakPill = document.getElementById('sp-s14-streak-pill');
   const streakInline = document.getElementById('sp-s14-streak-inline');
   if(streakPill) streakPill.textContent = '🔥 ' + st14.current + ' zile';
+  const s1StreakPill=document.getElementById('sp-s1-streak-pill');if(s1StreakPill)s1StreakPill.textContent='🔥 '+st14.current;
   if(streakInline) streakInline.textContent = st14.current + ' zile';
 
   // ── Slide 10 — Testimonial ────────────────────────────
@@ -7026,6 +7077,8 @@ function spPopulateAll() {
   if(mainSponsor&&mainSponsor.logo_url&&testLogo){ testLogo.src=mainSponsor.logo_url; testLogo.style.display='block'; if(testLogoTxt) testLogoTxt.style.display='none'; }
   const testName=document.getElementById('sp-test-name');
   if(testName&&mainSponsor) testName.textContent=(mainSponsor.denumire||'').toUpperCase();
+  const testNameL=document.getElementById('sp-test-name-left');if(testNameL&&mainSponsor)testNameL.textContent=(mainSponsor.denumire||'').toUpperCase();
+  const testLogoWrap=document.getElementById('sp-test-logo-wrap');if(testLogoWrap&&mainSponsor&&mainSponsor.logo_url)testLogoWrap.style.display='block';
 
   // Story slides — aplica textele si media din setari
   applyStorySlides();
