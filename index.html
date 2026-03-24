@@ -7394,24 +7394,67 @@ const STORY_SLIDES_IDS = ['s11','s12','s13','s14'];
 
 function renderStorySettings() {
   const ss = SETTINGS.story_slides || DEFAULT_SETTINGS.story_slides;
-  if (!ss) return;
-  STORY_SLIDES_IDS.forEach(sid => {
+  const acc = document.getElementById('set-story-accordion');
+  if (!ss || !acc) return;
+
+  const LABELS = {
+    s11: '🏃 Slide A — Originea',
+    s12: '⛰️ Slide B — Primul munte',
+    s13: '🌩️ Slide C — Km 130',
+    s14: '📈 Slide D — 5km → 5000km',
+  };
+
+  // Generează HTML accordion dinamic
+  acc.innerHTML = STORY_SLIDES_IDS.map(sid => {
     const d = ss[sid] || {};
-    const g = id => document.getElementById(id);
-    const set = (id, val) => { const el = g(id); if(el) el.value = val || ''; };
-    set(sid+'-left-type',  d.left_type || 'gradient');
-    set(sid+'-left-url',   d.left_url  || '');
-    set(sid+'-eyebrow',    d.eyebrow   || '');
-    // title: newlines → textarea
-    set(sid+'-title',      (d.title||'').replace(/\\n/g,'\n'));
+    const label = LABELS[sid] || sid;
+    const titleVal = (d.title||'').replace(/\n/g,'\n');
     const lines = d.lines || ['','',''];
-    set(sid+'-line0', lines[0]||'');
-    set(sid+'-line1', lines[1]||'');
-    set(sid+'-line2', lines[2]||'');
-    set(sid+'-left-quote', d.left_quote || '');
-    set(sid+'-left-label', d.left_label || '');
-    storyPreviewMedia(sid);
-  });
+    const typeOpts = ['gradient','image','video'].map(v =>
+      `<option value="${v}"${(d.left_type||'gradient')===v?' selected':''}>${
+        v==='gradient'?'Gradient (default)':v==='image'?'Imagine (URL)':'Video (YouTube / MP4 direct)'
+      }</option>`
+    ).join('');
+
+    return `<div class="set-story-block" data-slide="${sid}">
+      <div class="set-story-header" onclick="this.parentElement.classList.toggle('open')">
+        <span>${label}</span><span class="set-story-arrow">▾</span>
+      </div>
+      <div class="set-story-body">
+        <label class="set-lbl">Media stânga</label>
+        <select id="${sid}-left-type" class="set-story-sel" onchange="storyPreviewMedia('${sid}')">
+          ${typeOpts}
+        </select>
+        <input id="${sid}-left-url" class="set-story-inp" placeholder="URL imagine sau link YouTube / MP4..."
+          value="${escHtml(d.left_url||'')}" oninput="storyPreviewMedia('${sid}')">
+        <div id="${sid}-preview" class="set-story-preview" style="display:none"></div>
+
+        <label class="set-lbl" style="margin-top:10px">Eyebrow (text mic sus)</label>
+        <input id="${sid}-eyebrow" class="set-story-inp" value="${escHtml(d.eyebrow||'')}">
+
+        <label class="set-lbl">Titlu (Enter = rând nou)</label>
+        <textarea id="${sid}-title" class="set-story-inp" rows="3">${escHtml((d.title||'').replace(/\n/g,'\n'))}</textarea>
+
+        <label class="set-lbl">Paragraf 1</label>
+        <textarea id="${sid}-line0" class="set-story-inp" rows="2">${escHtml(lines[0]||'')}</textarea>
+
+        <label class="set-lbl">Paragraf 2</label>
+        <textarea id="${sid}-line1" class="set-story-inp" rows="2">${escHtml(lines[1]||'')}</textarea>
+
+        <label class="set-lbl">Paragraf 3 (accent)</label>
+        <textarea id="${sid}-line2" class="set-story-inp" rows="2">${escHtml(lines[2]||'')}</textarea>
+
+        <label class="set-lbl">Citat stânga</label>
+        <input id="${sid}-left-quote" class="set-story-inp" value="${escHtml(d.left_quote||'')}">
+
+        <label class="set-lbl">Label pill stânga</label>
+        <input id="${sid}-left-label" class="set-story-inp" value="${escHtml(d.left_label||'')}">
+      </div>
+    </div>`;
+  }).join('');
+
+  // Init preview pentru fiecare
+  STORY_SLIDES_IDS.forEach(sid => storyPreviewMedia(sid));
 }
 
 function storyPreviewMedia(sid) {
