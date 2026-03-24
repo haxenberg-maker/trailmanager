@@ -1187,17 +1187,17 @@ body.readonly label.btn { display:none !important }
   background:var(--accent);cursor:pointer;border:2px solid #000;
 }
 .sp-roi-item {
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-  border-radius:7px;padding:8px 12px;
-  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  border-radius:9px;padding:11px 14px;
+  display:flex;align-items:center;gap:12px;
   transition:background .2s,border-color .2s;
 }
 .sp-roi-item.on {
-  border-color:rgba(204,255,0,.4);background:rgba(204,255,0,.06);
+  border-color:rgba(204,255,0,.45);background:rgba(204,255,0,.07);
 }
-.sp-roi-item-icon { font-size:18px;flex-shrink:0; }
-.sp-roi-item-title { font-size:13px;font-weight:600;color:#fff;line-height:1.2; }
-.sp-roi-item-desc  { font-size:11px;color:rgba(255,255,255,.45);font-family:'Inter',sans-serif;line-height:1.3;display:none; }
+.sp-roi-item-icon { font-size:22px;flex-shrink:0; }
+.sp-roi-item-title { font-size:15px;font-weight:700;color:#fff;line-height:1.2;letter-spacing:.2px; }
+.sp-roi-item-desc  { font-size:12px;color:rgba(255,255,255,.55);font-family:'Inter',sans-serif;line-height:1.35;margin-top:3px; }
 .sp-cd-block {
   background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
   border-radius:10px;padding:12px 10px;min-width:56px;text-align:center;
@@ -1335,6 +1335,7 @@ body.readonly label.btn { display:none !important }
 .sp-split-img::after {
   content:'';position:absolute;inset:0;
   background:linear-gradient(90deg,transparent 60%,#000 100%);
+  pointer-events:none; /* nu bloca clickurile pe SVG */
 }
 .sp-split-year {
   font-family:'Bebas Neue',sans-serif;
@@ -2373,12 +2374,12 @@ body.readonly label.btn { display:none !important }
         <!-- STÂNGA: Hartă România interactivă -->
         <div class="sp-split-img" style="background:linear-gradient(160deg,#020a1a 0%,#030d12 100%);padding:0;position:relative">
           <svg id="sp-map-svg" viewBox="0 0 460 340"
-            style="width:100%;height:100%;display:block;position:absolute;inset:0"></svg>
+            style="width:100%;height:100%;display:block;position:absolute;inset:0;pointer-events:all;z-index:5"></svg>
           <!-- Info card cursă activă -->
           <div id="sp-map-info-card" style="
             position:absolute;bottom:0;left:0;right:0;
             background:linear-gradient(0deg,rgba(0,0,0,.9) 0%,transparent 100%);
-            padding:16px 14px 12px;z-index:10;min-height:60px">
+            padding:16px 14px 12px;z-index:6;min-height:60px;pointer-events:none">
             <div style="font-family:'Bebas Neue',sans-serif;font-size:15px;color:#fff;
                         letter-spacing:1px;line-height:1" id="sp-map-race-name">—</div>
             <div style="font-size:11px;color:rgba(255,255,255,.5);font-family:'Inter',sans-serif;
@@ -2496,7 +2497,7 @@ body.readonly label.btn { display:none !important }
           </div>
 
           <!-- Lista beneficii -->
-          <div id="sp-roi-grid" class="sp-reveal" data-delay="350" style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px"></div>
+          <div id="sp-roi-grid" class="sp-reveal" data-delay="350" style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;overflow-y:auto;max-height:42vh"></div>
 
           <!-- Sumar -->
           <div id="sp-roi-summary" class="sp-reveal" data-delay="500"
