@@ -1568,6 +1568,27 @@ body.readonly label.btn { display:none !important }
 }
 #sp-splash.vis .sp-splash-name,
 #sp-splash.vis .sp-splash-sub { opacity:1;transform:none; }
+.sp-splash-btn {
+  margin-top:8px;
+  padding:14px 36px;
+  background:var(--accent,#ccff00);
+  color:#000;font-weight:700;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;letter-spacing:3px;
+  border:none;border-radius:50px;
+  cursor:pointer;
+  opacity:0;transform:translateY(12px);
+  transition:opacity .5s ease .8s, transform .5s ease .8s, background .2s;
+}
+.sp-splash-btn:hover { background:#fff; }
+#sp-splash.vis .sp-splash-btn { opacity:1;transform:none; }
+.sp-splash-loading {
+  font-size:11px;color:rgba(255,255,255,.35);
+  letter-spacing:2px;font-family:'Inter',sans-serif;
+  margin-top:6px;
+  opacity:0;transition:opacity .4s ease .4s;
+}
+#sp-splash.vis .sp-splash-loading { opacity:1; }
 
 
 /* ═══════════════════════════════════════════════════
@@ -1713,6 +1734,10 @@ body.readonly label.btn { display:none !important }
   <div class="sp-splash-name" id="sp-splash-name">BALAN GABRIEL</div>
   <div class="sp-splash-sub">⛰️ SEZON 2026 · TRAIL RUNNING</div>
   <div class="sp-splash-bar"><div class="sp-splash-bar-fill" id="sp-splash-fill"></div></div>
+  <button id="sp-splash-btn" class="sp-splash-btn" onclick="spSplashUserClick()" style="display:none">
+    ▶ &nbsp;DESCHIDE PREZENTAREA
+  </button>
+  <div id="sp-splash-loading" class="sp-splash-loading">Se încarcă...</div>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -8872,18 +8897,28 @@ function checkSponsorParam() {
   const fill = window._splashFillEl;
   if (fill) fill.style.width = '100%';
 
+  // Progress la 100% și arată butonul — userul trebuie să dea click (deblochează audio)
+  if (window._splashFillTimer) clearInterval(window._splashFillTimer);
+  if (fill) {
+    fill.style.transition = 'width .4s ease';
+    fill.style.width = '100%';
+  }
   setTimeout(() => {
-    // Inchide splash cu fade
+    const btn = document.getElementById('sp-splash-btn');
+    const loading = document.getElementById('sp-splash-loading');
+    if (btn) btn.style.display = 'block';
+    if (loading) loading.style.display = 'none';
+  }, 450);
+  // Functia apelata la click pe buton
+  window.spSplashUserClick = function() {
     const splash = window._splashEl;
     if (splash) {
-      splash.style.transition = 'opacity .4s ease';
+      splash.style.transition = 'opacity .35s ease';
       splash.style.opacity = '0';
-      setTimeout(() => { splash.classList.remove('on'); splash.style.opacity = ''; }, 400);
+      setTimeout(() => { splash.classList.remove('on'); splash.style.opacity = ''; }, 350);
     }
-    if (window._splashFillTimer) clearInterval(window._splashFillTimer);
-    // Deschide prezentarea
     openSponsorPrez();
-  }, 300);
+  };
 }
 
 
