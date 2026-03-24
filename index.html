@@ -1178,15 +1178,26 @@ body.readonly label.btn { display:none !important }
   width:22px;height:22px;border-radius:50%;
   background:var(--accent);cursor:pointer;border:none;
 }
-.sp-roi-item {
-  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
-  border-radius:8px;padding:10px 12px;
-  display:flex;align-items:flex-start;gap:8px;
+.sp-roi-range {
+  width:100%;height:4px;-webkit-appearance:none;appearance:none;
+  background:rgba(255,255,255,.15);border-radius:2px;outline:none;cursor:pointer;
 }
-.sp-roi-item.on { border-color:rgba(204,255,0,.5);background:rgba(204,255,0,.07); }
-.sp-roi-item-icon { font-size:20px;flex-shrink:0;margin-top:1px; }
-.sp-roi-item-title { font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;line-height:1.2; }
-.sp-roi-item-desc  { font-size:11px;color:rgba(255,255,255,.5);font-family:'Inter',sans-serif;line-height:1.35; }
+.sp-roi-range::-webkit-slider-thumb {
+  -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+  background:var(--accent);cursor:pointer;border:2px solid #000;
+}
+.sp-roi-item {
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:7px;padding:8px 12px;
+  display:flex;align-items:center;gap:10px;
+  transition:background .2s,border-color .2s;
+}
+.sp-roi-item.on {
+  border-color:rgba(204,255,0,.4);background:rgba(204,255,0,.06);
+}
+.sp-roi-item-icon { font-size:18px;flex-shrink:0; }
+.sp-roi-item-title { font-size:13px;font-weight:600;color:#fff;line-height:1.2; }
+.sp-roi-item-desc  { font-size:11px;color:rgba(255,255,255,.45);font-family:'Inter',sans-serif;line-height:1.3;display:none; }
 .sp-cd-block {
   background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
   border-radius:10px;padding:12px 10px;min-width:56px;text-align:center;
@@ -1281,6 +1292,36 @@ body.readonly label.btn { display:none !important }
   transition:background .2s, transform .1s;
 }
 .sp-video-mute:hover { background:rgba(0,0,0,.8);transform:scale(1.1); }
+
+/* ── S2: Race rows ── */
+.sp-race-row {
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 10px;border-radius:7px;cursor:pointer;
+  border:1px solid transparent;
+  transition:background .15s, border-color .15s;
+}
+.sp-race-row:hover { background:rgba(255,255,255,.05); }
+.sp-race-row.active {
+  background:rgba(204,255,0,.07);
+  border-color:rgba(204,255,0,.3);
+}
+.sp-race-row.past { opacity:.55; }
+.sp-race-row-left { display:flex;align-items:center;gap:8px;min-width:0; }
+.sp-race-row-nr {
+  font-family:'Bebas Neue',sans-serif;font-size:14px;
+  color:rgba(255,255,255,.3);flex-shrink:0;width:24px;text-align:right;
+}
+.sp-race-row.active .sp-race-row-nr { color:var(--accent); }
+.sp-race-row-name {
+  font-size:12px;font-weight:600;color:#fff;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;
+}
+.sp-race-row-meta {
+  font-size:10px;color:rgba(255,255,255,.4);
+  font-family:'Inter',sans-serif;margin-top:1px;
+}
+.sp-race-row-right { flex-shrink:0; }
+
 /* ── STORY SLIDES — SPLIT SCREEN ── */
 .sp-split {
   display:grid;grid-template-columns:1fr 1fr;
@@ -2324,25 +2365,72 @@ body.readonly label.btn { display:none !important }
     </div>
 
     <!-- ── SLIDE 2 — SEZONUL ── -->
+    <!-- ── SLIDE 2 — CURSE + HARTĂ COMBINAT ── -->
     <div class="sp-slide" id="sp-s2">
       <div class="sp-bg" style="background:#000"></div>
-      <div class="sp-split">
-        <div class="sp-split-img" style="background:linear-gradient(160deg,#020a1a 0%,#040d1f 50%,#000 100%)">
-          <div class="sp-split-year">SEZON<br>2026</div>
-          <div style="position:relative;z-index:2">
-            <div class="sp-split-quote">🏁 Curse<br>planificate</div>
-            <div class="sp-split-km-pill" style="background:rgba(204,255,0,.15);color:#ccff00">
-              <span id="sp-s2-nr-left">—</span> curse
+      <div class="sp-split" style="grid-template-columns:1fr 1fr">
+
+        <!-- STÂNGA: Hartă România interactivă -->
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#020a1a 0%,#030d12 100%);padding:0;position:relative">
+          <svg id="sp-map-svg" viewBox="0 0 460 340"
+            style="width:100%;height:100%;display:block;position:absolute;inset:0"></svg>
+          <!-- Info card cursă activă -->
+          <div id="sp-map-info-card" style="
+            position:absolute;bottom:0;left:0;right:0;
+            background:linear-gradient(0deg,rgba(0,0,0,.9) 0%,transparent 100%);
+            padding:16px 14px 12px;z-index:10;min-height:60px">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:15px;color:#fff;
+                        letter-spacing:1px;line-height:1" id="sp-map-race-name">—</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.5);font-family:'Inter',sans-serif;
+                        margin-top:3px" id="sp-map-race-meta"></div>
+          </div>
+        </div>
+
+        <!-- DREAPTA: Lista curse + card detalii -->
+        <div class="sp-split-content" style="padding:0;overflow:hidden;display:flex;flex-direction:column">
+
+          <!-- Header -->
+          <div style="padding:16px 18px 10px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0">
+            <div class="sp-split-eyebrow sp-reveal" data-delay="0">🏁 CALENDAR 2026</div>
+            <h2 class="sp-split-title sp-reveal" data-delay="80"
+              style="font-size:clamp(22px,3vw,36px);margin-bottom:0">
+              <span id="sp-s2-nr-left">—</span> CURSE PLANIFICATE
+            </h2>
+          </div>
+
+          <!-- Lista curse scrollabila -->
+          <div id="sp-races-list" class="sp-reveal" data-delay="200"
+            style="flex:1;overflow-y:auto;padding:6px 8px;display:flex;flex-direction:column;gap:4px"></div>
+
+          <!-- Card detalii cursă (expandat la click) -->
+          <div id="sp-race-detail-card" style="
+            display:none;flex-shrink:0;
+            background:#0a0f0a;border-top:2px solid var(--accent);
+            max-height:55%;overflow-y:auto;">
+            <div style="padding:12px 14px">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+                <div>
+                  <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;
+                              letter-spacing:1px;line-height:1.1" id="sp-rd-name">—</div>
+                  <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;
+                              font-family:'Inter',sans-serif" id="sp-rd-date">—</div>
+                </div>
+                <button onclick="spCloseRaceDetail()"
+                  style="background:none;border:none;color:rgba(255,255,255,.4);
+                         font-size:18px;cursor:pointer;padding:0;line-height:1">✕</button>
+              </div>
+              <!-- Stats grid -->
+              <div id="sp-rd-stats" style="display:grid;grid-template-columns:repeat(3,1fr);
+                                             gap:6px;margin-bottom:10px"></div>
+              <!-- Info rows -->
+              <div id="sp-rd-info" style="display:flex;flex-direction:column;gap:5px"></div>
             </div>
-          </div></div>
-        <div class="sp-split-content">
-          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🏁 CALENDAR COMPETIȚIONAL</div>
-          <h2 class="sp-split-title sp-reveal" data-delay="100">SEZONUL<br>2026</h2>
-          <div class="sp-races-grid sp-reveal" data-delay="250" id="sp-races-grid" style="max-height:52vh"></div></div>
+          </div>
+
+        </div>
       </div>
     </div>
 
-    <!-- ── SLIDE 3 — DOVADA ── -->
     <div class="sp-slide" id="sp-s3">
       <div class="sp-bg" style="background:#000"></div>
       <div class="sp-split">
@@ -2388,46 +2476,42 @@ body.readonly label.btn { display:none !important }
             </div>
             <div id="sp-partner-tagline" class="sp-split-km-pill" style="margin:0">Parteneriat 2026</div>
           </div></div>
-        <div class="sp-split-content">
-          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🤝 ROI SIMULATOR</div>
-          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(26px,4vw,48px)">CÂT<br>INVESTEȘTI →<br>CE PRIMEȘTI</h2>
-          <div class="sp-reveal" data-delay="250" style="margin-bottom:12px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-              <span style="font-size:12px;color:rgba(255,255,255,.5);font-family:'Inter',sans-serif">Buget ales</span>
-              <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent)" id="sp-roi-amount">500 RON</span>
+        <div class="sp-split-content" style="padding:28px 32px">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🤝 CALCULATOR PARTENERIAT</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="80" style="font-size:clamp(24px,3.5vw,44px);margin-bottom:14px">CÂT INVESTEȘTI →<br>CE PRIMEȘTI</h2>
+
+          <!-- Slider buget -->
+          <div class="sp-reveal" data-delay="200">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+              <span style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;font-family:'Inter',sans-serif">Buget lunar ales</span>
+              <span style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--accent);letter-spacing:1px" id="sp-roi-amount">500 RON</span>
             </div>
-            <input type="range" id="sp-roi-slider" min="100" max="5000" step="100" value="500"
-              style="width:100%;height:5px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.12);border-radius:3px;outline:none;cursor:pointer;margin-bottom:14px">
+            <div style="position:relative;margin-bottom:16px">
+              <input type="range" id="sp-roi-slider" min="100" max="5000" step="100" value="500" class="sp-roi-range">
+              <div style="display:flex;justify-content:space-between;margin-top:4px">
+                <span style="font-size:9px;color:rgba(255,255,255,.3);font-family:'Inter',sans-serif">100 RON</span>
+                <span style="font-size:9px;color:rgba(255,255,255,.3);font-family:'Inter',sans-serif">5.000 RON</span>
+              </div>
+            </div>
           </div>
-          <div id="sp-roi-grid" class="sp-reveal" data-delay="400" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px"></div>
-          <div id="sp-roi-summary" class="sp-reveal" data-delay="550" style="background:rgba(204,255,0,.06);border:1px solid rgba(204,255,0,.15);border-radius:8px;padding:10px 12px;font-size:12px;color:rgba(255,255,255,.8);text-align:center;font-family:'Inter',sans-serif;line-height:1.6"></div></div>
+
+          <!-- Lista beneficii -->
+          <div id="sp-roi-grid" class="sp-reveal" data-delay="350" style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px"></div>
+
+          <!-- Sumar -->
+          <div id="sp-roi-summary" class="sp-reveal" data-delay="500"
+            style="background:rgba(204,255,0,.08);border:1px solid rgba(204,255,0,.2);
+                   border-radius:8px;padding:10px 14px;font-size:12px;
+                   color:rgba(255,255,255,.85);font-family:'Inter',sans-serif;line-height:1.6">
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- ── SLIDE 5 — HARTĂ ── -->
-    <div class="sp-slide" id="sp-s5">
-      <div class="sp-bg" style="background:#000"></div>
-      <div class="sp-split">
-        <div class="sp-split-img" style="background:linear-gradient(160deg,#000800 0%,#001200 50%,#000 100%)">
-          <div class="sp-split-year">RO-<br>MÂ-<br>NIA</div>
-          <div style="position:relative;z-index:2">
-            <div class="sp-split-quote">Brandul tău<br>pe harta<br>trail-ului.</div>
-            <div class="sp-split-km-pill" style="background:rgba(204,255,0,.15);color:#ccff00">10 curse naționale</div>
-          </div></div>
-        <div class="sp-split-content">
-          <div class="sp-split-eyebrow sp-reveal" data-delay="0">📍 PREZENȚĂ FIZICĂ LA CURSE</div>
-          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(26px,4vw,48px)">UNDE APARE<br>BRANDUL TĂU</h2>
-          <div class="sp-reveal" data-delay="250" style="position:relative;width:100%">
-            <svg id="sp-map-svg" viewBox="0 0 460 340" style="width:100%;height:auto;display:block;border-radius:10px"></svg>
-            <div id="sp-map-info" style="margin-top:8px;background:rgba(0,0,0,.6);border:1px solid var(--accent);border-radius:8px;padding:8px 12px;min-height:36px">
-              <span id="sp-map-race-name" style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;letter-spacing:1px">—</span>
-              <span id="sp-map-race-meta" style="font-size:11px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;margin-left:8px"></span>
-            </div>
-          </div></div>
-      </div>
-    </div>
+    <!-- ── SLIDE 5 — REDIRECT LA S2 (combinat) ── -->
+    <div class="sp-slide" id="sp-s5" style="display:none!important"></div>
 
-    <!-- ── SLIDE 6 — COUNTDOWN ── -->
     <div class="sp-slide" id="sp-s6">
       <div class="sp-bg" style="background:#000"></div>
       <div class="sp-split">
@@ -6979,7 +7063,7 @@ function spGoSlide(idx) {
     if (targetId === 'sp-s1')  setTimeout(spAnimateCounters, 350);
     if (targetId === 'sp-s3')  setTimeout(spAnimateBars, 350);
     if (targetId === 'sp-s4')  spInitROI();
-    if (targetId === 'sp-s5')  setTimeout(spStartMapAnimation, 300);
+    if (targetId === 'sp-s2')  setTimeout(spStartMapAnimationS2, 300);
     if (targetId === 'sp-s6')  spStartCountdown();
     if (targetId === 'sp-s7')  spAnimateBudget();
     if (targetId === 'sp-s14') setTimeout(spDrawKmChart, 300);
@@ -7023,10 +7107,11 @@ function spUpdateROI(amount) {
     const on = amount >= (t.min||0);
     return `<div class="sp-roi-item ${on?'on':''}">
       <span class="sp-roi-item-icon">${t.icon||'🎁'}</span>
-      <div>
+      <div style="flex:1;min-width:0">
         <div class="sp-roi-item-title">${escHtml(t.title||'')}</div>
-        <div class="sp-roi-item-desc">${escHtml(t.desc||'')}</div>
+        ${on ? `<div class="sp-roi-item-desc" style="display:block">${escHtml(t.desc||'')}</div>` : ''}
       </div>
+      ${on ? '<span style="color:#ccff00;font-size:14px;flex-shrink:0">✓</span>' : '<span style="color:rgba(255,255,255,.2);font-size:12px;flex-shrink:0">—</span>'}
     </div>`;
   }).join('');
   const sum = document.getElementById('sp-roi-summary');
@@ -7148,24 +7233,8 @@ function spPopulateAll() {
   if(s1streak){ const st=calcStreak(acts); s1streak.dataset.target=st.current; s1streak.textContent='0🔥'; }
 
   // ── Slide 2 ──────────────────────────────────────────
-  const s2nr=document.getElementById('sp-s2-nr');
-  if(s2nr) s2nr.textContent=races.length;
-  const s2nrL=document.getElementById('sp-s2-nr-left'); if(s2nrL) s2nrL.textContent=races.length;
-  const grid=document.getElementById('sp-races-grid');
-  if(grid) {
-    const sorted=[...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
-    const nextRace=sorted.find(r=>r.data_cursa&&new Date(r.data_cursa)>=today);
-    grid.innerHTML=sorted.map((r,i)=>{
-      const past=r.data_cursa&&new Date(r.data_cursa)<today;
-      const isNext=r.id===nextRace?.id;
-      const days=r.data_cursa?Math.ceil((new Date(r.data_cursa)-today)/86400000):null;
-      return `<div class="sp-race-card ${past?'past':''} ${isNext?'next':''}">
-        <div class="sp-race-nr">#${r.nr||i+1} ${isNext?'· 🔥 NEXT':''}${past?'· ✅ DONE':''}</div>
-        <div class="sp-race-name">${escHtml(r.denumire||'—')}</div>
-        <div class="sp-race-meta">${r.distanta||'?'} km${r.denivelare?' · '+Math.round(r.denivelare/1000)+'k D+':''}${days!==null&&!past?' · '+days+'z':''}</div>
-      </div>`;
-    }).join('');
-  }
+  // S2 combinat: liste + hartă
+  spPopulateS2(races, acts);
 
   // ── Slide 3 ──────────────────────────────────────────
   const pTotal=document.getElementById('sp-p-total'), pRuns=document.getElementById('sp-p-runs');
@@ -7676,6 +7745,232 @@ function applyStorySlides() {
   });
 }
 
+
+// ── S2: Curse + Hartă combinat ───────────────────────
+let _s2ActiveIdx = -1;
+
+function spPopulateS2(races, acts) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const sorted = [...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+  _spMapRaces = sorted;
+
+  // Populam nr curse
+  const nrEl = document.getElementById('sp-s2-nr-left');
+  if(nrEl) nrEl.textContent = races.length;
+
+  // ── Lista curse dreapta ──────────────────────────
+  const listEl = document.getElementById('sp-races-list');
+  if (listEl) {
+    listEl.innerHTML = sorted.map((r,i) => {
+      const past = r.data_cursa && new Date(r.data_cursa) < today;
+      const days = r.data_cursa ? Math.ceil((new Date(r.data_cursa)-today)/86400000) : null;
+      const hasLoc = !!spFindRaceLoc(r.denumire);
+      return `<div class="sp-race-row ${past?'past':''}" data-i="${i}" onclick="spSelectRace(${i})">
+        <div class="sp-race-row-left">
+          <div class="sp-race-row-nr">#${r.nr||i+1}</div>
+          <div>
+            <div class="sp-race-row-name">${escHtml(r.denumire||'—')}</div>
+            <div class="sp-race-row-meta">
+              ${r.distanta?r.distanta+'km':'?km'}
+              ${r.denivelare?' · '+Math.round(r.denivelare/1000)+'kD+':''}
+              ${past?' · ✅':days!==null?' · '+days+'z':''}
+            </div>
+          </div>
+        </div>
+        <div class="sp-race-row-right">
+          ${hasLoc?'<span style="color:rgba(204,255,0,.6);font-size:10px">📍</span>':''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Hartă stânga ─────────────────────────────────
+  spDrawMapS2(sorted, today);
+
+  // Selectam prima cursă viitoare
+  const nextIdx = sorted.findIndex(r=>r.data_cursa&&new Date(r.data_cursa)>=today);
+  spSelectRace(nextIdx >= 0 ? nextIdx : 0);
+}
+
+function spFindRaceLoc(denumire) {
+  if (!denumire) return null;
+  const dl = denumire.toLowerCase();
+  const LOCS = {
+    'transylvania':[46.54,25.08],'brasov':[45.65,25.61],'brașov':[45.65,25.61],
+    'skyrace':[45.36,25.56],'nemirei':[46.10,26.65],'predeal':[45.50,25.57],
+    'bucovina':[47.55,25.93],'utmb':[47.55,25.93],'2x2':[45.40,23.82],
+    'ciucas':[45.53,26.08],'ciucaș':[45.53,26.08],'azuga':[45.43,25.57],
+    'istrita':[44.88,26.82],'istrița':[44.88,26.82],'sinaia':[45.35,25.55],
+    'piatra':[46.92,26.38],'neamț':[46.92,26.38],'apuseni':[46.55,22.80],
+    'retezat':[45.38,22.90],'ceahlau':[46.97,25.95],'ceahlău':[46.97,25.95],
+  };
+  for (const [k,v] of Object.entries(LOCS)) if (dl.includes(k)) return v;
+  return null;
+}
+
+function spSelectRace(i) {
+  _s2ActiveIdx = i;
+  const r = _spMapRaces[i];
+  if (!r) return;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const past = r.data_cursa && new Date(r.data_cursa) < today;
+
+  // Highlight row
+  document.querySelectorAll('.sp-race-row').forEach((el,j) => {
+    el.classList.toggle('active', j===i);
+  });
+  // Scroll row into view
+  const activeRow = document.querySelector(`.sp-race-row[data-i="${i}"]`);
+  if (activeRow) activeRow.scrollIntoView({block:'nearest',behavior:'smooth'});
+
+  // Update hartă
+  spActivateMapDot(i, past);
+
+  // Update info card sub hartă
+  const nameEl = document.getElementById('sp-map-race-name');
+  const metaEl = document.getElementById('sp-map-race-meta');
+  if (nameEl) nameEl.textContent = r.denumire||'—';
+  if (metaEl) {
+    const days = r.data_cursa ? Math.ceil((new Date(r.data_cursa)-today)/86400000) : null;
+    metaEl.textContent = (r.distanta||'?')+'km'
+      +(r.denivelare?' · '+Math.round(r.denivelare/1000)+'k D+':'')
+      +(past?' · ✅ Finalizat':days!==null?' · '+days+' zile':'');
+  }
+}
+
+function spActivateMapDot(i, past) {
+  document.querySelectorAll('.sp-map-dot-circle').forEach((c,j) => {
+    const isActive = j===i;
+    c.setAttribute('r', isActive?'9':'6');
+    c.setAttribute('fill', isActive?(past?'#888':'#ccff00'):'#1a3a1a');
+    c.setAttribute('stroke', isActive?(past?'#aaa':'#ccff00'):'#2a4a2a');
+    c.setAttribute('opacity', isActive?'1':'.5');
+  });
+}
+
+function spDrawMapS2(races, today) {
+  const svg = document.getElementById('sp-map-svg');
+  if (!svg) return;
+
+  const COUNTIES = ["M163.4,38.0L169.8,47.4L162.0,53.5L157.0,52.6L152.6,53.4L152.7,55.3L157.5,57.4L157.7,59.6L153.6,66.4L151.4,66.6L147.3,63.6L140.2,72.6L141.5,74.4L145.7,75.2L146.6,77.0L143.7,81.1L137.7,77.3L132.7,76.0L122.8,80.7L121.7,77.1L118.4,74.8L112.5,75.1L104.3,62.7L106.1,57.5L109.0,54.2L114.5,53.4L115.8,50.4L117.2,50.0L122.0,52.0L125.4,51.1L130.5,47.4L131.0,44.3L139.3,38.2L138.2,35.7L141.8,37.2L145.7,35.7L147.5,29.8L152.0,30.8L157.8,36.5L163.4,38.0Z","M70.9,124.3L74.0,125.1L89.0,124.3L95.8,127.2L101.0,127.6L103.6,129.7L106.2,135.0L114.4,139.5L115.6,141.9L128.5,143.3L130.6,145.6L127.7,147.8L124.6,153.2L118.5,153.2L116.8,154.6L114.8,168.1L111.0,172.9L107.0,174.6L102.7,173.8L99.9,170.9L94.8,168.7L92.8,169.0L91.8,171.8L89.0,171.1L88.5,173.8L84.3,170.9L82.0,174.0L78.1,168.1L75.5,167.7L74.7,165.4L72.5,165.0L68.2,169.5L66.0,168.3L63.2,169.6L60.4,166.2L58.9,166.9L58.3,169.1L56.9,169.2L55.1,166.2L48.3,165.1L45.7,161.2L38.7,155.7L40.5,154.9L40.3,151.9L42.9,149.9L51.9,151.0L53.4,152.3L58.4,148.9L60.0,142.3L64.5,140.2L62.9,136.2L65.4,127.8L69.7,126.4L70.9,124.3Z","M104.3,62.7L112.5,75.1L118.4,74.8L122.1,77.9L122.4,82.5L119.0,89.9L123.3,97.9L129.0,103.2L127.6,107.0L130.9,108.7L130.9,110.6L126.7,116.0L133.0,126.8L132.8,130.9L129.4,130.7L127.8,134.2L128.5,143.3L115.6,141.9L114.4,139.5L106.2,135.0L103.6,129.7L101.0,127.6L95.8,127.2L89.0,124.3L74.0,125.1L70.9,124.3L74.4,121.3L73.0,118.7L74.5,114.6L78.1,111.8L78.4,107.8L81.0,105.5L82.0,102.2L80.3,100.3L86.2,94.9L88.7,90.4L90.6,82.2L96.9,75.9L97.1,67.8L104.3,62.7Z","M38.7,156.5L45.7,161.2L48.9,165.5L55.1,166.2L57.5,169.3L60.4,166.2L63.2,169.6L66.0,168.3L68.2,169.5L72.5,165.0L74.7,165.4L75.5,167.7L78.1,168.1L82.0,174.0L84.3,170.9L88.5,173.8L89.0,171.1L91.8,171.8L93.7,168.7L99.9,170.9L102.7,173.8L106.7,174.6L111.0,172.9L112.7,170.8L118.9,182.2L120.5,182.0L121.0,183.2L118.4,186.0L117.1,189.5L111.8,190.7L108.6,194.7L104.7,193.4L102.0,195.4L98.4,195.9L98.4,198.0L99.5,198.5L97.1,200.1L95.2,199.9L92.4,196.4L87.2,198.8L81.9,196.2L78.5,197.2L77.5,200.6L73.7,203.7L73.2,208.7L76.2,212.0L76.8,214.9L75.6,221.1L73.7,223.2L70.1,220.1L62.7,218.2L58.2,213.3L56.1,214.3L51.1,211.4L41.5,201.8L43.0,198.4L40.9,193.5L42.3,183.8L41.4,182.9L39.7,184.9L38.0,184.4L32.8,174.9L23.0,169.1L18.0,160.4L19.8,158.1L27.0,157.9L28.1,156.1L34.0,159.0L37.8,158.0L38.7,156.5Z","M332.3,291.0L325.5,289.5L322.2,287.4L315.8,288.7L309.9,291.9L294.8,294.8L296.7,289.5L296.4,285.4L288.7,277.9L289.2,276.1L292.3,271.8L296.6,268.7L294.8,265.2L299.9,262.5L303.8,264.4L307.8,262.0L311.3,264.4L319.9,265.0L325.3,266.9L340.5,265.6L351.9,268.2L355.9,271.5L366.8,275.7L364.3,280.6L353.8,285.2L346.5,286.1L341.6,289.9L334.1,289.0L332.3,291.0Z","M366.8,275.7L355.9,271.5L351.9,268.2L341.8,265.7L325.3,266.9L319.9,265.0L311.3,264.4L307.8,262.0L304.5,264.3L299.9,262.5L295.6,264.6L292.6,261.9L295.8,256.7L292.3,254.0L291.3,249.8L288.2,249.1L291.4,246.7L294.5,247.5L296.4,245.9L300.1,245.7L303.2,242.1L306.5,244.3L317.3,244.7L320.3,246.2L323.3,244.9L326.1,246.4L326.9,249.1L329.9,248.0L328.8,246.3L330.0,245.1L334.4,246.8L337.1,246.0L351.7,247.3L359.3,245.7L361.8,248.0L360.3,250.1L361.2,252.4L364.8,254.3L367.3,257.5L366.1,264.0L369.7,265.8L370.4,267.5L370.7,269.9L366.8,275.7Z"];
+
+  const W=460,H=340,pad=18,latMax=48.27,latMin=43.65,lngMin=20.24,lngMax=29.70;
+  const toX=lng=>pad+(lng-lngMin)/(lngMax-lngMin)*(W-pad*2);
+  const toY=lat=>pad+(latMax-lat)/(latMax-latMin)*(H-pad*2);
+
+  let inner = '<rect width="'+W+'" height="'+H+'" fill="#020a02" rx="0"/>';
+  COUNTIES.forEach(d=>{ inner+='<path d="'+d+'" fill="#0a1a0a" stroke="#122012" stroke-width="0.5"/>'; });
+
+  // HOME Bârlad
+  const hx=toX(27.67).toFixed(1),hy=toY(46.23).toFixed(1);
+  inner+='<circle cx="'+hx+'" cy="'+hy+'" r="4" fill="none" stroke="#ccff00" stroke-width="1.5" opacity=".7"/>';
+  inner+='<text x="'+hx+'" y="'+(parseFloat(hy)-7).toFixed(1)+'" font-size="6.5" fill="#ccff00" text-anchor="middle" font-weight="bold" font-family="Inter,sans-serif">HOME</text>';
+
+  // Route line
+  const locs = races.map(r=>spFindRaceLoc(r.denumire)).filter(Boolean);
+  if (locs.length>=2) {
+    inner+='<path d="M'+locs.map(([la,ln])=>toX(ln).toFixed(1)+','+toY(la).toFixed(1)).join('L')+'" fill="none" stroke="#ccff00" stroke-width="1" stroke-dasharray="3,4" opacity=".2"/>';
+  }
+
+  // Dots
+  races.forEach((r,i)=>{
+    const loc=spFindRaceLoc(r.denumire); if(!loc) return;
+    const x=toX(loc[1]).toFixed(1),y=toY(loc[0]).toFixed(1);
+    const past=r.data_cursa&&new Date(r.data_cursa)<today;
+    const big=(parseFloat(r.distanta)||0)>=100;
+    if(big&&!past) inner+='<circle cx="'+x+'" cy="'+y+'" r="14" fill="#ccff00" opacity=".06"/>';
+    inner+='<circle cx="'+x+'" cy="'+y+'" r="6" fill="#1a3a1a" stroke="#2a4a2a" stroke-width="1.5" class="sp-map-dot-circle" opacity=".5"/>';
+    inner+='<text x="'+x+'" y="'+(parseFloat(y)-9).toFixed(1)+'" font-size="7" fill="rgba(255,255,255,.4)" text-anchor="middle" font-family="Inter,sans-serif">'+(i+1)+'</text>';
+    inner+='<circle cx="'+x+'" cy="'+y+'" r="16" fill="transparent" class="sp-map-hit" data-i="'+i+'" style="cursor:pointer"/>';
+  });
+
+  svg.innerHTML = inner;
+
+  // Click handlers
+  svg.querySelectorAll('.sp-map-hit').forEach(el=>{
+    el.addEventListener('click', ()=>{ spSelectRace(parseInt(el.dataset.i)); spOpenRaceDetail(parseInt(el.dataset.i)); });
+  });
+}
+
+function spOpenRaceDetail(i) {
+  const r = _spMapRaces[i];
+  if (!r) return;
+  const card = document.getElementById('sp-race-detail-card');
+  if (!card) return;
+  card.style.display = 'block';
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const past = r.data_cursa && new Date(r.data_cursa) < today;
+  const days = r.data_cursa ? Math.ceil((new Date(r.data_cursa)-today)/86400000) : null;
+
+  document.getElementById('sp-rd-name').textContent = r.denumire||'—';
+  document.getElementById('sp-rd-date').textContent = r.data_cursa
+    ? new Date(r.data_cursa).toLocaleDateString('ro-RO',{weekday:'long',day:'numeric',month:'long',year:'numeric'})
+    : '—';
+
+  // Stats grid
+  const gpp = (DB.nutri?.gel_pret_set24||0)/24;
+  const gelCost = Math.round((r.geluri||0)*gpp);
+  const stats = [
+    { icon:'🏃', val:(r.distanta||'?')+' km',      lbl:'Distanță' },
+    { icon:'⛰️', val:r.denivelare?Math.round(r.denivelare/1000)+'k D+':'—', lbl:'Denivelare' },
+    { icon:'📅', val:past?'✅ Finalizat':days!==null?days+' zile':'—', lbl:'Status' },
+  ];
+  document.getElementById('sp-rd-stats').innerHTML = stats.map(s=>`
+    <div style="background:rgba(255,255,255,.05);border-radius:7px;padding:8px;text-align:center;border:1px solid rgba(255,255,255,.08)">
+      <div style="font-size:16px;margin-bottom:2px">${s.icon}</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--accent);line-height:1">${s.val}</div>
+      <div style="font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;font-family:'Inter',sans-serif">${s.lbl}</div>
+    </div>`).join('');
+
+  // Info rows detaliate
+  const rows = [
+    r.data_plecare  ? { icon:'🚗', lbl:'Plecare',      val: new Date(r.data_plecare).toLocaleDateString('ro-RO',{weekday:'short',day:'numeric',month:'long'}) } : null,
+    r.data_sfarsit  ? { icon:'🏠', lbl:'Întoarcere',   val: new Date(r.data_sfarsit).toLocaleDateString('ro-RO',{weekday:'short',day:'numeric',month:'long'}) } : null,
+    r.cazare!=null  ? { icon:'🏨', lbl:'Cazare',       val: r.cazare>0?r.cazare.toLocaleString('ro-RO')+' RON':(r.cazare===0?'Fără cazare':'—'), ok:r.plata_cazare } : null,
+    r.plata_concurs ? { icon:'🏁', lbl:'Înscriere',    val: r.plata_concurs.toLocaleString('ro-RO')+' RON', ok:r.plata_concurs_ok } : null,
+    r.geluri        ? { icon:'🧃', lbl:'Geluri',       val: r.geluri+' buc'+( gelCost?' · ~'+gelCost+' RON':'') } : null,
+    r.ora_start     ? { icon:'⏰', lbl:'Start',        val: r.ora_start } : null,
+    r.note          ? { icon:'📝', lbl:'Note',         val: r.note } : null,
+  ].filter(Boolean);
+
+  // Adauga adidasi daca exista in equipment
+  const shoes = (DB.equipment||[]).filter(e=>(e.tip||'').toLowerCase().includes('pantof')||(e.tip||'').toLowerCase().includes('trail'));
+  if (shoes.length) {
+    rows.push({ icon:'👟', lbl:'Adidași planificați', val: shoes.map(s=>s.denumire||s.tip||'—').join(', ') });
+  }
+
+  document.getElementById('sp-rd-info').innerHTML = rows.map(row=>`
+    <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;
+                border-bottom:1px solid rgba(255,255,255,.05)">
+      <span style="font-size:13px;flex-shrink:0;width:18px;text-align:center">${row.icon}</span>
+      <span style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;
+                   letter-spacing:.5px;font-family:'Inter',sans-serif;flex-shrink:0;
+                   min-width:72px;margin-top:1px">${row.lbl}</span>
+      <span style="font-size:12px;color:#fff;font-family:'Inter',sans-serif;flex:1;line-height:1.4">${escHtml(String(row.val||'—'))}</span>
+      ${row.ok!==undefined?`<span style="font-size:12px;flex-shrink:0">${row.ok?'✅':'⏳'}</span>`:''}
+    </div>`).join('');
+}
+
+function spCloseRaceDetail() {
+  const card = document.getElementById('sp-race-detail-card');
+  if (card) card.style.display = 'none';
+}
+
+// Start map animation pentru S2
+function spStartMapAnimationS2() {
+  if (_spMapTimer) clearInterval(_spMapTimer);
+  _spMapIdx = 0;
+  const total = _spMapRaces.length;
+  if (total > 1) {
+    _spMapTimer = setInterval(()=>{
+      if (document.getElementById('sp-race-detail-card')?.style.display === 'block') return;
+      _spMapIdx = (_spMapIdx+1) % total;
+      spSelectRace(_spMapIdx);
+    }, 2000);
+  }
+}
+
 // ── Slide 14: Grafic km pe luni ─────────────────────
 function spDrawKmChart() {
   const canvas = document.getElementById('sp-km-chart');
@@ -7865,10 +8160,11 @@ function loadSettings() {
 
 const ALL_SLIDES = [
   { id:'sp-s1',  icon:'🏃', label:'Atletul — km, ITRA, carieră' },
-  { id:'sp-s2',  icon:'🏁', label:'Sezonul 2026 — toate cursele' },
+  { id:'sp-s2',  icon:'🗺️', label:'Curse + Hartă România — interactiv' },
   { id:'sp-s3',  icon:'📊', label:'Dovada — numere reale' },
   { id:'sp-s4',  icon:'🤝', label:'Parteneriat + ROI Simulator' },
-  { id:'sp-s5',  icon:'📍', label:'Unde apar — hartă România animată' },
+  // S5 combinat in S2
+  // { id:'sp-s5',  icon:'📍', label:'Unde apar — hartă România animată' },
   { id:'sp-s6',  icon:'⏱️', label:'Countdown — next race' },
   { id:'sp-s7',  icon:'📈', label:'Unde se duc banii — buget' },
   { id:'sp-s8',  icon:'⚡', label:'Ultima alergare — live Strava' },
