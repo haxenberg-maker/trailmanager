@@ -1179,13 +1179,14 @@ body.readonly label.btn { display:none !important }
   background:var(--accent);cursor:pointer;border:none;
 }
 .sp-roi-item {
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-  border-radius:8px;padding:10px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;padding:10px 12px;
+  display:flex;align-items:flex-start;gap:8px;
 }
-.sp-roi-item.on { border-color:var(--accent);background:rgba(204,255,0,.08); }
-.sp-roi-item-icon { font-size:18px;margin-bottom:4px; }
-.sp-roi-item-title { font-size:13px;font-weight:600;color:#fff;margin-bottom:4px; }
-.sp-roi-item-desc  { font-size:12px;color:rgba(255,255,255,.55);font-family:'Inter',sans-serif;line-height:1.4; }
+.sp-roi-item.on { border-color:rgba(204,255,0,.5);background:rgba(204,255,0,.07); }
+.sp-roi-item-icon { font-size:20px;flex-shrink:0;margin-top:1px; }
+.sp-roi-item-title { font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;line-height:1.2; }
+.sp-roi-item-desc  { font-size:11px;color:rgba(255,255,255,.5);font-family:'Inter',sans-serif;line-height:1.35; }
 .sp-cd-block {
   background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
   border-radius:10px;padding:12px 10px;min-width:56px;text-align:center;
@@ -2369,15 +2370,23 @@ body.readonly label.btn { display:none !important }
       <div class="sp-bg" style="background:#000"></div>
       <div class="sp-split">
         <div class="sp-split-img" style="background:linear-gradient(160deg,#000a00 0%,#041400 50%,#000 100%)">
-          <div class="sp-split-year" style="opacity:.06">ROI</div>
-          <div style="position:relative;z-index:2;display:flex;flex-direction:column;gap:16px;align-items:flex-start">
+          <div class="sp-split-year" style="opacity:.04">ROI</div>
+          <!-- Sponsor centrat vertical -->
+          <div style="position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;
+                      align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center">
             <a id="sp-partner-logo-link" href="#" target="_blank" rel="noopener"
-              style="display:none;background:white;border-radius:10px;padding:10px 16px;text-decoration:none;transition:opacity .2s"
+              style="display:none;background:white;border-radius:12px;padding:12px 20px;
+                     text-decoration:none;transition:opacity .2s;box-shadow:0 4px 24px rgba(0,0,0,.4)"
               onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-              <img id="sp-partner-logo" src="" alt="Sponsor" style="max-height:56px;max-width:140px;object-fit:contain;display:block">
+              <img id="sp-partner-logo" src="" alt="Sponsor"
+                style="max-height:64px;max-width:150px;object-fit:contain;display:block">
             </a>
-            <div class="sp-split-quote" id="sp-partner-name" style="font-size:clamp(20px,3.5vw,36px)">FII PRIMUL</div>
-            <div class="sp-split-km-pill" id="sp-partner-tagline">Parteneriat 2026</div>
+            <div id="sp-partner-name"
+              style="font-family:'Bebas Neue',sans-serif;font-size:clamp(18px,3vw,32px);
+                     color:#fff;letter-spacing:2px;line-height:1.1;text-shadow:0 2px 12px rgba(0,0,0,.6)">
+              FII PRIMUL
+            </div>
+            <div id="sp-partner-tagline" class="sp-split-km-pill" style="margin:0">Parteneriat 2026</div>
           </div></div>
         <div class="sp-split-content">
           <div class="sp-split-eyebrow sp-reveal" data-delay="0">🤝 ROI SIMULATOR</div>
@@ -7013,9 +7022,11 @@ function spUpdateROI(amount) {
   if (grid) grid.innerHTML = tiers.map(t => {
     const on = amount >= (t.min||0);
     return `<div class="sp-roi-item ${on?'on':''}">
-      <div class="sp-roi-item-icon">${t.icon||'🎁'}</div>
-      <div class="sp-roi-item-title">${escHtml(t.title||'')}</div>
-      <div class="sp-roi-item-desc">${escHtml(t.desc||'')}</div>
+      <span class="sp-roi-item-icon">${t.icon||'🎁'}</span>
+      <div>
+        <div class="sp-roi-item-title">${escHtml(t.title||'')}</div>
+        <div class="sp-roi-item-desc">${escHtml(t.desc||'')}</div>
+      </div>
     </div>`;
   }).join('');
   const sum = document.getElementById('sp-roi-summary');
