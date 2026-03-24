@@ -1557,6 +1557,170 @@ body.readonly label.btn { display:none !important }
 #sp-splash.vis .sp-splash-name,
 #sp-splash.vis .sp-splash-sub { opacity:1;transform:none; }
 
+
+/* ═══════════════════════════════════════════════════
+   SETTINGS EDITOR — tab-based
+   ═══════════════════════════════════════════════════ */
+.set-editor {
+  display:grid;
+  grid-template-columns:180px 1fr;
+  gap:0;
+  min-height:600px;
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+  margin-bottom:0;
+}
+
+/* Sidebar */
+.set-nav {
+  background:var(--s2);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  padding:12px 8px;
+  gap:2px;
+}
+.set-nav-btn {
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:8px;
+  border:none;background:transparent;
+  color:var(--t3);font-size:12px;font-weight:500;
+  cursor:pointer;text-align:left;width:100%;
+  transition:background .15s,color .15s;
+}
+.set-nav-btn:hover { background:var(--s3);color:var(--text); }
+.set-nav-btn.active { background:var(--accent-dim);color:var(--accent);font-weight:600; }
+.set-nav-icon { font-size:15px;flex-shrink:0; }
+
+/* Content area */
+.set-content { overflow-y:auto;max-height:70vh; }
+.set-tab { display:none;padding:20px 22px; }
+.set-tab.active { display:block; }
+.set-tab-title {
+  font-size:13px;font-weight:700;color:var(--text);
+  letter-spacing:.5px;margin-bottom:18px;
+  padding-bottom:10px;border-bottom:1px solid var(--border);
+}
+
+/* Fields */
+.set-field-group { margin-bottom:16px; }
+.set-field-label {
+  font-size:11px;font-weight:600;color:var(--t2);
+  text-transform:uppercase;letter-spacing:.8px;
+  margin-bottom:6px;display:flex;align-items:center;gap:8px;
+}
+.set-badge {
+  font-size:9px;font-weight:500;letter-spacing:.5px;text-transform:uppercase;
+  background:var(--accent-dim);color:var(--accent);
+  padding:2px 7px;border-radius:10px;
+}
+.set-input {
+  width:100%;background:var(--s2);border:1px solid var(--border);
+  border-radius:8px;padding:9px 12px;
+  font-size:13px;color:var(--text);font-family:inherit;
+  transition:border-color .15s;
+}
+.set-input:focus { outline:none;border-color:var(--accent); }
+.set-textarea { resize:vertical;line-height:1.5; }
+.set-hint {
+  font-size:10px;color:var(--t4);margin-top:4px;line-height:1.5;
+}
+
+/* 2-col */
+.set-2col {
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;
+  margin-bottom:16px;
+}
+
+/* Link row */
+.set-link-row {
+  display:flex;align-items:center;gap:8px;
+  background:var(--s2);border:1px solid var(--border);
+  border-radius:8px;padding:8px 12px;
+}
+.set-link-url {
+  flex:1;font-size:11px;color:var(--accent);
+  word-break:break-all;font-family:monospace;
+}
+.set-btn-copy {
+  padding:5px 12px;font-size:11px;background:var(--s3);
+  border:1px solid var(--border);border-radius:6px;
+  color:var(--text);cursor:pointer;white-space:nowrap;
+  transition:background .15s;
+}
+.set-btn-copy:hover { background:var(--accent-dim);color:var(--accent); }
+
+/* Toggles */
+.set-toggles-grid { display:flex;flex-direction:column;gap:2px; }
+.set-toggle-row {
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 14px;border-radius:8px;
+  background:var(--s2);border:1px solid transparent;
+  transition:border-color .15s;
+}
+.set-toggle-row:hover { border-color:var(--border); }
+.set-toggle-label { font-size:13px;color:var(--text); }
+
+/* Toggle switch */
+.set-switch { position:relative;display:inline-block;width:40px;height:22px;flex-shrink:0; }
+.set-switch input { opacity:0;width:0;height:0; }
+.set-switch-slider {
+  position:absolute;cursor:pointer;inset:0;
+  background:var(--s3);border:1px solid var(--border);
+  border-radius:22px;transition:.2s;
+}
+.set-switch-slider:before {
+  content:'';position:absolute;height:16px;width:16px;
+  left:2px;bottom:2px;background:var(--t3);
+  border-radius:50%;transition:.2s;
+}
+.set-switch input:checked + .set-switch-slider { background:rgba(204,255,0,.15);border-color:var(--accent); }
+.set-switch input:checked + .set-switch-slider:before { transform:translateX(18px);background:var(--accent); }
+
+/* Media preview */
+.set-media-input { display:flex;flex-direction:column;gap:8px; }
+.set-media-preview {
+  width:100%;height:100px;border-radius:8px;overflow:hidden;
+  background:var(--s2);border:1px solid var(--border);
+}
+
+/* Add buttons */
+.set-btn-add {
+  width:100%;padding:10px;margin-top:8px;
+  border:1px dashed var(--border);border-radius:8px;
+  background:transparent;color:var(--t3);
+  font-size:12px;cursor:pointer;
+  transition:border-color .15s,color .15s;
+}
+.set-btn-add:hover { border-color:var(--accent);color:var(--accent); }
+.set-btn-ghost {
+  background:transparent;border:1px solid var(--border);
+  border-radius:8px;padding:8px 14px;font-size:12px;
+  color:var(--t3);cursor:pointer;transition:all .15s;
+}
+.set-btn-ghost:hover { border-color:var(--accent);color:var(--accent); }
+
+/* Story accordion — reuse existing set-story-* classes */
+
+/* Save bar */
+.set-save-bar {
+  display:flex;gap:10px;
+  padding:16px 0 0;
+  position:sticky;bottom:0;
+  background:var(--s1);
+  border-top:1px solid var(--border);
+  margin-top:16px;
+}
+
+@media(max-width:700px){
+  .set-editor { grid-template-columns:1fr; }
+  .set-nav { flex-direction:row;flex-wrap:wrap;border-right:none;border-bottom:1px solid var(--border); }
+  .set-nav-btn { padding:7px 10px;font-size:11px; }
+  .set-nav-icon { display:none; }
+  .set-2col { grid-template-columns:1fr; }
+  .set-content { max-height:none; }
+}
 </style>
 </head>
 <body class="readonly">
@@ -3052,283 +3216,259 @@ body.readonly label.btn { display:none !important }
   <div class="ph-right">
     <button class="btn btn-ghost btn-sm" onclick="openSponsorPrez()" style="color:var(--accent);border-color:var(--accent-border)">▶ Deschide prezentarea</button>
   </div>
-</div>
 
-<!-- ── LINK SPONSOR ── -->
-<div class="bk-card" style="padding:16px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px">🔗 Link pentru sponsori</div>
-  <div style="background:var(--s2);border-radius:8px;padding:12px;font-size:12px;color:var(--accent);display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
-    <span style="flex:1;word-break:break-all" id="set-sponsor-link">—</span>
-    <button class="btn btn-ghost btn-sm" onclick="setCopyLink()">📋 Copiază</button>
-  </div>
-  <div style="font-size:10px;color:var(--t3);margin-top:6px">Trimite acest link sponsorilor — deschide pagina de prezentare înainte de dashboard.</div>
-</div>
+<!-- ═══ SETĂRI EDITOR ═══ -->
+<div class="set-editor">
 
-<!-- ── MEDIA ── -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">📸 Media</div>
-  <div class="fi" style="margin-bottom:14px">
-    <span class="lbl">URL Poză profil</span>
-    <div style="display:flex;gap:8px;align-items:center">
-      <input type="url" id="set-photo-url" placeholder="https://i.imgur.com/..." style="font-size:12px;flex:1">
-      <div id="set-photo-preview" style="display:none"><img id="set-photo-img" src="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)"></div>
-    </div>
-    <div style="font-size:10px;color:var(--t3);margin-top:4px">Link direct la imagine (imgur, cloudinary etc). Apare ca avatar circular în hero.</div>
-  </div>
-  <div class="fi">
-    <span class="lbl">URL Video embed</span>
-    <input type="url" id="set-video-url" placeholder="https://www.youtube.com/embed/..." style="font-size:12px">
-    <div style="font-size:10px;color:var(--t3);margin-top:4px">YouTube: copiază ID-ul din link și pune-l după /embed/. Ex: youtube.com/shorts/<strong>kD_nMBhmG_Y</strong> → youtube.com/embed/<strong>kD_nMBhmG_Y</strong></div>
-  </div>
-</div>
+  <!-- Sidebar navigare -->
+  <nav class="set-nav">
+    <button class="set-nav-btn active" onclick="setTab(this,'tab-general')">
+      <span class="set-nav-icon">🔗</span><span>General</span>
+    </button>
+    <button class="set-nav-btn" onclick="setTab(this,'tab-profil')">
+      <span class="set-nav-icon">👤</span><span>Profil</span>
+    </button>
+    <button class="set-nav-btn" onclick="setTab(this,'tab-prezentare')">
+      <span class="set-nav-icon">🎬</span><span>Prezentare</span>
+    </button>
+    <button class="set-nav-btn" onclick="setTab(this,'tab-story')">
+      <span class="set-nav-icon">📖</span><span>Poveste</span>
+    </button>
+    <button class="set-nav-btn" onclick="setTab(this,'tab-roi')">
+      <span class="set-nav-icon">💰</span><span>Pachete ROI</span>
+    </button>
+    <button class="set-nav-btn" onclick="setTab(this,'tab-faq')">
+      <span class="set-nav-icon">❓</span><span>FAQ</span>
+    </button>
+    <button class="set-nav-btn" onclick="setTab(this,'tab-slideuri')">
+      <span class="set-nav-icon">🎞️</span><span>Ordine</span>
+    </button>
+    <button class="set-nav-btn" onclick="setTab(this,'tab-dashboard')">
+      <span class="set-nav-icon">📊</span><span>Dashboard</span>
+    </button>
+  </nav>
 
-<!-- ── TEXTE ── -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">💬 Texte landing</div>
-  <div class="fi" style="margin-bottom:12px">
-    <span class="lbl">Citat personal (apare bold, mare)</span>
-    <input type="text" id="set-quote" style="font-size:13px">
-  </div>
-  <div class="fi" style="margin-bottom:12px">
-    <span class="lbl">Subtitlu hero (sub nume)</span>
-    <input type="text" id="set-hero-sub" style="font-size:12px">
-    <div style="font-size:10px;color:var(--t3);margin-top:3px">Ex: "Ultra-trail runner din Bârlad. 10 curse, 517km."</div>
-  </div>
-  <div class="fi" style="margin-bottom:12px">
-    <span class="lbl">Mesaj de bun-venit (primul text vizibil sub hero)</span>
-    <textarea id="set-welcome-msg" rows="2" style="font-size:12px;width:100%;resize:vertical;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text)"></textarea>
-    <div style="font-size:10px;color:var(--t3);margin-top:3px">Apare imediat după countdown — primul lucru pe care îl citește sponsorul.</div>
-  </div>
-  <div class="fi" style="margin-bottom:12px">
-    <span class="lbl">Poveste scurtă (paragraful introductiv)</span>
-    <textarea id="set-story-short" rows="3" style="font-size:12px;width:100%;resize:vertical;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text)"></textarea>
-    <div style="font-size:10px;color:var(--t3);margin-top:3px">Apare în cardul "Povestea" de pe landing, după citat.</div>
-  </div>
-  <div class="fi" style="margin-bottom:12px">
-    <span class="lbl">Email contact sponsor</span>
-    <input type="email" id="set-contact-email" style="font-size:12px">
-  </div>
-  <div class="fi">
-    <span class="lbl">Număr WhatsApp (format internațional, fără +)</span>
-    <input type="tel" id="set-whatsapp-phone" placeholder="ex: 40712345678" style="font-size:12px">
-    <div style="font-size:10px;color:var(--t3);margin-top:3px">Apare pe butonul de contact din landing. Ex: România → 40 urmat de număr fără 0.</div>
-  </div>
-</div>
+  <!-- Content -->
+  <div class="set-content">
 
-<!-- ── PACHETE SPONSORIZARE ── -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">💰 Pachete sponsorizare</div>
-  <div style="font-size:11px;color:var(--t3);margin-bottom:14px">Nivelele din simulatorul ROI — suma minimă + ce primești.</div>
-  <div id="set-packages-list"></div>
-  <button class="btn btn-ghost btn-sm" onclick="setAddPackage()" style="margin-top:10px;width:100%">+ Adaugă nivel</button>
-</div>
+    <!-- ── TAB GENERAL ── -->
+    <div class="set-tab active" id="tab-general">
+      <div class="set-tab-title">🔗 Link & Contact</div>
 
-<!-- ── FAQ ── -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px">❓ FAQ</div>
-  <div id="set-faq-list"></div>
-  <button class="btn btn-ghost btn-sm" onclick="setAddFaq()" style="margin-top:10px;width:100%">+ Adaugă întrebare</button>
-</div>
-
-<!-- ── TOGGLES SECTIUNI ── -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px">👁 Vizibilitate landing</div>
-  <div style="display:flex;flex-direction:column;gap:12px">
-    <!-- Landing activ -->
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer;padding-bottom:12px;border-bottom:1px solid var(--border)">
-      <div>
-        <span style="font-weight:600">🌐 Landing activ (?sponsor=1)</span>
-        <div style="font-size:10px;color:var(--t3);margin-top:2px">Dezactivează dacă nu vrei ca sponsorii să vadă pagina momentan</div>
-      </div>
-      <input type="checkbox" id="set-landing-active" class="set-toggle" style="width:20px;height:20px;accent-color:var(--accent);flex-shrink:0">
-    </label>
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
-      <span>🗺️ Hartă curse</span>
-      <input type="checkbox" id="set-show-map" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
-    </label>
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
-      <span>🎥 Video</span>
-      <input type="checkbox" id="set-show-video" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
-    </label>
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
-      <span>💸 Unde se duc banii</span>
-      <input type="checkbox" id="set-show-budget" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
-    </label>
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
-      <span>❓ FAQ</span>
-      <input type="checkbox" id="set-show-faq" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
-    </label>
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
-      <span>⛰️ Timeline carieră</span>
-      <input type="checkbox" id="set-show-timeline" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
-    </label>
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
-      <span>💰 Simulator parteneriat (ROI)</span>
-      <input type="checkbox" id="set-show-roi" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
-    </label>
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
-      <span>🤝 Secțiunea "De ce să mă susții"</span>
-      <input type="checkbox" id="set-show-benefits" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
-    </label>
-  </div>
-</div>
-
-<!-- ── GENERAL ── -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">🎯 General dashboard</div>
-  <div class="fi" style="margin-bottom:12px">
-    <span class="lbl">Target km anual</span>
-    <input type="number" id="set-target-km" placeholder="5000" style="font-size:13px">
-  </div>
-  <div class="fi">
-    <span class="lbl">Titlu dashboard</span>
-    <input type="text" id="set-dash-title" placeholder="SEZONUL BESTIEI" style="font-size:13px">
-  </div>
-</div>
-
-<!-- ── ORDINE SLIDE-URI PREZENTARE ── -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px">🎞️ Ordine slide-uri prezentare</div>
-  <div style="font-size:11px;color:var(--t3);margin-bottom:14px">Trage sau folosește ↑↓ pentru a reordona. Dezactivează slide-urile pe care nu le vrei.</div>
-  <div id="set-slides-order" style="display:flex;flex-direction:column;gap:6px"></div>
-  <button class="btn btn-ghost btn-sm" onclick="resetSlideOrder()" style="margin-top:10px;font-size:11px">↺ Resetează la ordinea implicită</button>
-</div>
-
-<div style="display:flex;gap:10px;margin-bottom:24px">
-  
-<!-- ── STORY SLIDES EDITOR ── -->
-<div class="set-section" style="margin-top:24px">
-  <div class="set-section-title">📖 Slide-uri Poveste (S11-S14)</div>
-  <div style="font-size:11px;color:var(--t3);margin-bottom:16px">Editează textele și media pentru fiecare slide de poveste.</div>
-
-  <div id="set-story-accordion">
-    <!-- S11 -->
-    <div class="set-story-block" data-slide="s11">
-      <div class="set-story-header" onclick="this.parentElement.classList.toggle('open')">
-        <span>🏃 Slide A — Originea</span><span class="set-story-arrow">▾</span>
-      </div>
-      <div class="set-story-body">
-        <div class="set-story-media">
-          <label class="set-lbl">Media stânga</label>
-          <div style="display:flex;gap:8px;margin-bottom:8px">
-            <select id="s11-left-type" class="set-story-sel" onchange="storyPreviewMedia('s11')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video embed (YouTube)</option>
-            </select>
-          </div>
-          <input id="s11-left-url" placeholder="URL imagine sau embed YouTube..." class="set-story-inp" oninput="storyPreviewMedia('s11')">
-          <div id="s11-preview" class="set-story-preview"></div>
+      <div class="set-field-group">
+        <div class="set-field-label">Link prezentare sponsor</div>
+        <div class="set-link-row">
+          <div class="set-link-url" id="set-sponsor-link">—</div>
+          <button class="set-btn-copy" onclick="setCopyLink()">📋 Copiază</button>
         </div>
-        <label class="set-lbl">Eyebrow</label>
-        <input id="s11-eyebrow" class="set-story-inp" placeholder="ex: 🏃 ORIGINEA">
-        <label class="set-lbl">Titlu (fiecare rând = Enter)</label>
-        <textarea id="s11-title" class="set-story-inp" rows="3" placeholder="O SINGURĂ
-DECIZIE
-PROPRIE."></textarea>
-        <label class="set-lbl">Paragraf 1</label>
-        <textarea id="s11-line0" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Paragraf 2</label>
-        <textarea id="s11-line1" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Paragraf 3 (accent)</label>
-        <textarea id="s11-line2" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Citat stânga</label>
-        <input id="s11-left-quote" class="set-story-inp" placeholder='"Nimic nu mai era al meu."'>
-        <label class="set-lbl">Label pill stânga</label>
-        <input id="s11-left-label" class="set-story-inp" placeholder="Km 0">
+        <div class="set-hint">Trimite acest link sponsorilor — se deschide direct prezentarea</div>
       </div>
-    </div>
-    <!-- S12 -->
-    <div class="set-story-block" data-slide="s12">
-      <div class="set-story-header" onclick="this.parentElement.classList.toggle('open')">
-        <span>⛰️ Slide B — Primul munte</span><span class="set-story-arrow">▾</span>
-      </div>
-      <div class="set-story-body">
-        <div class="set-story-media">
-          <label class="set-lbl">Media stânga</label>
-          <div style="display:flex;gap:8px;margin-bottom:8px">
-            <select id="s12-left-type" class="set-story-sel" onchange="storyPreviewMedia('s12')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video embed (YouTube)</option>
-            </select>
-          </div>
-          <input id="s12-left-url" placeholder="URL imagine sau embed YouTube..." class="set-story-inp" oninput="storyPreviewMedia('s12')">
-          <div id="s12-preview" class="set-story-preview"></div>
-        </div>
-        <label class="set-lbl">Eyebrow</label>
-        <input id="s12-eyebrow" class="set-story-inp">
-        <label class="set-lbl">Titlu</label>
-        <textarea id="s12-title" class="set-story-inp" rows="3"></textarea>
-        <label class="set-lbl">Paragraf 1</label><textarea id="s12-line0" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Paragraf 2</label><textarea id="s12-line1" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Paragraf 3 (accent)</label><textarea id="s12-line2" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Citat stânga</label><input id="s12-left-quote" class="set-story-inp">
-        <label class="set-lbl">Label pill stânga</label><input id="s12-left-label" class="set-story-inp">
-      </div>
-    </div>
-    <!-- S13 -->
-    <div class="set-story-block" data-slide="s13">
-      <div class="set-story-header" onclick="this.parentElement.classList.toggle('open')">
-        <span>🌩️ Slide C — Km 130</span><span class="set-story-arrow">▾</span>
-      </div>
-      <div class="set-story-body">
-        <div class="set-story-media">
-          <label class="set-lbl">Media stânga</label>
-          <div style="display:flex;gap:8px;margin-bottom:8px">
-            <select id="s13-left-type" class="set-story-sel" onchange="storyPreviewMedia('s13')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video embed (YouTube)</option>
-            </select>
-          </div>
-          <input id="s13-left-url" placeholder="URL imagine sau embed YouTube..." class="set-story-inp" oninput="storyPreviewMedia('s13')">
-          <div id="s13-preview" class="set-story-preview"></div>
-        </div>
-        <label class="set-lbl">Eyebrow</label><input id="s13-eyebrow" class="set-story-inp">
-        <label class="set-lbl">Titlu</label><textarea id="s13-title" class="set-story-inp" rows="3"></textarea>
-        <label class="set-lbl">Paragraf 1</label><textarea id="s13-line0" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Paragraf 2</label><textarea id="s13-line1" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Paragraf 3 (accent)</label><textarea id="s13-line2" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Citat stânga</label><input id="s13-left-quote" class="set-story-inp">
-        <label class="set-lbl">Label pill stânga</label><input id="s13-left-label" class="set-story-inp">
-      </div>
-    </div>
-    <!-- S14 -->
-    <div class="set-story-block" data-slide="s14">
-      <div class="set-story-header" onclick="this.parentElement.classList.toggle('open')">
-        <span>📈 Slide D — 5km → 5000km</span><span class="set-story-arrow">▾</span>
-      </div>
-      <div class="set-story-body">
-        <div class="set-story-media">
-          <label class="set-lbl">Media stânga</label>
-          <div style="display:flex;gap:8px;margin-bottom:8px">
-            <select id="s14-left-type" class="set-story-sel" onchange="storyPreviewMedia('s14')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video embed (YouTube)</option>
-            </select>
-          </div>
-          <input id="s14-left-url" placeholder="URL imagine sau embed YouTube..." class="set-story-inp" oninput="storyPreviewMedia('s14')">
-          <div id="s14-preview" class="set-story-preview"></div>
-        </div>
-        <label class="set-lbl">Eyebrow</label><input id="s14-eyebrow" class="set-story-inp">
-        <label class="set-lbl">Titlu</label><textarea id="s14-title" class="set-story-inp" rows="3"></textarea>
-        <label class="set-lbl">Paragraf 1</label><textarea id="s14-line0" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Paragraf 2</label><textarea id="s14-line1" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Paragraf 3 (accent)</label><textarea id="s14-line2" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Citat stânga</label><input id="s14-left-quote" class="set-story-inp">
-        <label class="set-lbl">Label pill stânga</label><input id="s14-left-label" class="set-story-inp">
-      </div>
-    </div>
-  </div>
-</div>
 
-<button class="btn btn-primary" onclick="saveSettings()" style="flex:1;padding:14px;font-size:14px">💾 Salvează toate setările</button>
-  <button class="btn btn-ghost" onclick="openSponsorPrez()" style="padding:14px">▶</button>
-</div>
-</div>
+      <div class="set-2col">
+        <div class="set-field-group">
+          <div class="set-field-label">Email contact</div>
+          <input type="email" id="set-contact-email" class="set-input" placeholder="email@exemplu.com">
+        </div>
+        <div class="set-field-group">
+          <div class="set-field-label">WhatsApp (fără +)</div>
+          <input type="tel" id="set-whatsapp-phone" class="set-input" placeholder="40712345678">
+          <div class="set-hint">Apare pe butonul de contact</div>
+        </div>
+      </div>
 
+      <div class="set-field-group">
+        <div class="set-field-label">Citat personal
+          <span class="set-badge">S1 · Atletul</span>
+        </div>
+        <textarea id="set-quote" class="set-input set-textarea" rows="2" placeholder="Nu alerg să câștig. Alerg ca să demonstrez că din Bârlad se poate."></textarea>
+      </div>
+
+      <div class="set-field-group">
+        <div class="set-field-label">Text testimonial
+          <span class="set-badge">S10 · Testimonial</span>
+        </div>
+        <textarea id="set-testimonial-text" class="set-input set-textarea" rows="3" placeholder="„Susținem această inițiativă pentru că reprezintă exact valorile noastre...""></textarea>
+        <div class="set-hint">Apare pe ultimul slide al prezentării</div>
+      </div>
+
+      <div class="set-field-group">
+        <div class="set-field-label">Text testimonial — semnătură</div>
+        <input id="set-testimonial-author" class="set-input" placeholder="— PRISCOM, Bârlad">
+      </div>
+
+      <div class="set-toggles-grid">
+        <div class="set-toggle-row">
+          <div>
+            <div class="set-toggle-label">🌐 Prezentare activă</div>
+            <div class="set-hint">Dacă e dezactivat, link-ul afișează pagină blocată</div>
+          </div>
+          <label class="set-switch"><input type="checkbox" id="set-landing-active"><span class="set-switch-slider"></span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB PROFIL ── -->
+    <div class="set-tab" id="tab-profil">
+      <div class="set-tab-title">👤 Profil & Media</div>
+
+      <div class="set-field-group">
+        <div class="set-field-label">Poză profil
+          <span class="set-badge">S1 · Atletul (background)</span>
+        </div>
+        <div class="set-media-input">
+          <input type="url" id="set-photo-url" class="set-input" placeholder="https://i.imgur.com/... sau cloudinary.com/...">
+          <div id="set-photo-preview" class="set-media-preview" style="display:none">
+            <img id="set-photo-img" src="" style="width:100%;height:100%;object-fit:cover;border-radius:8px">
+          </div>
+        </div>
+        <div class="set-hint">Imgur, Cloudinary, orice URL direct la imagine</div>
+      </div>
+
+      <div class="set-field-group">
+        <div class="set-field-label">Subtitlu hero</div>
+        <input type="text" id="set-hero-sub" class="set-input" placeholder="Ultra-trail runner din Bârlad. Sezonul 2026 — 10 curse...">
+      </div>
+
+      <div class="set-field-group">
+        <div class="set-field-label">Mesaj bun-venit</div>
+        <textarea id="set-welcome-msg" class="set-input set-textarea" rows="3" placeholder="Bun venit! Sunt Gabriel Balan..."></textarea>
+        <div class="set-hint">Primul text vizibil pentru un sponsor care deschide link-ul</div>
+      </div>
+
+      <div class="set-field-group">
+        <div class="set-field-label">Poveste scurtă</div>
+        <textarea id="set-story-short" class="set-input set-textarea" rows="4" placeholder="2025: 3.000km alergați..."></textarea>
+        <div class="set-hint">Paragraful introductiv din cardul de poveste</div>
+      </div>
+
+      <!-- S9 De ce eu texts -->
+      <div class="set-field-group">
+        <div class="set-field-label">S9 — Motivul 1 (titlu)</div>
+        <input id="set-why1-title" class="set-input" placeholder="BÂRLADUL PE HARTA TRAIL-ULUI">
+      </div>
+      <div class="set-field-group">
+        <div class="set-field-label">S9 — Motivul 1 (descriere)</div>
+        <textarea id="set-why1-desc" class="set-input set-textarea" rows="2"></textarea>
+      </div>
+      <div class="set-field-group">
+        <div class="set-field-label">S9 — Motivul 2 (titlu)</div>
+        <input id="set-why2-title" class="set-input" placeholder="TRANSPARENȚĂ TOTALĂ">
+      </div>
+      <div class="set-field-group">
+        <div class="set-field-label">S9 — Motivul 2 (descriere)</div>
+        <textarea id="set-why2-desc" class="set-input set-textarea" rows="2"></textarea>
+      </div>
+      <div class="set-field-group">
+        <div class="set-field-label">S9 — Motivul 3 (titlu)</div>
+        <input id="set-why3-title" class="set-input" placeholder="PARTENERIATUL AUTENTIC">
+      </div>
+      <div class="set-field-group">
+        <div class="set-field-label">S9 — Motivul 3 (descriere)</div>
+        <textarea id="set-why3-desc" class="set-input set-textarea" rows="2"></textarea>
+      </div>
+    </div>
+
+    <!-- ── TAB PREZENTARE ── -->
+    <div class="set-tab" id="tab-prezentare">
+      <div class="set-tab-title">🎬 Vizibilitate Secțiuni</div>
+      <div class="set-hint" style="margin-bottom:20px">Controlează ce secțiuni apar în prezentare și pe pagina publică</div>
+
+      <div class="set-toggles-grid">
+        <div class="set-toggle-row">
+          <span class="set-toggle-label">🗺️ Hartă curse (S5)</span>
+          <label class="set-switch"><input type="checkbox" id="set-show-map"><span class="set-switch-slider"></span></label>
+        </div>
+        <div class="set-toggle-row">
+          <span class="set-toggle-label">🎥 Video (landing)</span>
+          <label class="set-switch"><input type="checkbox" id="set-show-video"><span class="set-switch-slider"></span></label>
+        </div>
+        <div class="set-toggle-row">
+          <span class="set-toggle-label">💸 Unde se duc banii (S7)</span>
+          <label class="set-switch"><input type="checkbox" id="set-show-budget"><span class="set-switch-slider"></span></label>
+        </div>
+        <div class="set-toggle-row">
+          <span class="set-toggle-label">❓ FAQ (landing)</span>
+          <label class="set-switch"><input type="checkbox" id="set-show-faq"><span class="set-switch-slider"></span></label>
+        </div>
+        <div class="set-toggle-row">
+          <span class="set-toggle-label">⛰️ Timeline carieră</span>
+          <label class="set-switch"><input type="checkbox" id="set-show-timeline"><span class="set-switch-slider"></span></label>
+        </div>
+        <div class="set-toggle-row">
+          <span class="set-toggle-label">💰 Simulator ROI (S4)</span>
+          <label class="set-switch"><input type="checkbox" id="set-show-roi"><span class="set-switch-slider"></span></label>
+        </div>
+        <div class="set-toggle-row">
+          <span class="set-toggle-label">🤝 De ce eu (S9)</span>
+          <label class="set-switch"><input type="checkbox" id="set-show-benefits"><span class="set-switch-slider"></span></label>
+        </div>
+      </div>
+
+      <div class="set-tab-title" style="margin-top:28px">📹 Video Landing</div>
+      <div class="set-field-group">
+        <div class="set-field-label">URL Video embed (YouTube sau MP4 direct)</div>
+        <input type="url" id="set-video-url" class="set-input" placeholder="https://www.youtube.com/embed/... sau https://res.cloudinary.com/....mp4">
+        <div class="set-hint">YouTube: youtu.be/ID sau youtube.com/watch?v=ID · MP4: link direct Cloudinary</div>
+      </div>
+    </div>
+
+    <!-- ── TAB STORY ── -->
+    <div class="set-tab" id="tab-story">
+      <div class="set-tab-title">📖 Slide-uri Poveste (S11–S14)</div>
+      <div class="set-hint" style="margin-bottom:16px">Editează textele și media pentru fiecare slide de poveste. Imaginile/video apar în panoul stâng.</div>
+
+      <div id="set-story-accordion"></div>
+    </div>
+
+    <!-- ── TAB ROI ── -->
+    <div class="set-tab" id="tab-roi">
+      <div class="set-tab-title">💰 Pachete Sponsorizare (ROI Simulator)</div>
+      <div class="set-hint" style="margin-bottom:16px">Nivelele din simulatorul ROI din slide-ul 4. Suma minimă determină ce beneficii se deblochează.</div>
+      <div id="set-packages-list"></div>
+      <button class="set-btn-add" onclick="setAddPackage()">+ Adaugă pachet</button>
+    </div>
+
+    <!-- ── TAB FAQ ── -->
+    <div class="set-tab" id="tab-faq">
+      <div class="set-tab-title">❓ Întrebări Frecvente (FAQ)</div>
+      <div class="set-hint" style="margin-bottom:16px">Apar pe pagina publică de landing pentru sponsori potențiali.</div>
+      <div id="set-faq-list"></div>
+      <button class="set-btn-add" onclick="setAddFaq()">+ Adaugă întrebare</button>
+    </div>
+
+    <!-- ── TAB ORDINE ── -->
+    <div class="set-tab" id="tab-slideuri">
+      <div class="set-tab-title">🎞️ Ordine Slide-uri Prezentare</div>
+      <div class="set-hint" style="margin-bottom:16px">Trage sau folosește ↑↓ pentru a reordona. Toggle-ul dezactivează slide-urile pe care nu le vrei.</div>
+      <div id="set-slides-order" style="display:flex;flex-direction:column;gap:6px"></div>
+      <button class="set-btn-ghost" onclick="resetSlideOrder()" style="margin-top:12px;font-size:11px">↺ Resetează la ordinea implicită</button>
+    </div>
+
+    <!-- ── TAB DASHBOARD ── -->
+    <div class="set-tab" id="tab-dashboard">
+      <div class="set-tab-title">📊 Dashboard</div>
+
+      <div class="set-2col">
+        <div class="set-field-group">
+          <div class="set-field-label">Target km anual</div>
+          <input type="number" id="set-target-km" class="set-input" placeholder="5000">
+          <div class="set-hint">Apare în bara de progres</div>
+        </div>
+        <div class="set-field-group">
+          <div class="set-field-label">Titlu dashboard</div>
+          <input type="text" id="set-dash-title" class="set-input" placeholder="SEZONUL BESTIEI">
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /set-content -->
+</div><!-- /set-editor -->
+
+<!-- Buton save sticky -->
+<div class="set-save-bar">
+  <button class="btn btn-primary" onclick="saveSettings()" style="flex:1;padding:14px;font-size:14px;border-radius:12px">💾 Salvează toate setările</button>
+  <button class="btn btn-ghost" onclick="openSponsorPrez()" style="padding:14px;border-radius:12px" title="Preview prezentare">▶</button>
+</div>
 
 </main>
 </div>
@@ -3916,6 +4056,8 @@ async function onLoggedIn() {
 
   await loadAllData(true);
   toast(isOwner ? '☁️ Bine ai revenit, ' + currentUser.email.split('@')[0] + '!' : '👁️ Mod vizualizare activ', isOwner ? 'ok' : 'info');
+  // Daca e ?prez=1 sau ?sponsor=1, deschide prezentarea dupa login
+  checkSponsorParam();
 }
 
 async function doLogout() {
@@ -7082,6 +7224,21 @@ function spPopulateAll() {
 
   // Story slides — aplica textele si media din setari
   applyStorySlides();
+  // S9 — De ce eu
+  const wi = SETTINGS.why_items || [];
+  ['1','2','3'].forEach((n,i) => {
+    const t=document.querySelector('#sp-s9 .sp-why-item:nth-child('+n+') .sp-why-title');
+    const d=document.querySelector('#sp-s9 .sp-why-item:nth-child('+n+') .sp-why-desc');
+    if(t&&wi[i]?.title) t.textContent=wi[i].title;
+    if(d&&wi[i]?.desc)  d.textContent=wi[i].desc;
+  });
+  // S10 — Testimonial
+  const testTxt = SETTINGS.testimonial_text;
+  const testAuth = SETTINGS.testimonial_author;
+  const testEl2 = document.getElementById('sp-testimonial-text');
+  const testAuthEl = document.getElementById('sp-test-logo-text');
+  if(testTxt && testEl2) testEl2.textContent = testTxt;
+  if(testAuth && testAuthEl) testAuthEl.textContent = testAuth;
 
   // WhatsApp buttons
   const waPhone=(PROFILE.whatsapp||'').replace(/\D/g,'');
@@ -7248,6 +7405,16 @@ function spActivateMapRace(i) {
 
 
 
+
+// ── Settings tabs ────────────────────────────────────
+function setTab(btn, tabId) {
+  document.querySelectorAll('.set-nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.set-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const tab = document.getElementById(tabId);
+  if (tab) tab.classList.add('active');
+}
+
 // ── Story Slides Settings ─────────────────────────────
 const STORY_SLIDES_IDS = ['s11','s12','s13','s14'];
 
@@ -7287,8 +7454,12 @@ function storyPreviewMedia(sid) {
   } else if (type === 'video') {
     // Convert YouTube watch URL to embed
     const embedUrl = url.replace('watch?v=','embed/').replace('youtu.be/','www.youtube.com/embed/');
-    const previewUrl = embedUrl + (embedUrl.includes('?') ? '&' : '?') + 'autoplay=1&mute=1&controls=0&playsinline=1';
-    prevEl.innerHTML = `<iframe src="${previewUrl}" allow="autoplay; encrypted-media" frameborder="0"></iframe>`;
+    if (url.match(/\.mp4|\.webm|\.mov/i)) {
+      prevEl.innerHTML = `<video src="${url}" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover"></video>`;
+    } else {
+      const previewUrl = embedUrl + (embedUrl.includes('?') ? '&' : '?') + 'autoplay=1&mute=1&controls=0&playsinline=1';
+      prevEl.innerHTML = `<iframe src="${previewUrl}" allow="autoplay; encrypted-media" frameborder="0"></iframe>`;
+    }
   }
 }
 
@@ -7380,6 +7551,13 @@ function applyStorySlides() {
       }
     } else if (type === 'video') {
       imgEl.style.background = '#000';
+      if (url.match(/\.mp4|\.webm|\.mov/i)) {
+        const vid = document.createElement('video');
+        vid.src = url; vid.autoplay = true; vid.loop = true; vid.playsInline = true;
+        vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none';
+        imgEl.insertBefore(vid, imgEl.firstChild);
+        vid.play().catch(()=>{ vid.muted=true; vid.play(); });
+      } else {
       const embedUrl = url.replace('watch?v=','embed/').replace('youtu.be/','www.youtube.com/embed/');
       const iframe = document.createElement('iframe');
       iframe.src = embedUrl + (embedUrl.includes('?') ? '&' : '?') + 'autoplay=1&mute=1&loop=1&controls=0&playsinline=1';
@@ -7388,6 +7566,7 @@ function applyStorySlides() {
       iframe.allowFullscreen = false;
       imgEl.insertBefore(iframe, imgEl.firstChild);
     }
+      }
   });
 }
 
@@ -7756,6 +7935,40 @@ function renderSetari() {
 
   // Story slides settings
   renderStorySettings();
+
+  // Tab-specific fields
+  const setValSafe = (id, val) => { const e=document.getElementById(id); if(e) e.value = val||''; };
+
+  // S9 - De ce eu
+  const why = SETTINGS.why_items || DEFAULT_SETTINGS.why_items || [];
+  setValSafe('set-why1-title', why[0]?.title || 'BÂRLADUL PE HARTA TRAIL-ULUI');
+  setValSafe('set-why1-desc',  why[0]?.desc  || 'La fiecare dintre cele 10 curse — Brașov, Sinaia, Bucovina — logo-ul tău e prezent fizic.');
+  setValSafe('set-why2-title', why[1]?.title || 'TRANSPARENȚĂ TOTALĂ');
+  setValSafe('set-why2-desc',  why[1]?.desc  || 'Fiecare km, fiecare cursă, fiecare cheltuială — live, în timp real.');
+  setValSafe('set-why3-title', why[2]?.title || 'PARTENERIATUL AUTENTIC');
+  setValSafe('set-why3-desc',  why[2]?.desc  || 'Nu reclamă. Asociere reală cu un om real din Bârlad.');
+
+  // Testimonial
+  const testEl = document.getElementById('sp-testimonial-text');
+  setValSafe('set-testimonial-text',
+    SETTINGS.testimonial_text || (testEl ? testEl.textContent.trim() : ''));
+  setValSafe('set-testimonial-author', SETTINGS.testimonial_author || '— PRISCOM, Bârlad');
+
+  // Photo preview
+  if (s.photo_url) {
+    const prev = document.getElementById('set-photo-preview');
+    const img  = document.getElementById('set-photo-img');
+    if (img) { img.src = s.photo_url; if(prev) prev.style.display='block'; }
+  }
+  const photoInp = document.getElementById('set-photo-url');
+  if (photoInp) {
+    photoInp.addEventListener('input', function() {
+      const prev = document.getElementById('set-photo-preview');
+      const img  = document.getElementById('set-photo-img');
+      if (this.value && img) { img.src=this.value; img.onload=()=>{if(prev)prev.style.display='block';}; img.onerror=()=>{if(prev)prev.style.display='none';}; }
+      else if (prev) prev.style.display='none';
+    });
+  }
 }
 
 // ── Packages ────────────────────────────────────────
@@ -7839,6 +8052,15 @@ async function saveSettings() {
   // slide_order e updatat direct în SETTINGS de editor — nu citim din DOM
   // Story slides — citim din formulare
   SETTINGS.story_slides = readStorySettings();
+  // Testimonial
+  SETTINGS.testimonial_text   = g('set-testimonial-text');
+  SETTINGS.testimonial_author = g('set-testimonial-author');
+  // De ce eu
+  SETTINGS.why_items = [
+    { title: g('set-why1-title'), desc: g('set-why1-desc') },
+    { title: g('set-why2-title'), desc: g('set-why2-desc') },
+    { title: g('set-why3-title'), desc: g('set-why3-desc') },
+  ];
 
   // Read packages & FAQ from DOM (in case user typed without triggering onchange)
   document.querySelectorAll('#set-packages-list .set-pkg-row').forEach((row, i) => {
