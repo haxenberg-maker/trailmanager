@@ -3916,6 +3916,8 @@ async function onLoggedIn() {
 
   await loadAllData(true);
   toast(isOwner ? '☁️ Bine ai revenit, ' + currentUser.email.split('@')[0] + '!' : '👁️ Mod vizualizare activ', isOwner ? 'ok' : 'info');
+  // Daca e ?prez=1 sau ?sponsor=1, deschide prezentarea dupa login
+  checkSponsorParam();
 }
 
 async function doLogout() {
