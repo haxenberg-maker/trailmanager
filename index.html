@@ -7805,7 +7805,7 @@ function spPopulateS2(races, acts) {
       const hasLoc = !!spFindRaceLoc(r.denumire);
       const diff = spCalcDifficulty(r);
       const dateStr = r.data_cursa ? new Date(r.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'short'}) : '';
-      return `<div class="sp-race-row ${past?'past':''} ${diff.barClass}" data-i="${i}"
+      return `<div class="sp-race-row ${past?'past':''} ${diff.barClass}" id="sp-race-row-${i}" data-i="${i}"
                    onclick="spSelectRace(${i}); spOpenRaceDetail(${i})">
         <div class="sp-race-diff-bar"></div>
         <div class="sp-race-row-body">
@@ -7883,7 +7883,7 @@ function spSelectRace(i) {
     el.classList.toggle('active', j===i);
   });
   // Scroll row vizibil
-  const activeRow = document.querySelector('.sp-race-row[data-i="'+i+'"]');
+  const activeRow = document.getElementById('sp-race-row-'+i);
   if (activeRow) activeRow.scrollIntoView({block:'nearest',behavior:'smooth'});
 
   // Highlight dot pe hartă
@@ -7902,13 +7902,23 @@ function spSelectRace(i) {
 }
 
 function spActivateMapDot(i, past) {
-  document.querySelectorAll('.sp-map-dot-circle').forEach((c,j) => {
-    const isActive = j===i;
-    c.setAttribute('r', isActive?'9':'6');
-    c.setAttribute('fill', isActive?(past?'#888':'#ccff00'):'#1a3a1a');
-    c.setAttribute('stroke', isActive?(past?'#aaa':'#ccff00'):'#2a4a2a');
-    c.setAttribute('opacity', isActive?'1':'.5');
+  // Reset toate
+  document.querySelectorAll('.sp-map-dot-circle').forEach(c => {
+    c.setAttribute('r','6');
+    c.setAttribute('fill','#1a3a1a');
+    c.setAttribute('stroke','#2a4a2a');
+    c.setAttribute('opacity','.5');
+    c.style.filter = '';
   });
+  // Activeaza doar cel cu ID-ul corect
+  const dot = document.getElementById('sp-dot-'+i);
+  if (dot) {
+    dot.setAttribute('r','10');
+    dot.setAttribute('fill', past?'#888':'#ccff00');
+    dot.setAttribute('stroke', past?'#aaa':'#ccff00');
+    dot.setAttribute('opacity','1');
+    dot.style.filter = past?'':'drop-shadow(0 0 6px #ccff00)';
+  }
 }
 
 function spDrawMapS2(races, today) {
@@ -7942,9 +7952,9 @@ function spDrawMapS2(races, today) {
     const past=r.data_cursa&&new Date(r.data_cursa)<today;
     const big=(parseFloat(r.distanta)||0)>=100;
     if(big&&!past) inner+='<circle cx="'+x+'" cy="'+y+'" r="14" fill="#ccff00" opacity=".06"/>';
-    inner+='<circle cx="'+x+'" cy="'+y+'" r="6" fill="#1a3a1a" stroke="#2a4a2a" stroke-width="1.5" class="sp-map-dot-circle" opacity=".5"/>';
+    inner+='<circle cx="'+x+'" cy="'+y+'" r="6" fill="#1a3a1a" stroke="#2a4a2a" stroke-width="1.5" class="sp-map-dot-circle" id="sp-dot-'+i+'" opacity=".5"/>';
     inner+='<text x="'+x+'" y="'+(parseFloat(y)-9).toFixed(1)+'" font-size="7" fill="rgba(255,255,255,.4)" text-anchor="middle" font-family="Inter,sans-serif">'+(i+1)+'</text>';
-    inner+='<circle cx="'+x+'" cy="'+y+'" r="16" fill="transparent" class="sp-map-hit" data-i="'+i+'" style="cursor:pointer"/>';
+    inner+='<circle cx="'+x+'" cy="'+y+'" r="16" fill="transparent" class="sp-map-hit" id="sp-hit-'+i+'" data-i="'+i+'" style="cursor:pointer"/>';
   });
 
   svg.innerHTML = inner;
@@ -8026,6 +8036,7 @@ function spCloseRaceDetail() {
   document.querySelectorAll('.sp-map-dot-circle').forEach(c=>{
     c.setAttribute('r','6');c.setAttribute('fill','#1a3a1a');
     c.setAttribute('stroke','#2a4a2a');c.setAttribute('opacity','.5');
+    c.style.filter='';
   });
   const nameEl=document.getElementById('sp-map-race-name');
   const metaEl=document.getElementById('sp-map-race-meta');
