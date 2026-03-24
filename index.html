@@ -2404,27 +2404,30 @@ body.readonly label.btn { display:none !important }
             style="flex:1;overflow-y:auto;padding:6px 8px;display:flex;flex-direction:column;gap:4px"></div>
 
           <!-- Card detalii cursă (expandat la click) -->
-          <div id="sp-race-detail-card" style="
-            display:none;flex-shrink:0;
-            background:#0a0f0a;border-top:2px solid var(--accent);
-            max-height:55%;overflow-y:auto;">
-            <div style="padding:12px 14px">
-              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+          <div id="sp-race-detail-card" style="display:none;flex-shrink:0;overflow:hidden;
+            transition:max-height .3s ease;max-height:0">
+            <div style="background:rgba(0,20,0,.95);border-top:2px solid var(--accent);
+                        max-height:54vh;overflow-y:auto;padding:14px 16px">
+              <!-- Header cursă -->
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
                 <div>
-                  <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;
-                              letter-spacing:1px;line-height:1.1" id="sp-rd-name">—</div>
-                  <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;
+                  <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;
+                              letter-spacing:1px;line-height:1" id="sp-rd-name">—</div>
+                  <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:3px;
                               font-family:'Inter',sans-serif" id="sp-rd-date">—</div>
                 </div>
                 <button onclick="spCloseRaceDetail()"
-                  style="background:none;border:none;color:rgba(255,255,255,.4);
-                         font-size:18px;cursor:pointer;padding:0;line-height:1">✕</button>
+                  style="background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.6);
+                         font-size:14px;cursor:pointer;padding:5px 9px;border-radius:6px;
+                         line-height:1;transition:background .15s"
+                  onmouseover="this.style.background='rgba(255,255,255,.15)'"
+                  onmouseout="this.style.background='rgba(255,255,255,.08)'">✕ Închide</button>
               </div>
-              <!-- Stats grid -->
+              <!-- Stats 3 col -->
               <div id="sp-rd-stats" style="display:grid;grid-template-columns:repeat(3,1fr);
-                                             gap:6px;margin-bottom:10px"></div>
-              <!-- Info rows -->
-              <div id="sp-rd-info" style="display:flex;flex-direction:column;gap:5px"></div>
+                                             gap:6px;margin-bottom:12px"></div>
+              <!-- Info rows detaliate -->
+              <div id="sp-rd-info" style="display:flex;flex-direction:column"></div>
             </div>
           </div>
 
@@ -7064,7 +7067,7 @@ function spGoSlide(idx) {
     if (targetId === 'sp-s1')  setTimeout(spAnimateCounters, 350);
     if (targetId === 'sp-s3')  setTimeout(spAnimateBars, 350);
     if (targetId === 'sp-s4')  spInitROI();
-    if (targetId === 'sp-s2')  setTimeout(spStartMapAnimationS2, 300);
+    // S2: nu auto-selectam nimic la intrare
     if (targetId === 'sp-s6')  spStartCountdown();
     if (targetId === 'sp-s7')  spAnimateBudget();
     if (targetId === 'sp-s14') setTimeout(spDrawKmChart, 300);
@@ -7766,7 +7769,7 @@ function spPopulateS2(races, acts) {
       const past = r.data_cursa && new Date(r.data_cursa) < today;
       const days = r.data_cursa ? Math.ceil((new Date(r.data_cursa)-today)/86400000) : null;
       const hasLoc = !!spFindRaceLoc(r.denumire);
-      return `<div class="sp-race-row ${past?'past':''}" data-i="${i}" onclick="spSelectRace(${i})">
+      return `<div class="sp-race-row ${past?'past':''}" data-i="${i}" onclick="spSelectRace(${i}); spOpenRaceDetail(${i})">
         <div class="sp-race-row-left">
           <div class="sp-race-row-nr">#${r.nr||i+1}</div>
           <div>
@@ -7788,9 +7791,7 @@ function spPopulateS2(races, acts) {
   // ── Hartă stânga ─────────────────────────────────
   spDrawMapS2(sorted, today);
 
-  // Selectam prima cursă viitoare
-  const nextIdx = sorted.findIndex(r=>r.data_cursa&&new Date(r.data_cursa)>=today);
-  spSelectRace(nextIdx >= 0 ? nextIdx : 0);
+  // Fara auto-selectie — userul alege
 }
 
 function spFindRaceLoc(denumire) {
@@ -7816,18 +7817,18 @@ function spSelectRace(i) {
   const today = new Date(); today.setHours(0,0,0,0);
   const past = r.data_cursa && new Date(r.data_cursa) < today;
 
-  // Highlight row
+  // Highlight row în lista
   document.querySelectorAll('.sp-race-row').forEach((el,j) => {
     el.classList.toggle('active', j===i);
   });
-  // Scroll row into view
-  const activeRow = document.querySelector(`.sp-race-row[data-i="${i}"]`);
+  // Scroll row vizibil
+  const activeRow = document.querySelector('.sp-race-row[data-i="'+i+'"]');
   if (activeRow) activeRow.scrollIntoView({block:'nearest',behavior:'smooth'});
 
-  // Update hartă
+  // Highlight dot pe hartă
   spActivateMapDot(i, past);
 
-  // Update info card sub hartă
+  // Update text sub hartă
   const nameEl = document.getElementById('sp-map-race-name');
   const metaEl = document.getElementById('sp-map-race-meta');
   if (nameEl) nameEl.textContent = r.denumire||'—';
@@ -7899,6 +7900,7 @@ function spOpenRaceDetail(i) {
   const card = document.getElementById('sp-race-detail-card');
   if (!card) return;
   card.style.display = 'block';
+  requestAnimationFrame(()=>{ card.style.maxHeight = '54vh'; });
 
   const today = new Date(); today.setHours(0,0,0,0);
   const past = r.data_cursa && new Date(r.data_cursa) < today;
@@ -7955,7 +7957,19 @@ function spOpenRaceDetail(i) {
 
 function spCloseRaceDetail() {
   const card = document.getElementById('sp-race-detail-card');
-  if (card) card.style.display = 'none';
+  if (!card) return;
+  card.style.maxHeight = '0';
+  setTimeout(()=>{ card.style.display='none'; }, 300);
+  // Deselecteaza lista si harta
+  document.querySelectorAll('.sp-race-row').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.sp-map-dot-circle').forEach(c=>{
+    c.setAttribute('r','6');c.setAttribute('fill','#1a3a1a');
+    c.setAttribute('stroke','#2a4a2a');c.setAttribute('opacity','.5');
+  });
+  const nameEl=document.getElementById('sp-map-race-name');
+  const metaEl=document.getElementById('sp-map-race-meta');
+  if(nameEl) nameEl.textContent='—';
+  if(metaEl) metaEl.textContent='';
 }
 
 // Start map animation pentru S2
