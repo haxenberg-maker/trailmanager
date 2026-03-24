@@ -3952,6 +3952,24 @@ create policy "Users see own data" on trail_data
 // ══════════════════════════════════════════════════════
 const SB_URL   = 'https://jqhtistewpmiphuoxfmp.supabase.co';
 const SB_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxaHRpc3Rld3BtaXBodW94Zm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMzkwOTUsImV4cCI6MjA4ODcxNTA5NX0.NWG60gy3twOCAjVlHuuIB1eTXum5rJVKN4L2EqgPa7I';
+
+const DEFAULT_PROFILE = {
+  name:        'Balan Gabriel',
+  nickname:    'HAX',
+  city:        'Bârlad',
+  year:        2024,
+  photo:       'https://i.imgur.com/7VqAGjI.jpeg',
+  bio_short:   'Totul a început cu o simplă întrebare, în mai 2024 — de la primele alergări pe străzile Bârladului, la Bucharest 10K terminat în pragul de a vomita cu spargere de PR, și de acolo... n-am mai oprit.',
+  bio_full:    '',
+  strava_id:   '136130375',
+  itra_url:    'https://itra.run/RunnerSpace/BALAN.Gabriel%20Zaharia/5688809',
+  itra_pi:     536,
+  instagram:   '',
+  facebook:    '',
+  whatsapp:    '40',
+};
+
+let PROFILE = { ...DEFAULT_PROFILE };
 const OWNER_EMAIL = 'evoluttionofall@gmail.com';
 
 let currentUser = null;
@@ -4321,7 +4339,7 @@ window.addEventListener('load', async () => {
     if (splash) {
       splash.classList.add('on');
       // Aplica PROFILE.name daca e disponibil
-      if (splashName && PROFILE?.name) splashName.textContent = PROFILE.name.toUpperCase();
+      if (splashName && typeof PROFILE !== 'undefined' && PROFILE?.name) splashName.textContent = PROFILE.name.toUpperCase();
       requestAnimationFrame(() => splash.classList.add('vis'));
       // Animam progress bar simulat
       let pct = 0;
@@ -5442,7 +5460,6 @@ function setEqUse(type) {
 }
 function closeEQ() { document.getElementById('ov-eq').classList.remove('on'); editEQid=null; }
 
-async 
 function eqSetStatus(val) {
   const inp = document.getElementById('eq-status');
   if (inp) inp.value = val;
@@ -6878,24 +6895,6 @@ const DEFAULT_SETTINGS = {
 // ══════════════════════════════════════════════════════
 //  SETĂRI PROFIL
 // ══════════════════════════════════════════════════════
-
-const DEFAULT_PROFILE = {
-  name:        'Balan Gabriel',
-  nickname:    'HAX',
-  city:        'Bârlad',
-  year:        2024,
-  photo:       'https://i.imgur.com/7VqAGjI.jpeg',
-  bio_short:   'Totul a început cu o simplă întrebare, în mai 2024 — de la primele alergări pe străzile Bârladului, la Bucharest 10K terminat în pragul de a vomita cu spargere de PR, și de acolo... n-am mai oprit.',
-  bio_full:    '',
-  strava_id:   '136130375',
-  itra_url:    'https://itra.run/RunnerSpace/BALAN.Gabriel%20Zaharia/5688809',
-  itra_pi:     536,
-  instagram:   '',
-  facebook:    '',
-  whatsapp:    '40',
-};
-
-let PROFILE = { ...DEFAULT_PROFILE };
 
 function loadProfile() {
   try {
