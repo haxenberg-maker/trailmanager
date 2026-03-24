@@ -7474,9 +7474,13 @@ function renderStorySettings() {
         <select id="${sid}-left-type" class="set-story-sel" onchange="storyPreviewMedia('${sid}')">
           ${typeOpts}
         </select>
-        <input id="${sid}-left-url" class="set-story-inp" placeholder="URL imagine sau link YouTube / MP4..."
+        <input id="${sid}-left-url" class="set-story-inp" placeholder="URL imagine, MP4 direct (res.cloudinary.com/...) sau YouTube"
           value="${escHtml(d.left_url||'')}" oninput="storyPreviewMedia('${sid}')">
         <div id="${sid}-preview" class="set-story-preview" style="display:none"></div>
+        <div class="set-hint" style="margin-top:4px">
+          🎬 <strong>MP4 cu sunet:</strong> foloseşte URL direct din Cloudinary:<br>
+          <code style="font-size:9px;color:var(--accent)">https://res.cloudinary.com/CLOUD_NAME/video/upload/PUBLIC_ID.mp4</code>
+        </div>
 
         <label class="set-lbl" style="margin-top:10px">Eyebrow (text mic sus)</label>
         <input id="${sid}-eyebrow" class="set-story-inp" value="${escHtml(d.eyebrow||'')}">
