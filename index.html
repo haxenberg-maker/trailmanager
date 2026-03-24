@@ -1268,6 +1268,18 @@ body.readonly label.btn { display:none !important }
 .set-story-preview img { width:100%;height:100%;object-fit:cover; }
 .set-story-preview iframe { width:100%;height:100%;border:none; }
 
+
+/* ── Video mute button ── */
+.sp-video-mute {
+  position:absolute;bottom:12px;right:12px;z-index:10;
+  background:rgba(0,0,0,.55);border:none;
+  border-radius:50%;width:34px;height:34px;
+  font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);
+  transition:background .2s, transform .1s;
+}
+.sp-video-mute:hover { background:rgba(0,0,0,.8);transform:scale(1.1); }
 /* ── STORY SLIDES — SPLIT SCREEN ── */
 .sp-split {
   display:grid;grid-template-columns:1fr 1fr;
@@ -6862,6 +6874,8 @@ function closeSponsorPrez() {
   document.removeEventListener('keydown', spKeyHandler);
   if (_spMapTimer) { clearInterval(_spMapTimer); _spMapTimer = null; }
   if (_spCdTimer)  { clearInterval(_spCdTimer);  _spCdTimer  = null; }
+  // Opreste toate video-urile
+  document.querySelectorAll('[data-story-video]').forEach(v => { v.pause(); v.currentTime=0; });
 }
 
 function spKeyHandler(e) {
@@ -6917,6 +6931,16 @@ function spGoSlide(idx) {
         el.style.transitionDelay = delay + 'ms';
       });
     }
+    // Porneste video pe slide-ul activ, opreste pe celelalte
+    document.querySelectorAll('[data-story-video]').forEach(v => {
+      const onActiveSlide = v.closest('.sp-slide') === target;
+      if (onActiveSlide) {
+        v.play().catch(()=>{ v.muted=true; v.play(); });
+      } else {
+        v.pause();
+        v.currentTime = 0;
+      }
+    });
     // Animatii bazate pe ID-ul slide-ului activ, nu pe index fix
     if (targetId === 'sp-s1')  setTimeout(spAnimateCounters, 350);
     if (targetId === 'sp-s3')  setTimeout(spAnimateBars, 350);
@@ -7570,10 +7594,22 @@ function applyStorySlides() {
       imgEl.style.background = '#000';
       if (url.match(/\.mp4|\.webm|\.mov/i)) {
         const vid = document.createElement('video');
-        vid.src = url; vid.autoplay = true; vid.loop = true; vid.playsInline = true;
+        vid.src = url; vid.loop = true; vid.playsInline = true;
+        vid.muted = false; // va fi gestionat de butonul mute
+        vid.dataset.storyVideo = '1';
         vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none';
         imgEl.insertBefore(vid, imgEl.firstChild);
-        vid.play().catch(()=>{ vid.muted=true; vid.play(); });
+        vid.load(); // preload fara play
+        // Buton mute overlay
+        const muteBtn = document.createElement('button');
+        muteBtn.className = 'sp-video-mute';
+        muteBtn.innerHTML = '🔊';
+        muteBtn.onclick = (e) => {
+          e.stopPropagation();
+          vid.muted = !vid.muted;
+          muteBtn.innerHTML = vid.muted ? '🔇' : '🔊';
+        };
+        imgEl.appendChild(muteBtn);
       } else {
       const embedUrl = url.replace('watch?v=','embed/').replace('youtu.be/','www.youtube.com/embed/');
       const iframe = document.createElement('iframe');
