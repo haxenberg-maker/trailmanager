@@ -1527,7 +1527,7 @@ body.readonly label.btn { display:none !important }
   .sp-slide {
     padding:52px 14px 20px;
     justify-content:flex-start;
-    overflow-y:auto;
+    overflow-y:hidden;
   }
 
   /* Titluri slide-uri */
@@ -2432,7 +2432,7 @@ body.readonly label.btn { display:none !important }
         </div>
 
         <!-- DREAPTA: Lista curse + card detalii -->
-        <div class="sp-split-content" style="padding:0;overflow:hidden;display:flex;flex-direction:column;position:relative">
+        <div class="sp-split-content" style="padding:0;overflow:hidden;display:flex;flex-direction:column;position:relative;height:100%">
 
           <!-- Header -->
           <div style="padding:16px 18px 10px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0">
@@ -2445,7 +2445,7 @@ body.readonly label.btn { display:none !important }
 
           <!-- Lista curse scrollabila — height fix, nu se micsoraza -->
           <div id="sp-races-list" class="sp-reveal" data-delay="200"
-            style="flex:1;overflow-y:auto;padding:6px 8px;display:flex;flex-direction:column;gap:4px;min-height:0"></div>
+            style="height:100%;overflow-y:auto;padding:6px 8px;display:flex;flex-direction:column;gap:4px;min-height:0;scroll-behavior:smooth"></div>
 
           <!-- Card detalii cursă — overlay absolut, NU impinge lista -->
           <div id="sp-race-detail-card" style="display:none;position:absolute;bottom:0;left:0;right:0;
@@ -7402,8 +7402,7 @@ function spPopulateAll() {
   const roiSlider=document.getElementById('sp-roi-slider');
   if(roiSlider){ roiSlider.oninput=function(){ spUpdateROI(parseInt(this.value)); }; spUpdateROI(500); }
 
-  // ── Slide 5 — Hartă animată ───────────────────────────
-  spDrawMapAnimated(races);
+  // ── Slide 5 — combinat în S2, nu mai desenam separat
 
   // ── Slide 6 — Countdown ──────────────────────────────
   // Comparam string-uri ISO direct (YYYY-MM-DD) evitand probleme de timezone
@@ -8049,11 +8048,6 @@ function spSelectRace(i) {
 }
 
 function spActivateMapDot(i, past) {
-  console.log('[MapDot] activating dot', i, 'past:', past);
-  const allDots = document.querySelectorAll('.sp-map-dot-circle');
-  console.log('[MapDot] total dots in DOM:', allDots.length);
-  const testDot = document.getElementById('map-dot-'+i);
-  console.log('[MapDot] getElementById map-dot-'+i+':', testDot);
   // Reset toate doturile
   document.querySelectorAll('.sp-map-dot-circle').forEach(c => {
     const origFill = c.dataset.defaultFill || '#1a3a1a';
