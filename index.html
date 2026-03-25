@@ -1178,14 +1178,26 @@ body.readonly label.btn { display:none !important }
   width:22px;height:22px;border-radius:50%;
   background:var(--accent);cursor:pointer;border:none;
 }
-.sp-roi-item {
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-  border-radius:8px;padding:10px;
+.sp-roi-range {
+  width:100%;height:4px;-webkit-appearance:none;appearance:none;
+  background:rgba(255,255,255,.15);border-radius:2px;outline:none;cursor:pointer;
 }
-.sp-roi-item.on { border-color:var(--accent);background:rgba(204,255,0,.08); }
-.sp-roi-item-icon { font-size:18px;margin-bottom:4px; }
-.sp-roi-item-title { font-size:13px;font-weight:600;color:#fff;margin-bottom:4px; }
-.sp-roi-item-desc  { font-size:12px;color:rgba(255,255,255,.55);font-family:'Inter',sans-serif;line-height:1.4; }
+.sp-roi-range::-webkit-slider-thumb {
+  -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+  background:var(--accent);cursor:pointer;border:2px solid #000;
+}
+.sp-roi-item {
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  border-radius:9px;padding:11px 14px;
+  display:flex;align-items:center;gap:12px;
+  transition:background .2s,border-color .2s;
+}
+.sp-roi-item.on {
+  border-color:rgba(204,255,0,.45);background:rgba(204,255,0,.07);
+}
+.sp-roi-item-icon { font-size:22px;flex-shrink:0; }
+.sp-roi-item-title { font-size:15px;font-weight:700;color:#fff;line-height:1.2;letter-spacing:.2px; }
+.sp-roi-item-desc  { font-size:12px;color:rgba(255,255,255,.55);font-family:'Inter',sans-serif;line-height:1.35;margin-top:3px; }
 .sp-cd-block {
   background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
   border-radius:10px;padding:12px 10px;min-width:56px;text-align:center;
@@ -1268,6 +1280,82 @@ body.readonly label.btn { display:none !important }
 .set-story-preview img { width:100%;height:100%;object-fit:cover; }
 .set-story-preview iframe { width:100%;height:100%;border:none; }
 
+
+/* ── Video mute button ── */
+.sp-video-mute {
+  position:absolute;bottom:12px;right:12px;z-index:10;
+  background:rgba(0,0,0,.55);border:none;
+  border-radius:50%;width:34px;height:34px;
+  font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);
+  transition:background .2s, transform .1s;
+}
+.sp-video-mute:hover { background:rgba(0,0,0,.8);transform:scale(1.1); }
+
+/* ── S2: Race rows ── */
+.sp-race-row {
+  display:flex;align-items:stretch;justify-content:space-between;
+  border-radius:9px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.07);
+  background:rgba(255,255,255,.03);
+  transition:background .15s, border-color .15s, transform .1s;
+  overflow:hidden;position:relative;
+}
+.sp-race-row:hover { background:rgba(255,255,255,.07);transform:translateX(2px); }
+.sp-race-row.active {
+  background:rgba(204,255,0,.07);
+  border-color:rgba(204,255,0,.35);
+}
+.sp-race-row.past { opacity:.5; }
+
+/* Bara dificultate colorata stanga */
+.sp-race-diff-bar {
+  width:4px;flex-shrink:0;border-radius:0;
+}
+
+/* Continut */
+.sp-race-row-body {
+  flex:1;padding:10px 10px 10px 10px;min-width:0;
+  display:flex;flex-direction:column;gap:3px;
+}
+.sp-race-row-top { display:flex;align-items:center;gap:8px; }
+.sp-race-row-nr {
+  font-family:'Bebas Neue',sans-serif;font-size:13px;
+  color:rgba(255,255,255,.3);flex-shrink:0;min-width:20px;
+}
+.sp-race-row.active .sp-race-row-nr { color:var(--accent); }
+.sp-race-row-name {
+  font-size:13px;font-weight:700;color:#fff;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sp-race-row-badge {
+  flex-shrink:0;font-size:9px;font-weight:700;letter-spacing:.5px;
+  padding:2px 6px;border-radius:4px;text-transform:uppercase;
+  font-family:'Inter',sans-serif;
+}
+.sp-race-row-meta {
+  font-size:10px;color:rgba(255,255,255,.4);
+  font-family:'Inter',sans-serif;line-height:1.3;
+}
+.sp-race-row-right {
+  flex-shrink:0;display:flex;align-items:center;
+  padding:0 10px;
+}
+
+/* Difficulty levels */
+.diff-easy   .sp-race-diff-bar { background:#4ade80; }
+.diff-medium .sp-race-diff-bar { background:#facc15; }
+.diff-hard   .sp-race-diff-bar { background:#f97316; }
+.diff-ultra  .sp-race-diff-bar { background:#ef4444; }
+.diff-beast  .sp-race-diff-bar { background:linear-gradient(180deg,#ef4444,#7c3aed); }
+
+.badge-easy   { background:rgba(74,222,128,.15);color:#4ade80; }
+.badge-medium { background:rgba(250,204,21,.12);color:#facc15; }
+.badge-hard   { background:rgba(249,115,22,.15);color:#f97316; }
+.badge-ultra  { background:rgba(239,68,68,.15);color:#ef4444; }
+.badge-beast  { background:linear-gradient(90deg,rgba(239,68,68,.2),rgba(124,58,237,.2));color:#f87171;border:1px solid rgba(239,68,68,.3); }
+
 /* ── STORY SLIDES — SPLIT SCREEN ── */
 .sp-split {
   display:grid;grid-template-columns:1fr 1fr;
@@ -1281,6 +1369,7 @@ body.readonly label.btn { display:none !important }
 .sp-split-img::after {
   content:'';position:absolute;inset:0;
   background:linear-gradient(90deg,transparent 60%,#000 100%);
+  pointer-events:none; /* nu bloca clickurile pe SVG */
 }
 .sp-split-year {
   font-family:'Bebas Neue',sans-serif;
@@ -1556,7 +1645,165 @@ body.readonly label.btn { display:none !important }
 }
 #sp-splash.vis .sp-splash-name,
 #sp-splash.vis .sp-splash-sub { opacity:1;transform:none; }
+.sp-splash-btn {
+  margin-top:8px;
+  padding:14px 36px;
+  background:var(--accent,#ccff00);
+  color:#000;font-weight:700;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;letter-spacing:3px;
+  border:none;border-radius:50px;
+  cursor:pointer;
+  opacity:0;transform:translateY(12px);
+  transition:opacity .5s ease .8s, transform .5s ease .8s, background .2s;
+}
+.sp-splash-btn:hover { background:#fff; }
+#sp-splash.vis .sp-splash-btn { opacity:1;transform:none; }
+.sp-splash-loading {
+  font-size:11px;color:rgba(255,255,255,.35);
+  letter-spacing:2px;font-family:'Inter',sans-serif;
+  margin-top:6px;
+  opacity:0;transition:opacity .4s ease .4s;
+}
+#sp-splash.vis .sp-splash-loading { opacity:1; }
 
+
+/* ═══════════════════════════════════════════════════
+   SETTINGS EDITOR — tab-based
+   ═══════════════════════════════════════════════════ */
+.set-editor {
+  display:grid;
+  grid-template-columns:170px 1fr;
+  gap:0;
+  min-height:500px;
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  margin-bottom:16px;
+}
+.set-nav {
+  background:var(--s2);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  padding:10px 6px;gap:2px;flex-shrink:0;
+}
+.set-nav-btn {
+  display:flex;align-items:center;gap:8px;
+  padding:8px 10px;border-radius:7px;
+  border:none;background:transparent;
+  color:var(--t2);font-size:12px;font-weight:500;
+  cursor:pointer;text-align:left;width:100%;
+  transition:background .12s,color .12s;white-space:nowrap;
+}
+.set-nav-btn:hover { background:var(--s3);color:var(--text); }
+.set-nav-btn.active {
+  background:var(--accent-dim,rgba(0,120,255,.1));
+  color:var(--accent,#0078ff);font-weight:600;
+}
+.set-nav-icon { font-size:14px;flex-shrink:0; }
+.set-content { overflow-y:auto;max-height:65vh;flex:1; }
+.set-tab { display:none;padding:18px 20px; }
+.set-tab.active { display:block; }
+.set-tab-title {
+  font-size:12px;font-weight:700;color:var(--text);
+  letter-spacing:.5px;margin-bottom:16px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);
+  text-transform:uppercase;
+}
+.set-field-group { margin-bottom:14px; }
+.set-field-label {
+  font-size:10px;font-weight:600;color:var(--t3);
+  text-transform:uppercase;letter-spacing:.8px;
+  margin-bottom:5px;display:flex;align-items:center;gap:6px;
+}
+.set-badge {
+  font-size:9px;font-weight:600;letter-spacing:.3px;
+  background:var(--accent-dim,rgba(0,120,255,.08));
+  color:var(--accent,#0078ff);
+  padding:1px 6px;border-radius:8px;text-transform:uppercase;
+}
+.set-input {
+  width:100%;background:var(--s2);border:1px solid var(--border);
+  border-radius:7px;padding:8px 10px;
+  font-size:12px;color:var(--text);font-family:inherit;
+  transition:border-color .15s;box-sizing:border-box;
+}
+.set-input:focus { outline:none;border-color:var(--accent,#0078ff); }
+.set-textarea { resize:vertical;line-height:1.5; }
+.set-hint { font-size:10px;color:var(--t4);margin-top:3px;line-height:1.4; }
+.set-2col { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px; }
+.set-link-row {
+  display:flex;align-items:center;gap:8px;
+  background:var(--s2);border:1px solid var(--border);
+  border-radius:7px;padding:7px 10px;
+}
+.set-link-url { flex:1;font-size:10px;color:var(--accent);word-break:break-all;font-family:monospace; }
+.set-btn-copy {
+  padding:4px 10px;font-size:10px;background:var(--s3);
+  border:1px solid var(--border);border-radius:5px;
+  color:var(--text);cursor:pointer;white-space:nowrap;flex-shrink:0;
+}
+.set-btn-copy:hover { background:var(--accent-dim);color:var(--accent); }
+.set-toggles-grid { display:flex;flex-direction:column;gap:2px; }
+.set-toggle-row {
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 12px;border-radius:7px;
+  background:var(--s2);
+  transition:background .12s;
+}
+.set-toggle-row:hover { background:var(--s3); }
+.set-toggle-label { font-size:12px;color:var(--text); }
+.set-switch { position:relative;display:inline-block;width:38px;height:20px;flex-shrink:0; }
+.set-switch input { opacity:0;width:0;height:0; }
+.set-switch-slider {
+  position:absolute;cursor:pointer;inset:0;
+  background:var(--s3);border:1px solid var(--border);
+  border-radius:20px;transition:.2s;
+}
+.set-switch-slider:before {
+  content:'';position:absolute;height:14px;width:14px;
+  left:2px;bottom:2px;background:var(--t3);
+  border-radius:50%;transition:.2s;
+}
+.set-switch input:checked + .set-switch-slider {
+  background:var(--accent-dim,rgba(0,120,255,.15));
+  border-color:var(--accent,#0078ff);
+}
+.set-switch input:checked + .set-switch-slider:before {
+  transform:translateX(18px);background:var(--accent,#0078ff);
+}
+.set-media-input { display:flex;flex-direction:column;gap:6px; }
+.set-media-preview {
+  width:100%;height:90px;border-radius:7px;overflow:hidden;
+  background:var(--s2);border:1px solid var(--border);
+}
+.set-btn-add {
+  width:100%;padding:9px;margin-top:6px;
+  border:1px dashed var(--border);border-radius:7px;
+  background:transparent;color:var(--t3);
+  font-size:11px;cursor:pointer;
+}
+.set-btn-add:hover { border-color:var(--accent);color:var(--accent); }
+.set-btn-ghost {
+  background:transparent;border:1px solid var(--border);
+  border-radius:7px;padding:7px 12px;font-size:11px;
+  color:var(--t3);cursor:pointer;
+}
+.set-btn-ghost:hover { border-color:var(--accent);color:var(--accent); }
+.set-save-bar {
+  display:flex;gap:10px;padding:14px 0 0;
+  position:sticky;bottom:0;background:var(--s1);
+  border-top:1px solid var(--border);margin-top:12px;
+}
+@media(max-width:700px){
+  .set-editor { grid-template-columns:1fr;grid-template-rows:auto 1fr; }
+  .set-nav { flex-direction:row;flex-wrap:wrap;border-right:none;border-bottom:1px solid var(--border); }
+  .set-nav-btn { padding:6px 8px;font-size:10px; }
+  .set-nav-icon { display:none; }
+  .set-2col { grid-template-columns:1fr; }
+  .set-content { max-height:none; }
+}
 </style>
 </head>
 <body class="readonly">
@@ -1564,6 +1811,10 @@ body.readonly label.btn { display:none !important }
   <div class="sp-splash-name" id="sp-splash-name">BALAN GABRIEL</div>
   <div class="sp-splash-sub">⛰️ SEZON 2026 · TRAIL RUNNING</div>
   <div class="sp-splash-bar"><div class="sp-splash-bar-fill" id="sp-splash-fill"></div></div>
+  <button id="sp-splash-btn" class="sp-splash-btn" onclick="spSplashUserClick()" style="display:none">
+    ▶ &nbsp;DESCHIDE PREZENTAREA
+  </button>
+  <div id="sp-splash-loading" class="sp-splash-loading">Se încarcă...</div>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -2149,25 +2400,75 @@ body.readonly label.btn { display:none !important }
     </div>
 
     <!-- ── SLIDE 2 — SEZONUL ── -->
+    <!-- ── SLIDE 2 — CURSE + HARTĂ COMBINAT ── -->
     <div class="sp-slide" id="sp-s2">
       <div class="sp-bg" style="background:#000"></div>
-      <div class="sp-split">
-        <div class="sp-split-img" style="background:linear-gradient(160deg,#020a1a 0%,#040d1f 50%,#000 100%)">
-          <div class="sp-split-year">SEZON<br>2026</div>
-          <div style="position:relative;z-index:2">
-            <div class="sp-split-quote">🏁 Curse<br>planificate</div>
-            <div class="sp-split-km-pill" style="background:rgba(204,255,0,.15);color:#ccff00">
-              <span id="sp-s2-nr-left">—</span> curse
+      <div class="sp-split" style="grid-template-columns:1fr 1fr">
+
+        <!-- STÂNGA: Hartă România interactivă -->
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#020a1a 0%,#030d12 100%);padding:0;position:relative">
+          <svg id="sp-map-svg" viewBox="0 0 460 340"
+            style="width:100%;height:100%;display:block;position:absolute;inset:0;pointer-events:all;z-index:5"></svg>
+          <!-- Info card cursă activă -->
+          <div id="sp-map-info-card" style="
+            position:absolute;bottom:0;left:0;right:0;
+            background:linear-gradient(0deg,rgba(0,0,0,.9) 0%,transparent 100%);
+            padding:16px 14px 12px;z-index:6;min-height:60px;pointer-events:none">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:15px;color:#fff;
+                        letter-spacing:1px;line-height:1" id="sp-map-race-name">—</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.5);font-family:'Inter',sans-serif;
+                        margin-top:3px" id="sp-map-race-meta"></div>
+          </div>
+        </div>
+
+        <!-- DREAPTA: Lista curse + card detalii -->
+        <div class="sp-split-content" style="padding:0;overflow:hidden;display:flex;flex-direction:column">
+
+          <!-- Header -->
+          <div style="padding:16px 18px 10px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0">
+            <div class="sp-split-eyebrow sp-reveal" data-delay="0">🏁 CALENDAR 2026</div>
+            <h2 class="sp-split-title sp-reveal" data-delay="80"
+              style="font-size:clamp(22px,3vw,36px);margin-bottom:0">
+              <span id="sp-s2-nr-left">—</span> CURSE PLANIFICATE
+            </h2>
+          </div>
+
+          <!-- Lista curse scrollabila -->
+          <div id="sp-races-list" class="sp-reveal" data-delay="200"
+            style="flex:1;overflow-y:auto;padding:6px 8px;display:flex;flex-direction:column;gap:4px"></div>
+
+          <!-- Card detalii cursă (expandat la click) -->
+          <div id="sp-race-detail-card" style="display:none;flex-shrink:0;overflow:hidden;
+            transition:max-height .3s ease;max-height:0">
+            <div style="background:rgba(0,20,0,.95);border-top:2px solid var(--accent);
+                        max-height:54vh;overflow-y:auto;padding:14px 16px">
+              <!-- Header cursă -->
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+                <div>
+                  <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;
+                              letter-spacing:1px;line-height:1" id="sp-rd-name">—</div>
+                  <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:3px;
+                              font-family:'Inter',sans-serif" id="sp-rd-date">—</div>
+                </div>
+                <button onclick="spCloseRaceDetail()"
+                  style="background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.6);
+                         font-size:14px;cursor:pointer;padding:5px 9px;border-radius:6px;
+                         line-height:1;transition:background .15s"
+                  onmouseover="this.style.background='rgba(255,255,255,.15)'"
+                  onmouseout="this.style.background='rgba(255,255,255,.08)'">✕ Închide</button>
+              </div>
+              <!-- Stats 3 col -->
+              <div id="sp-rd-stats" style="display:grid;grid-template-columns:repeat(3,1fr);
+                                             gap:6px;margin-bottom:12px"></div>
+              <!-- Info rows detaliate -->
+              <div id="sp-rd-info" style="display:flex;flex-direction:column"></div>
             </div>
-          </div></div>
-        <div class="sp-split-content">
-          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🏁 CALENDAR COMPETIȚIONAL</div>
-          <h2 class="sp-split-title sp-reveal" data-delay="100">SEZONUL<br>2026</h2>
-          <div class="sp-races-grid sp-reveal" data-delay="250" id="sp-races-grid" style="max-height:52vh"></div></div>
+          </div>
+
+        </div>
       </div>
     </div>
 
-    <!-- ── SLIDE 3 — DOVADA ── -->
     <div class="sp-slide" id="sp-s3">
       <div class="sp-bg" style="background:#000"></div>
       <div class="sp-split">
@@ -2195,56 +2496,108 @@ body.readonly label.btn { display:none !important }
       <div class="sp-bg" style="background:#000"></div>
       <div class="sp-split">
         <div class="sp-split-img" style="background:linear-gradient(160deg,#000a00 0%,#041400 50%,#000 100%)">
-          <div class="sp-split-year" style="opacity:.06">ROI</div>
-          <div style="position:relative;z-index:2;display:flex;flex-direction:column;gap:16px;align-items:flex-start">
+          <div class="sp-split-year" style="opacity:.04">ROI</div>
+          <!-- Sponsor centrat vertical -->
+          <div style="position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;
+                      align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center">
             <a id="sp-partner-logo-link" href="#" target="_blank" rel="noopener"
-              style="display:none;background:white;border-radius:10px;padding:10px 16px;text-decoration:none;transition:opacity .2s"
+              style="display:none;background:white;border-radius:12px;padding:12px 20px;
+                     text-decoration:none;transition:opacity .2s;box-shadow:0 4px 24px rgba(0,0,0,.4)"
               onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-              <img id="sp-partner-logo" src="" alt="Sponsor" style="max-height:56px;max-width:140px;object-fit:contain;display:block">
+              <img id="sp-partner-logo" src="" alt="Sponsor"
+                style="max-height:64px;max-width:150px;object-fit:contain;display:block">
             </a>
-            <div class="sp-split-quote" id="sp-partner-name" style="font-size:clamp(20px,3.5vw,36px)">FII PRIMUL</div>
-            <div class="sp-split-km-pill" id="sp-partner-tagline">Parteneriat 2026</div>
-          </div></div>
-        <div class="sp-split-content">
-          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🤝 ROI SIMULATOR</div>
-          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(26px,4vw,48px)">CÂT<br>INVESTEȘTI →<br>CE PRIMEȘTI</h2>
-          <div class="sp-reveal" data-delay="250" style="margin-bottom:12px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-              <span style="font-size:12px;color:rgba(255,255,255,.5);font-family:'Inter',sans-serif">Buget ales</span>
-              <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent)" id="sp-roi-amount">500 RON</span>
+            <div id="sp-partner-name"
+              style="font-family:'Bebas Neue',sans-serif;font-size:clamp(18px,3vw,32px);
+                     color:#fff;letter-spacing:2px;line-height:1.1;text-shadow:0 2px 12px rgba(0,0,0,.6)">
+              FII PRIMUL
             </div>
-            <input type="range" id="sp-roi-slider" min="100" max="5000" step="100" value="500"
-              style="width:100%;height:5px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.12);border-radius:3px;outline:none;cursor:pointer;margin-bottom:14px">
+            <div id="sp-partner-tagline" class="sp-split-km-pill" style="margin:0">Parteneriat 2026</div>
+          </div></div>
+        <div class="sp-split-content" style="padding:28px 32px">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🤝 CALCULATOR PARTENERIAT</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="80" style="font-size:clamp(24px,3.5vw,44px);margin-bottom:14px">CÂT INVESTEȘTI →<br>CE PRIMEȘTI</h2>
+
+          <!-- Slider buget -->
+          <div class="sp-reveal" data-delay="200">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+              <span style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;font-family:'Inter',sans-serif">Buget lunar ales</span>
+              <span style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--accent);letter-spacing:1px" id="sp-roi-amount">500 RON</span>
+            </div>
+            <div style="position:relative;margin-bottom:16px">
+              <input type="range" id="sp-roi-slider" min="100" max="5000" step="100" value="500" class="sp-roi-range">
+              <div style="display:flex;justify-content:space-between;margin-top:4px">
+                <span style="font-size:9px;color:rgba(255,255,255,.3);font-family:'Inter',sans-serif">100 RON</span>
+                <span style="font-size:9px;color:rgba(255,255,255,.3);font-family:'Inter',sans-serif">5.000 RON</span>
+              </div>
+            </div>
           </div>
-          <div id="sp-roi-grid" class="sp-reveal" data-delay="400" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px"></div>
-          <div id="sp-roi-summary" class="sp-reveal" data-delay="550" style="background:rgba(204,255,0,.06);border:1px solid rgba(204,255,0,.15);border-radius:8px;padding:10px 12px;font-size:12px;color:rgba(255,255,255,.8);text-align:center;font-family:'Inter',sans-serif;line-height:1.6"></div></div>
+
+          <!-- Lista beneficii -->
+          <div id="sp-roi-grid" class="sp-reveal" data-delay="350" style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;overflow-y:auto;max-height:42vh"></div>
+
+          <!-- Sumar -->
+          <div id="sp-roi-summary" class="sp-reveal" data-delay="500"
+            style="background:rgba(204,255,0,.08);border:1px solid rgba(204,255,0,.2);
+                   border-radius:8px;padding:10px 14px;font-size:12px;
+                   color:rgba(255,255,255,.85);font-family:'Inter',sans-serif;line-height:1.6">
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── SLIDE 4B — WISHLIST ECHIPAMENT ── -->
+    <div class="sp-slide" id="sp-s4b">
+      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-split">
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#080010 0%,#130020 50%,#000 100%)">
+          <div class="sp-split-year" style="opacity:.06">GEAR</div>
+          <div style="position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;
+                      align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center">
+            <div style="font-size:52px">👟</div>
+            <div class="sp-split-quote" style="font-size:clamp(18px,3vw,28px)">
+              Echipament<br>înseamnă<br>siguranță.
+            </div>
+            <div id="sp-wish-total-pill" class="sp-split-km-pill"
+              style="background:rgba(167,139,250,.15);color:#a78bfa;border-color:rgba(167,139,250,.3);margin:0">
+              — RON total
+            </div>
+          </div>
+        </div>
+        <div class="sp-split-content" style="padding:0;overflow:hidden;display:flex;flex-direction:column">
+          <div style="padding:16px 18px 10px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0">
+            <div class="sp-split-eyebrow sp-reveal" data-delay="0">🎯 SUSȚINE-MĂ CU ECHIPAMENT</div>
+            <h2 class="sp-split-title sp-reveal" data-delay="80"
+              style="font-size:clamp(20px,3.2vw,38px);margin-bottom:0">
+              CE AM NEVOIE<br>PENTRU SEZON
+            </h2>
+          </div>
+          <div id="sp-wishlist-grid" class="sp-reveal" data-delay="200"
+            style="flex:1;overflow-y:auto;padding:8px 10px;display:flex;flex-direction:column;gap:5px"></div>
+          <div style="padding:10px 14px;border-top:1px solid rgba(255,255,255,.07);flex-shrink:0" class="sp-reveal" data-delay="450">
+            <a id="sp-wish-wa-btn" href="#" target="_blank" rel="noopener"
+              style="display:flex;align-items:center;justify-content:center;gap:10px;
+                     background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3);
+                     border-radius:10px;padding:11px;text-decoration:none;
+                     font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;
+                     color:#25d366;transition:background .2s"
+              onmouseover="this.style.background='rgba(37,211,102,.22)'"
+              onmouseout="this.style.background='rgba(37,211,102,.12)'">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              VREAU SĂ SUSȚIN ECHIPAMENTUL
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- ── SLIDE 5 — HARTĂ ── -->
-    <div class="sp-slide" id="sp-s5">
-      <div class="sp-bg" style="background:#000"></div>
-      <div class="sp-split">
-        <div class="sp-split-img" style="background:linear-gradient(160deg,#000800 0%,#001200 50%,#000 100%)">
-          <div class="sp-split-year">RO-<br>MÂ-<br>NIA</div>
-          <div style="position:relative;z-index:2">
-            <div class="sp-split-quote">Brandul tău<br>pe harta<br>trail-ului.</div>
-            <div class="sp-split-km-pill" style="background:rgba(204,255,0,.15);color:#ccff00">10 curse naționale</div>
-          </div></div>
-        <div class="sp-split-content">
-          <div class="sp-split-eyebrow sp-reveal" data-delay="0">📍 PREZENȚĂ FIZICĂ LA CURSE</div>
-          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(26px,4vw,48px)">UNDE APARE<br>BRANDUL TĂU</h2>
-          <div class="sp-reveal" data-delay="250" style="position:relative;width:100%">
-            <svg id="sp-map-svg" viewBox="0 0 460 340" style="width:100%;height:auto;display:block;border-radius:10px"></svg>
-            <div id="sp-map-info" style="margin-top:8px;background:rgba(0,0,0,.6);border:1px solid var(--accent);border-radius:8px;padding:8px 12px;min-height:36px">
-              <span id="sp-map-race-name" style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;letter-spacing:1px">—</span>
-              <span id="sp-map-race-meta" style="font-size:11px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;margin-left:8px"></span>
-            </div>
-          </div></div>
-      </div>
-    </div>
+    <!-- ── SLIDE 5 — REDIRECT LA S2 (combinat) ── -->
+    <div class="sp-slide" id="sp-s5" style="display:none!important"></div>
 
-    <!-- ── SLIDE 6 — COUNTDOWN ── -->
     <div class="sp-slide" id="sp-s6">
       <div class="sp-bg" style="background:#000"></div>
       <div class="sp-split">
@@ -3054,281 +3407,258 @@ body.readonly label.btn { display:none !important }
   </div>
 </div>
 
-<!-- ── LINK SPONSOR ── -->
-<div class="bk-card" style="padding:16px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px">🔗 Link pentru sponsori</div>
-  <div style="background:var(--s2);border-radius:8px;padding:12px;font-size:12px;color:var(--accent);display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
-    <span style="flex:1;word-break:break-all" id="set-sponsor-link">—</span>
-    <button class="btn btn-ghost btn-sm" onclick="setCopyLink()">📋 Copiază</button>
-  </div>
-  <div style="font-size:10px;color:var(--t3);margin-top:6px">Trimite acest link sponsorilor — deschide pagina de prezentare înainte de dashboard.</div>
-</div>
+<!-- ═══ SETĂRI EDITOR ═══ -->
+<div class="set-editor">
 
-<!-- ── MEDIA ── -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">📸 Media</div>
-  <div class="fi" style="margin-bottom:14px">
-    <span class="lbl">URL Poză profil</span>
-    <div style="display:flex;gap:8px;align-items:center">
-      <input type="url" id="set-photo-url" placeholder="https://i.imgur.com/..." style="font-size:12px;flex:1">
-      <div id="set-photo-preview" style="display:none"><img id="set-photo-img" src="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)"></div>
-    </div>
-    <div style="font-size:10px;color:var(--t3);margin-top:4px">Link direct la imagine (imgur, cloudinary etc). Apare ca avatar circular în hero.</div>
-  </div>
-  <div class="fi">
-    <span class="lbl">URL Video embed</span>
-    <input type="url" id="set-video-url" placeholder="https://www.youtube.com/embed/..." style="font-size:12px">
-    <div style="font-size:10px;color:var(--t3);margin-top:4px">YouTube: copiază ID-ul din link și pune-l după /embed/. Ex: youtube.com/shorts/<strong>kD_nMBhmG_Y</strong> → youtube.com/embed/<strong>kD_nMBhmG_Y</strong></div>
-  </div>
-</div>
+  <!-- Sidebar navigare -->
+  <nav class="set-nav">
+    <button class="set-nav-btn active" onclick="setTab(this,'tab-general')">
+      <span class="set-nav-icon">🔗</span><span>General</span>
+    </button>
+    <button class="set-nav-btn" onclick="setTab(this,'tab-profil')">
+      <span class="set-nav-icon">👤</span><span>Profil</span>
+    </button>
+    <button class="set-nav-btn" onclick="setTab(this,'tab-prezentare')">
+      <span class="set-nav-icon">🎬</span><span>Prezentare</span>
+    </button>
+    <button class="set-nav-btn" onclick="setTab(this,'tab-story')">
+      <span class="set-nav-icon">📖</span><span>Poveste</span>
+    </button>
+    <button class="set-nav-btn" onclick="setTab(this,'tab-roi')">
+      <span class="set-nav-icon">💰</span><span>Pachete ROI</span>
+    </button>
+    <button class="set-nav-btn" onclick="setTab(this,'tab-faq')">
+      <span class="set-nav-icon">❓</span><span>FAQ</span>
+    </button>
+    <button class="set-nav-btn" onclick="setTab(this,'tab-slideuri')">
+      <span class="set-nav-icon">🎞️</span><span>Ordine</span>
+    </button>
+    <button class="set-nav-btn" onclick="setTab(this,'tab-dashboard')">
+      <span class="set-nav-icon">📊</span><span>Dashboard</span>
+    </button>
+  </nav>
 
-<!-- ── TEXTE ── -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">💬 Texte landing</div>
-  <div class="fi" style="margin-bottom:12px">
-    <span class="lbl">Citat personal (apare bold, mare)</span>
-    <input type="text" id="set-quote" style="font-size:13px">
-  </div>
-  <div class="fi" style="margin-bottom:12px">
-    <span class="lbl">Subtitlu hero (sub nume)</span>
-    <input type="text" id="set-hero-sub" style="font-size:12px">
-    <div style="font-size:10px;color:var(--t3);margin-top:3px">Ex: "Ultra-trail runner din Bârlad. 10 curse, 517km."</div>
-  </div>
-  <div class="fi" style="margin-bottom:12px">
-    <span class="lbl">Mesaj de bun-venit (primul text vizibil sub hero)</span>
-    <textarea id="set-welcome-msg" rows="2" style="font-size:12px;width:100%;resize:vertical;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text)"></textarea>
-    <div style="font-size:10px;color:var(--t3);margin-top:3px">Apare imediat după countdown — primul lucru pe care îl citește sponsorul.</div>
-  </div>
-  <div class="fi" style="margin-bottom:12px">
-    <span class="lbl">Poveste scurtă (paragraful introductiv)</span>
-    <textarea id="set-story-short" rows="3" style="font-size:12px;width:100%;resize:vertical;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text)"></textarea>
-    <div style="font-size:10px;color:var(--t3);margin-top:3px">Apare în cardul "Povestea" de pe landing, după citat.</div>
-  </div>
-  <div class="fi" style="margin-bottom:12px">
-    <span class="lbl">Email contact sponsor</span>
-    <input type="email" id="set-contact-email" style="font-size:12px">
-  </div>
-  <div class="fi">
-    <span class="lbl">Număr WhatsApp (format internațional, fără +)</span>
-    <input type="tel" id="set-whatsapp-phone" placeholder="ex: 40712345678" style="font-size:12px">
-    <div style="font-size:10px;color:var(--t3);margin-top:3px">Apare pe butonul de contact din landing. Ex: România → 40 urmat de număr fără 0.</div>
-  </div>
-</div>
+  <!-- Content -->
+  <div class="set-content">
 
-<!-- ── PACHETE SPONSORIZARE ── -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">💰 Pachete sponsorizare</div>
-  <div style="font-size:11px;color:var(--t3);margin-bottom:14px">Nivelele din simulatorul ROI — suma minimă + ce primești.</div>
-  <div id="set-packages-list"></div>
-  <button class="btn btn-ghost btn-sm" onclick="setAddPackage()" style="margin-top:10px;width:100%">+ Adaugă nivel</button>
-</div>
+    <!-- ── TAB GENERAL ── -->
+    <div class="set-tab active" id="tab-general">
+      <div class="set-tab-title">🔗 Link & Contact</div>
 
-<!-- ── FAQ ── -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px">❓ FAQ</div>
-  <div id="set-faq-list"></div>
-  <button class="btn btn-ghost btn-sm" onclick="setAddFaq()" style="margin-top:10px;width:100%">+ Adaugă întrebare</button>
-</div>
-
-<!-- ── TOGGLES SECTIUNI ── -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px">👁 Vizibilitate landing</div>
-  <div style="display:flex;flex-direction:column;gap:12px">
-    <!-- Landing activ -->
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer;padding-bottom:12px;border-bottom:1px solid var(--border)">
-      <div>
-        <span style="font-weight:600">🌐 Landing activ (?sponsor=1)</span>
-        <div style="font-size:10px;color:var(--t3);margin-top:2px">Dezactivează dacă nu vrei ca sponsorii să vadă pagina momentan</div>
-      </div>
-      <input type="checkbox" id="set-landing-active" class="set-toggle" style="width:20px;height:20px;accent-color:var(--accent);flex-shrink:0">
-    </label>
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
-      <span>🗺️ Hartă curse</span>
-      <input type="checkbox" id="set-show-map" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
-    </label>
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
-      <span>🎥 Video</span>
-      <input type="checkbox" id="set-show-video" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
-    </label>
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
-      <span>💸 Unde se duc banii</span>
-      <input type="checkbox" id="set-show-budget" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
-    </label>
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
-      <span>❓ FAQ</span>
-      <input type="checkbox" id="set-show-faq" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
-    </label>
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
-      <span>⛰️ Timeline carieră</span>
-      <input type="checkbox" id="set-show-timeline" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
-    </label>
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
-      <span>💰 Simulator parteneriat (ROI)</span>
-      <input type="checkbox" id="set-show-roi" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
-    </label>
-    <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text);cursor:pointer">
-      <span>🤝 Secțiunea "De ce să mă susții"</span>
-      <input type="checkbox" id="set-show-benefits" class="set-toggle" style="width:18px;height:18px;accent-color:var(--accent)">
-    </label>
-  </div>
-</div>
-
-<!-- ── GENERAL ── -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">🎯 General dashboard</div>
-  <div class="fi" style="margin-bottom:12px">
-    <span class="lbl">Target km anual</span>
-    <input type="number" id="set-target-km" placeholder="5000" style="font-size:13px">
-  </div>
-  <div class="fi">
-    <span class="lbl">Titlu dashboard</span>
-    <input type="text" id="set-dash-title" placeholder="SEZONUL BESTIEI" style="font-size:13px">
-  </div>
-</div>
-
-<!-- ── ORDINE SLIDE-URI PREZENTARE ── -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px">🎞️ Ordine slide-uri prezentare</div>
-  <div style="font-size:11px;color:var(--t3);margin-bottom:14px">Trage sau folosește ↑↓ pentru a reordona. Dezactivează slide-urile pe care nu le vrei.</div>
-  <div id="set-slides-order" style="display:flex;flex-direction:column;gap:6px"></div>
-  <button class="btn btn-ghost btn-sm" onclick="resetSlideOrder()" style="margin-top:10px;font-size:11px">↺ Resetează la ordinea implicită</button>
-</div>
-
-<div style="display:flex;gap:10px;margin-bottom:24px">
-  
-<!-- ── STORY SLIDES EDITOR ── -->
-<div class="set-section" style="margin-top:24px">
-  <div class="set-section-title">📖 Slide-uri Poveste (S11-S14)</div>
-  <div style="font-size:11px;color:var(--t3);margin-bottom:16px">Editează textele și media pentru fiecare slide de poveste.</div>
-
-  <div id="set-story-accordion">
-    <!-- S11 -->
-    <div class="set-story-block" data-slide="s11">
-      <div class="set-story-header" onclick="this.parentElement.classList.toggle('open')">
-        <span>🏃 Slide A — Originea</span><span class="set-story-arrow">▾</span>
-      </div>
-      <div class="set-story-body">
-        <div class="set-story-media">
-          <label class="set-lbl">Media stânga</label>
-          <div style="display:flex;gap:8px;margin-bottom:8px">
-            <select id="s11-left-type" class="set-story-sel" onchange="storyPreviewMedia('s11')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video embed (YouTube)</option>
-            </select>
-          </div>
-          <input id="s11-left-url" placeholder="URL imagine sau embed YouTube..." class="set-story-inp" oninput="storyPreviewMedia('s11')">
-          <div id="s11-preview" class="set-story-preview"></div>
+      <div class="set-field-group">
+        <div class="set-field-label">Link prezentare sponsor</div>
+        <div class="set-link-row">
+          <div class="set-link-url" id="set-sponsor-link">—</div>
+          <button class="set-btn-copy" onclick="setCopyLink()">📋 Copiază</button>
         </div>
-        <label class="set-lbl">Eyebrow</label>
-        <input id="s11-eyebrow" class="set-story-inp" placeholder="ex: 🏃 ORIGINEA">
-        <label class="set-lbl">Titlu (fiecare rând = Enter)</label>
-        <textarea id="s11-title" class="set-story-inp" rows="3" placeholder="O SINGURĂ
-DECIZIE
-PROPRIE."></textarea>
-        <label class="set-lbl">Paragraf 1</label>
-        <textarea id="s11-line0" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Paragraf 2</label>
-        <textarea id="s11-line1" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Paragraf 3 (accent)</label>
-        <textarea id="s11-line2" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Citat stânga</label>
-        <input id="s11-left-quote" class="set-story-inp" placeholder='"Nimic nu mai era al meu."'>
-        <label class="set-lbl">Label pill stânga</label>
-        <input id="s11-left-label" class="set-story-inp" placeholder="Km 0">
+        <div class="set-hint">Trimite acest link sponsorilor — se deschide direct prezentarea</div>
       </div>
-    </div>
-    <!-- S12 -->
-    <div class="set-story-block" data-slide="s12">
-      <div class="set-story-header" onclick="this.parentElement.classList.toggle('open')">
-        <span>⛰️ Slide B — Primul munte</span><span class="set-story-arrow">▾</span>
-      </div>
-      <div class="set-story-body">
-        <div class="set-story-media">
-          <label class="set-lbl">Media stânga</label>
-          <div style="display:flex;gap:8px;margin-bottom:8px">
-            <select id="s12-left-type" class="set-story-sel" onchange="storyPreviewMedia('s12')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video embed (YouTube)</option>
-            </select>
-          </div>
-          <input id="s12-left-url" placeholder="URL imagine sau embed YouTube..." class="set-story-inp" oninput="storyPreviewMedia('s12')">
-          <div id="s12-preview" class="set-story-preview"></div>
-        </div>
-        <label class="set-lbl">Eyebrow</label>
-        <input id="s12-eyebrow" class="set-story-inp">
-        <label class="set-lbl">Titlu</label>
-        <textarea id="s12-title" class="set-story-inp" rows="3"></textarea>
-        <label class="set-lbl">Paragraf 1</label><textarea id="s12-line0" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Paragraf 2</label><textarea id="s12-line1" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Paragraf 3 (accent)</label><textarea id="s12-line2" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Citat stânga</label><input id="s12-left-quote" class="set-story-inp">
-        <label class="set-lbl">Label pill stânga</label><input id="s12-left-label" class="set-story-inp">
-      </div>
-    </div>
-    <!-- S13 -->
-    <div class="set-story-block" data-slide="s13">
-      <div class="set-story-header" onclick="this.parentElement.classList.toggle('open')">
-        <span>🌩️ Slide C — Km 130</span><span class="set-story-arrow">▾</span>
-      </div>
-      <div class="set-story-body">
-        <div class="set-story-media">
-          <label class="set-lbl">Media stânga</label>
-          <div style="display:flex;gap:8px;margin-bottom:8px">
-            <select id="s13-left-type" class="set-story-sel" onchange="storyPreviewMedia('s13')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video embed (YouTube)</option>
-            </select>
-          </div>
-          <input id="s13-left-url" placeholder="URL imagine sau embed YouTube..." class="set-story-inp" oninput="storyPreviewMedia('s13')">
-          <div id="s13-preview" class="set-story-preview"></div>
-        </div>
-        <label class="set-lbl">Eyebrow</label><input id="s13-eyebrow" class="set-story-inp">
-        <label class="set-lbl">Titlu</label><textarea id="s13-title" class="set-story-inp" rows="3"></textarea>
-        <label class="set-lbl">Paragraf 1</label><textarea id="s13-line0" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Paragraf 2</label><textarea id="s13-line1" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Paragraf 3 (accent)</label><textarea id="s13-line2" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Citat stânga</label><input id="s13-left-quote" class="set-story-inp">
-        <label class="set-lbl">Label pill stânga</label><input id="s13-left-label" class="set-story-inp">
-      </div>
-    </div>
-    <!-- S14 -->
-    <div class="set-story-block" data-slide="s14">
-      <div class="set-story-header" onclick="this.parentElement.classList.toggle('open')">
-        <span>📈 Slide D — 5km → 5000km</span><span class="set-story-arrow">▾</span>
-      </div>
-      <div class="set-story-body">
-        <div class="set-story-media">
-          <label class="set-lbl">Media stânga</label>
-          <div style="display:flex;gap:8px;margin-bottom:8px">
-            <select id="s14-left-type" class="set-story-sel" onchange="storyPreviewMedia('s14')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video embed (YouTube)</option>
-            </select>
-          </div>
-          <input id="s14-left-url" placeholder="URL imagine sau embed YouTube..." class="set-story-inp" oninput="storyPreviewMedia('s14')">
-          <div id="s14-preview" class="set-story-preview"></div>
-        </div>
-        <label class="set-lbl">Eyebrow</label><input id="s14-eyebrow" class="set-story-inp">
-        <label class="set-lbl">Titlu</label><textarea id="s14-title" class="set-story-inp" rows="3"></textarea>
-        <label class="set-lbl">Paragraf 1</label><textarea id="s14-line0" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Paragraf 2</label><textarea id="s14-line1" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Paragraf 3 (accent)</label><textarea id="s14-line2" class="set-story-inp" rows="2"></textarea>
-        <label class="set-lbl">Citat stânga</label><input id="s14-left-quote" class="set-story-inp">
-        <label class="set-lbl">Label pill stânga</label><input id="s14-left-label" class="set-story-inp">
-      </div>
-    </div>
-  </div>
-</div>
 
-<button class="btn btn-primary" onclick="saveSettings()" style="flex:1;padding:14px;font-size:14px">💾 Salvează toate setările</button>
-  <button class="btn btn-ghost" onclick="openSponsorPrez()" style="padding:14px">▶</button>
-</div>
-</div>
+      <div class="set-2col">
+        <div class="set-field-group">
+          <div class="set-field-label">Email contact</div>
+          <input type="email" id="set-contact-email" class="set-input" placeholder="email@exemplu.com">
+        </div>
+        <div class="set-field-group">
+          <div class="set-field-label">WhatsApp (fără +)</div>
+          <input type="tel" id="set-whatsapp-phone" class="set-input" placeholder="40712345678">
+          <div class="set-hint">Apare pe butonul de contact</div>
+        </div>
+      </div>
 
+      <div class="set-field-group">
+        <div class="set-field-label">Citat personal
+          <span class="set-badge">S1 · Atletul</span>
+        </div>
+        <textarea id="set-quote" class="set-input set-textarea" rows="2" placeholder="Nu alerg să câștig. Alerg ca să demonstrez că din Bârlad se poate."></textarea>
+      </div>
+
+      <div class="set-field-group">
+        <div class="set-field-label">Text testimonial
+          <span class="set-badge">S10 · Testimonial</span>
+        </div>
+        <textarea id="set-testimonial-text" class="set-input set-textarea" rows="3" placeholder="„Susținem această inițiativă pentru că reprezintă exact valorile noastre...""></textarea>
+        <div class="set-hint">Apare pe ultimul slide al prezentării</div>
+      </div>
+
+      <div class="set-field-group">
+        <div class="set-field-label">Text testimonial — semnătură</div>
+        <input id="set-testimonial-author" class="set-input" placeholder="— PRISCOM, Bârlad">
+      </div>
+
+      <div class="set-toggles-grid">
+        <div class="set-toggle-row">
+          <div>
+            <div class="set-toggle-label">🌐 Prezentare activă</div>
+            <div class="set-hint">Dacă e dezactivat, link-ul afișează pagină blocată</div>
+          </div>
+          <label class="set-switch"><input type="checkbox" id="set-landing-active"><span class="set-switch-slider"></span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB PROFIL ── -->
+    <div class="set-tab" id="tab-profil">
+      <div class="set-tab-title">👤 Profil & Media</div>
+
+      <div class="set-field-group">
+        <div class="set-field-label">Poză profil
+          <span class="set-badge">S1 · Atletul (background)</span>
+        </div>
+        <div class="set-media-input">
+          <input type="url" id="set-photo-url" class="set-input" placeholder="https://i.imgur.com/... sau cloudinary.com/...">
+          <div id="set-photo-preview" class="set-media-preview" style="display:none">
+            <img id="set-photo-img" src="" style="width:100%;height:100%;object-fit:cover;border-radius:8px">
+          </div>
+        </div>
+        <div class="set-hint">Imgur, Cloudinary, orice URL direct la imagine</div>
+      </div>
+
+      <div class="set-field-group">
+        <div class="set-field-label">Subtitlu hero</div>
+        <input type="text" id="set-hero-sub" class="set-input" placeholder="Ultra-trail runner din Bârlad. Sezonul 2026 — 10 curse...">
+      </div>
+
+      <div class="set-field-group">
+        <div class="set-field-label">Mesaj bun-venit</div>
+        <textarea id="set-welcome-msg" class="set-input set-textarea" rows="3" placeholder="Bun venit! Sunt Gabriel Balan..."></textarea>
+        <div class="set-hint">Primul text vizibil pentru un sponsor care deschide link-ul</div>
+      </div>
+
+      <div class="set-field-group">
+        <div class="set-field-label">Poveste scurtă</div>
+        <textarea id="set-story-short" class="set-input set-textarea" rows="4" placeholder="2025: 3.000km alergați..."></textarea>
+        <div class="set-hint">Paragraful introductiv din cardul de poveste</div>
+      </div>
+
+      <!-- S9 De ce eu texts -->
+      <div class="set-field-group">
+        <div class="set-field-label">S9 — Motivul 1 (titlu)</div>
+        <input id="set-why1-title" class="set-input" placeholder="BÂRLADUL PE HARTA TRAIL-ULUI">
+      </div>
+      <div class="set-field-group">
+        <div class="set-field-label">S9 — Motivul 1 (descriere)</div>
+        <textarea id="set-why1-desc" class="set-input set-textarea" rows="2"></textarea>
+      </div>
+      <div class="set-field-group">
+        <div class="set-field-label">S9 — Motivul 2 (titlu)</div>
+        <input id="set-why2-title" class="set-input" placeholder="TRANSPARENȚĂ TOTALĂ">
+      </div>
+      <div class="set-field-group">
+        <div class="set-field-label">S9 — Motivul 2 (descriere)</div>
+        <textarea id="set-why2-desc" class="set-input set-textarea" rows="2"></textarea>
+      </div>
+      <div class="set-field-group">
+        <div class="set-field-label">S9 — Motivul 3 (titlu)</div>
+        <input id="set-why3-title" class="set-input" placeholder="PARTENERIATUL AUTENTIC">
+      </div>
+      <div class="set-field-group">
+        <div class="set-field-label">S9 — Motivul 3 (descriere)</div>
+        <textarea id="set-why3-desc" class="set-input set-textarea" rows="2"></textarea>
+      </div>
+    </div>
+
+    <!-- ── TAB PREZENTARE ── -->
+    <div class="set-tab" id="tab-prezentare">
+      <div class="set-tab-title">🎬 Vizibilitate Secțiuni</div>
+      <div class="set-hint" style="margin-bottom:20px">Controlează ce secțiuni apar în prezentare și pe pagina publică</div>
+
+      <div class="set-toggles-grid">
+        <div class="set-toggle-row">
+          <span class="set-toggle-label">🗺️ Hartă curse (S5)</span>
+          <label class="set-switch"><input type="checkbox" id="set-show-map"><span class="set-switch-slider"></span></label>
+        </div>
+        <div class="set-toggle-row">
+          <span class="set-toggle-label">🎥 Video (landing)</span>
+          <label class="set-switch"><input type="checkbox" id="set-show-video"><span class="set-switch-slider"></span></label>
+        </div>
+        <div class="set-toggle-row">
+          <span class="set-toggle-label">💸 Unde se duc banii (S7)</span>
+          <label class="set-switch"><input type="checkbox" id="set-show-budget"><span class="set-switch-slider"></span></label>
+        </div>
+        <div class="set-toggle-row">
+          <span class="set-toggle-label">❓ FAQ (landing)</span>
+          <label class="set-switch"><input type="checkbox" id="set-show-faq"><span class="set-switch-slider"></span></label>
+        </div>
+        <div class="set-toggle-row">
+          <span class="set-toggle-label">⛰️ Timeline carieră</span>
+          <label class="set-switch"><input type="checkbox" id="set-show-timeline"><span class="set-switch-slider"></span></label>
+        </div>
+        <div class="set-toggle-row">
+          <span class="set-toggle-label">💰 Simulator ROI (S4)</span>
+          <label class="set-switch"><input type="checkbox" id="set-show-roi"><span class="set-switch-slider"></span></label>
+        </div>
+        <div class="set-toggle-row">
+          <span class="set-toggle-label">🤝 De ce eu (S9)</span>
+          <label class="set-switch"><input type="checkbox" id="set-show-benefits"><span class="set-switch-slider"></span></label>
+        </div>
+      </div>
+
+      <div class="set-tab-title" style="margin-top:28px">📹 Video Landing</div>
+      <div class="set-field-group">
+        <div class="set-field-label">URL Video embed (YouTube sau MP4 direct)</div>
+        <input type="url" id="set-video-url" class="set-input" placeholder="https://www.youtube.com/embed/... sau https://res.cloudinary.com/....mp4">
+        <div class="set-hint">YouTube: youtu.be/ID sau youtube.com/watch?v=ID · MP4: link direct Cloudinary</div>
+      </div>
+    </div>
+
+    <!-- ── TAB STORY ── -->
+    <div class="set-tab" id="tab-story">
+      <div class="set-tab-title">📖 Slide-uri Poveste (S11–S14)</div>
+      <div class="set-hint" style="margin-bottom:16px">Editează textele și media pentru fiecare slide de poveste. Imaginile/video apar în panoul stâng.</div>
+
+      <div id="set-story-accordion"></div>
+    </div>
+
+    <!-- ── TAB ROI ── -->
+    <div class="set-tab" id="tab-roi">
+      <div class="set-tab-title">💰 Pachete Sponsorizare (ROI Simulator)</div>
+      <div class="set-hint" style="margin-bottom:16px">Nivelele din simulatorul ROI din slide-ul 4. Suma minimă determină ce beneficii se deblochează.</div>
+      <div id="set-packages-list"></div>
+      <button class="set-btn-add" onclick="setAddPackage()">+ Adaugă pachet</button>
+    </div>
+
+    <!-- ── TAB FAQ ── -->
+    <div class="set-tab" id="tab-faq">
+      <div class="set-tab-title">❓ Întrebări Frecvente (FAQ)</div>
+      <div class="set-hint" style="margin-bottom:16px">Apar pe pagina publică de landing pentru sponsori potențiali.</div>
+      <div id="set-faq-list"></div>
+      <button class="set-btn-add" onclick="setAddFaq()">+ Adaugă întrebare</button>
+    </div>
+
+    <!-- ── TAB ORDINE ── -->
+    <div class="set-tab" id="tab-slideuri">
+      <div class="set-tab-title">🎞️ Ordine Slide-uri Prezentare</div>
+      <div class="set-hint" style="margin-bottom:16px">Trage sau folosește ↑↓ pentru a reordona. Toggle-ul dezactivează slide-urile pe care nu le vrei.</div>
+      <div id="set-slides-order" style="display:flex;flex-direction:column;gap:6px"></div>
+      <button class="set-btn-ghost" onclick="resetSlideOrder()" style="margin-top:12px;font-size:11px">↺ Resetează la ordinea implicită</button>
+    </div>
+
+    <!-- ── TAB DASHBOARD ── -->
+    <div class="set-tab" id="tab-dashboard">
+      <div class="set-tab-title">📊 Dashboard</div>
+
+      <div class="set-2col">
+        <div class="set-field-group">
+          <div class="set-field-label">Target km anual</div>
+          <input type="number" id="set-target-km" class="set-input" placeholder="5000">
+          <div class="set-hint">Apare în bara de progres</div>
+        </div>
+        <div class="set-field-group">
+          <div class="set-field-label">Titlu dashboard</div>
+          <input type="text" id="set-dash-title" class="set-input" placeholder="SEZONUL BESTIEI">
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /set-content -->
+</div><!-- /set-editor -->
+
+<!-- Buton save sticky -->
+<div class="set-save-bar">
+  <button class="btn btn-primary" onclick="saveSettings()" style="flex:1;padding:14px;font-size:14px;border-radius:12px">💾 Salvează toate setările</button>
+  <button class="btn btn-ghost" onclick="openSponsorPrez()" style="padding:14px;border-radius:12px" title="Preview prezentare">▶</button>
+</div>
 
 </main>
 </div>
@@ -3429,6 +3759,20 @@ PROPRIE."></textarea>
       <div class="fi"><span class="lbl">Km maximi</span><input type="number" id="eq-kmx" placeholder="800"></div>
       <div class="fi"><span class="lbl">Km actuali parcurși</span><input type="number" id="eq-kma" placeholder="0"></div>
       <div class="fi fgrow"><span class="lbl">Note</span><textarea id="eq-note" rows="2" placeholder="Observații..."></textarea></div>
+      <div class="fi fgrow">
+        <span class="lbl">Link produs (eMAG, Decathlon, etc)</span>
+        <input id="eq-product-link" placeholder="https://www.emag.ro/...">
+      </div>
+      <div class="fi">
+        <span class="lbl">Status</span>
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <button type="button" id="eq-btn-owned" onclick="eqSetStatus('owned')"
+            class="btn btn-primary btn-sm" style="flex:1">✅ Cumpărat</button>
+          <button type="button" id="eq-btn-wishlist" onclick="eqSetStatus('wishlist')"
+            class="btn btn-ghost btn-sm" style="flex:1">🎯 Wishlist</button>
+        </div>
+        <input type="hidden" id="eq-status" value="owned">
+      </div>
       <div class="sl">Dovadă achiziție</div>
       <div class="fi fgrow"><span class="lbl">Link dovadă (factură/chitanță)</span><input id="eq-link" placeholder="https://..."></div>
       <div style="margin-top:4px" id="eq-link-preview-wrap"></div>
@@ -3608,6 +3952,24 @@ create policy "Users see own data" on trail_data
 // ══════════════════════════════════════════════════════
 const SB_URL   = 'https://jqhtistewpmiphuoxfmp.supabase.co';
 const SB_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxaHRpc3Rld3BtaXBodW94Zm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMzkwOTUsImV4cCI6MjA4ODcxNTA5NX0.NWG60gy3twOCAjVlHuuIB1eTXum5rJVKN4L2EqgPa7I';
+
+const DEFAULT_PROFILE = {
+  name:        'Balan Gabriel',
+  nickname:    'HAX',
+  city:        'Bârlad',
+  year:        2024,
+  photo:       'https://i.imgur.com/7VqAGjI.jpeg',
+  bio_short:   'Totul a început cu o simplă întrebare, în mai 2024 — de la primele alergări pe străzile Bârladului, la Bucharest 10K terminat în pragul de a vomita cu spargere de PR, și de acolo... n-am mai oprit.',
+  bio_full:    '',
+  strava_id:   '136130375',
+  itra_url:    'https://itra.run/RunnerSpace/BALAN.Gabriel%20Zaharia/5688809',
+  itra_pi:     536,
+  instagram:   '',
+  facebook:    '',
+  whatsapp:    '40',
+};
+
+let PROFILE = { ...DEFAULT_PROFILE };
 const OWNER_EMAIL = 'evoluttionofall@gmail.com';
 
 let currentUser = null;
@@ -3977,7 +4339,7 @@ window.addEventListener('load', async () => {
     if (splash) {
       splash.classList.add('on');
       // Aplica PROFILE.name daca e disponibil
-      if (splashName && PROFILE?.name) splashName.textContent = PROFILE.name.toUpperCase();
+      if (splashName && typeof PROFILE !== 'undefined' && PROFILE?.name) splashName.textContent = PROFILE.name.toUpperCase();
       requestAnimationFrame(() => splash.classList.add('vis'));
       // Animam progress bar simulat
       let pct = 0;
@@ -5098,6 +5460,15 @@ function setEqUse(type) {
 }
 function closeEQ() { document.getElementById('ov-eq').classList.remove('on'); editEQid=null; }
 
+function eqSetStatus(val) {
+  const inp = document.getElementById('eq-status');
+  if (inp) inp.value = val;
+  const btnO = document.getElementById('eq-btn-owned');
+  const btnW = document.getElementById('eq-btn-wishlist');
+  if (btnO) { btnO.className = val==='owned' ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm'; btnO.style.flex='1'; }
+  if (btnW) { btnW.className = val==='wishlist' ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm'; btnW.style.flex='1'; }
+}
+
 async function saveEQ() {
   if (!isOwnerLoggedIn()) return;
   // Încearcă să restaureze tokenul din localStorage dacă lipsește
@@ -5124,6 +5495,8 @@ async function saveEQ() {
     race_ids: useType==='race' ? Array.from(raceChecks).map(c=>c.value) : [],
     use_type: useType,
     train_months: useType==='training' ? (+document.getElementById('eq-train-months').value||0) : null,
+    status: document.getElementById('eq-status')?.value || 'owned',
+    product_link: document.getElementById('eq-product-link')?.value.trim() || null,
   };
   try {
     if (editEQid) {
@@ -6523,24 +6896,6 @@ const DEFAULT_SETTINGS = {
 //  SETĂRI PROFIL
 // ══════════════════════════════════════════════════════
 
-const DEFAULT_PROFILE = {
-  name:        'Balan Gabriel',
-  nickname:    'HAX',
-  city:        'Bârlad',
-  year:        2024,
-  photo:       'https://i.imgur.com/7VqAGjI.jpeg',
-  bio_short:   'Totul a început cu o simplă întrebare, în mai 2024 — de la primele alergări pe străzile Bârladului, la Bucharest 10K terminat în pragul de a vomita cu spargere de PR, și de acolo... n-am mai oprit.',
-  bio_full:    '',
-  strava_id:   '136130375',
-  itra_url:    'https://itra.run/RunnerSpace/BALAN.Gabriel%20Zaharia/5688809',
-  itra_pi:     536,
-  instagram:   '',
-  facebook:    '',
-  whatsapp:    '40',
-};
-
-let PROFILE = { ...DEFAULT_PROFILE };
-
 function loadProfile() {
   try {
     let raw = DB.prefs?.profile_settings;
@@ -6748,6 +7103,8 @@ function closeSponsorPrez() {
   document.removeEventListener('keydown', spKeyHandler);
   if (_spMapTimer) { clearInterval(_spMapTimer); _spMapTimer = null; }
   if (_spCdTimer)  { clearInterval(_spCdTimer);  _spCdTimer  = null; }
+  // Opreste toate video-urile
+  document.querySelectorAll('[data-story-video]').forEach(v => { v.pause(); v.currentTime=0; });
 }
 
 function spKeyHandler(e) {
@@ -6803,11 +7160,21 @@ function spGoSlide(idx) {
         el.style.transitionDelay = delay + 'ms';
       });
     }
+    // Porneste video pe slide-ul activ, opreste pe celelalte
+    document.querySelectorAll('[data-story-video]').forEach(v => {
+      const onActiveSlide = v.closest('.sp-slide') === target;
+      if (onActiveSlide) {
+        v.play().catch(()=>{ v.muted=true; v.play(); });
+      } else {
+        v.pause();
+        v.currentTime = 0;
+      }
+    });
     // Animatii bazate pe ID-ul slide-ului activ, nu pe index fix
     if (targetId === 'sp-s1')  setTimeout(spAnimateCounters, 350);
     if (targetId === 'sp-s3')  setTimeout(spAnimateBars, 350);
     if (targetId === 'sp-s4')  spInitROI();
-    if (targetId === 'sp-s5')  setTimeout(spStartMapAnimation, 300);
+    // S2: nu auto-selectam nimic la intrare
     if (targetId === 'sp-s6')  spStartCountdown();
     if (targetId === 'sp-s7')  spAnimateBudget();
     if (targetId === 'sp-s14') setTimeout(spDrawKmChart, 300);
@@ -6850,9 +7217,12 @@ function spUpdateROI(amount) {
   if (grid) grid.innerHTML = tiers.map(t => {
     const on = amount >= (t.min||0);
     return `<div class="sp-roi-item ${on?'on':''}">
-      <div class="sp-roi-item-icon">${t.icon||'🎁'}</div>
-      <div class="sp-roi-item-title">${escHtml(t.title||'')}</div>
-      <div class="sp-roi-item-desc">${escHtml(t.desc||'')}</div>
+      <span class="sp-roi-item-icon">${t.icon||'🎁'}</span>
+      <div style="flex:1;min-width:0">
+        <div class="sp-roi-item-title">${escHtml(t.title||'')}</div>
+        ${on ? `<div class="sp-roi-item-desc" style="display:block">${escHtml(t.desc||'')}</div>` : ''}
+      </div>
+      ${on ? '<span style="color:#ccff00;font-size:14px;flex-shrink:0">✓</span>' : '<span style="color:rgba(255,255,255,.2);font-size:12px;flex-shrink:0">—</span>'}
     </div>`;
   }).join('');
   const sum = document.getElementById('sp-roi-summary');
@@ -6974,24 +7344,8 @@ function spPopulateAll() {
   if(s1streak){ const st=calcStreak(acts); s1streak.dataset.target=st.current; s1streak.textContent='0🔥'; }
 
   // ── Slide 2 ──────────────────────────────────────────
-  const s2nr=document.getElementById('sp-s2-nr');
-  if(s2nr) s2nr.textContent=races.length;
-  const s2nrL=document.getElementById('sp-s2-nr-left'); if(s2nrL) s2nrL.textContent=races.length;
-  const grid=document.getElementById('sp-races-grid');
-  if(grid) {
-    const sorted=[...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
-    const nextRace=sorted.find(r=>r.data_cursa&&new Date(r.data_cursa)>=today);
-    grid.innerHTML=sorted.map((r,i)=>{
-      const past=r.data_cursa&&new Date(r.data_cursa)<today;
-      const isNext=r.id===nextRace?.id;
-      const days=r.data_cursa?Math.ceil((new Date(r.data_cursa)-today)/86400000):null;
-      return `<div class="sp-race-card ${past?'past':''} ${isNext?'next':''}">
-        <div class="sp-race-nr">#${r.nr||i+1} ${isNext?'· 🔥 NEXT':''}${past?'· ✅ DONE':''}</div>
-        <div class="sp-race-name">${escHtml(r.denumire||'—')}</div>
-        <div class="sp-race-meta">${r.distanta||'?'} km${r.denivelare?' · '+Math.round(r.denivelare/1000)+'k D+':''}${days!==null&&!past?' · '+days+'z':''}</div>
-      </div>`;
-    }).join('');
-  }
+  // S2 combinat: liste + hartă
+  spPopulateS2(races, acts);
 
   // ── Slide 3 ──────────────────────────────────────────
   const pTotal=document.getElementById('sp-p-total'), pRuns=document.getElementById('sp-p-runs');
@@ -7084,6 +7438,23 @@ function spPopulateAll() {
 
   // Story slides — aplica textele si media din setari
   applyStorySlides();
+  // Slide 4B — wishlist
+  spPopulateWishlist();
+  // S9 — De ce eu
+  const wi = SETTINGS.why_items || [];
+  ['1','2','3'].forEach((n,i) => {
+    const t=document.querySelector('#sp-s9 .sp-why-item:nth-child('+n+') .sp-why-title');
+    const d=document.querySelector('#sp-s9 .sp-why-item:nth-child('+n+') .sp-why-desc');
+    if(t&&wi[i]?.title) t.textContent=wi[i].title;
+    if(d&&wi[i]?.desc)  d.textContent=wi[i].desc;
+  });
+  // S10 — Testimonial
+  const testTxt = SETTINGS.testimonial_text;
+  const testAuth = SETTINGS.testimonial_author;
+  const testEl2 = document.getElementById('sp-testimonial-text');
+  const testAuthEl = document.getElementById('sp-test-logo-text');
+  if(testTxt && testEl2) testEl2.textContent = testTxt;
+  if(testAuth && testAuthEl) testAuthEl.textContent = testAuth;
 
   // WhatsApp buttons
   const waPhone=(PROFILE.whatsapp||'').replace(/\D/g,'');
@@ -7250,29 +7621,86 @@ function spActivateMapRace(i) {
 
 
 
+
+// ── Settings tabs ────────────────────────────────────
+function setTab(btn, tabId) {
+  document.querySelectorAll('.set-nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.set-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const tab = document.getElementById(tabId);
+  if (tab) tab.classList.add('active');
+}
+
 // ── Story Slides Settings ─────────────────────────────
 const STORY_SLIDES_IDS = ['s11','s12','s13','s14'];
 
 function renderStorySettings() {
   const ss = SETTINGS.story_slides || DEFAULT_SETTINGS.story_slides;
-  if (!ss) return;
-  STORY_SLIDES_IDS.forEach(sid => {
+  const acc = document.getElementById('set-story-accordion');
+  if (!ss || !acc) return;
+
+  const LABELS = {
+    s11: '🏃 Slide A — Originea',
+    s12: '⛰️ Slide B — Primul munte',
+    s13: '🌩️ Slide C — Km 130',
+    s14: '📈 Slide D — 5km → 5000km',
+  };
+
+  // Generează HTML accordion dinamic
+  acc.innerHTML = STORY_SLIDES_IDS.map(sid => {
     const d = ss[sid] || {};
-    const g = id => document.getElementById(id);
-    const set = (id, val) => { const el = g(id); if(el) el.value = val || ''; };
-    set(sid+'-left-type',  d.left_type || 'gradient');
-    set(sid+'-left-url',   d.left_url  || '');
-    set(sid+'-eyebrow',    d.eyebrow   || '');
-    // title: newlines → textarea
-    set(sid+'-title',      (d.title||'').replace(/\\n/g,'\n'));
+    const label = LABELS[sid] || sid;
+    const titleVal = (d.title||'').replace(/\n/g,'\n');
     const lines = d.lines || ['','',''];
-    set(sid+'-line0', lines[0]||'');
-    set(sid+'-line1', lines[1]||'');
-    set(sid+'-line2', lines[2]||'');
-    set(sid+'-left-quote', d.left_quote || '');
-    set(sid+'-left-label', d.left_label || '');
-    storyPreviewMedia(sid);
-  });
+    const typeOpts = ['gradient','image','video'].map(v =>
+      `<option value="${v}"${(d.left_type||'gradient')===v?' selected':''}>${
+        v==='gradient'?'Gradient (default)':v==='image'?'Imagine (URL)':'Video (YouTube / MP4 direct)'
+      }</option>`
+    ).join('');
+
+    return `<div class="set-story-block" data-slide="${sid}">
+      <div class="set-story-header" onclick="this.parentElement.classList.toggle('open')">
+        <span>${label}</span><span class="set-story-arrow">▾</span>
+      </div>
+      <div class="set-story-body">
+        <label class="set-lbl">Media stânga</label>
+        <select id="${sid}-left-type" class="set-story-sel" onchange="storyPreviewMedia('${sid}')">
+          ${typeOpts}
+        </select>
+        <input id="${sid}-left-url" class="set-story-inp" placeholder="URL imagine, MP4 direct (res.cloudinary.com/...) sau YouTube"
+          value="${escHtml(d.left_url||'')}" oninput="storyPreviewMedia('${sid}')">
+        <div id="${sid}-preview" class="set-story-preview" style="display:none"></div>
+        <div class="set-hint" style="margin-top:4px">
+          🎬 <strong>MP4 cu sunet:</strong> foloseşte URL direct din Cloudinary:<br>
+          <code style="font-size:9px;color:var(--accent)">https://res.cloudinary.com/CLOUD_NAME/video/upload/PUBLIC_ID.mp4</code>
+        </div>
+
+        <label class="set-lbl" style="margin-top:10px">Eyebrow (text mic sus)</label>
+        <input id="${sid}-eyebrow" class="set-story-inp" value="${escHtml(d.eyebrow||'')}">
+
+        <label class="set-lbl">Titlu (Enter = rând nou)</label>
+        <textarea id="${sid}-title" class="set-story-inp" rows="3">${escHtml((d.title||'').replace(/\n/g,'\n'))}</textarea>
+
+        <label class="set-lbl">Paragraf 1</label>
+        <textarea id="${sid}-line0" class="set-story-inp" rows="2">${escHtml(lines[0]||'')}</textarea>
+
+        <label class="set-lbl">Paragraf 2</label>
+        <textarea id="${sid}-line1" class="set-story-inp" rows="2">${escHtml(lines[1]||'')}</textarea>
+
+        <label class="set-lbl">Paragraf 3 (accent)</label>
+        <textarea id="${sid}-line2" class="set-story-inp" rows="2">${escHtml(lines[2]||'')}</textarea>
+
+        <label class="set-lbl">Citat stânga</label>
+        <input id="${sid}-left-quote" class="set-story-inp" value="${escHtml(d.left_quote||'')}">
+
+        <label class="set-lbl">Label pill stânga</label>
+        <input id="${sid}-left-label" class="set-story-inp" value="${escHtml(d.left_label||'')}">
+      </div>
+    </div>`;
+  }).join('');
+
+  // Init preview pentru fiecare
+  STORY_SLIDES_IDS.forEach(sid => storyPreviewMedia(sid));
 }
 
 function storyPreviewMedia(sid) {
@@ -7289,8 +7717,12 @@ function storyPreviewMedia(sid) {
   } else if (type === 'video') {
     // Convert YouTube watch URL to embed
     const embedUrl = url.replace('watch?v=','embed/').replace('youtu.be/','www.youtube.com/embed/');
-    const previewUrl = embedUrl + (embedUrl.includes('?') ? '&' : '?') + 'autoplay=1&mute=1&controls=0&playsinline=1';
-    prevEl.innerHTML = `<iframe src="${previewUrl}" allow="autoplay; encrypted-media" frameborder="0"></iframe>`;
+    if (url.match(/\.mp4|\.webm|\.mov/i)) {
+      prevEl.innerHTML = `<video src="${url}" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover"></video>`;
+    } else {
+      const previewUrl = embedUrl + (embedUrl.includes('?') ? '&' : '?') + 'autoplay=1&mute=1&controls=0&playsinline=1';
+      prevEl.innerHTML = `<iframe src="${previewUrl}" allow="autoplay; encrypted-media" frameborder="0"></iframe>`;
+    }
   }
 }
 
@@ -7382,15 +7814,388 @@ function applyStorySlides() {
       }
     } else if (type === 'video') {
       imgEl.style.background = '#000';
-      const embedUrl = url.replace('watch?v=','embed/').replace('youtu.be/','www.youtube.com/embed/');
+      if (url.match(/\.mp4|\.webm|\.mov/i)) {
+        const vid = document.createElement('video');
+        vid.src = url; vid.loop = true; vid.playsInline = true;
+        vid.muted = false; // va fi gestionat de butonul mute
+        vid.dataset.storyVideo = '1';
+        vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none';
+        imgEl.insertBefore(vid, imgEl.firstChild);
+        vid.load(); // preload fara play
+        // Buton mute overlay
+        const muteBtn = document.createElement('button');
+        muteBtn.className = 'sp-video-mute';
+        muteBtn.innerHTML = '🔊';
+        muteBtn.onclick = (e) => {
+          e.stopPropagation();
+          vid.muted = !vid.muted;
+          muteBtn.innerHTML = vid.muted ? '🔇' : '🔊';
+        };
+        imgEl.appendChild(muteBtn);
+      } else {
+      let finalUrl = url;
+      if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        finalUrl = url.replace('watch?v=','embed/').replace('youtu.be/','www.youtube.com/embed/');
+        finalUrl += (finalUrl.includes('?') ? '&' : '?') + 'autoplay=1&mute=1&loop=1&controls=0&playsinline=1';
+      } else if (url.includes('player.cloudinary.com')) {
+        // Cloudinary embed player - fix params
+        finalUrl = url.replace('autoplay=0','autoplay=1').replace('mute=1','muted=0');
+        if (!finalUrl.includes('autoplay=')) finalUrl += '&autoplay=1';
+        if (!finalUrl.includes('muted=') && !finalUrl.includes('mute=')) finalUrl += '&muted=0';
+        if (!finalUrl.includes('loop=')) finalUrl += '&loop=1';
+        if (!finalUrl.includes('controls=')) finalUrl += '&controls=0';
+      } else {
+        // Orice alt iframe
+        finalUrl += (finalUrl.includes('?') ? '&' : '?') + 'autoplay=1&muted=0&loop=1';
+      }
       const iframe = document.createElement('iframe');
-      iframe.src = embedUrl + (embedUrl.includes('?') ? '&' : '?') + 'autoplay=1&mute=1&loop=1&controls=0&playsinline=1';
+      iframe.src = finalUrl;
       iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;z-index:0;pointer-events:none';
-      iframe.allow = 'autoplay; encrypted-media';
-      iframe.allowFullscreen = false;
+      iframe.allow = 'autoplay; encrypted-media; fullscreen';
       imgEl.insertBefore(iframe, imgEl.firstChild);
     }
+      }
   });
+}
+
+
+
+// ── Slide 4B: Wishlist echipament ────────────────────
+function spPopulateWishlist() {
+  const items = (DB.equipment || []).filter(e => e.status === 'wishlist');
+  const grid  = document.getElementById('sp-wishlist-grid');
+  const pill  = document.getElementById('sp-wish-total-pill');
+  const waBtn = document.getElementById('sp-wish-wa-btn');
+  const waPhone = (PROFILE.whatsapp||'').replace(/\D/g,'');
+
+  if (!grid) return;
+
+  const total = items.reduce((s,e) => s+(parseFloat(e.pret)||0), 0);
+  if (pill) pill.textContent = total>0 ? total.toLocaleString('ro-RO')+' RON total wishlist' : 'Wishlist gol';
+
+  if (waBtn && waPhone) {
+    const msg = encodeURIComponent('Bună! Am văzut wishlist-ul tău de echipament și vreau să te susțin pentru sezonul 2026!');
+    waBtn.href = 'https://wa.me/'+waPhone+'?text='+msg;
+  }
+
+  if (!items.length) {
+    grid.innerHTML = '<div style="padding:24px;text-align:center;color:rgba(255,255,255,.3);font-size:13px;font-family:Inter,sans-serif">Nu există articole în wishlist momentan.</div>';
+    return;
+  }
+
+  const ICONS = {
+    'Pantofi Curse Scurte':'👟','Pantofi Curse Lungi':'👟',
+    'Rucsac':'🎒','Bastoane':'🥢','Altele':'📦'
+  };
+
+  grid.innerHTML = items.map(e => {
+    const icon = ICONS[e.categorie] || '📦';
+    const hasLink = e.product_link && e.product_link.startsWith('http');
+    return `<div style="background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.15);
+                 border-radius:9px;padding:10px 12px;display:flex;align-items:center;gap:10px;
+                 transition:background .15s" 
+               onmouseover="this.style.background='rgba(167,139,250,.1)'"
+               onmouseout="this.style.background='rgba(167,139,250,.05)'">
+      <span style="font-size:22px;flex-shrink:0">${icon}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:700;color:#fff;line-height:1.2;
+                    white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+          ${escHtml(e.denumire||'—')}
+        </div>
+        <div style="font-size:10px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;margin-top:2px">
+          ${escHtml(e.categorie||'')}${e.note?' · '+escHtml(e.note):''}
+        </div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#a78bfa;letter-spacing:.5px">
+          ${e.pret ? e.pret.toLocaleString('ro-RO')+' RON' : '—'}
+        </div>
+        ${hasLink ? `<a href="${escHtml(e.product_link)}" target="_blank" rel="noopener"
+          style="font-size:9px;color:rgba(167,139,250,.7);text-decoration:none;
+                 text-transform:uppercase;letter-spacing:.5px;font-family:'Inter',sans-serif"
+          onclick="event.stopPropagation()">Vezi produs ›</a>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── S2: Curse + Hartă combinat ───────────────────────
+let _s2ActiveIdx = -1;
+
+function spPopulateS2(races, acts) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const sorted = [...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+  _spMapRaces = sorted;
+
+  // Populam nr curse
+  const nrEl = document.getElementById('sp-s2-nr-left');
+  if(nrEl) nrEl.textContent = races.length;
+
+  // ── Lista curse dreapta ──────────────────────────
+  const listEl = document.getElementById('sp-races-list');
+  if (listEl) {
+    listEl.innerHTML = sorted.map((r,i) => {
+      const past = r.data_cursa && new Date(r.data_cursa) < today;
+      const days = r.data_cursa ? Math.ceil((new Date(r.data_cursa)-today)/86400000) : null;
+      const hasLoc = !!spFindRaceLoc(r.denumire);
+      const diff = spCalcDifficulty(r);
+      const dateStr = r.data_cursa ? new Date(r.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'short'}) : '';
+      return `<div class="sp-race-row ${past?'past':''} ${diff.barClass}" id="sp-race-row-${i}" data-i="${i}"
+                   onclick="spSelectRace(${i}); spOpenRaceDetail(${i})">
+        <div class="sp-race-diff-bar"></div>
+        <div class="sp-race-row-body">
+          <div class="sp-race-row-top">
+            <span class="sp-race-row-nr">#${r.nr||i+1}</span>
+            <span class="sp-race-row-name">${escHtml(r.denumire||'—')}</span>
+            <span class="sp-race-row-badge ${diff.badgeClass}">${diff.label}</span>
+          </div>
+          <div class="sp-race-row-meta">
+            ${r.distanta?'<strong style="color:rgba(255,255,255,.7)">'+r.distanta+'km</strong>':'?km'}${r.denivelare?' · '+Math.round(r.denivelare/1000)+'k D+':''}${dateStr?' · '+dateStr:''}${past?' · ✅':days!==null&&days<=30?' · <span style="color:#facc15">'+days+'z</span>':days!==null?' · '+days+'z':''}
+          </div>
+        </div>
+        <div class="sp-race-row-right">
+          ${past?'<span style="font-size:14px">✅</span>':hasLoc?'<span style="color:rgba(204,255,0,.5);font-size:16px">›</span>':''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Hartă stânga ─────────────────────────────────
+  spDrawMapS2(sorted, today);
+
+  // Fara auto-selectie — userul alege
+}
+
+function spCalcDifficulty(r) {
+  const km = parseFloat(r.distanta)||0;
+  const dplus = parseFloat(r.denivelare)||0;
+  const name = (r.denumire||'').toLowerCase();
+  // Beast: Bucovina UTMB, Transylvania 100+
+  if (name.includes('bucovina') || name.includes('utmb') ||
+      (name.includes('transylvania') && km >= 100)) {
+    return { level:'beast', label:'BEAST 💀', barClass:'diff-beast', badgeClass:'badge-beast' };
+  }
+  // Ultra: 80km+ sau D+5000+
+  if (km >= 80 || dplus >= 5000) {
+    return { level:'ultra', label:'ULTRA 🔥', barClass:'diff-ultra', badgeClass:'badge-ultra' };
+  }
+  // Hard: 40-80km sau D+2500+
+  if (km >= 40 || dplus >= 2500) {
+    return { level:'hard', label:'HARD ⚡', barClass:'diff-hard', badgeClass:'badge-hard' };
+  }
+  // Medium: 20-40km
+  if (km >= 20) {
+    return { level:'medium', label:'MEDIUM', barClass:'diff-medium', badgeClass:'badge-medium' };
+  }
+  return { level:'easy', label:'EASY', barClass:'diff-easy', badgeClass:'badge-easy' };
+}
+
+function spFindRaceLoc(denumire) {
+  if (!denumire) return null;
+  const dl = denumire.toLowerCase();
+  const LOCS = {
+    'transylvania':[46.54,25.08],'brasov':[45.65,25.61],'brașov':[45.65,25.61],
+    'skyrace':[45.36,25.56],'nemirei':[46.10,26.65],'predeal':[45.50,25.57],
+    'bucovina':[47.55,25.93],'utmb':[47.55,25.93],'2x2':[45.40,23.82],
+    'ciucas':[45.53,26.08],'ciucaș':[45.53,26.08],'azuga':[45.43,25.57],
+    'istrita':[44.88,26.82],'istrița':[44.88,26.82],'sinaia':[45.35,25.55],
+    'piatra':[46.92,26.38],'neamț':[46.92,26.38],'apuseni':[46.55,22.80],
+    'retezat':[45.38,22.90],'ceahlau':[46.97,25.95],'ceahlău':[46.97,25.95],
+  };
+  for (const [k,v] of Object.entries(LOCS)) if (dl.includes(k)) return v;
+  return null;
+}
+
+function spSelectRace(i) {
+  _s2ActiveIdx = i;
+  const r = _spMapRaces[i];
+  if (!r) return;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const past = r.data_cursa && new Date(r.data_cursa) < today;
+
+  // Highlight row în lista
+  document.querySelectorAll('.sp-race-row').forEach(el => el.classList.remove('active'));
+  const activeEl = document.getElementById('sp-race-row-'+i);
+  if (activeEl) activeEl.classList.add('active');
+  // Scroll row vizibil
+  const activeRow = document.getElementById('sp-race-row-'+i);
+  if (activeRow) activeRow.scrollIntoView({block:'nearest',behavior:'smooth'});
+
+  // Highlight dot pe hartă
+  spActivateMapDot(i, past);
+
+  // Update text sub hartă
+  const nameEl = document.getElementById('sp-map-race-name');
+  const metaEl = document.getElementById('sp-map-race-meta');
+  if (nameEl) nameEl.textContent = r.denumire||'—';
+  if (metaEl) {
+    const days = r.data_cursa ? Math.ceil((new Date(r.data_cursa)-today)/86400000) : null;
+    metaEl.textContent = (r.distanta||'?')+'km'
+      +(r.denivelare?' · '+Math.round(r.denivelare/1000)+'k D+':'')
+      +(past?' · ✅ Finalizat':days!==null?' · '+days+' zile':'');
+  }
+}
+
+function spActivateMapDot(i, past) {
+  // Reset toate
+  document.querySelectorAll('.sp-map-dot-circle').forEach(c => {
+    c.setAttribute('r','6');
+    c.setAttribute('fill','#1a3a1a');
+    c.setAttribute('stroke','#2a4a2a');
+    c.setAttribute('opacity','.5');
+    c.style.filter = '';
+  });
+  // Activeaza doar cel cu ID-ul corect
+  const dot = document.getElementById('map-dot-'+i);
+  if (dot) {
+    dot.setAttribute('r','10');
+    dot.setAttribute('fill', past?'#888':'#ccff00');
+    dot.setAttribute('stroke', past?'#aaa':'#ccff00');
+    dot.setAttribute('opacity','1');
+    dot.style.filter = past?'':'drop-shadow(0 0 6px #ccff00)';
+  }
+}
+
+function spDrawMapS2(races, today) {
+  const svg = document.getElementById('sp-map-svg');
+  if (!svg) return;
+
+  const COUNTIES = ["M163.4,38.0L169.8,47.4L162.0,53.5L157.0,52.6L152.6,53.4L152.7,55.3L157.5,57.4L157.7,59.6L153.6,66.4L151.4,66.6L147.3,63.6L140.2,72.6L141.5,74.4L145.7,75.2L146.6,77.0L143.7,81.1L137.7,77.3L132.7,76.0L122.8,80.7L121.7,77.1L118.4,74.8L112.5,75.1L104.3,62.7L106.1,57.5L109.0,54.2L114.5,53.4L115.8,50.4L117.2,50.0L122.0,52.0L125.4,51.1L130.5,47.4L131.0,44.3L139.3,38.2L138.2,35.7L141.8,37.2L145.7,35.7L147.5,29.8L152.0,30.8L157.8,36.5L163.4,38.0Z","M70.9,124.3L74.0,125.1L89.0,124.3L95.8,127.2L101.0,127.6L103.6,129.7L106.2,135.0L114.4,139.5L115.6,141.9L128.5,143.3L130.6,145.6L127.7,147.8L124.6,153.2L118.5,153.2L116.8,154.6L114.8,168.1L111.0,172.9L107.0,174.6L102.7,173.8L99.9,170.9L94.8,168.7L92.8,169.0L91.8,171.8L89.0,171.1L88.5,173.8L84.3,170.9L82.0,174.0L78.1,168.1L75.5,167.7L74.7,165.4L72.5,165.0L68.2,169.5L66.0,168.3L63.2,169.6L60.4,166.2L58.9,166.9L58.3,169.1L56.9,169.2L55.1,166.2L48.3,165.1L45.7,161.2L38.7,155.7L40.5,154.9L40.3,151.9L42.9,149.9L51.9,151.0L53.4,152.3L58.4,148.9L60.0,142.3L64.5,140.2L62.9,136.2L65.4,127.8L69.7,126.4L70.9,124.3Z","M104.3,62.7L112.5,75.1L118.4,74.8L122.1,77.9L122.4,82.5L119.0,89.9L123.3,97.9L129.0,103.2L127.6,107.0L130.9,108.7L130.9,110.6L126.7,116.0L133.0,126.8L132.8,130.9L129.4,130.7L127.8,134.2L128.5,143.3L115.6,141.9L114.4,139.5L106.2,135.0L103.6,129.7L101.0,127.6L95.8,127.2L89.0,124.3L74.0,125.1L70.9,124.3L74.4,121.3L73.0,118.7L74.5,114.6L78.1,111.8L78.4,107.8L81.0,105.5L82.0,102.2L80.3,100.3L86.2,94.9L88.7,90.4L90.6,82.2L96.9,75.9L97.1,67.8L104.3,62.7Z","M38.7,156.5L45.7,161.2L48.9,165.5L55.1,166.2L57.5,169.3L60.4,166.2L63.2,169.6L66.0,168.3L68.2,169.5L72.5,165.0L74.7,165.4L75.5,167.7L78.1,168.1L82.0,174.0L84.3,170.9L88.5,173.8L89.0,171.1L91.8,171.8L93.7,168.7L99.9,170.9L102.7,173.8L106.7,174.6L111.0,172.9L112.7,170.8L118.9,182.2L120.5,182.0L121.0,183.2L118.4,186.0L117.1,189.5L111.8,190.7L108.6,194.7L104.7,193.4L102.0,195.4L98.4,195.9L98.4,198.0L99.5,198.5L97.1,200.1L95.2,199.9L92.4,196.4L87.2,198.8L81.9,196.2L78.5,197.2L77.5,200.6L73.7,203.7L73.2,208.7L76.2,212.0L76.8,214.9L75.6,221.1L73.7,223.2L70.1,220.1L62.7,218.2L58.2,213.3L56.1,214.3L51.1,211.4L41.5,201.8L43.0,198.4L40.9,193.5L42.3,183.8L41.4,182.9L39.7,184.9L38.0,184.4L32.8,174.9L23.0,169.1L18.0,160.4L19.8,158.1L27.0,157.9L28.1,156.1L34.0,159.0L37.8,158.0L38.7,156.5Z","M332.3,291.0L325.5,289.5L322.2,287.4L315.8,288.7L309.9,291.9L294.8,294.8L296.7,289.5L296.4,285.4L288.7,277.9L289.2,276.1L292.3,271.8L296.6,268.7L294.8,265.2L299.9,262.5L303.8,264.4L307.8,262.0L311.3,264.4L319.9,265.0L325.3,266.9L340.5,265.6L351.9,268.2L355.9,271.5L366.8,275.7L364.3,280.6L353.8,285.2L346.5,286.1L341.6,289.9L334.1,289.0L332.3,291.0Z","M366.8,275.7L355.9,271.5L351.9,268.2L341.8,265.7L325.3,266.9L319.9,265.0L311.3,264.4L307.8,262.0L304.5,264.3L299.9,262.5L295.6,264.6L292.6,261.9L295.8,256.7L292.3,254.0L291.3,249.8L288.2,249.1L291.4,246.7L294.5,247.5L296.4,245.9L300.1,245.7L303.2,242.1L306.5,244.3L317.3,244.7L320.3,246.2L323.3,244.9L326.1,246.4L326.9,249.1L329.9,248.0L328.8,246.3L330.0,245.1L334.4,246.8L337.1,246.0L351.7,247.3L359.3,245.7L361.8,248.0L360.3,250.1L361.2,252.4L364.8,254.3L367.3,257.5L366.1,264.0L369.7,265.8L370.4,267.5L370.7,269.9L366.8,275.7Z"];
+
+  const W=460,H=340,pad=18,latMax=48.27,latMin=43.65,lngMin=20.24,lngMax=29.70;
+  const toX=lng=>pad+(lng-lngMin)/(lngMax-lngMin)*(W-pad*2);
+  const toY=lat=>pad+(latMax-lat)/(latMax-latMin)*(H-pad*2);
+
+  let inner = '<rect width="'+W+'" height="'+H+'" fill="#020a02" rx="0"/>';
+  COUNTIES.forEach(d=>{ inner+='<path d="'+d+'" fill="#0a1a0a" stroke="#122012" stroke-width="0.5"/>'; });
+
+  // HOME Bârlad
+  const hx=toX(27.67).toFixed(1),hy=toY(46.23).toFixed(1);
+  inner+='<circle cx="'+hx+'" cy="'+hy+'" r="4" fill="none" stroke="#ccff00" stroke-width="1.5" opacity=".7"/>';
+  inner+='<text x="'+hx+'" y="'+(parseFloat(hy)-7).toFixed(1)+'" font-size="6.5" fill="#ccff00" text-anchor="middle" font-weight="bold" font-family="Inter,sans-serif">HOME</text>';
+
+  // Route line
+  const locs = races.map(r=>spFindRaceLoc(r.denumire)).filter(Boolean);
+  if (locs.length>=2) {
+    inner+='<path d="M'+locs.map(([la,ln])=>toX(ln).toFixed(1)+','+toY(la).toFixed(1)).join('L')+'" fill="none" stroke="#ccff00" stroke-width="1" stroke-dasharray="3,4" opacity=".2"/>';
+  }
+
+  // Dots
+  races.forEach((r,i)=>{
+    const loc=spFindRaceLoc(r.denumire); if(!loc) return;
+    const x=toX(loc[1]).toFixed(1),y=toY(loc[0]).toFixed(1);
+    const past=r.data_cursa&&new Date(r.data_cursa)<today;
+    const big=(parseFloat(r.distanta)||0)>=100;
+    if(big&&!past) inner+='<circle cx="'+x+'" cy="'+y+'" r="14" fill="#ccff00" opacity=".06"/>';
+    inner+='<circle cx="'+x+'" cy="'+y+'" r="7" fill="#1a3a1a" stroke="#2a4a2a" stroke-width="1.5" class="sp-map-dot-circle" id="map-dot-'+i+'" data-race="'+i+'" opacity=".5"/>';
+    inner+='<text x="'+x+'" y="'+(parseFloat(y)-10).toFixed(1)+'" font-size="7.5" fill="rgba(255,255,255,.45)" text-anchor="middle" font-family="Inter,sans-serif" font-weight="600">'+(i+1)+'</text>';
+    inner+='<circle cx="'+x+'" cy="'+y+'" r="18" fill="transparent" data-race="'+i+'" style="cursor:pointer;pointer-events:all"/>';
+  });
+
+  svg.innerHTML = inner;
+
+  // Click handlers
+  // Click pe orice element cu data-race
+  svg.addEventListener('click', (e) => {
+    const target = e.target.closest('[data-race]');
+    if (!target) return;
+    const i = parseInt(target.dataset.race);
+    spSelectRace(i);
+    spOpenRaceDetail(i);
+  });
+}
+
+function spOpenRaceDetail(i) {
+  const r = _spMapRaces[i];
+  if (!r) return;
+  const card = document.getElementById('sp-race-detail-card');
+  if (!card) return;
+  card.style.display = 'block';
+  requestAnimationFrame(()=>{ card.style.maxHeight = '54vh'; });
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const past = r.data_cursa && new Date(r.data_cursa) < today;
+  const days = r.data_cursa ? Math.ceil((new Date(r.data_cursa)-today)/86400000) : null;
+
+  document.getElementById('sp-rd-name').textContent = r.denumire||'—';
+  document.getElementById('sp-rd-date').textContent = r.data_cursa
+    ? new Date(r.data_cursa).toLocaleDateString('ro-RO',{weekday:'long',day:'numeric',month:'long',year:'numeric'})
+    : '—';
+
+  // Stats grid
+  const gpp = (DB.nutri?.gel_pret_set24||0)/24;
+  const gelCost = Math.round((r.geluri||0)*gpp);
+  const stats = [
+    { icon:'🏃', val:(r.distanta||'?')+' km',      lbl:'Distanță' },
+    { icon:'⛰️', val:r.denivelare?Math.round(r.denivelare/1000)+'k D+':'—', lbl:'Denivelare' },
+    { icon:'📅', val:past?'✅ Finalizat':days!==null?days+' zile':'—', lbl:'Status' },
+  ];
+  document.getElementById('sp-rd-stats').innerHTML = stats.map(s=>`
+    <div style="background:rgba(255,255,255,.05);border-radius:7px;padding:8px;text-align:center;border:1px solid rgba(255,255,255,.08)">
+      <div style="font-size:16px;margin-bottom:2px">${s.icon}</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--accent);line-height:1">${s.val}</div>
+      <div style="font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;font-family:'Inter',sans-serif">${s.lbl}</div>
+    </div>`).join('');
+
+  // Info rows detaliate
+  const rows = [
+    r.data_plecare  ? { icon:'🚗', lbl:'Plecare',      val: new Date(r.data_plecare).toLocaleDateString('ro-RO',{weekday:'short',day:'numeric',month:'long'}) } : null,
+    r.data_sfarsit  ? { icon:'🏠', lbl:'Întoarcere',   val: new Date(r.data_sfarsit).toLocaleDateString('ro-RO',{weekday:'short',day:'numeric',month:'long'}) } : null,
+    r.cazare!=null  ? { icon:'🏨', lbl:'Cazare',       val: r.cazare>0?r.cazare.toLocaleString('ro-RO')+' RON':(r.cazare===0?'Fără cazare':'—'), ok:r.plata_cazare } : null,
+    r.plata_concurs ? { icon:'🏁', lbl:'Înscriere',    val: r.plata_concurs.toLocaleString('ro-RO')+' RON', ok:r.plata_concurs_ok } : null,
+    r.geluri        ? { icon:'🧃', lbl:'Geluri',       val: r.geluri+' buc'+( gelCost?' · ~'+gelCost+' RON':'') } : null,
+    r.ora_start     ? { icon:'⏰', lbl:'Start',        val: r.ora_start } : null,
+    r.note          ? { icon:'📝', lbl:'Note',         val: r.note } : null,
+  ].filter(Boolean);
+
+  // Adauga adidasi daca exista in equipment
+  const shoes = (DB.equipment||[]).filter(e=>(e.tip||'').toLowerCase().includes('pantof')||(e.tip||'').toLowerCase().includes('trail'));
+  if (shoes.length) {
+    rows.push({ icon:'👟', lbl:'Adidași planificați', val: shoes.map(s=>s.denumire||s.tip||'—').join(', ') });
+  }
+
+  document.getElementById('sp-rd-info').innerHTML = rows.map(row=>`
+    <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;
+                border-bottom:1px solid rgba(255,255,255,.05)">
+      <span style="font-size:13px;flex-shrink:0;width:18px;text-align:center">${row.icon}</span>
+      <span style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;
+                   letter-spacing:.5px;font-family:'Inter',sans-serif;flex-shrink:0;
+                   min-width:72px;margin-top:1px">${row.lbl}</span>
+      <span style="font-size:12px;color:#fff;font-family:'Inter',sans-serif;flex:1;line-height:1.4">${escHtml(String(row.val||'—'))}</span>
+      ${row.ok!==undefined?`<span style="font-size:12px;flex-shrink:0">${row.ok?'✅':'⏳'}</span>`:''}
+    </div>`).join('');
+}
+
+function spCloseRaceDetail() {
+  const card = document.getElementById('sp-race-detail-card');
+  if (!card) return;
+  card.style.maxHeight = '0';
+  setTimeout(()=>{ card.style.display='none'; }, 300);
+  // Deselecteaza lista si harta
+  document.querySelectorAll('.sp-race-row').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.sp-map-dot-circle').forEach(c=>{
+    c.setAttribute('r','6');c.setAttribute('fill','#1a3a1a');
+    c.setAttribute('stroke','#2a4a2a');c.setAttribute('opacity','.5');
+    c.style.filter='';
+  });
+  const nameEl=document.getElementById('sp-map-race-name');
+  const metaEl=document.getElementById('sp-map-race-meta');
+  if(nameEl) nameEl.textContent='—';
+  if(metaEl) metaEl.textContent='';
+}
+
+// Start map animation pentru S2
+function spStartMapAnimationS2() {
+  if (_spMapTimer) clearInterval(_spMapTimer);
+  _spMapIdx = 0;
+  const total = _spMapRaces.length;
+  if (total > 1) {
+    _spMapTimer = setInterval(()=>{
+      if (document.getElementById('sp-race-detail-card')?.style.display === 'block') return;
+      _spMapIdx = (_spMapIdx+1) % total;
+      spSelectRace(_spMapIdx);
+    }, 2000);
+  }
 }
 
 // ── Slide 14: Grafic km pe luni ─────────────────────
@@ -7582,10 +8387,12 @@ function loadSettings() {
 
 const ALL_SLIDES = [
   { id:'sp-s1',  icon:'🏃', label:'Atletul — km, ITRA, carieră' },
-  { id:'sp-s2',  icon:'🏁', label:'Sezonul 2026 — toate cursele' },
+  { id:'sp-s2',  icon:'🗺️', label:'Curse + Hartă România — interactiv' },
   { id:'sp-s3',  icon:'📊', label:'Dovada — numere reale' },
   { id:'sp-s4',  icon:'🤝', label:'Parteneriat + ROI Simulator' },
-  { id:'sp-s5',  icon:'📍', label:'Unde apar — hartă România animată' },
+  { id:'sp-s4b', icon:'👟', label:'Wishlist Echipament — Susține-mă' },
+  // S5 combinat in S2
+  // { id:'sp-s5',  icon:'📍', label:'Unde apar — hartă România animată' },
   { id:'sp-s6',  icon:'⏱️', label:'Countdown — next race' },
   { id:'sp-s7',  icon:'📈', label:'Unde se duc banii — buget' },
   { id:'sp-s8',  icon:'⚡', label:'Ultima alergare — live Strava' },
@@ -7758,6 +8565,40 @@ function renderSetari() {
 
   // Story slides settings
   renderStorySettings();
+
+  // Tab-specific fields
+  const setValSafe = (id, val) => { const e=document.getElementById(id); if(e) e.value = val||''; };
+
+  // S9 - De ce eu
+  const why = SETTINGS.why_items || DEFAULT_SETTINGS.why_items || [];
+  setValSafe('set-why1-title', why[0]?.title || 'BÂRLADUL PE HARTA TRAIL-ULUI');
+  setValSafe('set-why1-desc',  why[0]?.desc  || 'La fiecare dintre cele 10 curse — Brașov, Sinaia, Bucovina — logo-ul tău e prezent fizic.');
+  setValSafe('set-why2-title', why[1]?.title || 'TRANSPARENȚĂ TOTALĂ');
+  setValSafe('set-why2-desc',  why[1]?.desc  || 'Fiecare km, fiecare cursă, fiecare cheltuială — live, în timp real.');
+  setValSafe('set-why3-title', why[2]?.title || 'PARTENERIATUL AUTENTIC');
+  setValSafe('set-why3-desc',  why[2]?.desc  || 'Nu reclamă. Asociere reală cu un om real din Bârlad.');
+
+  // Testimonial
+  const testEl = document.getElementById('sp-testimonial-text');
+  setValSafe('set-testimonial-text',
+    SETTINGS.testimonial_text || (testEl ? testEl.textContent.trim() : ''));
+  setValSafe('set-testimonial-author', SETTINGS.testimonial_author || '— PRISCOM, Bârlad');
+
+  // Photo preview
+  if (s.photo_url) {
+    const prev = document.getElementById('set-photo-preview');
+    const img  = document.getElementById('set-photo-img');
+    if (img) { img.src = s.photo_url; if(prev) prev.style.display='block'; }
+  }
+  const photoInp = document.getElementById('set-photo-url');
+  if (photoInp) {
+    photoInp.addEventListener('input', function() {
+      const prev = document.getElementById('set-photo-preview');
+      const img  = document.getElementById('set-photo-img');
+      if (this.value && img) { img.src=this.value; img.onload=()=>{if(prev)prev.style.display='block';}; img.onerror=()=>{if(prev)prev.style.display='none';}; }
+      else if (prev) prev.style.display='none';
+    });
+  }
 }
 
 // ── Packages ────────────────────────────────────────
@@ -7841,6 +8682,15 @@ async function saveSettings() {
   // slide_order e updatat direct în SETTINGS de editor — nu citim din DOM
   // Story slides — citim din formulare
   SETTINGS.story_slides = readStorySettings();
+  // Testimonial
+  SETTINGS.testimonial_text   = g('set-testimonial-text');
+  SETTINGS.testimonial_author = g('set-testimonial-author');
+  // De ce eu
+  SETTINGS.why_items = [
+    { title: g('set-why1-title'), desc: g('set-why1-desc') },
+    { title: g('set-why2-title'), desc: g('set-why2-desc') },
+    { title: g('set-why3-title'), desc: g('set-why3-desc') },
+  ];
 
   // Read packages & FAQ from DOM (in case user typed without triggering onchange)
   document.querySelectorAll('#set-packages-list .set-pkg-row').forEach((row, i) => {
@@ -8586,18 +9436,28 @@ function checkSponsorParam() {
   const fill = window._splashFillEl;
   if (fill) fill.style.width = '100%';
 
+  // Progress la 100% și arată butonul — userul trebuie să dea click (deblochează audio)
+  if (window._splashFillTimer) clearInterval(window._splashFillTimer);
+  if (fill) {
+    fill.style.transition = 'width .4s ease';
+    fill.style.width = '100%';
+  }
   setTimeout(() => {
-    // Inchide splash cu fade
+    const btn = document.getElementById('sp-splash-btn');
+    const loading = document.getElementById('sp-splash-loading');
+    if (btn) btn.style.display = 'block';
+    if (loading) loading.style.display = 'none';
+  }, 450);
+  // Functia apelata la click pe buton
+  window.spSplashUserClick = function() {
     const splash = window._splashEl;
     if (splash) {
-      splash.style.transition = 'opacity .4s ease';
+      splash.style.transition = 'opacity .35s ease';
       splash.style.opacity = '0';
-      setTimeout(() => { splash.classList.remove('on'); splash.style.opacity = ''; }, 400);
+      setTimeout(() => { splash.classList.remove('on'); splash.style.opacity = ''; }, 350);
     }
-    if (window._splashFillTimer) clearInterval(window._splashFillTimer);
-    // Deschide prezentarea
     openSponsorPrez();
-  }, 300);
+  };
 }
 
 
