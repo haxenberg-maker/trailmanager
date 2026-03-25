@@ -8049,6 +8049,11 @@ function spSelectRace(i) {
 }
 
 function spActivateMapDot(i, past) {
+  console.log('[MapDot] activating dot', i, 'past:', past);
+  const allDots = document.querySelectorAll('.sp-map-dot-circle');
+  console.log('[MapDot] total dots in DOM:', allDots.length);
+  const testDot = document.getElementById('map-dot-'+i);
+  console.log('[MapDot] getElementById map-dot-'+i+':', testDot);
   // Reset toate doturile
   document.querySelectorAll('.sp-map-dot-circle').forEach(c => {
     const origFill = c.dataset.defaultFill || '#1a3a1a';
