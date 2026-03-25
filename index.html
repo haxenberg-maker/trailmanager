@@ -3618,6 +3618,141 @@ body.readonly [data-owner-only] { display:none !important }
         </div>
       </div>
 
+
+      <div class="set-tab-title" style="margin-top:28px">🖼️ Media Slide-uri (panoul stâng)</div>
+      <div class="set-hint" style="margin-bottom:14px">Fiecare slide are un panou stâng. Poți pune o imagine sau video MP4 din Cloudinary în loc de gradient.</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
+          <div class="set-field-label">🏃 S1 — Atletul</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <select id="sm-s1-type" class="set-story-sel" onchange="smPreview('s1')">
+              <option value="gradient">Gradient (default)</option>
+              <option value="image">Imagine (URL)</option>
+              <option value="video">Video MP4 / YouTube</option>
+            </select>
+          </div>
+          <input id="sm-s1-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
+            oninput="smPreview('s1')">
+          <div id="sm-s1-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
+        </div>
+        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
+          <div class="set-field-label">🗺️ S2 — Curse + Hartă</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <select id="sm-s2-type" class="set-story-sel" onchange="smPreview('s2')">
+              <option value="gradient">Gradient (default)</option>
+              <option value="image">Imagine (URL)</option>
+              <option value="video">Video MP4 / YouTube</option>
+            </select>
+          </div>
+          <input id="sm-s2-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
+            oninput="smPreview('s2')">
+          <div id="sm-s2-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
+        </div>
+        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
+          <div class="set-field-label">📊 S3 — Dovada</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <select id="sm-s3-type" class="set-story-sel" onchange="smPreview('s3')">
+              <option value="gradient">Gradient (default)</option>
+              <option value="image">Imagine (URL)</option>
+              <option value="video">Video MP4 / YouTube</option>
+            </select>
+          </div>
+          <input id="sm-s3-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
+            oninput="smPreview('s3')">
+          <div id="sm-s3-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
+        </div>
+        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
+          <div class="set-field-label">🤝 S4 — Parteneriat ROI</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <select id="sm-s4-type" class="set-story-sel" onchange="smPreview('s4')">
+              <option value="gradient">Gradient (default)</option>
+              <option value="image">Imagine (URL)</option>
+              <option value="video">Video MP4 / YouTube</option>
+            </select>
+          </div>
+          <input id="sm-s4-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
+            oninput="smPreview('s4')">
+          <div id="sm-s4-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
+        </div>
+        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
+          <div class="set-field-label">👟 S4b — Wishlist Echipament</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <select id="sm-s4b-type" class="set-story-sel" onchange="smPreview('s4b')">
+              <option value="gradient">Gradient (default)</option>
+              <option value="image">Imagine (URL)</option>
+              <option value="video">Video MP4 / YouTube</option>
+            </select>
+          </div>
+          <input id="sm-s4b-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
+            oninput="smPreview('s4b')">
+          <div id="sm-s4b-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
+        </div>
+        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
+          <div class="set-field-label">⏱️ S6 — Countdown</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <select id="sm-s6-type" class="set-story-sel" onchange="smPreview('s6')">
+              <option value="gradient">Gradient (default)</option>
+              <option value="image">Imagine (URL)</option>
+              <option value="video">Video MP4 / YouTube</option>
+            </select>
+          </div>
+          <input id="sm-s6-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
+            oninput="smPreview('s6')">
+          <div id="sm-s6-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
+        </div>
+        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
+          <div class="set-field-label">📊 S7 — Buget</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <select id="sm-s7-type" class="set-story-sel" onchange="smPreview('s7')">
+              <option value="gradient">Gradient (default)</option>
+              <option value="image">Imagine (URL)</option>
+              <option value="video">Video MP4 / YouTube</option>
+            </select>
+          </div>
+          <input id="sm-s7-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
+            oninput="smPreview('s7')">
+          <div id="sm-s7-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
+        </div>
+        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
+          <div class="set-field-label">⚡ S8 — Ultima alergare</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <select id="sm-s8-type" class="set-story-sel" onchange="smPreview('s8')">
+              <option value="gradient">Gradient (default)</option>
+              <option value="image">Imagine (URL)</option>
+              <option value="video">Video MP4 / YouTube</option>
+            </select>
+          </div>
+          <input id="sm-s8-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
+            oninput="smPreview('s8')">
+          <div id="sm-s8-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
+        </div>
+        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
+          <div class="set-field-label">🧩 S9 — De ce eu</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <select id="sm-s9-type" class="set-story-sel" onchange="smPreview('s9')">
+              <option value="gradient">Gradient (default)</option>
+              <option value="image">Imagine (URL)</option>
+              <option value="video">Video MP4 / YouTube</option>
+            </select>
+          </div>
+          <input id="sm-s9-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
+            oninput="smPreview('s9')">
+          <div id="sm-s9-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
+        </div>
+        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
+          <div class="set-field-label">💬 S10 — Testimonial</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <select id="sm-s10-type" class="set-story-sel" onchange="smPreview('s10')">
+              <option value="gradient">Gradient (default)</option>
+              <option value="image">Imagine (URL)</option>
+              <option value="video">Video MP4 / YouTube</option>
+            </select>
+          </div>
+          <input id="sm-s10-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
+            oninput="smPreview('s10')">
+          <div id="sm-s10-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
+        </div>
+      </div>
       <div class="set-tab-title" style="margin-top:28px">📹 Video Landing</div>
       <div class="set-field-group">
         <div class="set-field-label">URL Video embed (YouTube sau MP4 direct)</div>
@@ -4363,7 +4498,7 @@ window.addEventListener('load', async () => {
     if (splash) {
       splash.classList.add('on');
       // Aplica PROFILE.name daca e disponibil
-      if (splashName && typeof PROFILE !== 'undefined' && PROFILE?.name) splashName.textContent = PROFILE.name.toUpperCase();
+      // splash name e fix: BÂRLADUL PE FUGĂ — nu suprascrie cu PROFILE.name
       requestAnimationFrame(() => splash.classList.add('vis'));
       // Animam progress bar simulat
       let pct = 0;
@@ -7074,7 +7209,9 @@ function openSponsorPrez() {
   });
 
   prez.classList.add('on');
-  document.body.style.overflow = 'hidden'; // blochează scroll fundal
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.width = '100%';
 
   // rAF1: prez e in DOM cu display:flex
   requestAnimationFrame(() => {
@@ -7125,7 +7262,9 @@ function closeSponsorPrez() {
   if (!prez) return;
   prez.classList.remove('vis');
   setTimeout(() => prez.classList.remove('on'), 500);
-  document.body.style.overflow = ''; // restaurează scroll
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.body.style.width = '';
   document.removeEventListener('keydown', spKeyHandler);
   if (_spMapTimer) { clearInterval(_spMapTimer); _spMapTimer = null; }
   if (_spCdTimer)  { clearInterval(_spCdTimer);  _spCdTimer  = null; }
@@ -7461,7 +7600,8 @@ function spPopulateAll() {
   const testNameL=document.getElementById('sp-test-name-left');if(testNameL&&mainSponsor)testNameL.textContent=(mainSponsor.denumire||'').toUpperCase();
   const testLogoWrap=document.getElementById('sp-test-logo-wrap');if(testLogoWrap&&mainSponsor&&mainSponsor.logo_url)testLogoWrap.style.display='block';
 
-  // Story slides — aplica textele si media din setari
+  // Slide media S1-S10 + Story slides S11-S14
+  applySlideMedia();
   applyStorySlides();
   // Slide 4B — wishlist
   spPopulateWishlist();
@@ -7654,6 +7794,109 @@ function setTab(btn, tabId) {
   btn.classList.add('active');
   const tab = document.getElementById(tabId);
   if (tab) tab.classList.add('active');
+}
+
+
+// ── Slide Media (panoul stâng S1-S10) ────────────────
+const SLIDE_GRADIENTS = {
+  's1':  'linear-gradient(160deg,#000510 0%,#001030 50%,#000 100%)',
+  's2':  'linear-gradient(160deg,#020a1a 0%,#040d1f 50%,#000 100%)',
+  's3':  'linear-gradient(160deg,#080018 0%,#0a001a 50%,#000 100%)',
+  's4':  'linear-gradient(160deg,#000a00 0%,#041400 50%,#000 100%)',
+  's4b': 'linear-gradient(160deg,#080010 0%,#130020 50%,#000 100%)',
+  's6':  'linear-gradient(160deg,#020010 0%,#050018 50%,#000 100%)',
+  's7':  'linear-gradient(160deg,#060008 0%,#0a000e 50%,#000 100%)',
+  's8':  'linear-gradient(160deg,#000a02 0%,#001404 50%,#000 100%)',
+  's9':  'linear-gradient(160deg,#0a0400 0%,#180800 50%,#000 100%)',
+  's10': 'linear-gradient(160deg,#080005 0%,#12000a 50%,#000 100%)',
+};
+
+function renderSlideMedia() {
+  const sm = SETTINGS.slide_media || {};
+  Object.keys(SLIDE_GRADIENTS).forEach(sid => {
+    const d = sm[sid] || { type:'gradient', url:'' };
+    const typeEl = document.getElementById('sm-'+sid+'-type');
+    const urlEl  = document.getElementById('sm-'+sid+'-url');
+    if (typeEl) typeEl.value = d.type || 'gradient';
+    if (urlEl)  urlEl.value  = d.url  || '';
+    smPreview(sid);
+  });
+}
+
+function smPreview(sid) {
+  const typeEl = document.getElementById('sm-'+sid+'-type');
+  const urlEl  = document.getElementById('sm-'+sid+'-url');
+  const prevEl = document.getElementById('sm-'+sid+'-prev');
+  if (!prevEl) return;
+  const type = typeEl?.value || 'gradient';
+  const url  = (urlEl?.value || '').trim();
+  if (!url || type === 'gradient') { prevEl.style.display='none'; prevEl.innerHTML=''; return; }
+  prevEl.style.display = 'block';
+  if (type === 'image') {
+    prevEl.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.style.display='none'">`;
+  } else {
+    const emb = url.replace('watch?v=','embed/').replace('youtu.be/','www.youtube.com/embed/');
+    const final = url.match(/\.mp4|\.webm/i)
+      ? `<video src="${url}" muted autoplay loop style="width:100%;height:100%;object-fit:cover"></video>`
+      : `<iframe src="${emb}?autoplay=0&mute=1&controls=0" style="width:100%;height:100%;border:none"></iframe>`;
+    prevEl.innerHTML = final;
+  }
+}
+
+function readSlideMedia() {
+  const sm = {};
+  Object.keys(SLIDE_GRADIENTS).forEach(sid => {
+    const typeEl = document.getElementById('sm-'+sid+'-type');
+    const urlEl  = document.getElementById('sm-'+sid+'-url');
+    sm[sid] = {
+      type: typeEl?.value || 'gradient',
+      url:  urlEl?.value.trim() || '',
+    };
+  });
+  return sm;
+}
+
+function applySlideMedia() {
+  const sm = SETTINGS.slide_media || {};
+  Object.keys(SLIDE_GRADIENTS).forEach(sid => {
+    const d    = sm[sid] || { type:'gradient', url:'' };
+    const el   = document.getElementById('sp-'+sid);
+    if (!el) return;
+    const imgEl = el.querySelector('.sp-split-img');
+    if (!imgEl) return;
+
+    // Curata media anterioara
+    imgEl.querySelectorAll('iframe,video,.sm-overlay').forEach(e => e.remove());
+
+    const type = d.type || 'gradient';
+    const url  = (d.url || '').trim();
+
+    if (type === 'gradient' || !url) {
+      imgEl.style.background = SLIDE_GRADIENTS[sid] || '#000';
+    } else if (type === 'image') {
+      imgEl.style.background = `url('${url}') center/cover no-repeat`;
+      const ov = document.createElement('div');
+      ov.className = 'sm-overlay';
+      ov.style.cssText = 'position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.5),rgba(0,0,0,.2));z-index:0;pointer-events:none';
+      imgEl.insertBefore(ov, imgEl.firstChild);
+    } else if (type === 'video') {
+      imgEl.style.background = '#000';
+      if (url.match(/\.mp4|\.webm|\.mov/i)) {
+        const vid = document.createElement('video');
+        vid.src = url; vid.autoplay = true; vid.loop = true; vid.playsInline = true;
+        vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none';
+        imgEl.insertBefore(vid, imgEl.firstChild);
+        vid.play().catch(()=>{ vid.muted=true; vid.play(); });
+      } else {
+        const embedUrl = url.replace('watch?v=','embed/').replace('youtu.be/','www.youtube.com/embed/');
+        const iframe = document.createElement('iframe');
+        iframe.src = embedUrl + (embedUrl.includes('?') ? '&' : '?') + 'autoplay=1&mute=1&loop=1&controls=0&playsinline=1';
+        iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;z-index:0;pointer-events:none';
+        iframe.allow = 'autoplay; encrypted-media';
+        imgEl.insertBefore(iframe, imgEl.firstChild);
+      }
+    }
+  });
 }
 
 // ── Story Slides Settings ─────────────────────────────
@@ -8626,6 +8869,8 @@ function renderSetari() {
 
   // Story slides settings
   renderStorySettings();
+  // Slide media (S1-S10)
+  renderSlideMedia();
 
   // Tab-specific fields
   const setValSafe = (id, val) => { const e=document.getElementById(id); if(e) e.value = val||''; };
@@ -8743,6 +8988,7 @@ async function saveSettings() {
   // slide_order e updatat direct în SETTINGS de editor — nu citim din DOM
   // Story slides — citim din formulare
   SETTINGS.story_slides = readStorySettings();
+  SETTINGS.slide_media   = readSlideMedia();
   // Testimonial
   SETTINGS.testimonial_text   = g('set-testimonial-text');
   SETTINGS.testimonial_author = g('set-testimonial-author');
