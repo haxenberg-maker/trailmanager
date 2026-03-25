@@ -1293,6 +1293,16 @@ body.readonly label.btn { display:none !important }
 }
 .sp-video-mute:hover { background:rgba(0,0,0,.8);transform:scale(1.1); }
 
+/* ── S2 Detail card animation ── */
+@keyframes slideUp {
+  from { transform:translateY(100%);opacity:0; }
+  to   { transform:translateY(0);opacity:1; }
+}
+@keyframes slideDown {
+  from { transform:translateY(0);opacity:1; }
+  to   { transform:translateY(100%);opacity:0; }
+}
+
 /* ── S2: Race rows ── */
 .sp-race-row {
   display:flex;align-items:stretch;justify-content:space-between;
@@ -2422,7 +2432,7 @@ body.readonly label.btn { display:none !important }
         </div>
 
         <!-- DREAPTA: Lista curse + card detalii -->
-        <div class="sp-split-content" style="padding:0;overflow:hidden;display:flex;flex-direction:column">
+        <div class="sp-split-content" style="padding:0;overflow:hidden;display:flex;flex-direction:column;position:relative">
 
           <!-- Header -->
           <div style="padding:16px 18px 10px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0">
@@ -2433,15 +2443,17 @@ body.readonly label.btn { display:none !important }
             </h2>
           </div>
 
-          <!-- Lista curse scrollabila -->
+          <!-- Lista curse scrollabila — height fix, nu se micsoraza -->
           <div id="sp-races-list" class="sp-reveal" data-delay="200"
-            style="flex:1;overflow-y:auto;padding:6px 8px;display:flex;flex-direction:column;gap:4px"></div>
+            style="flex:1;overflow-y:auto;padding:6px 8px;display:flex;flex-direction:column;gap:4px;min-height:0"></div>
 
-          <!-- Card detalii cursă (expandat la click) -->
-          <div id="sp-race-detail-card" style="display:none;flex-shrink:0;overflow:hidden;
-            transition:max-height .3s ease;max-height:0">
-            <div style="background:rgba(0,20,0,.95);border-top:2px solid var(--accent);
-                        max-height:54vh;overflow-y:auto;padding:14px 16px">
+          <!-- Card detalii cursă — overlay absolut, NU impinge lista -->
+          <div id="sp-race-detail-card" style="display:none;position:absolute;bottom:0;left:0;right:0;
+            z-index:20;max-height:65%;overflow:hidden;
+            border-radius:0 0 0 0;
+            animation:slideUp .25s ease forwards">
+            <div style="background:rgba(2,12,2,.97);border-top:2px solid var(--accent);
+                        max-height:65vh;overflow-y:auto;padding:14px 16px">
               <!-- Header cursă -->
               <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
                 <div>
@@ -8037,22 +8049,48 @@ function spSelectRace(i) {
 }
 
 function spActivateMapDot(i, past) {
-  // Reset toate
+  // Reset toate doturile
   document.querySelectorAll('.sp-map-dot-circle').forEach(c => {
-    c.setAttribute('r','6');
-    c.setAttribute('fill','#1a3a1a');
-    c.setAttribute('stroke','#2a4a2a');
-    c.setAttribute('opacity','.5');
-    c.style.filter = '';
+    const origFill = c.dataset.defaultFill || '#1a3a1a';
+    const origStroke = c.dataset.defaultStroke || '#2a4a2a';
+    c.setAttribute('r', c.dataset.baseR || '7');
+    c.setAttribute('fill', origFill);
+    c.setAttribute('stroke', origStroke);
+    c.setAttribute('stroke-width','1.5');
+    c.setAttribute('opacity','.7');
   });
-  // Activeaza doar cel cu ID-ul corect
+  // Ascunde glow-ul vechi
+  const oldGlow = document.getElementById('sp-map-glow');
+  if (oldGlow) oldGlow.remove();
+
   const dot = document.getElementById('map-dot-'+i);
-  if (dot) {
-    dot.setAttribute('r','10');
-    dot.setAttribute('fill', past?'#888':'#ccff00');
-    dot.setAttribute('stroke', past?'#aaa':'#ccff00');
-    dot.setAttribute('opacity','1');
-    dot.style.filter = past?'':'drop-shadow(0 0 6px #ccff00)';
+  if (!dot) { console.warn('[map] dot not found: map-dot-'+i); return; }
+
+  const fillColor = past ? '#aaa' : '#ccff00';
+  dot.setAttribute('r','11');
+  dot.setAttribute('fill', fillColor);
+  dot.setAttribute('stroke', fillColor);
+  dot.setAttribute('stroke-width','2.5');
+  dot.setAttribute('opacity','1');
+
+  // Adauga cerc de glow
+  const svg = document.getElementById('sp-map-svg');
+  if (svg) {
+    const cx = dot.getAttribute('cx');
+    const cy = dot.getAttribute('cy');
+    const glow = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    glow.setAttribute('id','sp-map-glow');
+    glow.setAttribute('cx', cx);
+    glow.setAttribute('cy', cy);
+    glow.setAttribute('r','18');
+    glow.setAttribute('fill', past?'rgba(170,170,170,.15)':'rgba(204,255,0,.2)');
+    glow.setAttribute('stroke', past?'rgba(170,170,170,.3)':'rgba(204,255,0,.4)');
+    glow.setAttribute('stroke-width','1');
+    glow.setAttribute('pointer-events','none');
+    // Inseram inaintea primului dot ca sa fie dedesubt
+    const firstDot = svg.querySelector('.sp-map-dot-circle');
+    if (firstDot) svg.insertBefore(glow, firstDot);
+    else svg.appendChild(glow);
   }
 }
 
@@ -8087,8 +8125,18 @@ function spDrawMapS2(races, today) {
     const past=r.data_cursa&&new Date(r.data_cursa)<today;
     const big=(parseFloat(r.distanta)||0)>=100;
     if(big&&!past) inner+='<circle cx="'+x+'" cy="'+y+'" r="14" fill="#ccff00" opacity=".06"/>';
-    inner+='<circle cx="'+x+'" cy="'+y+'" r="7" fill="#1a3a1a" stroke="#2a4a2a" stroke-width="1.5" class="sp-map-dot-circle" id="map-dot-'+i+'" data-race="'+i+'" opacity=".5"/>';
-    inner+='<text x="'+x+'" y="'+(parseFloat(y)-10).toFixed(1)+'" font-size="7.5" fill="rgba(255,255,255,.45)" text-anchor="middle" font-family="Inter,sans-serif" font-weight="600">'+(i+1)+'</text>';
+    // Culoarea bazata pe dificultate
+    const diff2 = spCalcDifficulty(r);
+    const dotColors = {
+      'easy':   { fill:'rgba(74,222,128,.25)',  stroke:'#4ade80' },
+      'medium': { fill:'rgba(250,204,21,.2)',   stroke:'#facc15' },
+      'hard':   { fill:'rgba(249,115,22,.2)',   stroke:'#f97316' },
+      'ultra':  { fill:'rgba(239,68,68,.2)',    stroke:'#ef4444' },
+      'beast':  { fill:'rgba(167,139,250,.25)', stroke:'#a78bfa' },
+    };
+    const dc = dotColors[diff2.level] || dotColors.easy;
+    inner+='<circle cx="'+x+'" cy="'+y+'" r="7" fill="'+dc.fill+'" stroke="'+dc.stroke+'" stroke-width="1.5" class="sp-map-dot-circle" id="map-dot-'+i+'" data-race="'+i+'" data-base-r="7" data-default-fill="'+dc.fill+'" data-default-stroke="'+dc.stroke+'" opacity=".8"/>';
+    inner+='<text x="'+x+'" y="'+(parseFloat(y)-10).toFixed(1)+'" font-size="7" fill="rgba(255,255,255,.5)" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700">'+(i+1)+'</text>';
     inner+='<circle cx="'+x+'" cy="'+y+'" r="18" fill="transparent" data-race="'+i+'" style="cursor:pointer;pointer-events:all"/>';
   });
 
@@ -8111,7 +8159,7 @@ function spOpenRaceDetail(i) {
   const card = document.getElementById('sp-race-detail-card');
   if (!card) return;
   card.style.display = 'block';
-  requestAnimationFrame(()=>{ card.style.maxHeight = '54vh'; });
+  card.style.animation = 'slideUp .25s ease forwards';
 
   const today = new Date(); today.setHours(0,0,0,0);
   const past = r.data_cursa && new Date(r.data_cursa) < today;
@@ -8169,8 +8217,8 @@ function spOpenRaceDetail(i) {
 function spCloseRaceDetail() {
   const card = document.getElementById('sp-race-detail-card');
   if (!card) return;
-  card.style.maxHeight = '0';
-  setTimeout(()=>{ card.style.display='none'; }, 300);
+  card.style.animation = 'slideDown .2s ease forwards';
+  setTimeout(()=>{ card.style.display='none'; card.style.animation=''; }, 220);
   // Deselecteaza lista si harta
   document.querySelectorAll('.sp-race-row').forEach(el=>el.classList.remove('active'));
   document.querySelectorAll('.sp-map-dot-circle').forEach(c=>{
