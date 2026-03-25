@@ -531,10 +531,22 @@ body.readonly button[onclick*="open"],
 body.readonly button[onclick*="save"],
 body.readonly button[onclick*="delete"],
 body.readonly button[onclick*="clear"],
+body.readonly button[onclick*="edit"],
+body.readonly button[onclick*="Edit"],
+body.readonly button[onclick*="RC("],
+body.readonly button[onclick*="EQ("],
+body.readonly button[onclick*="SP("],
+body.readonly button[onclick*="supl"],
+body.readonly button[onclick*="new"],
+body.readonly button[onclick*="add"],
+body.readonly button[onclick*="Add"],
+body.readonly .btn-icon,
 body.readonly #save-btn,
 body.readonly #export-btn,
 body.readonly .ph-right .btn,
-body.readonly label.btn { display:none !important }
+body.readonly label.btn,
+body.readonly .add-row,
+body.readonly [data-owner-only] { display:none !important }
 .guest-banner{
   position:fixed;bottom:0;left:0;right:0;z-index:80;
   background:rgba(255,200,79,.12);border-top:1px solid rgba(255,200,79,.3);
@@ -1818,11 +1830,11 @@ body.readonly label.btn { display:none !important }
 </head>
 <body class="readonly">
 <div id="sp-splash">
-  <div class="sp-splash-name" id="sp-splash-name">BALAN GABRIEL</div>
-  <div class="sp-splash-sub">⛰️ SEZON 2026 · TRAIL RUNNING</div>
+  <div class="sp-splash-name" id="sp-splash-name">BÂRLADUL PE FUGĂ</div>
+  <div class="sp-splash-sub" id="sp-splash-sub">⛰️ SEZON 2026 · TRAIL RUNNING</div>
   <div class="sp-splash-bar"><div class="sp-splash-bar-fill" id="sp-splash-fill"></div></div>
   <button id="sp-splash-btn" class="sp-splash-btn" onclick="spSplashUserClick()" style="display:none">
-    ▶ &nbsp;DESCHIDE PREZENTAREA
+    ▶ &nbsp;ATLET BALAN GABRIEL
   </button>
   <div id="sp-splash-loading" class="sp-splash-loading">Se încarcă...</div>
 </div>
@@ -7062,6 +7074,7 @@ function openSponsorPrez() {
   });
 
   prez.classList.add('on');
+  document.body.style.overflow = 'hidden'; // blochează scroll fundal
 
   // rAF1: prez e in DOM cu display:flex
   requestAnimationFrame(() => {
@@ -7112,6 +7125,7 @@ function closeSponsorPrez() {
   if (!prez) return;
   prez.classList.remove('vis');
   setTimeout(() => prez.classList.remove('on'), 500);
+  document.body.style.overflow = ''; // restaurează scroll
   document.removeEventListener('keydown', spKeyHandler);
   if (_spMapTimer) { clearInterval(_spMapTimer); _spMapTimer = null; }
   if (_spCdTimer)  { clearInterval(_spCdTimer);  _spCdTimer  = null; }
