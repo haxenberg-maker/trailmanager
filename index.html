@@ -2417,7 +2417,17 @@ body.readonly [data-owner-only] { display:none !important }
               <span class="sp-s1-val" id="sp-s1-streak" style="color:#ff6b35">0🔥</span>
               <span class="sp-s1-lbl">streak zile</span>
             </div>
-          </div></div>
+          </div>
+
+          <!-- Susținut de -->
+          <div id="sp-s1-partners" class="sp-reveal" data-delay="500"
+            style="margin-top:18px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;
+                        letter-spacing:2px;font-family:'Inter',sans-serif">Susținut de</div>
+            <div id="sp-s1-partners-list" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"></div>
+          </div>
+
+        </div></div>
       </div>
     </div>
 
@@ -3509,6 +3519,12 @@ body.readonly [data-owner-only] { display:none !important }
         <div class="set-field-label">Text testimonial — semnătură</div>
         <input id="set-testimonial-author" class="set-input" placeholder="— PRISCOM, Bârlad">
       </div>
+
+      <!-- Parteneri S1 -->
+      <div class="set-tab-title" style="margin-top:24px">🤝 Susținut de (Slide 1)</div>
+      <div class="set-hint" style="margin-bottom:12px">Apar pe S1 sub statistici. Maxim 4 parteneri. Logo e opțional — dacă lipsește, apare numele.</div>
+      <div id="set-s1-partners-list" style="display:flex;flex-direction:column;gap:8px"></div>
+      <button class="set-btn-add" onclick="addS1Partner()" style="margin-bottom:16px">+ Adaugă partener</button>
 
       <div class="set-toggles-grid">
         <div class="set-toggle-row">
@@ -7508,6 +7524,39 @@ function spPopulateAll() {
   const s1streak = document.getElementById('sp-s1-streak');
   if(s1streak){ const st=calcStreak(acts); s1streak.dataset.target=st.current; s1streak.textContent='0🔥'; }
 
+  // ── Susținut de — parteneri pe S1
+  const partnersList = document.getElementById('sp-s1-partners-list');
+  if (partnersList) {
+    const partners = SETTINGS.s1_partners || [];
+    if (partners.length === 0) {
+      document.getElementById('sp-s1-partners').style.display = 'none';
+    } else {
+      document.getElementById('sp-s1-partners').style.display = 'flex';
+      partnersList.innerHTML = partners.map(p => {
+        const inner = p.logo_url
+          ? `<img src="${escHtml(p.logo_url)}" alt="${escHtml(p.name)}"
+               style="max-height:32px;max-width:90px;object-fit:contain;display:block"
+               onerror="this.style.display='none';this.nextSibling.style.display='block'">`
+            + `<span style="display:none;font-family:'Bebas Neue',sans-serif;font-size:12px;
+                            color:rgba(255,255,255,.7);letter-spacing:1px">${escHtml(p.name)}</span>`
+          : `<span style="font-family:'Bebas Neue',sans-serif;font-size:12px;
+                          color:rgba(255,255,255,.7);letter-spacing:1px">${escHtml(p.name)}</span>`;
+        const tag = p.website
+          ? `<a href="${escHtml(p.website)}" target="_blank" rel="noopener"
+               style="display:inline-flex;align-items:center;background:rgba(255,255,255,.08);
+                      border:1px solid rgba(255,255,255,.15);border-radius:7px;
+                      padding:5px 10px;text-decoration:none;gap:6px;
+                      transition:background .2s"
+               onmouseover="this.style.background='rgba(255,255,255,.15)'"
+               onmouseout="this.style.background='rgba(255,255,255,.08)'">${inner}</a>`
+          : `<div style="display:inline-flex;align-items:center;background:rgba(255,255,255,.08);
+                          border:1px solid rgba(255,255,255,.15);border-radius:7px;
+                          padding:5px 10px;gap:6px">${inner}</div>`;
+        return tag;
+      }).join('');
+    }
+  }
+
   // ── Slide 2 ──────────────────────────────────────────
   // S2 combinat: liste + hartă
   spPopulateS2(races, acts);
@@ -7897,6 +7946,50 @@ function applySlideMedia() {
       }
     }
   });
+}
+
+
+// ── S1 Partners editor ───────────────────────────────
+function renderS1Partners() {
+  const el = document.getElementById('set-s1-partners-list');
+  if (!el) return;
+  const partners = SETTINGS.s1_partners || [];
+  el.innerHTML = partners.map((p, i) => `
+    <div style="background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:10px 12px;display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;
+                    letter-spacing:.5px;min-width:24px">#${i+1}</div>
+        <input class="set-input" style="flex:1" placeholder="Denumire partener *"
+          value="${escHtml(p.name||'')}" oninput="updS1Partner(${i},'name',this.value)">
+        <button onclick="delS1Partner(${i})"
+          style="background:none;border:none;color:var(--t4);cursor:pointer;font-size:16px;
+                 padding:0 4px;line-height:1;transition:color .15s"
+          onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--t4)'">✕</button>
+      </div>
+      <input class="set-input" placeholder="URL logo (imgur, cloudinary...)"
+        value="${escHtml(p.logo_url||'')}" oninput="updS1Partner(${i},'logo_url',this.value)">
+      <input class="set-input" placeholder="Website (opțional)"
+        value="${escHtml(p.website||'')}" oninput="updS1Partner(${i},'website',this.value)">
+      ${p.logo_url ? `<img src="${escHtml(p.logo_url)}" style="height:32px;object-fit:contain;border-radius:4px;background:rgba(255,255,255,.1);padding:3px 8px" onerror="this.style.display='none'">` : ''}
+    </div>`).join('');
+}
+
+function addS1Partner() {
+  if (!SETTINGS.s1_partners) SETTINGS.s1_partners = [];
+  if (SETTINGS.s1_partners.length >= 4) { toast('Maxim 4 parteneri pe S1','info'); return; }
+  SETTINGS.s1_partners.push({ name:'', logo_url:'', website:'' });
+  renderS1Partners();
+}
+
+function updS1Partner(i, key, val) {
+  if (!SETTINGS.s1_partners?.[i]) return;
+  SETTINGS.s1_partners[i][key] = val;
+  if (key === 'logo_url') renderS1Partners(); // refresh preview
+}
+
+function delS1Partner(i) {
+  SETTINGS.s1_partners.splice(i, 1);
+  renderS1Partners();
 }
 
 // ── Story Slides Settings ─────────────────────────────
@@ -8871,6 +8964,8 @@ function renderSetari() {
   renderStorySettings();
   // Slide media (S1-S10)
   renderSlideMedia();
+  // Parteneri S1
+  renderS1Partners();
 
   // Tab-specific fields
   const setValSafe = (id, val) => { const e=document.getElementById(id); if(e) e.value = val||''; };
@@ -8989,6 +9084,7 @@ async function saveSettings() {
   // Story slides — citim din formulare
   SETTINGS.story_slides = readStorySettings();
   SETTINGS.slide_media   = readSlideMedia();
+  // s1_partners e actualizat direct prin updS1Partner
   // Testimonial
   SETTINGS.testimonial_text   = g('set-testimonial-text');
   SETTINGS.testimonial_author = g('set-testimonial-author');
