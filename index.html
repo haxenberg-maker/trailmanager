@@ -4,8 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trail Running Manager 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;1,9..40,300&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <meta name="theme-color" content="#0c0e0d">
+<script>
+// Apply theme immediately — before any rendering — to prevent flash
+(function(){
+  var t = localStorage.getItem('tm_theme');
+  if(t && t !== 'default') document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Trail Manager">
@@ -31,6 +38,7 @@ link.rel = 'manifest';
 link.href = URL.createObjectURL(blob);
 document.currentScript.parentNode.appendChild(link);
 </script>
+<link rel="stylesheet" href="themes.css">
 <style>
 /* Temele sunt în themes.css — linkuit în <head> */
 /* ═══════════════════════════════════════
@@ -459,16 +467,86 @@ select option{background:var(--s2)}
 .tl-item-lbl{color:var(--t2)}
 .tl-item-val{font-weight:600}
 
+/* ── ACTIVITY FEED ── */
+.af-card {
+  background:var(--s1);border:1px solid var(--border);border-radius:var(--r);
+  overflow:hidden;transition:border-color .15s;
+}
+.af-card:hover { border-color:var(--border2); }
+.af-head {
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  cursor:pointer;user-select:none;
+}
+.af-type-badge {
+  width:34px;height:34px;border-radius:8px;
+  background:var(--accent-dim);border:1px solid var(--accent-border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.af-info { flex:1;min-width:0; }
+.af-name {
+  font-size:13px;font-weight:600;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.af-date { font-size:10px;color:var(--t3);margin-top:2px; }
+.af-stats {
+  display:flex;gap:10px;flex-shrink:0;align-items:center;
+}
+.af-stat { text-align:center; }
+.af-stat-val {
+  font-family:var(--display);font-size:15px;color:var(--accent);
+  white-space:nowrap;line-height:1;
+}
+.af-stat-lbl { font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px; }
+.af-expand { display:none;border-top:1px solid var(--border);padding:12px 14px; }
+.af-card.open .af-expand { display:block; }
+.af-map { background:var(--s2);border-radius:8px;overflow:hidden;margin-bottom:10px; }
+.af-map svg { display:block;width:100%;height:auto; }
+.af-extra-stats {
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:8px;
+}
+.af-extra-stat {
+  background:var(--s2);border-radius:7px;padding:8px 6px;text-align:center;
+}
+.af-extra-stat-val {
+  font-family:var(--display);font-size:16px;color:var(--text);
+  line-height:1;
+}
+.af-extra-stat-lbl { font-size:9px;color:var(--t3);margin-top:2px; }
+
+
+
+/* ── MOD SPONSOR — ascunde elemente interne ── */
+.sponsor-mode .bk-card[id="db-race-card"],
+.sponsor-mode #db-race-pagination,
+.sponsor-mode #db-unpaid-label,
+.sponsor-mode #db-unpaid-list,
+.sponsor-mode .ph { display:none !important; }
+.sponsor-mode .dash-hero { margin-bottom:32px; }
+.sponsor-mode #db-tiles .tile:nth-child(4) { display:none; } /* plăți restante */
+
 /* ── READ-ONLY (guest) MODE ── */
 body.readonly .btn-primary:not(.allow-guest),
 body.readonly button[onclick*="open"],
 body.readonly button[onclick*="save"],
 body.readonly button[onclick*="delete"],
 body.readonly button[onclick*="clear"],
+body.readonly button[onclick*="edit"],
+body.readonly button[onclick*="Edit"],
+body.readonly button[onclick*="RC("],
+body.readonly button[onclick*="EQ("],
+body.readonly button[onclick*="SP("],
+body.readonly button[onclick*="supl"],
+body.readonly button[onclick*="new"],
+body.readonly button[onclick*="add"],
+body.readonly button[onclick*="Add"],
+body.readonly .btn-icon,
 body.readonly #save-btn,
 body.readonly #export-btn,
 body.readonly .ph-right .btn,
-body.readonly label.btn { display:none !important }
+body.readonly label.btn,
+body.readonly .add-row,
+body.readonly [data-owner-only] { display:none !important }
 .guest-banner{
   position:fixed;bottom:0;left:0;right:0;z-index:80;
   background:rgba(255,200,79,.12);border-top:1px solid rgba(255,200,79,.3);
@@ -476,6 +554,55 @@ body.readonly label.btn { display:none !important }
   font-size:12px;color:var(--yellow);
 }
 @media(max-width:800px){.guest-banner{bottom:64px}}
+
+/* ── RACE HISTORY CARDS ── */
+.race-card{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:10px;transition:border-color .2s}
+.race-card:hover{border-color:var(--border2)}
+.race-card-head{display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer;user-select:none;min-width:0}
+.race-card-head:hover{background:var(--s2)}
+.race-medal{font-size:20px;flex-shrink:0;line-height:1}
+.race-info{flex:1;min-width:0;overflow:hidden}
+.race-name{font-family:var(--display);font-size:16px;letter-spacing:.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.race-date{font-size:10px;color:var(--t3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.race-stats{display:flex;gap:10px;flex-shrink:0;align-items:center}
+.race-stat{text-align:center;flex-shrink:0}
+.race-stat-val{font-family:var(--display);font-size:14px;color:var(--accent);white-space:nowrap}
+.race-stat-lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+.race-chevron{color:var(--t3);font-size:13px;transition:transform .25s;flex-shrink:0;margin-left:2px}
+.race-card.open .race-chevron{transform:rotate(180deg)}
+.race-expand{display:none;padding:0 14px 14px;border-top:1px solid var(--border)}
+.race-card.open .race-expand{display:block}
+.race-map-wrap{background:var(--s2);border-radius:8px;overflow:hidden}
+.race-map-wrap svg{display:block;width:100%;height:auto}
+.race-extra-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:8px;margin-top:12px}
+.race-extra-stat{background:var(--s2);border-radius:8px;padding:8px 6px;text-align:center;min-width:0}
+.race-extra-stat-val{font-family:var(--display);font-size:17px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.race-extra-stat-lbl{font-size:9px;color:var(--t3);margin-top:2px;white-space:nowrap}
+/* Splits table */
+.splits-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+.splits-table th,.splits-table td{padding:5px 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.splits-table th{text-align:left;color:var(--t3);border-bottom:1px solid var(--border);font-weight:500}
+.splits-table th:not(:first-child),.splits-table td:not(:first-child){text-align:center}
+.splits-table td{border-bottom:1px solid var(--border)}
+.splits-table col.c-km{width:40px}
+.splits-table col.c-pace{width:auto}
+.splits-table col.c-hr{width:52px}
+.splits-table col.c-elev{width:44px}
+
+@media(max-width:480px){
+  .race-card-head{padding:11px 12px;gap:8px}
+  .race-name{font-size:14px}
+  .race-stat-val{font-size:13px}
+  .race-stats{gap:6px}
+  .race-expand{padding:0 12px 12px}
+  .race-extra-stat-val{font-size:15px}
+  .race-extra-stats{gap:6px}
+}
+
+/* ── THEME SWITCHER ── */
+.theme-btn{background:var(--s2);border:1px solid var(--border);color:var(--t2);border-radius:6px;padding:6px 4px;font-size:10px;cursor:pointer;font-family:var(--body);transition:all .15s;text-align:center}
+.theme-btn:hover{border-color:var(--border2);color:var(--text)}
+.theme-btn.active{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
 
 /* ── STATS PAGE ── */
 .act-row{
@@ -493,7 +620,7 @@ body.readonly label.btn { display:none !important }
 }
 .act-name{font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .act-tag{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;
-  background:rgba(184,255,79,.1);color:var(--accent);border:1px solid var(--accent-border)}
+  background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border)}
 .act-tag.road{background:rgba(79,200,255,.1);color:#4fc8ff;border-color:rgba(79,200,255,.2)}
 .act-tag.track{background:rgba(255,200,79,.1);color:var(--yellow);border-color:rgba(255,200,79,.2)}
 .st-bar-wrap{position:absolute;bottom:0;left:0;right:0;top:0;display:flex;align-items:flex-end;gap:3px;padding:0 2px}
@@ -507,12 +634,12 @@ body.readonly label.btn { display:none !important }
   .act-row,.act-row-head{grid-template-columns:64px 1fr 60px 60px}
   .act-row > *:nth-child(5),.act-row > *:nth-child(6),
   .act-row-head > *:nth-child(5),.act-row-head > *:nth-child(6){display:none}
-  #st-charts-row{grid-template-columns:1fr}
+  #st-charts-row2,#st-charts-row3{grid-template-columns:1fr!important}
 }
 
 /* ── DASHBOARD HERO ── */
 .dash-hero{
-  background:linear-gradient(135deg,var(--s2) 0%,rgba(184,255,79,.06) 100%);
+  background:linear-gradient(135deg,var(--s2) 0%,var(--accent-dim) 100%);
   border:1px solid var(--border2);border-radius:14px;
   padding:32px 32px 28px;margin-bottom:20px;
   position:relative;overflow:hidden;
@@ -520,22 +647,25 @@ body.readonly label.btn { display:none !important }
 .dash-hero::before{
   content:'';position:absolute;top:-40px;right:-40px;
   width:200px;height:200px;border-radius:50%;
-  background:radial-gradient(circle,rgba(184,255,79,.08) 0%,transparent 70%);
+  background:radial-gradient(circle,var(--accent-dim) 0%,transparent 70%);
 }
 .dash-hero-eyebrow{font-size:10px;color:var(--t3);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
 .dash-hero-title{font-family:var(--display);font-size:52px;letter-spacing:4px;color:var(--text);line-height:1;margin-bottom:4px}
 .dash-hero-aka{font-family:var(--display);font-size:18px;color:var(--accent);letter-spacing:3px;margin-bottom:22px}
-.dash-hero-stats{display:flex;align-items:center;gap:0;flex-wrap:wrap;gap:4px}
-.dhs{display:flex;flex-direction:column;align-items:center;padding:0 20px}
-.dhs:first-child{padding-left:0}
-.dhs span{font-family:var(--display);font-size:28px;color:var(--accent);letter-spacing:1px;line-height:1}
-.dhs small{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
-.dhs-sep{width:1px;height:36px;background:var(--border2)}
+.dash-hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:8px}
+.dhs{display:flex;flex-direction:column;align-items:center;text-align:center;padding:12px 8px;position:relative}
+.dhs+.dhs::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:1px;height:36px;background:var(--border2)}
+.dhs:nth-child(1)::before{display:none}
+.dhs:nth-child(4){border-top:1px solid var(--border)}
+.dhs:nth-child(4)::before{display:none}
+.dhs span{font-family:var(--display);font-size:28px;color:var(--text);letter-spacing:1px;line-height:1}
+.dhs small{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:4px;text-align:center;display:block}
+.dhs-sep{display:none}
 @media(max-width:600px){
   .dash-hero{padding:20px}
   .dash-hero-title{font-size:36px}
   .dhs span{font-size:22px}
-  .dhs{padding:0 12px}
+  .dhs{padding:10px 6px}
 }
 
 /* ── BIO CARD ── */
@@ -543,27 +673,29 @@ body.readonly label.btn { display:none !important }
   background:var(--s1);border:1px solid var(--border);border-radius:12px;
   padding:20px 22px;margin-bottom:24px;
 }
-.bio-head{display:flex;align-items:center;gap:14px;margin-bottom:12px}
-.bio-icon{font-size:28px;flex-shrink:0}
-.bio-name{font-weight:700;font-size:15px;color:var(--text);display:flex;align-items:center;gap:8px}
-.bio-tag{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:1px}
-.bio-sub{font-size:11px;color:var(--t3);margin-top:2px}
-.bio-toggle{margin-left:auto;background:none;border:1px solid var(--border);color:var(--t2);font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:var(--body);white-space:nowrap;transition:all .15s}
+.bio-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+.bio-head-info{flex:1;min-width:0}
+.bio-icon{font-size:28px;flex-shrink:0;margin-top:2px}
+.bio-name{font-weight:700;font-size:15px;color:var(--text);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.bio-tag{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:1px;flex-shrink:0}
+.bio-sub{font-size:11px;color:var(--t3);margin-top:4px}
+.bio-badges{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px}
+.bio-toggle{background:none;border:1px solid var(--border);color:var(--t2);font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:var(--body);white-space:nowrap;transition:all .15s;margin-top:10px;align-self:flex-start}
 .bio-toggle:hover{background:var(--s2);color:var(--text)}
 .bio-link{
   display:inline-flex;align-items:center;justify-content:center;
   padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700;
   text-decoration:none;letter-spacing:.5px;transition:all .15s;
-  border:1px solid transparent;
+  border:1px solid transparent;flex-shrink:0;
 }
 .strava-link{background:rgba(252,82,0,.12);color:#fc5200;border-color:rgba(252,82,0,.25)}
 .strava-link:hover{background:rgba(252,82,0,.22)}
 .itra-link{background:rgba(79,200,255,.1);color:#4fc8ff;border-color:rgba(79,200,255,.2);font-family:var(--display);font-size:12px;letter-spacing:1px}
 .itra-link:hover{background:rgba(79,200,255,.2)}
-.bio-itra-pi{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--t3);padding:3px 8px;border:1px solid var(--border);border-radius:5px}
+.bio-itra-pi{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--t3);padding:3px 8px;border:1px solid var(--border);border-radius:5px;flex-shrink:0}
 .bio-itra-pi #itra-pi-val{font-family:var(--display);font-size:14px;color:var(--accent)}
 .bio-preview{font-size:13px;color:var(--t2);line-height:1.7;border-top:1px solid var(--border);padding-top:12px}
-.bio-full{font-size:13px;color:var(--t2);line-height:1.8;border-top:1px solid var(--border);padding-top:12px}
+.bio-full{font-size:13px;color:var(--t2);line-height:1.8;padding-top:12px}
 .bio-full p{margin-bottom:12px}
 .bio-full p:last-child{margin-bottom:0}
 .bio-full strong{color:var(--text)}
@@ -596,7 +728,7 @@ body.readonly label.btn { display:none !important }
   font-family:var(--body);font-size:14px;font-weight:700;
   border:none;cursor:pointer;transition:all .15s;letter-spacing:.3px;
 }
-.login-btn:hover{background:#caff6b;transform:translateY(-1px);box-shadow:0 4px 20px rgba(184,255,79,.3)}
+.login-btn:hover{background:#caff6b;transform:translateY(-1px);box-shadow:0 4px 20px var(--accent-border)}
 .login-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .login-err{font-size:12px;color:var(--red);text-align:center;min-height:18px;margin-top:-4px}
 .login-sep{text-align:center;font-size:12px;color:var(--t3);margin:8px 0}
@@ -763,201 +895,143 @@ body.readonly label.btn { display:none !important }
 #sp-prez.on  { display:block; }
 #sp-prez.vis { opacity:1; }
 
-<!-- ── LOGIN SCREEN ── -->
-<div class="login-screen" id="login-screen" style="display:none" onclick="if(event.target===this)hideLoginModal()">
-  <div class="login-box">
-    <button onclick="hideLoginModal()" style="position:absolute;top:12px;right:14px;background:none;border:none;color:var(--t3);font-size:20px;cursor:pointer;line-height:1">✕</button>
-    <div class="login-logo">
-      <div class="login-logo-mark">⛰️ TRAIL</div>
-      <div class="login-logo-sub">Running Manager 2026</div>
-    </div>
-    <div class="login-tabs">
-      <button class="login-tab on" onclick="switchLoginTab('login',this)">Intră în cont</button>
-      <button class="login-tab" onclick="switchLoginTab('signup',this)">Cont nou</button>
-    </div>
-    <div class="login-fields">
-      <div class="fi">
-        <lbl style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Email</lbl>
-        <input type="email" id="auth-email" placeholder="email@exemplu.com" autocomplete="email">
-      </div>
-      <div class="fi">
-        <lbl style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Parolă</lbl>
-        <input type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password"
-          onkeydown="if(event.key==='Enter') doAuth()">
-      </div>
-      <div class="fi" id="auth-pass2-wrap" style="display:none">
-        <lbl style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Confirmă parola</lbl>
-        <input type="password" id="auth-pass2" placeholder="••••••••" autocomplete="new-password"
-          onkeydown="if(event.key==='Enter') doAuth()">
-      </div>
-    </div>
-    <div class="login-err" id="auth-err"></div>
-    <button class="login-btn" id="auth-btn" onclick="doAuth()">Intră în cont</button>
-    <div class="login-sep" id="auth-reset-wrap">
-      <a href="#" onclick="resetPassword()" style="color:var(--t3);text-decoration:none;font-size:12px">Am uitat parola</a>
-    </div>
-  </div>
-</div>
+/* Progress bar sus */
+#sp-progress {
+  position:absolute;top:0;left:0;right:0;height:3px;
+  background:rgba(255,255,255,.1);z-index:10;
+}
+#sp-progress-fill {
+  height:100%;background:var(--accent);
+  transition:width .4s cubic-bezier(.4,0,.2,1);
+}
 
-<!-- ── MOBILE TOP BAR ── -->
-<div class="mobile-topbar">
-  <div class="mobile-logo"><span>⛰️</span>TRAIL MANAGER</div>
-  <div class="mobile-topbar-right">
-    <div class="mobile-sync">
-      <span id="m-sync-dot" style="width:6px;height:6px;border-radius:50%;background:var(--t4);display:inline-block"></span>
-      <span id="m-sync-status">—</span>
-    </div>
-    <button id="m-login-btn" onclick="showLoginModal()" style="background:none;border:1px solid var(--accent-border);color:var(--accent);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer">🔑</button>
-    <button id="m-logout-btn" onclick="doLogout()" style="display:none;background:none;border:1px solid rgba(255,79,79,.2);color:var(--red);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer">🚪</button>
-    <button class="hamburger" onclick="openDrawer()">☰</button>
-  </div>
-</div>
+/* Nav arrows */
+.sp-nav {
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:48px;height:48px;border-radius:50%;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.7);font-size:20px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:10;transition:all .2s;
+  backdrop-filter:blur(6px);
+}
+.sp-nav:hover { background:rgba(255,255,255,.18);color:#fff; }
+#sp-prev { left:20px; }
+#sp-next { right:20px; }
 
-<!-- ── MOBILE DRAWER ── -->
-<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
-<div class="drawer" id="drawer">
-  <div class="drawer-head">
-    <div class="drawer-logo">⛰️ TRAIL</div>
-    <button class="drawer-close" onclick="closeDrawer()">✕</button>
-  </div>
-  <div class="drawer-nav">
-    <div class="nav-group">Principal</div>
-    <div class="ni" onclick="go('dash',this);closeDrawer()"><span class="ico">🏠</span>Dashboard</div>
-    <div class="ni" onclick="go('curse',this);closeDrawer()"><span class="ico">🏁</span>Curse <span class="badge" id="db-curse">0</span></div>
-    <div class="ni" onclick="go('cal',this);closeDrawer()"><span class="ico">📅</span>Calendar</div>
-    <div class="nav-group">Finanțe & Gear</div>
-    <div class="ni" onclick="go('buget',this);closeDrawer()"><span class="ico">💰</span>Buget Curse</div>
-    <div class="ni" onclick="go('estimare',this);closeDrawer()"><span class="ico">📊</span>Estimare An</div>
-    <div class="ni" onclick="go('sponsori',this);closeDrawer()"><span class="ico">💼</span>Sponsori</div>
-    <div class="ni" onclick="go('echip',this);closeDrawer()"><span class="ico">👟</span>Echipament</div>
-    <div class="ni" onclick="go('nutri',this);closeDrawer()"><span class="ico">🍌</span>Nutriție</div>
-    <div class="nav-group">Performanță</div>
-    <div class="ni" onclick="go('stats',this);closeDrawer()"><span class="ico">📈</span>Statistici</div>
-  </div>
-  <div class="drawer-kpi">
-    <div class="drawer-kpi-row"><span>Total km sezon</span><strong id="d-km">—</strong></div>
-    <div class="drawer-kpi-row"><span>Urmează în</span><strong id="d-next">—</strong></div>
-  </div>
-  <div class="drawer-save">
-    <button class="save-btn" onclick="saveData();closeDrawer()">☁️ Salvează</button>
-    <button class="save-btn" onclick="exportJSON();closeDrawer()" style="color:var(--t2);border-color:var(--border)">💾 Export JSON</button>
-  </div>
-</div>
+/* Close */
+#sp-close {
+  position:absolute;top:20px;right:20px;z-index:10;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.6);font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;
+}
+#sp-close:hover { background:rgba(255,255,255,.2);color:#fff; }
 
-<!-- ── BOTTOM NAV ── -->
-<nav class="bottom-nav" id="bottom-nav">
-  <button class="bn on" onclick="goBN('dash',this)"><span class="bn-ico">🏠</span>Home</button>
-  <button class="bn" onclick="goBN('curse',this)"><span class="bn-ico">🏁</span>Curse</button>
-  <button class="bn" onclick="goBN('stats',this)"><span class="bn-ico">📈</span>Stats</button>
-  <button class="bn" onclick="goBN('buget',this)"><span class="bn-ico">💰</span>Buget</button>
-  <button class="bn" onclick="goBN('nutri',this)"><span class="bn-ico">🍌</span>Nutriție</button>
-</nav>
+/* Slide counter */
+#sp-counter {
+  position:absolute;top:24px;left:50%;transform:translateX(-50%);
+  display:flex;gap:8px;z-index:10;
+}
+.sp-dot {
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(255,255,255,.25);
+  transition:all .3s;
+}
+.sp-dot.on {
+  background:var(--accent);
+  width:24px;border-radius:3px;
+}
 
-<!-- GUEST BANNER -->
-<div class="guest-banner" id="guest-banner" style="display:none">
-  👁️ <strong>Mod vizualizare</strong> — ești logat ca vizitator. Doar Balan Gabriel poate edita datele.
-</div>
+/* Slides container */
+#sp-slides {
+  width:100%;height:100%;
+  position:relative;
+}
 
-<div class="shell">
+/* Slide base */
+.sp-slide {
+  position:absolute;inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:60px 40px 40px;
+  overflow:hidden;
+  opacity:0;
+  transform:scale(.97);
+  pointer-events:none;
+  transition:opacity .45s ease, transform .45s ease;
+}
+.sp-slide.on {
+  opacity:1;
+  transform:scale(1);
+  pointer-events:all;
+}
 
-<!-- ── SIDEBAR ── -->
-<aside class="sidebar">
-  <div class="logo">
-    <div class="logo-mark"><span>⛰️</span>TRAIL<br>MANAGER</div>
-    <div class="logo-sub">Sezon 2026</div>
-  </div>
-  <nav class="nav">
-    <div class="nav-group">Principal</div>
-    <div class="ni on" onclick="go('dash',this)"><span class="ico">🏠</span>Dashboard</div>
-    <div class="ni" onclick="go('curse',this)"><span class="ico">🏁</span>Curse <span class="badge" id="b-curse">0</span></div>
-    <div class="ni" onclick="go('cal',this)"><span class="ico">📅</span>Calendar</div>
-    <div class="nav-group">Finanțe & Gear</div>
-    <div class="ni" onclick="go('buget',this)"><span class="ico">💰</span>Buget Curse</div>
-    <div class="ni" onclick="go('estimare',this)"><span class="ico">📊</span>Estimare An</div>
-    <div class="ni" onclick="go('sponsori',this)"><span class="ico">💼</span>Sponsori <span class="badge" id="b-sp">0</span></div>
-    <div class="ni" onclick="go('echip',this)"><span class="ico">👟</span>Echipament</div>
-    <div class="ni" onclick="go('nutri',this)"><span class="ico">🍌</span>Nutriție & Transport</div>
-    <div class="nav-group">Performanță</div>
-    <div class="ni" onclick="go('stats',this)"><span class="ico">📈</span>Statistici Alergări</div>
-  </nav>
-  <div class="sidebar-bottom">
-    <div class="kpi">
-      <span class="kpi-label">Total km sezon</span>
-      <div class="kpi-val" id="sk-km">—</div>
-      <div class="kpi-sub" id="sk-kmsub">curse înregistrate</div>
-    </div>
-    <div class="kpi" style="margin-bottom:10px">
-      <span class="kpi-label">Urmează în</span>
-      <div class="kpi-val" id="sk-next">—</div>
-      <div class="kpi-sub" id="sk-nextn" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</div>
-    </div>
-    <div style="font-size:10px;color:var(--t3);margin-bottom:6px;display:flex;align-items:center;gap:6px">
-      <span id="sync-dot" style="width:7px;height:7px;border-radius:50%;background:var(--t4);display:inline-block"></span>
-      <span id="sync-status">Neconectat</span>
-    </div>
-    <div style="font-size:11px;color:var(--t3);margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="user-email-display"></div>
-    <button class="save-btn" id="save-btn" onclick="saveData()">☁️ Salvează</button>
-    <button class="save-btn" id="export-btn" onclick="exportJSON()" style="margin-top:6px;color:var(--t2);border-color:var(--border)">💾 Export JSON</button>
-    <button class="save-btn" id="login-btn" onclick="showLoginModal()" style="margin-top:6px;color:var(--accent);border-color:var(--accent-border);background:var(--accent-dim)">🔑 Login</button>
-    <button class="save-btn" id="logout-btn" onclick="doLogout()" style="margin-top:6px;color:var(--red);border-color:rgba(255,79,79,.2);background:rgba(255,79,79,.05);display:none">🚪 Deconectare</button>
-  </div>
-</aside>
+/* Blur BG */
+.sp-bg {
+  position:absolute;inset:0;z-index:0;
+  background-size:cover;background-position:center;
+  filter:blur(20px) brightness(.25);
+  transform:scale(1.1);
+}
+/* Tot conținutul din slide deasupra bg-ului */
+.sp-slide > *:not(.sp-bg) {
+  position:relative;z-index:1;
+}
 
-<!-- ── MAIN ── -->
-<main class="main">
-<div id="filebanner-wrap" style="display:none"></div>
+/* ── SLIDE 1 — Atletul ── */
+#sp-s1 { gap:0; }
+.sp-s1-eyebrow {
+  font-size:11px;letter-spacing:6px;color:var(--accent);
+  text-transform:uppercase;margin-bottom:16px;
+}
+.sp-s1-name {
+  font-size:clamp(52px,10vw,96px);letter-spacing:4px;
+  color:#fff;line-height:.9;text-align:center;
+  margin-bottom:6px;
+}
+.sp-s1-aka {
+  font-size:clamp(18px,4vw,32px);letter-spacing:8px;
+  color:var(--accent);margin-bottom:40px;
+}
+.sp-s1-stats {
+  display:flex;gap:clamp(24px,5vw,60px);
+}
+.sp-s1-stat { text-align:center; }
+.sp-s1-val {
+  font-size:clamp(36px,7vw,64px);color:var(--accent);
+  line-height:1;letter-spacing:2px;
+  display:block;
+}
+.sp-s1-lbl {
+  font-size:clamp(9px,1.5vw,11px);color:rgba(255,255,255,.5);
+  letter-spacing:2px;text-transform:uppercase;
+  display:block;margin-top:4px;
+  font-family:'Inter',sans-serif;font-weight:400;
+}
+.sp-s1-divider {
+  width:1px;background:rgba(255,255,255,.15);
+  align-self:stretch;
+}
 
-<!-- DASHBOARD -->
-<div class="page on" id="pg-dash">
-
-  <!-- HERO SEZON -->
-  <div class="dash-hero">
-    <div class="dash-hero-eyebrow">⛰️ SEZON DE ALERGARE</div>
-    <div class="dash-hero-title">BALAN GABRIEL</div>
-    <div class="dash-hero-aka">HAX · 2026</div>
-    <div class="dash-hero-stats" id="dash-hero-stats">
-      <div class="dhs"><span id="dhs-km-real" style="color:var(--accent)">—</span><small>km alergați 2026</small></div>
-      <div class="dhs-sep"></div>
-      <div class="dhs"><span id="dhs-curse">—</span><small>curse planificate</small></div>
-      <div class="dhs-sep"></div>
-      <div class="dhs"><span id="dhs-km">—</span><small>km curse</small></div>
-      <div class="dhs-sep"></div>
-      <div class="dhs"><span id="dhs-next">—</span><small>zile până la start</small></div>
-      <div class="dhs-sep"></div>
-      <div class="dhs"><span id="dhs-streak" style="color:var(--orange)">—</span><small>🔥 streak</small></div>
-    </div>
-  </div>
-
-  <!-- BIO CARD -->
-  <div class="bio-card" id="bio-card">
-    <div class="bio-head">
-      <div class="bio-icon">🏃</div>
-      <div>
-        <div class="bio-name">Balan Gabriel <span class="bio-tag">HAX</span>
-          <a href="https://www.strava.com/athletes/136130375" target="_blank" class="bio-link strava-link" title="Strava">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="display:block"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
-          </a>
-          <a href="https://itra.run/RunnerSpace/BALAN.Gabriel%20Zaharia/5688809" target="_blank" class="bio-link itra-link" title="ITRA Profile">ITRA</a>
-          <span class="bio-itra-pi" title="ITRA Performance Index">PI <span id="itra-pi-val">—</span> <span id="itra-rank" style="font-size:10px;color:var(--t3);font-family:var(--body);font-weight:400"></span></span>
-        </div>
-        <div class="bio-sub">Alergător · Bârlad · Din mai 2024</div>
-      </div>
-      <button class="bio-toggle" id="bio-toggle" onclick="toggleBio()">Vezi mai mult ▾</button>
-    </div>
-    <div class="bio-preview">
-      Totul a început cu o simplă întrebare, în mai 2024 — de la primele alergări pe străzile Bârladului, la <strong>Bucharest 10K</strong> terminat în pragul de a vomita cu spargere de PR, și de acolo... n-am mai oprit.
-    </div>
-    <div class="bio-full" id="bio-full" style="display:none">
-      <p>Primul contact cu <strong>trail-ul</strong> a venit printr-un challenge: <em>Triple Crown Challenge</em> — 5K, 21K și 15K în zile diferite. La prima cursă, pe urcare, am realizat la ce m-am înhamat. Am terminat totuși toate probele, cu febra de „mentenanță", și de acolo m-am îndrăgostit de alergările montane.</p>
-      <p><strong>2025</strong> a început cu un challenge zilnic: alerg în fiecare zi numărul zilei în km — 1 ianuarie = 1km, 30 ianuarie = 30km... peste <strong>500km</strong> strânși. Am dat totul, zi de zi, după muncă. Apoi a venit prăbușirea din februarie, iar din aprilie am dat din nou bice.</p>
-      <p>Am făcut prima alergare de <strong>peste 100km</strong> — local, la Bârlad — ca să mă calific la <em>Transylvania 100K</em>, care era cerință pentru marele obiectiv: <strong>BUCOVINA ULTRA ROCKS, 100 MILE — THE BEAST</strong>.</p>
-      <p>Am ajuns la start, pulsul creștea, respirațiile înlemneau. Am plecat. Am trecut prin 3 deshidratări, insolații, depresii, noroc de prieteni care m-au ținut pe drumul cel bun. Am dormit o oră. La <strong>km 130</strong>, ultimul checkpoint înainte de Giumalău — furtună îngrozitoare, copacii se rupeau, totul era vraiște. Cursa s-a oprit acolo.</p>
-      <p><em>Dar nu am renunțat.</em> Asta a fost lecția — să mă pregătesc mai bine.</p>
-      <p>Am terminat 2025 cu <strong>3.000 km</strong>. Și decembrie cu <strong>600km</strong> — un challenge nebun, 20km pe zi dimineața și seara, pe lângă muncă. Acum e 2026 și în câteva zile fac deja <strong>1.000km pe an</strong>. Cursele din 2026 sunt imposibile pentru un începător. Dar eu nu mai sunt începător.</p>
-    </div>
-  </div>
-
-  <div class="ph" style="margin-top:0"><div class="ph-left"><h2>DASHBOARD</h2><p id="db-sub">Sezon 2026</p></div></div>
+/* ── SLIDE 2 — Sezonul ── */
+.sp-s2-title {
+  font-size:clamp(28px,5vw,48px);color:#fff;letter-spacing:4px;
+  margin-bottom:28px;text-align:center;
+  
+}
+.sp-races-grid {
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:14px;width:100%;max-width:900px;max-height:65vh;overflow-y:auto;
+}
+.sp-race-card {
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;padding:18px 20px;
+}
 
 .sp-race-nr {
   font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:6px;
@@ -973,85 +1047,63 @@ body.readonly label.btn { display:none !important }
 .sp-race-card.past { opacity:.4; }
 .sp-race-card.next { border-color:var(--accent);background:rgba(204,255,0,.06); }
 
-  <!-- SPONSORI DONUT + LIST -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px" id="db-sp-row">
+/* ── SLIDE 3 — Dovada ── */
+.sp-proof-grid {
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:16px;width:100%;max-width:700px;
+}
+.sp-proof-card {
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;padding:20px;
+  text-align:center;
+}
 
-    <!-- Donut chart sponsorizare vs necesar -->
-    <div class="bk-card" style="padding:20px">
-      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">💰 Sponsorizare vs Necesar</div>
-      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
-        <div id="db-donut" style="flex-shrink:0"></div>
-        <div id="db-donut-legend" style="display:flex;flex-direction:column;gap:10px;flex:1;min-width:120px"></div>
-      </div>
-      <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px" id="db-donut-breakdown"></div>
-    </div>
+.sp-proof-val {
+  font-size:clamp(32px,6vw,56px);color:var(--accent);
+  letter-spacing:2px;line-height:1;display:block;
+}
+.sp-proof-lbl {
+  font-size:10px;color:rgba(255,255,255,.4);
+  letter-spacing:2px;text-transform:uppercase;
+  display:block;margin-top:6px;
+  font-family:'Inter',sans-serif;
+}
+.sp-proof-sub {
+  font-size:11px;color:rgba(255,255,255,.3);
+  font-family:'Inter',sans-serif;margin-top:4px;display:block;
+}
+/* Bar chart simplu */
+.sp-bar-chart {
+  width:100%;height:80px;
+  display:flex;align-items:flex-end;gap:6px;
+  margin-top:12px;
+}
+.sp-bar-yr {
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.sp-bar-yr-bar {
+  width:100%;border-radius:4px 4px 0 0;
+  background:var(--accent);opacity:.7;
+  min-height:4px;transition:height .8s cubic-bezier(.4,0,.2,1);
+  position:relative;
+}
+.sp-bar-yr-bar.cur { opacity:1;box-shadow:0 0 12px var(--accent); }
+.sp-bar-yr-lbl {
+  font-size:9px;color:rgba(255,255,255,.4);letter-spacing:1px;
+  font-family:'Inter',sans-serif;
+}
+.sp-bar-yr-val {
+  font-size:11px;color:var(--accent);letter-spacing:.5px;
+}
 
-    <!-- Top sponsori -->
-    <div class="bk-card" style="padding:20px">
-      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px">🤝 Sponsori</div>
-      <div id="db-sp-list"></div>
-      <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:10px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:11px;color:var(--t3)">Total angajat</span>
-        <span style="font-family:var(--display);font-size:18px;color:var(--green)" id="db-sp-total">—</span>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Plăți restante curse - MUTAT în Buget Curse -->
-
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin:24px 0 12px">Urmează curând</div>
-  <div class="cg" id="db-upcoming"></div>
-
-  <!-- TARGET KM PROGRESS -->
-  <div class="bk-card" style="padding:20px;margin-top:28px" id="db-target-card">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-      <div>
-        <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">🎯 Target anual km</div>
-        <div style="display:flex;align-items:baseline;gap:8px">
-          <span style="font-family:var(--display);font-size:36px;color:var(--accent)" id="db-km-actual">0</span>
-          <span style="color:var(--t3);font-size:14px">/ <input type="number" id="db-target-input" style="background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text);font-size:14px;width:60px;text-align:center;font-family:var(--body)" value="5000" onchange="saveTarget(this.value)"> km</span>
-        </div>
-      </div>
-      <div style="text-align:right">
-        <div style="font-size:11px;color:var(--t3)">La ritmul actual</div>
-        <div style="font-family:var(--display);font-size:20px;color:var(--yellow)" id="db-km-pred">—</div>
-        <div style="font-size:10px;color:var(--t3)">km estimat dec 2026</div>
-      </div>
-    </div>
-    <div style="background:var(--s3);border-radius:6px;height:10px;overflow:hidden;margin-bottom:8px">
-      <div id="db-target-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:6px;transition:width .5s"></div>
-    </div>
-    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t3)">
-      <span id="db-target-pct">0% din target</span>
-      <span id="db-target-rem">5000 km rămași</span>
-    </div>
-  </div>
-
-  <!-- STREAK -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px" id="db-streak-row">
-    <div class="bk-card" style="padding:16px;text-align:center">
-      <div style="font-size:24px;margin-bottom:4px">🔥</div>
-      <div style="font-family:var(--display);font-size:32px;color:var(--orange)" id="db-streak-cur">—</div>
-      <div style="font-size:11px;color:var(--t3)">zile consecutive acum</div>
-    </div>
-    <div class="bk-card" style="padding:16px;text-align:center">
-      <div style="font-size:24px;margin-bottom:4px">⚡</div>
-      <div style="font-family:var(--display);font-size:32px;color:var(--yellow)" id="db-streak-best">—</div>
-      <div style="font-size:11px;color:var(--t3)">zile — best streak ever</div>
-    </div>
-  </div>
-
-  <!-- HEATMAP -->
-  <div class="bk-card" style="padding:20px;margin-top:16px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">🗓️ Heatmap activitate</div>
-      <div style="font-size:11px;color:var(--t3)" id="db-heatmap-year">2026</div>
-    </div>
-    <div id="db-heatmap" style="overflow-x:auto"></div>
-  </div>
-
-</div>
+/* ── SLIDE 4 — Parteneriat ── */
+.sp-partner-logo {
+  max-height:80px;max-width:220px;object-fit:contain;
+  background:white;border-radius:12px;padding:12px 20px;
+  margin-bottom:24px;
+  
+}
 
 .sp-partner-title {
   font-size:clamp(22px,4vw,38px);color:#fff;letter-spacing:4px;
@@ -1088,18 +1140,8 @@ body.readonly label.btn { display:none !important }
 }
 
 
-<!-- BUGET -->
-<div class="page" id="pg-buget">
-  <div class="ph"><div class="ph-left"><h2>BUGET CURSE</h2><p>Costuri per cursă — ce mai e de plătit</p></div></div>
-
-  <!-- Plăți restante -->
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px" id="db-unpaid-label"></div>
-  <div id="db-unpaid-list" style="margin-bottom:24px"></div>
-
-  <div class="tiles" id="bg-tiles"></div>
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">Status plăți per cursă</div>
-  <div id="bg-curse-cards"></div>
-</div>
+/* ── SLIDE 5 — Hartă ── */
+/* folosește clasele existente din landing slDrawMap */
 
 /* ── SLIDE 6 — Last run ── */
 .sp-last-stat {
@@ -7739,157 +7781,7 @@ function slUpdateROI(amount) {
   });
 }
 
-<!-- STATISTICI ALERGĂRI -->
-<div class="page" id="pg-stats">
-  <div class="ph">
-    <div class="ph-left"><h2>STATISTICI</h2><p>Evoluție · 3 ani de date</p></div>
-    <div class="ph-right">
-      <label class="btn btn-primary" style="cursor:pointer">
-        ＋ Import
-        <input type="file" id="stats-file-input" accept=".csv,.gpx,.tcx,.fit" multiple style="display:none" onchange="importActivities(this.files)">
-      </label>
-      <button class="btn btn-ghost btn-sm" onclick="syncStrava()" title="Sync Strava" style="color:#fc5200;border-color:rgba(252,82,0,.3)">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-right:4px"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
-        Sync Strava
-      </button>
-      <button class="btn btn-ghost btn-sm" onclick="clearActivities()" title="Șterge toate">🗑</button>
-      <button class="btn btn-ghost btn-sm" onclick="deduplicateActivities()" title="Elimină duplicate" style="color:var(--yellow);border-color:rgba(255,200,79,.3)">🧹 Deduplică</button>
-    </div>
-  </div>
 
-  <!-- KPI tiles -->
-  <div class="tiles" id="st-tiles" style="margin-bottom:28px"></div>
-
-  <!-- AN SELECTOR -->
-  <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap" id="st-year-tabs"></div>
-
-  <!-- TARGET BLOCK -->
-  <div id="st-target-block"></div>
-
-  <!-- YEARLY COMPARISON CARDS -->
-  <div id="st-year-cards" style="margin-bottom:28px"></div>
-
-  <!-- GROWTH ROW -->
-  <div id="st-growth-row" style="margin-bottom:28px"></div>
-
-  <!-- Charts row 1: km/luna + pie tip -->
-  <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:20px" id="st-charts-row">
-    <div class="bk-card" style="padding:20px">
-      <h4 style="margin-bottom:4px">📅 KM pe lună</h4>
-      <div style="font-size:11px;color:var(--t3);margin-bottom:14px" id="chart-km-month-sub">—</div>
-      <div style="position:relative;height:160px" id="chart-km-month"></div>
-    </div>
-    <div class="bk-card" style="padding:20px">
-      <h4 style="margin-bottom:4px">🏷️ Tipuri activitate</h4>
-      <div style="font-size:11px;color:var(--t3);margin-bottom:14px">distribuție</div>
-      <div style="position:relative;height:160px;display:flex;align-items:center;justify-content:center" id="chart-pie"></div>
-    </div>
-  </div>
-
-  <!-- Chart row 2: elevatie + durata -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
-    <div class="bk-card" style="padding:20px">
-      <h4 style="margin-bottom:14px">⛰️ D+ pe lună (m)</h4>
-      <div style="position:relative;height:140px" id="chart-elev-month"></div>
-    </div>
-    <div class="bk-card" style="padding:20px">
-      <h4 style="margin-bottom:14px">⏱️ Ore alergare / lună</h4>
-      <div style="position:relative;height:140px" id="chart-dur-month"></div>
-    </div>
-  </div>
-
-  <!-- Cumulative -->
-  <div class="bk-card" style="padding:20px;margin-bottom:28px">
-    <h4 style="margin-bottom:4px">📈 KM cumulați în timp</h4>
-    <div style="font-size:11px;color:var(--t3);margin-bottom:14px" id="chart-cum-sub">—</div>
-    <div style="position:relative;height:200px" id="chart-cumulative"></div>
-  </div>
-
-  <!-- Personal records -->
-  <div id="st-records" style="margin-bottom:28px"></div>
-
-  <!-- HEATMAP -->
-  <div class="bk-card" style="padding:20px;margin-bottom:28px">
-    <h4 style="margin-bottom:4px">🗓️ Heatmap activitate</h4>
-    <div style="font-size:11px;color:var(--t3);margin-bottom:14px" id="st-heatmap-sub">zile cu alergare</div>
-    <div id="st-heatmap" style="overflow-x:auto"></div>
-  </div>
-
-  <!-- Filter + list -->
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
-    <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">📋 Activități</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <select id="st-filter-year" onchange="renderStats()" style="padding:6px 10px;font-size:12px;background:var(--s2);border:1px solid var(--border);border-radius:6px;color:var(--text)">
-        <option value="">Toți anii</option>
-      </select>
-      <select id="st-filter-type" onchange="renderStats()" style="padding:6px 10px;font-size:12px;background:var(--s2);border:1px solid var(--border);border-radius:6px;color:var(--text)">
-        <option value="">Toate tipurile</option>
-        <option value="trail">Trail</option>
-        <option value="road">Road</option>
-        <option value="track">Track</option>
-      </select>
-    </div>
-  </div>
-  <div id="st-activity-list"></div>
-
-  <!-- Empty state -->
-  <div id="st-empty" style="display:none;text-align:center;padding:60px 20px">
-    <div style="font-size:48px;margin-bottom:16px">📂</div>
-    <div style="font-family:var(--display);font-size:28px;letter-spacing:2px;color:var(--t2);margin-bottom:8px">NICIO ACTIVITATE</div>
-    <div style="color:var(--t3);font-size:13px;margin-bottom:24px">Importă CSV din Garmin Connect sau GPX/TCX individual</div>
-    <label class="btn btn-primary" style="cursor:pointer">
-      ＋ Import primul fișier
-      <input type="file" accept=".csv,.gpx,.tcx" multiple style="display:none" onchange="importActivities(this.files)">
-    </label>
-    <div style="margin-top:20px;font-size:12px;color:var(--t3)">
-      💡 <strong style="color:var(--t2)">Garmin:</strong> Garmin Connect → hamburger → Import/Export → Export your data → Activities CSV<br>
-      💡 <strong style="color:var(--t2)">Strava:</strong> Settings → My Account → Download or Delete Data → Request Archive
-    </div>
-  </div>
-</div>
-
-
-
-</main>
-</div>
-<div class="overlay" id="ov-rc">
-<div class="modal">
-  <div class="mh"><h3 id="rc-title">CURSĂ NOUĂ</h3><button class="mx" onclick="closeRC()">✕</button></div>
-  <div class="mb">
-    <div class="fg">
-      <div class="fi fgrow"><lbl>Denumire cursă *</lbl><input id="f-den" placeholder="ex: Ultra Trail Apuseni"></div>
-      <div class="fi"><lbl>Distanță (km)</lbl><input type="number" id="f-dist" placeholder="42"></div>
-      <div class="fi"><lbl>Denivelare (m)</lbl><input type="number" id="f-deniv" placeholder="2400"></div>
-      <div class="fi"><lbl>Data cursei *</lbl><input type="date" id="f-dc"></div>
-      <div class="fi"><lbl>Ora start</lbl><input type="time" id="f-ora" value="09:00"></div>
-      <div class="fi"><lbl>Data plecare</lbl><input type="date" id="f-dp"></div>
-      <div class="fi"><lbl>Data întoarcere</lbl><input type="date" id="f-di"></div>
-      <div class="fi"><lbl>Încălțări</lbl>
-        <select id="f-inc">
-          <option>Hoka Speedgoat 6/7</option>
-          <option>Hoka Mafate X</option>
-          <option>Altele</option>
-        </select>
-      </div>
-      <div class="fi"><lbl>Nr. geluri estimat</lbl><input type="number" id="f-gel" placeholder="5"></div>
-      <div class="fi"><lbl>Cost cazare (RON)</lbl><input type="number" id="f-caz" placeholder="300"></div>
-      <div class="fi fgrow"><lbl>Cost înscriere (RON)</lbl><input type="number" id="f-ins" placeholder="200"></div>
-    </div>
-    <div class="sl">Status & plăți</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
-      <div class="cb-row"><input type="checkbox" id="f-rez"><label for="f-rez">🏨 Cazare rezervată</label></div>
-      <div class="cb-row"><input type="checkbox" id="f-pcaz"><label for="f-pcaz">✅ Cazare plătită</label></div>
-      <div class="cb-row"><input type="checkbox" id="f-pins"><label for="f-pins">✅ Înscriere plătită</label></div>
-    </div>
-    <div class="sl">Note</div>
-    <textarea id="f-note" rows="2" placeholder="Observații, parteneri de cursă, detalii logistice..."></textarea>
-  </div>
-  <div class="mf">
-    <button class="btn btn-ghost" onclick="closeRC()">Anulează</button>
-    <button class="btn btn-primary" onclick="saveRC()">Salvează</button>
-  </div>
-</div>
-</div>
 
 function spStartMapAnimation() {
   if (_spMapTimer) clearInterval(_spMapTimer);
@@ -7943,19 +7835,136 @@ function spActivateMapRace(i) {
 
 
 
-      <div style="background:var(--s2);border-radius:8px;padding:14px 16px;margin-bottom:10px">
-        <div style="font-weight:600;color:var(--text);margin-bottom:8px">2. Creează tabelul</div>
-        <div>În proiect → <strong>SQL Editor</strong> → New Query → Rulează:</div>
-        <pre style="background:var(--bg);border-radius:6px;padding:10px;margin-top:8px;font-size:12px;color:var(--accent);overflow-x:auto">create table trail_data (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references auth.users(id) on delete cascade,
-  data jsonb
-);
 
-alter table trail_data enable row level security;
-create policy "Users see own data" on trail_data
-  for all using (auth.uid() = user_id)
-  with check (auth.uid() = user_id);</pre>
+// ── Settings tabs ────────────────────────────────────
+function setTab(btn, tabId) {
+  document.querySelectorAll('.set-nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.set-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const tab = document.getElementById(tabId);
+  if (tab) tab.classList.add('active');
+}
+
+
+// ── Slide Media (panoul stâng S1-S10) ────────────────
+const SLIDE_GRADIENTS = {
+  's1':  'linear-gradient(160deg,#000510 0%,#001030 50%,#000 100%)',
+  's2':  'linear-gradient(160deg,#020a1a 0%,#040d1f 50%,#000 100%)',
+  's3':  'linear-gradient(160deg,#080018 0%,#0a001a 50%,#000 100%)',
+  's4':  'linear-gradient(160deg,#000a00 0%,#041400 50%,#000 100%)',
+  's4b': 'linear-gradient(160deg,#080010 0%,#130020 50%,#000 100%)',
+  's6':  'linear-gradient(160deg,#020010 0%,#050018 50%,#000 100%)',
+  's7':  'linear-gradient(160deg,#060008 0%,#0a000e 50%,#000 100%)',
+  's8':  'linear-gradient(160deg,#000a02 0%,#001404 50%,#000 100%)',
+  's9':  'linear-gradient(160deg,#0a0400 0%,#180800 50%,#000 100%)',
+  's10': 'linear-gradient(160deg,#080005 0%,#12000a 50%,#000 100%)',
+};
+
+function renderSlideMedia() {
+  const sm = SETTINGS.slide_media || {};
+  Object.keys(SLIDE_GRADIENTS).forEach(sid => {
+    const d = sm[sid] || { type:'gradient', url:'' };
+    const typeEl = document.getElementById('sm-'+sid+'-type');
+    const urlEl  = document.getElementById('sm-'+sid+'-url');
+    if (typeEl) typeEl.value = d.type || 'gradient';
+    if (urlEl)  urlEl.value  = d.url  || '';
+    smPreview(sid);
+  });
+}
+
+function smPreview(sid) {
+  const typeEl = document.getElementById('sm-'+sid+'-type');
+  const urlEl  = document.getElementById('sm-'+sid+'-url');
+  const prevEl = document.getElementById('sm-'+sid+'-prev');
+  if (!prevEl) return;
+  const type = typeEl?.value || 'gradient';
+  const url  = (urlEl?.value || '').trim();
+  if (!url || type === 'gradient') { prevEl.style.display='none'; prevEl.innerHTML=''; return; }
+  prevEl.style.display = 'block';
+  if (type === 'image') {
+    prevEl.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.style.display='none'">`;
+  } else {
+    const emb = url.replace('watch?v=','embed/').replace('youtu.be/','www.youtube.com/embed/');
+    const final = url.match(/\.mp4|\.webm/i)
+      ? `<video src="${url}" muted autoplay loop style="width:100%;height:100%;object-fit:cover"></video>`
+      : `<iframe src="${emb}?autoplay=0&mute=1&controls=0" style="width:100%;height:100%;border:none"></iframe>`;
+    prevEl.innerHTML = final;
+  }
+}
+
+function readSlideMedia() {
+  const sm = {};
+  Object.keys(SLIDE_GRADIENTS).forEach(sid => {
+    const typeEl = document.getElementById('sm-'+sid+'-type');
+    const urlEl  = document.getElementById('sm-'+sid+'-url');
+    sm[sid] = {
+      type: typeEl?.value || 'gradient',
+      url:  urlEl?.value.trim() || '',
+    };
+  });
+  return sm;
+}
+
+function applySlideMedia() {
+  const sm = SETTINGS.slide_media || {};
+  Object.keys(SLIDE_GRADIENTS).forEach(sid => {
+    const d    = sm[sid] || { type:'gradient', url:'' };
+    const el   = document.getElementById('sp-'+sid);
+    if (!el) return;
+    const imgEl = el.querySelector('.sp-split-img');
+    if (!imgEl) return;
+
+    // Curata media anterioara
+    imgEl.querySelectorAll('iframe,video,.sm-overlay').forEach(e => e.remove());
+
+    const type = d.type || 'gradient';
+    const url  = (d.url || '').trim();
+
+    if (type === 'gradient' || !url) {
+      imgEl.style.background = SLIDE_GRADIENTS[sid] || '#000';
+    } else if (type === 'image') {
+      imgEl.style.background = `url('${url}') center/cover no-repeat`;
+      const ov = document.createElement('div');
+      ov.className = 'sm-overlay';
+      ov.style.cssText = 'position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.5),rgba(0,0,0,.2));z-index:0;pointer-events:none';
+      imgEl.insertBefore(ov, imgEl.firstChild);
+    } else if (type === 'video') {
+      imgEl.style.background = '#000';
+      if (url.match(/\.mp4|\.webm|\.mov/i)) {
+        const vid = document.createElement('video');
+        vid.src = url; vid.autoplay = true; vid.loop = true; vid.playsInline = true;
+        vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none';
+        imgEl.insertBefore(vid, imgEl.firstChild);
+        vid.play().catch(()=>{ vid.muted=true; vid.play(); });
+      } else {
+        const embedUrl = url.replace('watch?v=','embed/').replace('youtu.be/','www.youtube.com/embed/');
+        const iframe = document.createElement('iframe');
+        iframe.src = embedUrl + (embedUrl.includes('?') ? '&' : '?') + 'autoplay=1&mute=1&loop=1&controls=0&playsinline=1';
+        iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;z-index:0;pointer-events:none';
+        iframe.allow = 'autoplay; encrypted-media';
+        imgEl.insertBefore(iframe, imgEl.firstChild);
+      }
+    }
+  });
+}
+
+
+// ── S1 Partners editor ───────────────────────────────
+function renderS1Partners() {
+  const el = document.getElementById('set-s1-partners-list');
+  if (!el) return;
+  const partners = SETTINGS.s1_partners || [];
+  el.innerHTML = partners.map((p, i) => `
+    <div style="background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:10px 12px;display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;
+                    letter-spacing:.5px;min-width:24px">#${i+1}</div>
+        <input class="set-input" style="flex:1" placeholder="Denumire partener *"
+          value="${escHtml(p.name||'')}" oninput="updS1Partner(${i},'name',this.value)">
+        <button onclick="delS1Partner(${i})"
+          style="background:none;border:none;color:var(--t4);cursor:pointer;font-size:16px;
+                 padding:0 4px;line-height:1;transition:color .15s"
+          onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--t4)'">✕</button>
       </div>
       <input class="set-input" placeholder="URL logo (imgur, cloudinary...)"
         value="${escHtml(p.logo_url||'')}" oninput="updS1Partner(${i},'logo_url',this.value)">
@@ -8078,289 +8087,161 @@ function storyPreviewMedia(sid) {
   }
 }
 
-const DEFAULT = {
-  curse: [
-    {id:1,nr:1,denumire:"Transylvania 100",distanta:102,denivelare:6700,incaltari:"Hoka Mafate X",geluri:20,data_cursa:"2026-05-20",ora_start:"05:00",data_plecare:"2026-05-22",data_sfarsit:"2026-05-24",cazare:540,rezervat:true,plata_cazare:false,plata_concurs:490,plata_concurs_ok:false,note:""},
-    {id:2,nr:2,denumire:"Brasov Marathon",distanta:42,denivelare:2400,incaltari:"Hoka Speedgoat 6/7",geluri:8,data_cursa:"2026-05-30",ora_start:"08:00",data_plecare:"2026-05-29",data_sfarsit:"2026-05-30",cazare:321,rezervat:true,plata_cazare:false,plata_concurs:189,plata_concurs_ok:false,note:""},
-    {id:3,nr:3,denumire:"Skyrace Giants Race",distanta:40,denivelare:3000,incaltari:"Hoka Speedgoat 6/7",geluri:10,data_cursa:"2026-06-12",ora_start:"08:00",data_plecare:"2026-06-12",data_sfarsit:"2026-06-13",cazare:242,rezervat:true,plata_cazare:false,plata_concurs:200,plata_concurs_ok:false,note:""},
-    {id:4,nr:4,denumire:"Legendele Nemirei",distanta:25,denivelare:1250,incaltari:"Hoka Speedgoat 6/7",geluri:3,data_cursa:"2026-07-04",ora_start:"09:00",data_plecare:"2026-07-04",data_sfarsit:"2026-07-04",cazare:0,rezervat:true,plata_cazare:true,plata_concurs:155,plata_concurs_ok:false,note:""},
-    {id:5,nr:5,denumire:"Predeal Forest Run",distanta:38,denivelare:2420,incaltari:"Hoka Speedgoat 6/7",geluri:6,data_cursa:"2026-07-10",ora_start:"09:00",data_plecare:"2026-07-10",data_sfarsit:"2026-07-11",cazare:266,rezervat:true,plata_cazare:false,plata_concurs:250,plata_concurs_ok:false,note:""},
-    {id:6,nr:6,denumire:"UTMB Bucovina Ultra Rocks",distanta:114,denivelare:6300,incaltari:"Hoka Mafate X",geluri:22,data_cursa:"2026-07-24",ora_start:"23:00",data_plecare:"2026-07-23",data_sfarsit:"2026-07-26",cazare:420,rezervat:true,plata_cazare:false,plata_concurs:810,plata_concurs_ok:true,note:"Cursa principală a sezonului"},
-    {id:7,nr:7,denumire:"2X2 Race",distanta:46,denivelare:4200,incaltari:"Hoka Speedgoat 6/7",geluri:15,data_cursa:"2026-08-22",ora_start:"06:00",data_plecare:"2026-08-21",data_sfarsit:"2026-08-22",cazare:1040,rezervat:true,plata_cazare:false,plata_concurs:350,plata_concurs_ok:false,note:""},
-    {id:8,nr:8,denumire:"Ciucas X3",distanta:39,denivelare:2385,incaltari:"Hoka Speedgoat 6/7",geluri:5,data_cursa:"2026-09-06",ora_start:"10:00",data_plecare:"2026-09-05",data_sfarsit:"2026-09-06",cazare:null,rezervat:false,plata_cazare:false,plata_concurs:180,plata_concurs_ok:false,note:"David; 180"},
-    {id:9,nr:9,denumire:"Azuga L30 Dynafit",distanta:30,denivelare:1700,incaltari:"Hoka Speedgoat 6/7",geluri:4,data_cursa:"2026-10-17",ora_start:"10:00",data_plecare:"2026-10-16",data_sfarsit:"2026-10-17",cazare:null,rezervat:false,plata_cazare:false,plata_concurs:159,plata_concurs_ok:true,note:""},
-    {id:10,nr:10,denumire:"Istrița xScape",distanta:41,denivelare:1850,incaltari:"Hoka Speedgoat 6/7",geluri:3,data_cursa:"2026-11-07",ora_start:"10:00",data_plecare:"2026-11-06",data_sfarsit:"2026-11-08",cazare:null,rezervat:false,plata_cazare:false,plata_concurs:150,plata_concurs_ok:false,note:""}
-  ],
-  sponsori: [
-    {id:1,denumire:"SC PRISCOM DEZMEMBRARI AUTO SRL",suma:5000,data:"",contact:"",tip:"general",note:"",primit:false}
-  ],
-  echipament:[
-    {id:1,categorie:"Pantofi Curse Scurte",denumire:"Hoka Speedgoat 6/7",pret:700,km_max:800,km_actuali:0,note:"700-800 RON pret mediu"},
-    {id:2,categorie:"Pantofi Curse Lungi",denumire:"Hoka Mafate X",pret:900,km_max:800,km_actuali:0,note:"900-1000 RON pret mediu"}
-  ],
-  nutritie:{
-    gel_pret_set24:200,
-    gel_training_lunar:8,
-    suplimente:[
-      {id:1,denumire:"Colagen",cantitate:"500gr = 28 portii",pret_lunar:1430,note:""},
-      {id:2,denumire:"Alte suplimente",cantitate:"",pret_lunar:500,note:""},
-      {id:3,denumire:"Creatina",cantitate:"500gr = 50 portii",pret_lunar:1400,note:""}
-    ]
-  },
-  transport:[
-    {id:1,dest:"Brașov",km:456,pret:260},
-    {id:2,dest:"Bran",km:512,pret:290},
-    {id:3,dest:"Voluntari",km:560,pret:320},
-    {id:4,dest:"Sadova (SV)",km:574,pret:330},
-    {id:5,dest:"Cumpăna (CT)",km:612,pret:350},
-    {id:6,dest:"Predeal",km:672,pret:388},
-    {id:7,dest:"Lupeni (HD)",km:1368,pret:790}
-  ],
-  target_km: 5000,
-  activities: []
-};
+function readStorySettings() {
+  const ss = {};
+  STORY_SLIDES_IDS.forEach(sid => {
+    const g = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+    ss[sid] = {
+      left_type:   g(sid+'-left-type'),
+      left_url:    g(sid+'-left-url'),
+      eyebrow:     g(sid+'-eyebrow'),
+      title:       g(sid+'-title').replace(/\n/g,'\\n'),
+      lines:       [g(sid+'-line0'), g(sid+'-line1'), g(sid+'-line2')],
+      left_quote:  g(sid+'-left-quote'),
+      left_label:  g(sid+'-left-label'),
+      left_year:   (SETTINGS.story_slides?.[sid]?.left_year) || DEFAULT_SETTINGS.story_slides[sid].left_year,
+    };
+  });
+  return ss;
+}
 
-// ══════════════════════════════════════════════════════
-//  SUPABASE — HARDCODED CONFIG
-// ══════════════════════════════════════════════════════
-const SB_URL = 'https://jqhtistewpmiphuoxfmp.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxaHRpc3Rld3BtaXBodW94Zm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMzkwOTUsImV4cCI6MjA4ODcxNTA5NX0.NWG60gy3twOCAjVlHuuIB1eTXum5rJVKN4L2EqgPa7I';
-const SB_TABLE = 'trail_data';
-const OWNER_EMAIL = 'evoluttionofall@gmail.com'; // doar acest cont poate edita
+// ── Aplica story settings pe slide-urile din DOM ─────
+function applyStorySlides() {
+  const ss = SETTINGS.story_slides || DEFAULT_SETTINGS.story_slides;
+  if (!ss) return;
 
-let isCloud = false;
-let currentUser = null; // { id, email }
-let authToken = null;   // JWT from Supabase Auth
-
-function sbHeaders(useAuth = false) {
-  return {
-    'Content-Type': 'application/json',
-    'apikey': SB_KEY,
-    'Authorization': 'Bearer ' + (useAuth && authToken ? authToken : SB_KEY),
+  const GRADIENTS = {
+    s11: 'linear-gradient(160deg,#0a0015 0%,#1a0530 50%,#000 100%)',
+    s12: 'linear-gradient(160deg,#001408 0%,#003010 50%,#000 100%)',
+    s13: 'linear-gradient(160deg,#140800 0%,#2a1000 50%,#000 100%)',
+    s14: 'linear-gradient(160deg,#000a00 0%,#001f08 50%,#000 100%)',
   };
 
-// ── SYNC STATUS ───────────────────────────────────────
-function setSyncStatus(status, color) {
-  ['sync-dot','m-sync-dot'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.style.background = color;
-  });
-  ['sync-status','m-sync-status'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.textContent = status;
-  });
-}
+  STORY_SLIDES_IDS.forEach(sid => {
+    const d   = ss[sid] || DEFAULT_SETTINGS.story_slides[sid] || {};
+    const el  = document.getElementById('sp-'+sid);
+    if (!el) return;
 
-// ══════════════════════════════════════════════════════
-//  AUTH
-// ══════════════════════════════════════════════════════
-let loginMode = 'login';
-
-function switchLoginTab(mode, el) {
-  loginMode = mode;
-  document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('on'));
-  el.classList.add('on');
-  document.getElementById('auth-pass2-wrap').style.display = mode === 'signup' ? 'block' : 'none';
-  document.getElementById('auth-btn').textContent = mode === 'signup' ? 'Creează cont' : 'Intră în cont';
-  document.getElementById('auth-reset-wrap').style.display = mode === 'signup' ? 'none' : 'block';
-  document.getElementById('auth-err').textContent = '';
-}
-
-async function doAuth() {
-  const email = document.getElementById('auth-email').value.trim();
-  const pass  = document.getElementById('auth-pass').value;
-  const pass2 = document.getElementById('auth-pass2').value;
-  const errEl = document.getElementById('auth-err');
-  const btn   = document.getElementById('auth-btn');
-
-  errEl.textContent = '';
-  if (!email || !pass) { errEl.textContent = 'Completează email și parolă.'; return; }
-  if (loginMode === 'signup') {
-    if (pass.length < 6) { errEl.textContent = 'Parola trebuie să aibă minim 6 caractere.'; return; }
-    if (pass !== pass2)  { errEl.textContent = 'Parolele nu coincid.'; return; }
-  }
-
-  btn.disabled = true;
-  btn.textContent = '⏳ Se procesează...';
-
-  const endpoint = loginMode === 'signup'
-    ? `${SB_URL}/auth/v1/signup`
-    : `${SB_URL}/auth/v1/token?grant_type=password`;
-
-  try {
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY },
-      body: JSON.stringify({ email, password: pass })
-    });
-    const data = await res.json();
-
-    if (!res.ok) {
-      errEl.textContent = translateAuthError(data.error_description || data.msg || data.message || 'Eroare necunoscută');
-      btn.disabled = false;
-      btn.textContent = loginMode === 'signup' ? 'Creează cont' : 'Intră în cont';
-      return;
-    }
-
-    if (loginMode === 'signup' && !data.access_token) {
-      // Email confirmation required
-      errEl.style.color = 'var(--green)';
-      errEl.textContent = '✅ Cont creat! Verifică emailul pentru confirmare.';
-      btn.disabled = false;
-      btn.textContent = 'Creează cont';
-      return;
-    }
-
-    // Successful login
-    authToken = data.access_token;
-    currentUser = { id: data.user.id, email: data.user.email };
-    await onLoggedIn();
-
-  } catch(e) {
-    errEl.textContent = 'Eroare de rețea. Încearcă din nou.';
-    btn.disabled = false;
-    btn.textContent = loginMode === 'signup' ? 'Creează cont' : 'Intră în cont';
-  }
-}
-
-async function resetPassword() {
-  const email = document.getElementById('auth-email').value.trim();
-  if (!email) { document.getElementById('auth-err').textContent = 'Introdu emailul mai întâi.'; return; }
-  try {
-    await fetch(`${SB_URL}/auth/v1/recover`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY },
-      body: JSON.stringify({ email })
-    });
-    const errEl = document.getElementById('auth-err');
-    errEl.style.color = 'var(--green)';
-    errEl.textContent = '✅ Email de resetare trimis!';
-  } catch(e) {}
-}
-
-function translateAuthError(msg) {
-  if (!msg) return 'Eroare necunoscută';
-  if (msg.includes('Invalid login') || msg.includes('invalid_credentials')) return 'Email sau parolă incorectă.';
-  if (msg.includes('already registered') || msg.includes('already exists')) return 'Acest email este deja înregistrat.';
-  if (msg.includes('Email not confirmed')) return 'Confirmă emailul înainte de a te loga.';
-  if (msg.includes('Password should be')) return 'Parola trebuie să aibă minim 6 caractere.';
-  return msg;
-}
-
-async function doLogout() {
-  if (!confirm('Ești sigur că vrei să te deconectezi?')) return;
-  try {
-    await fetch(`${SB_URL}/auth/v1/logout`, {
-      method: 'POST',
-      headers: sbHeaders(true)
-    });
-  } catch(e) {}
-  authToken = null;
-  currentUser = null;
-  isCloud = false;
-  D = null;
-  document.getElementById('auth-email').value = '';
-  document.getElementById('auth-pass').value = '';
-  document.getElementById('auth-err').textContent = '';
-  document.getElementById('auth-btn').disabled = false;
-  document.getElementById('auth-btn').textContent = 'Intră în cont';
-  document.getElementById('user-email-display').textContent = '';
-  document.getElementById('guest-banner').style.display = 'none';
-  setSyncStatus('Deconectat', 'var(--t4)');
-  updateAuthButtons();
-  toast('👋 Deconectat!', 'info');
-  // Reload owner data publicly
-  await loadOwnerDataAnonymously();
-}
-
-// ══════════════════════════════════════════════════════
-//  POST-LOGIN: LOAD DATA
-// ══════════════════════════════════════════════════════
-async function onLoggedIn() {
-  // Persist session
-  localStorage.setItem('sb_session', JSON.stringify({
-    access_token: authToken,
-    user: currentUser
-  }));
-
-  // Hide login modal
-  hideLoginModal();
-
-  // Show user email
-  const emailEl = document.getElementById('user-email-display');
-  if (emailEl) emailEl.textContent = '👤 ' + currentUser.email;
-
-  // ── OWNER CHECK ──────────────────────────────────────
-  const isOwner = currentUser.email.toLowerCase() === OWNER_EMAIL.toLowerCase();
-  if (!isOwner) {
-    document.body.classList.add('readonly');
-    document.getElementById('guest-banner').style.display = 'flex';
-  } else {
-    document.body.classList.remove('readonly');
-    document.getElementById('guest-banner').style.display = 'none';
-  }
-
-  updateAuthButtons();
-  isCloud = true;
-  setSyncStatus('Se încarcă...', 'var(--yellow)');
-
-  try {
-    // Guests always load OWNER's data — find owner's user_id first
-    let targetUserId = currentUser.id;
-
-    if (!isOwner) {
-      // Fetch owner's row directly — owner data is public to read via RLS (we'll add a guest policy)
-      const allRows = await fetch(
-        `${SB_URL}/rest/v1/${SB_TABLE}?select=user_id,data&limit=1`,
-        { headers: sbHeaders(true) }
-      ).then(r => r.json());
-
-      if (allRows.length > 0 && allRows[0].data) {
-        D = allRows[0].data;
-        if (!D.sponsori) D.sponsori = [];
-        renderAll();
-        setSyncStatus('Vizualizare ☁️', 'var(--yellow)');
-        toast('👁️ Mod vizualizare — datele lui Balan Gabriel', 'info');
-        return;
+    // ── Titlu
+    const titleEl = el.querySelector('.sp-split-title');
+    if (titleEl && d.title) {
+      titleEl.innerHTML = d.title.replace(/\n|\\n/g,'<br>');
+      // S14: highlight ultimul rand in accent
+      if (sid === 's14') {
+        const parts = d.title.split(/\n|\\n/);
+        if (parts.length >= 2) {
+          titleEl.innerHTML = parts.slice(0,-1).join('<br>') +
+            '<br><span style="color:#ccff00">'+ parts[parts.length-1] +'</span>';
+        }
       }
     }
 
-    const res = await fetch(
-      `${SB_URL}/rest/v1/${SB_TABLE}?user_id=eq.${targetUserId}&select=data&limit=1`,
-      { headers: sbHeaders(true) }
-    );
+    // ── Eyebrow
+    const eyeEl = el.querySelector('.sp-split-eyebrow');
+    if (eyeEl && d.eyebrow) eyeEl.textContent = d.eyebrow;
 
-    if (!res.ok) throw new Error('Eroare citire date');
+    // ── Paragraphs
+    const pEls = el.querySelectorAll('.sp-split-lines p');
+    const lines = d.lines || [];
+    pEls.forEach((p, i) => { if(lines[i] !== undefined) p.innerHTML = lines[i]; });
 
-    const rows = await res.json();
+    // ── Left quote & label
+    const quoteEl = el.querySelector('.sp-split-quote');
+    if (quoteEl && d.left_quote) quoteEl.innerHTML = d.left_quote.replace(/\n/g,'<br>');
+    const pillEl = el.querySelector('.sp-split-km-pill:not(#sp-s14-streak-pill)');
+    if (pillEl && d.left_label && sid !== 's14') pillEl.textContent = d.left_label;
 
-    if (rows.length > 0 && rows[0].data) {
-      D = rows[0].data;
-      if (!D.sponsori) D.sponsori = [];
-      renderAll();
-      setSyncStatus('Sincronizat ☁️', 'var(--green)');
-      toast(isOwner ? '☁️ Bine ai revenit, ' + currentUser.email.split('@')[0] + '!' : '👁️ Mod vizualizare activ', isOwner ? 'ok' : 'info');
-      fetchITRA();
-    } else {
-      if (!isOwner) {
-        toast('⚠️ Nu s-au găsit date de vizualizat', 'err');
-        return;
+    // ── Media stânga
+    const imgEl = el.querySelector('.sp-split-img');
+    if (!imgEl) return;
+
+    // Curata media anterioara
+    imgEl.querySelectorAll('iframe,.story-img-cover').forEach(e => e.remove());
+
+    const type = d.left_type || 'gradient';
+    const url  = (d.left_url || '').trim();
+
+    if (type === 'gradient' || !url) {
+      imgEl.style.background = GRADIENTS[sid] || '#000';
+      imgEl.style.backgroundSize = '';
+    } else if (type === 'image') {
+      imgEl.style.background = `url('${url}') center/cover no-repeat`;
+      // Overlay intunecat deasupra imaginii
+      if (!imgEl.querySelector('.story-img-cover')) {
+        const ov = document.createElement('div');
+        ov.className = 'story-img-cover';
+        ov.style.cssText = 'position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.3) 100%);z-index:0';
+        imgEl.insertBefore(ov, imgEl.firstChild);
       }
-      D = JSON.parse(JSON.stringify(DEFAULT));
-      const ins = await fetch(`${SB_URL}/rest/v1/${SB_TABLE}`, {
-        method: 'POST',
-        headers: { ...sbHeaders(true), 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ user_id: currentUser.id, data: D })
-      });
-      if (!ins.ok) throw new Error('Nu s-a putut crea profilul');
-      renderAll();
-      setSyncStatus('Sincronizat ☁️', 'var(--green)');
-      toast('✨ Bine ai venit! Datele tale sunt gata.', 'ok');
+    } else if (type === 'video') {
+      imgEl.style.background = '#000';
+      if (url.match(/\.mp4|\.webm|\.mov/i)) {
+        const vid = document.createElement('video');
+        vid.src = url; vid.loop = true; vid.playsInline = true;
+        vid.muted = false; // va fi gestionat de butonul mute
+        vid.dataset.storyVideo = '1';
+        vid.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none';
+        imgEl.insertBefore(vid, imgEl.firstChild);
+        vid.load(); // preload fara play
+        // Buton mute overlay
+        const muteBtn = document.createElement('button');
+        muteBtn.className = 'sp-video-mute';
+        muteBtn.innerHTML = '🔊';
+        muteBtn.onclick = (e) => {
+          e.stopPropagation();
+          vid.muted = !vid.muted;
+          muteBtn.innerHTML = vid.muted ? '🔇' : '🔊';
+        };
+        imgEl.appendChild(muteBtn);
+      } else {
+      let finalUrl = url;
+      if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        finalUrl = url.replace('watch?v=','embed/').replace('youtu.be/','www.youtube.com/embed/');
+        finalUrl += (finalUrl.includes('?') ? '&' : '?') + 'autoplay=1&mute=1&loop=1&controls=0&playsinline=1';
+      } else if (url.includes('player.cloudinary.com')) {
+        // Cloudinary embed player - fix params
+        finalUrl = url.replace('autoplay=0','autoplay=1').replace('mute=1','muted=0');
+        if (!finalUrl.includes('autoplay=')) finalUrl += '&autoplay=1';
+        if (!finalUrl.includes('muted=') && !finalUrl.includes('mute=')) finalUrl += '&muted=0';
+        if (!finalUrl.includes('loop=')) finalUrl += '&loop=1';
+        if (!finalUrl.includes('controls=')) finalUrl += '&controls=0';
+      } else {
+        // Orice alt iframe
+        finalUrl += (finalUrl.includes('?') ? '&' : '?') + 'autoplay=1&muted=0&loop=1';
+      }
+      const iframe = document.createElement('iframe');
+      iframe.src = finalUrl;
+      iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;z-index:0;pointer-events:none';
+      iframe.allow = 'autoplay; encrypted-media; fullscreen';
+      imgEl.insertBefore(iframe, imgEl.firstChild);
     }
-  } catch(e) {
-    setSyncStatus('Eroare', 'var(--red)');
-    toast('❌ ' + e.message, 'err');
-    console.error(e);
+      }
+  });
+}
+
+
+
+// ── Slide 4B: Wishlist echipament ────────────────────
+function spPopulateWishlist() {
+  const items = (DB.equipment || []).filter(e => e.status === 'wishlist');
+  const grid  = document.getElementById('sp-wishlist-grid');
+  const pill  = document.getElementById('sp-wish-total-pill');
+  const waBtn = document.getElementById('sp-wish-wa-btn');
+  const waPhone = (PROFILE.whatsapp||'').replace(/\D/g,'');
+
+  if (!grid) return;
+
+  const total = items.reduce((s,e) => s+(parseFloat(e.pret)||0), 0);
+  if (pill) pill.textContent = total>0 ? total.toLocaleString('ro-RO')+' RON total wishlist' : 'Wishlist gol';
+
+  if (waBtn && waPhone) {
+    const msg = encodeURIComponent('Bună! Am văzut wishlist-ul tău de echipament și vreau să te susțin pentru sezonul 2026!');
+    waBtn.href = 'https://wa.me/'+waPhone+'?text='+msg;
+  }
+
+  if (!items.length) {
+    grid.innerHTML = '<div style="padding:24px;text-align:center;color:rgba(255,255,255,.3);font-size:13px;font-family:Inter,sans-serif">Nu există articole în wishlist momentan.</div>';
+    return;
   }
 
   const ICONS = {
@@ -8399,24 +8280,45 @@ async function onLoggedIn() {
   }).join('');
 }
 
-// ══════════════════════════════════════════════════════
-//  CLOUD SAVE
-// ══════════════════════════════════════════════════════
-async function pushToSupabase() {
-  if (!isCloud || !currentUser) return false;
-  try {
-    const res = await fetch(
-      `${SB_URL}/rest/v1/${SB_TABLE}?user_id=eq.${currentUser.id}`,
-      {
-        method: 'PATCH',
-        headers: { ...sbHeaders(true), 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ data: D })
-      }
-    );
-    return res.ok;
-  } catch(e) {
-    console.error('Push error:', e);
-    return false;
+// ── S2: Curse + Hartă combinat ───────────────────────
+let _s2ActiveIdx = -1;
+
+function spPopulateS2(races, acts) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const sorted = [...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+  _spMapRaces = sorted;
+
+  // Populam nr curse
+  const nrEl = document.getElementById('sp-s2-nr-left');
+  if(nrEl) nrEl.textContent = races.length;
+
+  // ── Lista curse dreapta ──────────────────────────
+  const listEl = document.getElementById('sp-races-list');
+  if (listEl) {
+    listEl.innerHTML = sorted.map((r,i) => {
+      const past = r.data_cursa && new Date(r.data_cursa) < today;
+      const days = r.data_cursa ? Math.ceil((new Date(r.data_cursa)-today)/86400000) : null;
+      const hasLoc = !!spFindRaceLoc(r.denumire);
+      const diff = spCalcDifficulty(r);
+      const dateStr = r.data_cursa ? new Date(r.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'short'}) : '';
+      return `<div class="sp-race-row ${past?'past':''} ${diff.barClass}" id="sp-race-row-${i}" data-i="${i}"
+                   onclick="spSelectRace(${i}); spOpenRaceDetail(${i})">
+        <div class="sp-race-diff-bar"></div>
+        <div class="sp-race-row-body">
+          <div class="sp-race-row-top">
+            <span class="sp-race-row-nr">#${r.nr||i+1}</span>
+            <span class="sp-race-row-name">${escHtml(r.denumire||'—')}</span>
+            <span class="sp-race-row-badge ${diff.badgeClass}">${diff.label}</span>
+          </div>
+          <div class="sp-race-row-meta">
+            ${r.distanta?'<strong style="color:rgba(255,255,255,.7)">'+r.distanta+'km</strong>':'?km'}${r.denivelare?' · '+Math.round(r.denivelare/1000)+'k D+':''}${dateStr?' · '+dateStr:''}${past?' · ✅':days!==null&&days<=30?' · <span style="color:#facc15">'+days+'z</span>':days!==null?' · '+days+'z':''}
+          </div>
+        </div>
+        <div class="sp-race-row-right">
+          ${past?'<span style="font-size:14px">✅</span>':hasLoc?'<span style="color:rgba(204,255,0,.5);font-size:16px">›</span>':''}
+        </div>
+      </div>`;
+    }).join('');
   }
 
   // ── Hartă stânga ─────────────────────────────────
@@ -8425,132 +8327,296 @@ async function pushToSupabase() {
   // Fara auto-selectie — userul alege
 }
 
-async function saveData() {
-  if (!D) { toast('⚠️ Nu există date de salvat', 'err'); return; }
-  const btn = document.getElementById('save-btn');
-  btn.textContent = '🔄 Se salvează...';
-  setSyncStatus('Se salvează...', 'var(--yellow)');
-  const ok = await pushToSupabase();
-  btn.classList.toggle('saved', ok);
-  btn.textContent = ok ? '✅ Salvat!' : '❌ Eroare';
-  setSyncStatus(ok ? 'Salvat ☁️' : 'Eroare sync', ok ? 'var(--green)' : 'var(--red)');
-  if (ok) toast('☁️ Salvat în cloud!', 'ok');
-  else toast('❌ Eroare la salvare', 'err');
-  setTimeout(() => { btn.textContent = '☁️ Salvează'; btn.classList.remove('saved'); }, 2000);
+function spCalcDifficulty(r) {
+  const km = parseFloat(r.distanta)||0;
+  const dplus = parseFloat(r.denivelare)||0;
+  const name = (r.denumire||'').toLowerCase();
+  // Beast: Bucovina UTMB, Transylvania 100+
+  if (name.includes('bucovina') || name.includes('utmb') ||
+      (name.includes('transylvania') && km >= 100)) {
+    return { level:'beast', label:'BEAST 💀', barClass:'diff-beast', badgeClass:'badge-beast' };
+  }
+  // Ultra: 80km+ sau D+5000+
+  if (km >= 80 || dplus >= 5000) {
+    return { level:'ultra', label:'ULTRA 🔥', barClass:'diff-ultra', badgeClass:'badge-ultra' };
+  }
+  // Hard: 40-80km sau D+2500+
+  if (km >= 40 || dplus >= 2500) {
+    return { level:'hard', label:'HARD ⚡', barClass:'diff-hard', badgeClass:'badge-hard' };
+  }
+  // Medium: 20-40km
+  if (km >= 20) {
+    return { level:'medium', label:'MEDIUM', barClass:'diff-medium', badgeClass:'badge-medium' };
+  }
+  return { level:'easy', label:'EASY', barClass:'diff-easy', badgeClass:'badge-easy' };
 }
 
-let autoSaveTimer = null;
-function scheduleAutoSave() {
-  if (!isCloud) return;
-  if (document.body.classList.contains('readonly')) return; // guests can't save
-  clearTimeout(autoSaveTimer);
-  setSyncStatus('Modificat...', 'var(--yellow)');
-  autoSaveTimer = setTimeout(async () => {
-    setSyncStatus('Se sincronizează...', 'var(--yellow)');
-    const ok = await pushToSupabase();
-    setSyncStatus(ok ? 'Sincronizat ☁️' : 'Eroare sync', ok ? 'var(--green)' : 'var(--red)');
-  }, 1500);
+function spFindRaceLoc(denumire) {
+  if (!denumire) return null;
+  const dl = denumire.toLowerCase();
+  const LOCS = {
+    'transylvania':[46.54,25.08],'brasov':[45.65,25.61],'brașov':[45.65,25.61],
+    'skyrace':[45.36,25.56],'nemirei':[46.10,26.65],'predeal':[45.50,25.57],
+    'bucovina':[47.55,25.93],'utmb':[47.55,25.93],'2x2':[45.40,23.82],
+    'ciucas':[45.53,26.08],'ciucaș':[45.53,26.08],'azuga':[45.43,25.57],
+    'istrita':[44.88,26.82],'istrița':[44.88,26.82],'sinaia':[45.35,25.55],
+    'piatra':[46.92,26.38],'neamț':[46.92,26.38],'apuseni':[46.55,22.80],
+    'retezat':[45.38,22.90],'ceahlau':[46.97,25.95],'ceahlău':[46.97,25.95],
+  };
+  for (const [k,v] of Object.entries(LOCS)) if (dl.includes(k)) return v;
+  return null;
 }
 
-// ══════════════════════════════════════════════════════
-//  LOCAL EXPORT (backup)
-// ══════════════════════════════════════════════════════
-function exportJSON() {
-  if (!D) { toast('⚠️ Nu există date', 'err'); return; }
-  const blob = new Blob([JSON.stringify(D, null, 2)], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'trail_data_backup.json';
-  a.click();
-  toast('💾 Export descărcat!', 'ok');
-}
+function spSelectRace(i) {
+  _s2ActiveIdx = i;
+  const r = _spMapRaces[i];
+  if (!r) return;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const past = r.data_cursa && new Date(r.data_cursa) < today;
 
-function hideBanner() {
-  const el = document.getElementById('filebanner-wrap');
-  if(el) el.style.display = 'none';
-}
+  // Highlight row în lista
+  document.querySelectorAll('.sp-race-row').forEach(el => el.classList.remove('active'));
+  const activeEl = document.getElementById('sp-race-row-'+i);
+  if (activeEl) activeEl.classList.add('active');
+  // Scroll row vizibil
+  const activeRow = document.getElementById('sp-race-row-'+i);
+  if (activeRow) activeRow.scrollIntoView({block:'nearest',behavior:'smooth'});
 
-// ── Helper: show/hide login modal ────────────────────
-function showLoginModal() {
-  document.getElementById('login-screen').style.display = 'flex';
-  setTimeout(() => document.getElementById('auth-email')?.focus(), 100);
-}
-function hideLoginModal() {
-  document.getElementById('login-screen').style.display = 'none';
-}
+  // Highlight dot pe hartă
+  spActivateMapDot(i, past);
 
-// ── Update login/logout button visibility ────────────
-function updateAuthButtons() {
-  const loggedIn = !!currentUser;
-  const isOwner = loggedIn && currentUser.email.toLowerCase() === OWNER_EMAIL.toLowerCase();
-  // Sidebar
-  const loginBtn  = document.getElementById('login-btn');
-  const logoutBtn = document.getElementById('logout-btn');
-  const saveBtn   = document.getElementById('save-btn');
-  const exportBtn = document.getElementById('export-btn');
-  if (loginBtn)  loginBtn.style.display  = loggedIn ? 'none' : 'block';
-  if (logoutBtn) logoutBtn.style.display = loggedIn ? 'block' : 'none';
-  if (saveBtn)   saveBtn.style.display   = isOwner ? 'block' : 'none';
-  if (exportBtn) exportBtn.style.display = isOwner ? 'block' : 'none';
-  // Mobile
-  const mLogin  = document.getElementById('m-login-btn');
-  const mLogout = document.getElementById('m-logout-btn');
-  if (mLogin)  mLogin.style.display  = loggedIn ? 'none' : 'flex';
-  if (mLogout) mLogout.style.display = loggedIn ? 'flex' : 'none';
-}
-
-// ── Load owner data anonymously (no login required) ──
-async function loadOwnerDataAnonymously() {
-  setSyncStatus('Se încarcă...', 'var(--yellow)');
-  try {
-    const res = await fetch(
-      `${SB_URL}/rest/v1/${SB_TABLE}?select=data&limit=1`,
-      { headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY } }
-    );
-    const rows = await res.json();
-    if (rows?.[0]?.data) {
-      D = rows[0].data;
-      if (!D.curse)      D.curse      = [];
-      if (!D.sponsori)   D.sponsori   = [];
-      if (!D.echipament) D.echipament = [];
-      if (!D.nutritie)   D.nutritie   = { gel_pret_set24:0, gel_training_lunar:0, suplimente:[] };
-      if (!D.transport)  D.transport  = [];
-      if (!D.activities) D.activities = [];
-      if (!D.target_km)  D.target_km  = 5000;
-      document.body.classList.add('readonly');
-      renderAll();
-      setSyncStatus('Public ☁️', 'var(--t3)');
-    }
-  } catch(e) {
-    setSyncStatus('Eroare', 'var(--red)');
-    console.error(e);
+  // Update text sub hartă
+  const nameEl = document.getElementById('sp-map-race-name');
+  const metaEl = document.getElementById('sp-map-race-meta');
+  if (nameEl) nameEl.textContent = r.denumire||'—';
+  if (metaEl) {
+    const days = r.data_cursa ? Math.ceil((new Date(r.data_cursa)-today)/86400000) : null;
+    metaEl.textContent = (r.distanta||'?')+'km'
+      +(r.denivelare?' · '+Math.round(r.denivelare/1000)+'k D+':'')
+      +(past?' · ✅ Finalizat':days!==null?' · '+days+' zile':'');
   }
 }
 
-// ── Auto-login if session exists in localStorage ─────
-window.addEventListener('load', async () => {
-  const saved = localStorage.getItem('sb_session');
-  if (saved) {
-    try {
-      const session = JSON.parse(saved);
-      if (session.access_token && session.user) {
-        const res = await fetch(`${SB_URL}/auth/v1/user`, {
-          headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + session.access_token }
-        });
-        if (res.ok) {
-          authToken = session.access_token;
-          currentUser = { id: session.user.id, email: session.user.email };
-          await onLoggedIn();
-          return;
-        }
-      }
-    } catch(e) {}
-    localStorage.removeItem('sb_session');
+function spActivateMapDot(i, past) {
+  // Reset toate doturile
+  document.querySelectorAll('.sp-map-dot-circle').forEach(c => {
+    const origFill = c.dataset.defaultFill || '#1a3a1a';
+    const origStroke = c.dataset.defaultStroke || '#2a4a2a';
+    c.setAttribute('r', c.dataset.baseR || '7');
+    c.setAttribute('fill', origFill);
+    c.setAttribute('stroke', origStroke);
+    c.setAttribute('stroke-width','1.5');
+    c.setAttribute('opacity','.7');
+  });
+  // Ascunde glow-ul vechi
+  const oldGlow = document.getElementById('sp-map-glow');
+  if (oldGlow) oldGlow.remove();
+
+  const dot = document.getElementById('map-dot-'+i);
+  if (!dot) { console.warn('[map] dot not found: map-dot-'+i); return; }
+
+  const fillColor = past ? '#aaa' : '#ccff00';
+  dot.setAttribute('r','11');
+  dot.setAttribute('fill', fillColor);
+  dot.setAttribute('stroke', fillColor);
+  dot.setAttribute('stroke-width','2.5');
+  dot.setAttribute('opacity','1');
+
+  // Adauga cerc de glow
+  const svg = document.getElementById('sp-map-svg');
+  if (svg) {
+    const cx = dot.getAttribute('cx');
+    const cy = dot.getAttribute('cy');
+    const glow = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    glow.setAttribute('id','sp-map-glow');
+    glow.setAttribute('cx', cx);
+    glow.setAttribute('cy', cy);
+    glow.setAttribute('r','18');
+    glow.setAttribute('fill', past?'rgba(170,170,170,.15)':'rgba(204,255,0,.2)');
+    glow.setAttribute('stroke', past?'rgba(170,170,170,.3)':'rgba(204,255,0,.4)');
+    glow.setAttribute('stroke-width','1');
+    glow.setAttribute('pointer-events','none');
+    // Inseram inaintea primului dot ca sa fie dedesubt
+    const firstDot = svg.querySelector('.sp-map-dot-circle');
+    if (firstDot) svg.insertBefore(glow, firstDot);
+    else svg.appendChild(glow);
   }
-  // No session — load owner data publicly, no login required
-  await loadOwnerDataAnonymously();
-  updateAuthButtons();
-});
+}
+
+function spDrawMapS2(races, today) {
+  const svg = document.getElementById('sp-map-svg');
+  if (!svg) return;
+
+  const COUNTIES = ["M163.4,38.0L169.8,47.4L162.0,53.5L157.0,52.6L152.6,53.4L152.7,55.3L157.5,57.4L157.7,59.6L153.6,66.4L151.4,66.6L147.3,63.6L140.2,72.6L141.5,74.4L145.7,75.2L146.6,77.0L143.7,81.1L137.7,77.3L132.7,76.0L122.8,80.7L121.7,77.1L118.4,74.8L112.5,75.1L104.3,62.7L106.1,57.5L109.0,54.2L114.5,53.4L115.8,50.4L117.2,50.0L122.0,52.0L125.4,51.1L130.5,47.4L131.0,44.3L139.3,38.2L138.2,35.7L141.8,37.2L145.7,35.7L147.5,29.8L152.0,30.8L157.8,36.5L163.4,38.0Z","M70.9,124.3L74.0,125.1L89.0,124.3L95.8,127.2L101.0,127.6L103.6,129.7L106.2,135.0L114.4,139.5L115.6,141.9L128.5,143.3L130.6,145.6L127.7,147.8L124.6,153.2L118.5,153.2L116.8,154.6L114.8,168.1L111.0,172.9L107.0,174.6L102.7,173.8L99.9,170.9L94.8,168.7L92.8,169.0L91.8,171.8L89.0,171.1L88.5,173.8L84.3,170.9L82.0,174.0L78.1,168.1L75.5,167.7L74.7,165.4L72.5,165.0L68.2,169.5L66.0,168.3L63.2,169.6L60.4,166.2L58.9,166.9L58.3,169.1L56.9,169.2L55.1,166.2L48.3,165.1L45.7,161.2L38.7,155.7L40.5,154.9L40.3,151.9L42.9,149.9L51.9,151.0L53.4,152.3L58.4,148.9L60.0,142.3L64.5,140.2L62.9,136.2L65.4,127.8L69.7,126.4L70.9,124.3Z","M104.3,62.7L112.5,75.1L118.4,74.8L122.1,77.9L122.4,82.5L119.0,89.9L123.3,97.9L129.0,103.2L127.6,107.0L130.9,108.7L130.9,110.6L126.7,116.0L133.0,126.8L132.8,130.9L129.4,130.7L127.8,134.2L128.5,143.3L115.6,141.9L114.4,139.5L106.2,135.0L103.6,129.7L101.0,127.6L95.8,127.2L89.0,124.3L74.0,125.1L70.9,124.3L74.4,121.3L73.0,118.7L74.5,114.6L78.1,111.8L78.4,107.8L81.0,105.5L82.0,102.2L80.3,100.3L86.2,94.9L88.7,90.4L90.6,82.2L96.9,75.9L97.1,67.8L104.3,62.7Z","M38.7,156.5L45.7,161.2L48.9,165.5L55.1,166.2L57.5,169.3L60.4,166.2L63.2,169.6L66.0,168.3L68.2,169.5L72.5,165.0L74.7,165.4L75.5,167.7L78.1,168.1L82.0,174.0L84.3,170.9L88.5,173.8L89.0,171.1L91.8,171.8L93.7,168.7L99.9,170.9L102.7,173.8L106.7,174.6L111.0,172.9L112.7,170.8L118.9,182.2L120.5,182.0L121.0,183.2L118.4,186.0L117.1,189.5L111.8,190.7L108.6,194.7L104.7,193.4L102.0,195.4L98.4,195.9L98.4,198.0L99.5,198.5L97.1,200.1L95.2,199.9L92.4,196.4L87.2,198.8L81.9,196.2L78.5,197.2L77.5,200.6L73.7,203.7L73.2,208.7L76.2,212.0L76.8,214.9L75.6,221.1L73.7,223.2L70.1,220.1L62.7,218.2L58.2,213.3L56.1,214.3L51.1,211.4L41.5,201.8L43.0,198.4L40.9,193.5L42.3,183.8L41.4,182.9L39.7,184.9L38.0,184.4L32.8,174.9L23.0,169.1L18.0,160.4L19.8,158.1L27.0,157.9L28.1,156.1L34.0,159.0L37.8,158.0L38.7,156.5Z","M142.0,292.4L137.4,290.9L127.8,284.0L127.3,278.9L122.9,277.4L119.4,272.4L118.5,266.1L121.4,265.4L122.8,261.8L128.2,263.4L130.8,261.9L131.1,260.7L128.2,257.5L123.1,256.3L118.5,251.4L115.9,250.8L110.5,254.5L104.5,265.8L101.5,265.5L98.6,261.1L98.3,259.8L104.4,259.0L104.0,253.6L107.0,245.7L114.5,249.6L116.1,249.2L122.2,231.7L125.5,227.2L130.0,231.1L134.2,231.4L137.9,235.0L138.8,243.7L146.3,251.8L157.0,255.8L163.6,262.8L154.7,264.9L155.5,265.8L151.4,269.3L150.8,271.6L153.9,274.4L149.4,276.4L147.5,283.5L147.9,287.8L145.7,288.3L142.0,292.4Z","M142.0,292.4L145.7,288.3L147.9,287.8L147.5,283.5L149.4,276.4L153.9,274.4L150.8,271.6L151.4,269.3L155.5,265.8L154.7,264.9L162.9,263.6L167.7,259.8L174.5,258.0L175.1,250.7L177.3,254.6L180.7,256.8L184.6,264.2L182.4,268.9L188.8,274.5L193.6,281.6L197.7,284.6L198.9,292.3L196.4,292.4L195.6,296.0L199.3,297.9L199.6,299.7L197.9,301.6L198.1,306.1L193.2,315.1L174.9,309.3L168.2,309.7L163.4,306.8L156.2,306.5L147.5,309.0L138.0,309.9L134.9,307.3L136.0,300.8L137.4,298.7L142.7,296.9L143.4,294.9L142.0,292.4Z","M332.3,291.0L325.5,289.5L322.2,287.4L315.8,288.7L309.9,291.9L294.8,294.8L296.7,289.5L296.4,285.4L288.7,277.9L289.2,276.1L292.3,271.8L296.6,268.7L294.8,265.2L299.9,262.5L303.8,264.4L307.8,262.0L311.3,264.4L319.9,265.0L325.3,266.9L340.5,265.6L351.9,268.2L355.9,271.5L366.8,275.7L364.3,280.6L353.8,285.2L346.5,286.1L341.6,289.9L334.1,289.0L332.3,291.0Z","M264.2,317.5L249.4,322.0L242.6,318.4L229.7,315.5L220.2,316.2L216.1,315.1L219.9,311.2L214.7,298.4L215.9,296.1L224.2,291.4L224.6,273.4L230.5,273.3L239.8,269.2L246.0,270.4L249.1,266.0L249.0,264.3L255.3,266.5L253.4,272.3L254.9,276.1L256.0,277.3L260.6,278.1L263.5,282.2L263.5,288.5L261.5,289.5L260.0,296.0L264.2,317.5Z","M288.7,277.9L296.4,285.4L296.7,289.5L294.8,294.8L281.3,299.1L266.3,316.6L264.2,317.5L260.0,296.0L261.5,289.5L263.5,288.5L263.5,282.2L260.6,278.1L256.0,277.3L254.9,276.1L253.4,272.3L255.3,267.5L254.3,265.7L258.2,262.7L272.0,261.8L273.1,264.3L271.1,272.7L271.9,274.7L282.7,281.9L285.2,281.5L288.7,277.9Z","M332.3,291.0L334.1,289.0L341.6,289.9L346.5,286.1L353.8,285.2L356.3,283.2L362.8,281.5L365.5,279.0L370.7,268.9L369.7,265.8L366.1,264.0L367.2,257.1L360.6,251.3L361.8,248.0L366.4,249.2L372.3,247.6L378.4,252.3L380.4,251.8L381.4,249.0L383.9,249.0L386.2,251.8L389.4,253.2L395.9,252.3L401.0,254.3L401.3,256.6L404.8,255.5L406.7,253.2L406.0,251.9L409.9,253.5L408.9,257.0L407.9,257.3L409.4,254.9L408.5,253.2L408.7,254.4L407.0,254.1L400.5,259.5L401.4,257.3L400.2,257.3L399.6,258.7L401.1,260.4L398.6,261.7L398.6,262.7L399.3,261.8L400.5,262.7L399.8,268.4L400.7,265.6L406.4,260.4L407.3,258.2L403.6,266.5L397.5,273.9L396.9,276.2L395.6,276.1L394.3,278.2L395.9,287.9L394.1,288.8L395.9,299.2L391.7,316.0L385.3,316.4L375.7,314.6L364.9,308.9L361.9,299.4L353.3,302.4L349.4,297.0L338.2,298.0L333.8,294.2L332.3,291.0Z","M193.2,315.1L198.1,306.1L197.9,301.6L199.6,299.7L199.3,297.9L195.6,296.0L196.4,292.4L198.9,292.3L198.0,285.2L193.6,281.6L188.8,274.5L182.2,267.9L186.3,263.1L188.3,263.1L190.2,265.0L193.2,261.8L197.5,261.1L198.9,258.2L200.3,261.1L201.4,260.7L199.3,250.0L202.3,242.4L205.1,238.9L206.9,245.0L211.7,240.4L214.8,249.2L219.2,250.9L217.4,252.6L219.7,260.2L220.8,271.6L224.6,273.4L224.2,291.4L215.0,297.4L214.8,299.6L219.9,311.2L216.1,315.1L207.4,312.0L202.5,314.8L193.2,315.1Z","M73.7,223.2L75.6,221.1L76.8,214.9L76.2,212.0L73.2,208.7L73.7,203.7L77.5,200.6L79.3,196.6L82.7,196.4L87.2,198.8L92.4,196.4L95.2,199.9L97.1,200.1L99.5,198.5L98.4,198.0L98.4,195.9L102.0,195.4L104.7,193.4L108.6,194.7L111.8,190.7L116.8,189.7L118.5,193.1L120.9,194.0L121.1,195.8L122.6,196.0L127.2,200.9L128.1,206.1L127.1,208.7L128.4,213.1L126.8,217.5L122.0,223.6L125.2,224.9L125.5,227.2L122.2,231.7L116.1,249.2L114.5,249.6L108.1,245.6L106.7,246.0L104.2,252.8L104.6,258.1L103.5,259.7L98.3,259.8L96.5,255.7L91.0,253.2L85.9,254.5L81.4,253.8L77.9,247.9L70.4,247.4L67.3,244.3L68.5,242.1L76.0,240.5L75.1,237.6L70.3,236.0L67.7,233.4L70.9,231.2L71.8,227.2L74.1,225.4L73.7,223.2Z","M340.3,64.2L334.7,65.2L331.4,69.5L325.1,67.7L324.2,69.0L325.1,71.9L323.5,73.1L319.0,70.5L309.0,69.4L305.6,73.8L303.8,73.5L301.3,70.4L299.7,61.4L288.8,47.5L281.8,42.2L280.7,37.5L284.8,35.9L291.8,23.5L295.8,23.3L297.1,21.5L301.8,21.6L302.0,20.1L303.9,20.3L306.0,18.0L312.2,19.1L316.8,23.9L318.2,22.6L320.9,25.1L319.5,26.6L323.1,28.0L322.8,31.0L325.9,33.9L325.3,35.7L326.4,35.2L328.5,37.2L328.2,41.2L332.3,47.4L330.8,48.3L333.9,52.3L333.6,56.2L340.3,64.2Z","M305.6,73.8L309.0,69.4L319.0,70.5L323.5,73.1L325.1,71.9L324.2,69.0L325.1,67.7L331.4,69.5L334.7,65.2L340.3,64.2L342.2,69.5L346.8,71.5L346.6,77.1L349.5,81.6L353.8,83.7L357.1,92.3L363.1,98.7L367.1,99.6L370.4,106.1L371.3,112.2L367.2,113.7L364.9,112.7L363.8,113.8L358.3,112.2L358.0,107.2L356.2,109.8L349.0,103.5L348.8,107.7L350.9,108.1L350.0,109.7L346.0,109.1L344.7,111.0L342.3,111.6L330.1,111.0L327.4,105.4L331.7,102.3L328.2,97.2L325.9,96.9L322.7,99.7L319.1,99.3L317.1,101.5L309.7,97.4L305.2,96.8L303.1,91.5L297.8,85.1L302.0,83.5L298.8,78.8L305.1,78.9L306.4,75.3L305.6,73.8Z","M330.1,111.0L342.3,111.6L344.7,111.0L346.0,109.1L350.0,109.7L350.9,108.1L348.8,107.7L349.0,103.5L356.2,109.8L358.0,107.2L358.3,112.2L363.8,113.8L364.9,112.7L367.2,113.7L371.3,112.2L377.1,126.8L375.6,134.4L376.8,139.4L373.8,148.7L370.8,152.1L372.3,155.5L370.6,161.2L368.3,161.6L361.5,159.3L358.4,162.2L357.0,160.1L349.3,159.1L348.5,159.9L349.9,163.4L349.6,166.8L348.3,167.4L344.9,159.9L342.4,141.4L336.1,129.1L335.5,123.3L331.1,118.7L330.1,111.0Z","M344.9,159.9L348.8,167.8L349.9,164.0L348.5,159.9L349.3,159.1L357.0,160.1L358.4,162.2L361.5,159.3L368.3,161.6L370.6,161.2L369.5,166.6L371.4,172.9L370.9,179.0L372.7,183.2L373.3,191.7L370.6,192.2L368.6,194.2L373.2,198.4L373.2,200.8L375.4,203.7L374.2,206.0L371.0,205.1L367.2,207.3L357.7,206.2L352.5,201.9L349.5,202.0L345.8,199.5L343.7,192.2L337.9,185.4L332.2,169.5L332.7,166.7L335.8,163.2L344.9,159.9Z","M280.7,37.5L281.8,42.2L288.8,47.5L299.7,61.4L301.6,71.0L306.3,74.7L305.1,78.9L298.8,78.8L301.7,84.0L297.8,85.1L295.5,82.8L293.0,82.3L286.1,85.1L275.3,84.9L271.3,86.6L266.4,83.5L267.7,88.9L262.5,93.7L261.4,98.0L258.4,98.6L256.8,98.6L248.8,92.6L245.3,93.7L243.4,97.4L234.4,95.0L234.7,86.8L232.5,85.5L233.8,81.1L231.4,76.4L233.5,75.5L233.1,73.2L235.3,70.0L229.3,63.5L232.7,61.5L228.7,54.8L234.9,53.0L243.0,42.7L280.7,37.5Z","M145.7,75.2L140.2,73.5L144.2,67.2L147.3,63.6L152.8,66.9L157.7,59.6L157.5,57.4L152.7,55.3L152.6,53.4L157.0,52.6L162.0,53.5L169.8,47.4L163.4,38.0L166.8,35.7L171.5,37.1L176.6,36.9L180.3,40.5L186.9,38.6L190.8,40.2L191.5,41.7L195.8,42.8L202.2,41.6L204.8,39.2L211.6,40.0L215.6,43.0L216.9,46.6L222.7,49.5L225.8,54.6L228.7,54.8L232.6,60.8L232.0,62.6L225.5,63.5L220.5,66.5L212.1,66.8L202.9,65.0L199.1,67.0L197.4,70.1L192.1,71.8L191.3,74.8L186.8,80.5L179.3,79.9L175.8,81.8L171.1,77.8L162.1,77.8L152.6,74.4L145.7,75.2Z","M132.8,130.9L132.8,126.3L126.7,116.0L130.9,110.6L130.9,108.7L127.6,107.0L129.0,103.2L135.7,103.6L138.7,108.2L142.4,110.0L150.4,110.1L152.5,106.0L153.7,108.0L157.2,108.9L158.0,107.1L157.0,104.5L163.2,102.1L162.0,97.5L163.4,96.7L164.5,93.5L169.5,92.0L172.9,88.5L177.7,87.4L178.1,81.0L179.3,79.9L186.8,80.5L183.6,85.6L184.5,91.6L192.1,96.4L193.7,104.8L197.2,108.4L195.3,116.0L193.5,116.5L191.4,120.4L191.9,125.2L188.5,126.9L187.9,132.4L185.2,135.4L185.9,138.5L180.9,137.8L172.6,138.9L171.0,141.2L169.0,139.6L169.6,136.5L165.8,136.2L159.7,132.9L155.2,133.7L152.7,135.7L148.5,135.0L145.1,137.6L141.5,132.6L134.1,132.2L132.8,130.9Z","M229.3,63.5L235.3,70.0L233.1,73.2L233.5,75.5L231.4,76.4L233.8,81.1L232.5,85.5L234.7,86.8L234.4,95.0L226.8,97.4L223.0,100.4L219.4,108.8L215.0,107.4L212.6,108.7L208.1,117.1L202.0,118.5L195.3,116.0L196.9,107.5L193.7,104.8L192.1,96.4L184.8,92.2L183.6,86.4L191.3,74.8L191.9,72.1L196.5,70.7L199.1,67.0L203.6,64.8L212.1,66.8L220.5,66.5L225.5,63.5L229.3,63.5Z","M122.8,80.7L132.7,76.0L137.7,77.3L143.7,81.1L146.6,78.0L145.7,75.2L152.6,74.4L162.1,77.8L171.1,77.8L175.2,81.6L178.1,81.0L178.8,82.5L177.7,87.4L172.9,88.5L169.5,92.0L164.5,93.5L163.4,96.7L162.0,97.5L163.2,102.1L157.0,104.5L157.6,108.6L153.7,108.0L152.5,106.0L150.8,109.8L146.1,110.2L138.7,108.2L135.7,103.6L129.0,103.2L123.3,97.9L118.9,89.0L122.8,80.7Z","M254.3,265.7L249.0,264.3L246.9,269.5L243.8,270.3L245.5,261.8L241.0,258.3L239.7,255.2L241.1,253.6L239.5,251.2L241.0,242.5L240.1,235.5L241.9,232.8L239.1,227.3L238.6,223.5L240.0,220.5L241.9,222.2L243.1,221.3L246.3,211.1L245.2,207.7L247.9,207.0L250.6,203.5L251.9,211.4L254.5,214.4L254.9,218.6L261.6,229.4L263.2,236.1L266.7,236.8L268.3,243.9L272.4,245.4L277.4,250.5L273.9,255.2L275.6,257.7L272.0,261.8L258.2,262.7L254.3,265.7Z","M295.6,264.6L294.6,266.4L296.7,267.9L296.3,269.3L291.5,272.6L288.7,277.9L284.6,281.8L281.3,281.4L271.4,273.9L273.1,264.3L272.0,261.8L275.6,257.7L273.9,255.2L278.0,249.5L284.5,248.5L291.3,249.8L292.3,254.0L295.8,256.7L292.6,261.9L295.6,264.6Z","M243.8,270.3L237.8,269.6L229.8,273.5L221.5,272.5L219.0,256.2L217.4,252.6L219.2,250.9L214.8,249.2L211.7,240.4L207.7,244.9L206.6,244.7L206.1,243.1L209.4,238.9L208.3,235.9L210.6,224.3L208.7,219.1L208.4,213.0L209.6,210.3L208.6,204.6L210.6,198.4L210.1,196.3L221.1,193.6L224.1,196.2L230.6,195.1L235.6,195.8L240.5,199.3L245.9,209.0L246.0,212.2L243.4,220.6L241.9,222.2L240.0,220.5L238.6,223.5L239.1,227.3L241.8,232.2L240.0,236.6L241.0,242.5L239.5,251.2L241.1,253.6L239.8,256.0L242.7,260.2L245.5,261.8L243.8,270.3Z","M163.6,262.8L157.0,255.8L146.3,251.8L138.8,243.7L137.9,235.0L133.7,231.1L129.2,230.6L125.5,227.2L125.2,224.9L122.2,224.1L122.5,222.0L126.8,217.5L136.8,213.8L142.1,216.2L145.7,214.9L149.4,215.6L157.6,212.1L161.3,213.3L167.9,210.1L178.6,211.9L179.4,221.6L176.6,235.4L177.0,247.7L176.4,251.5L174.6,251.1L174.7,257.6L167.7,259.8L163.6,262.8Z","M112.7,170.8L115.6,165.9L115.0,162.8L116.8,154.6L118.5,153.2L124.6,153.2L127.7,147.8L130.6,145.6L133.2,147.1L137.8,146.8L140.1,153.1L144.6,155.4L145.9,158.4L144.6,159.3L145.0,160.7L149.3,166.5L151.7,167.6L155.8,175.6L160.0,193.7L167.6,200.5L167.9,210.1L161.3,213.3L157.6,212.1L149.4,215.6L145.7,214.9L142.1,216.2L136.8,213.8L126.8,217.5L128.5,212.1L127.1,208.7L128.1,206.1L127.2,200.9L117.1,191.2L118.0,186.7L121.2,182.7L118.9,182.2L112.7,170.8Z","M184.6,264.2L180.7,256.8L177.0,254.2L176.4,251.5L176.6,235.4L179.4,220.8L178.9,212.4L177.4,211.1L167.9,210.1L167.8,203.9L171.2,203.4L177.2,199.9L189.5,200.6L194.0,198.0L200.9,196.3L210.1,196.3L210.6,198.4L208.6,204.6L209.6,210.3L208.4,213.0L208.7,219.1L210.6,224.3L208.3,235.9L209.4,238.9L206.1,243.1L206.2,240.1L204.3,239.2L199.3,250.0L201.4,260.7L200.3,261.1L198.9,258.2L197.5,261.1L193.2,261.8L190.2,265.0L187.3,262.8L184.6,264.2Z","M277.4,250.5L272.4,245.4L268.3,243.9L267.2,237.3L262.8,235.4L261.6,229.4L254.9,218.6L254.5,214.4L251.9,211.4L251.3,203.0L260.5,201.4L266.7,202.1L269.2,204.5L270.8,203.5L272.1,199.8L273.7,199.7L278.2,201.6L283.3,206.9L287.9,218.9L291.6,219.4L293.1,221.2L294.8,220.2L294.8,222.6L297.2,225.5L298.1,231.6L302.0,234.7L300.5,238.1L303.2,242.1L300.1,245.7L296.4,245.9L294.5,247.5L291.4,246.7L288.2,249.1L278.0,249.5L277.4,250.5Z","M297.9,166.1L294.3,173.0L293.8,184.0L290.9,192.6L288.9,193.6L286.6,192.1L285.1,195.3L280.6,196.2L271.4,186.1L265.8,183.0L261.4,183.9L261.3,181.7L256.3,177.1L256.7,165.0L254.0,164.7L251.4,161.5L253.6,156.7L262.3,148.3L264.7,150.3L267.0,156.0L271.6,159.9L275.8,160.2L287.4,157.7L291.1,155.7L294.5,158.6L293.9,160.7L297.9,166.1Z","M344.3,156.8L344.9,159.9L335.8,163.2L332.2,168.1L337.9,185.4L343.7,192.2L347.0,200.8L342.6,203.2L340.0,207.9L334.8,207.2L333.3,204.7L330.7,203.7L327.6,205.0L327.1,202.5L323.2,203.4L319.9,198.2L316.8,197.4L316.2,199.2L313.9,198.8L306.1,192.4L301.6,192.2L293.2,180.5L294.3,173.0L297.9,166.1L303.0,166.9L306.2,162.5L319.7,163.5L321.8,161.4L326.0,162.2L330.3,157.4L334.7,156.1L339.5,157.6L341.3,156.2L344.3,156.8Z","M303.2,242.1L300.5,238.1L302.0,234.7L298.1,231.6L297.2,225.5L294.8,222.6L294.8,220.2L293.1,221.2L291.6,219.4L287.9,218.9L285.5,214.6L283.9,207.9L278.2,201.6L280.6,196.2L285.1,195.3L286.2,192.3L290.4,193.2L293.8,184.0L293.2,180.5L301.6,192.2L306.1,192.4L313.9,198.8L316.2,199.2L316.8,197.4L319.9,198.2L323.2,203.4L327.1,202.5L327.6,205.0L330.7,203.7L333.3,204.7L334.8,207.2L340.0,207.9L338.3,213.0L334.9,214.5L334.6,217.9L328.5,217.6L323.8,220.0L324.8,223.1L327.8,221.2L330.4,229.2L333.0,230.1L332.0,236.7L328.8,239.2L330.1,241.6L330.0,245.1L328.8,246.3L329.9,248.0L326.5,249.0L326.1,246.4L323.3,244.9L320.3,246.2L317.3,244.7L306.5,244.3L303.2,242.1Z","M250.6,203.5L247.9,207.0L245.2,207.7L240.5,199.3L235.6,195.8L230.6,195.1L224.1,196.2L221.8,193.8L218.2,193.9L215.6,182.2L220.3,179.3L218.5,173.6L222.3,171.0L224.2,171.0L224.1,168.6L229.5,164.7L230.7,160.7L232.7,159.0L245.3,156.5L250.4,159.2L254.0,164.7L256.7,165.0L256.3,177.1L261.3,181.7L261.4,183.9L265.8,183.0L271.4,186.1L280.6,196.2L278.2,201.6L272.7,199.6L269.2,204.5L266.7,202.1L260.5,201.4L250.6,203.5Z","M218.2,193.9L210.1,196.3L200.9,196.3L194.0,198.0L189.5,200.6L177.2,199.9L169.7,203.6L170.9,201.7L169.1,196.8L170.0,192.6L169.1,186.5L170.7,182.1L173.4,181.1L175.9,176.5L173.5,175.4L173.0,172.8L179.1,172.5L180.4,171.1L180.7,166.3L184.3,165.7L187.1,167.2L188.3,163.9L195.1,157.0L195.1,151.5L200.0,151.1L203.3,152.3L216.7,150.1L216.7,157.8L218.2,161.9L225.6,160.8L230.5,163.4L224.1,168.6L224.2,171.0L222.3,171.0L218.5,173.6L220.3,179.3L215.6,182.2L218.2,193.9Z","M234.4,95.0L240.5,96.8L243.1,103.0L243.9,123.7L238.7,129.8L232.9,134.3L231.9,138.6L228.3,140.7L229.6,143.6L225.5,146.2L230.1,151.9L233.8,152.4L239.7,158.1L232.7,159.0L230.7,160.7L230.5,163.4L225.6,160.8L218.8,162.2L216.9,159.5L216.7,150.1L203.3,152.3L200.0,151.1L195.1,151.5L192.9,147.0L187.6,143.3L189.0,139.4L185.0,136.2L187.9,132.4L188.5,126.9L191.9,125.2L191.2,121.2L193.9,116.1L202.0,118.5L208.1,117.1L212.6,108.7L215.0,107.4L219.4,108.8L223.0,100.4L226.8,97.4L234.4,95.0Z","M240.5,96.8L244.0,97.2L245.3,93.7L248.8,92.6L256.8,98.6L261.4,98.0L264.9,100.0L270.4,108.6L267.9,110.4L268.6,122.8L272.1,126.2L272.4,122.9L276.5,123.6L276.7,128.5L279.3,135.5L277.2,137.6L277.2,140.4L282.7,142.2L283.7,147.4L287.9,146.0L289.5,147.1L287.4,157.7L275.8,160.2L271.6,159.9L267.0,156.0L264.7,150.3L262.3,148.3L258.4,151.0L251.7,160.6L245.3,156.5L239.7,158.1L233.8,152.4L230.1,151.9L225.8,146.7L225.9,145.4L229.8,143.1L228.3,140.7L231.9,138.6L232.9,134.3L238.7,129.8L243.9,123.7L244.3,117.7L242.7,112.4L243.3,104.0L240.5,96.8Z","M297.8,85.1L303.1,91.5L305.2,96.8L309.7,97.4L315.2,101.1L317.7,101.4L319.1,99.3L322.7,99.7L325.9,96.9L328.2,97.2L331.7,102.3L327.4,105.4L329.9,110.2L331.1,118.7L329.3,119.6L323.9,118.1L319.7,118.6L316.2,114.0L313.6,120.2L308.2,118.9L302.2,123.7L296.5,123.7L294.4,125.8L289.6,125.8L287.5,121.2L281.7,124.3L272.9,122.7L272.1,126.2L271.2,125.8L268.4,121.9L267.9,110.4L270.2,109.4L270.1,107.5L264.3,99.2L261.4,98.0L262.5,93.7L268.0,88.2L266.1,83.8L271.3,86.6L275.3,84.9L286.1,85.1L293.9,82.3L297.8,85.1Z","M331.1,118.7L335.5,123.3L336.1,129.1L342.4,141.4L344.3,156.8L331.4,156.8L326.0,162.2L321.8,161.4L319.7,163.5L306.2,162.5L303.0,166.9L297.1,165.7L293.9,160.7L294.5,158.6L291.5,155.9L287.4,157.7L289.5,147.1L287.9,146.0L283.7,147.4L282.7,142.2L277.2,140.4L277.2,137.6L279.3,135.5L276.7,128.5L276.5,123.6L282.6,124.1L287.5,121.2L289.6,125.8L294.4,125.8L296.5,123.7L302.2,123.7L308.2,118.9L313.6,120.2L316.2,114.0L319.7,118.6L323.9,118.1L329.3,119.6L331.1,118.7Z","M130.6,145.6L128.5,143.3L127.6,135.8L128.9,131.4L130.6,130.3L134.1,132.2L141.5,132.6L145.1,137.6L148.5,135.0L152.7,135.7L155.2,133.7L159.7,132.9L165.8,136.2L169.6,136.5L169.0,139.6L171.0,141.2L172.1,139.0L176.5,138.2L187.7,138.1L188.8,139.1L187.4,142.8L192.9,147.0L195.1,151.5L195.3,156.5L188.3,163.9L187.1,167.2L184.3,165.7L180.7,166.3L180.4,171.1L179.1,172.5L173.0,172.8L173.5,175.4L175.9,176.5L173.4,181.1L170.7,182.1L169.1,186.5L170.0,192.6L169.1,196.8L170.9,201.7L169.7,203.6L167.8,203.9L167.3,200.1L160.0,193.7L155.8,175.6L151.7,167.6L149.3,166.5L145.0,160.7L144.6,159.3L145.9,158.4L144.6,155.4L140.1,153.1L137.8,146.8L133.2,147.1L130.6,145.6Z","M368.3,247.9L365.6,249.0L358.3,245.5L351.7,247.3L337.1,246.0L334.4,246.8L330.0,245.1L330.1,241.6L328.8,239.2L332.0,236.7L333.0,230.1L330.4,229.2L327.8,221.2L324.8,223.1L323.8,220.0L328.5,217.6L334.6,217.9L334.9,214.5L338.3,213.0L341.5,204.7L347.0,200.8L352.5,201.9L357.7,206.2L367.2,207.3L365.2,214.0L367.7,216.3L371.3,216.8L370.2,221.2L373.8,224.4L371.7,227.4L371.5,240.1L368.3,247.9Z","M366.8,275.7L355.9,271.5L351.9,268.2L341.8,265.7L325.3,266.9L319.9,265.0L311.3,264.4L307.8,262.0L304.5,264.3L299.9,262.5L295.6,264.6L292.6,261.9L295.8,256.7L292.3,254.0L291.3,249.8L288.2,249.1L291.4,246.7L294.5,247.5L296.4,245.9L300.1,245.7L303.2,242.1L306.5,244.3L317.3,244.7L320.3,246.2L323.3,244.9L326.1,246.4L326.9,249.1L329.9,248.0L328.8,246.3L330.0,245.1L334.4,246.8L337.1,246.0L351.7,247.3L359.3,245.7L361.8,248.0L360.3,250.1L361.2,252.4L364.8,254.3L367.3,257.5L366.1,264.0L369.7,265.8L370.4,267.5L370.7,269.9L366.8,275.7Z","M284.9,272.5L282.8,271.8L283.8,276.5L282.6,277.5L275.0,270.7L275.0,268.6L278.0,268.3L278.0,266.2L275.6,265.2L277.8,261.2L280.8,260.0L281.2,264.5L284.7,265.4L283.6,268.7L285.6,270.5L284.9,272.5Z"];
+
+  const W=460,H=340,pad=18,latMax=48.27,latMin=43.65,lngMin=20.24,lngMax=29.70;
+  const toX=lng=>pad+(lng-lngMin)/(lngMax-lngMin)*(W-pad*2);
+  const toY=lat=>pad+(latMax-lat)/(latMax-latMin)*(H-pad*2);
+
+  let inner = '<rect width="'+W+'" height="'+H+'" fill="#020a02" rx="0"/>';
+  COUNTIES.forEach(d=>{ inner+='<path d="'+d+'" fill="#0a1a0a" stroke="#122012" stroke-width="0.5"/>'; });
+
+  // HOME Bârlad
+  const hx=toX(27.67).toFixed(1),hy=toY(46.23).toFixed(1);
+  inner+='<circle cx="'+hx+'" cy="'+hy+'" r="4" fill="none" stroke="#ccff00" stroke-width="1.5" opacity=".7"/>';
+  inner+='<text x="'+hx+'" y="'+(parseFloat(hy)-7).toFixed(1)+'" font-size="6.5" fill="#ccff00" text-anchor="middle" font-weight="bold" font-family="Inter,sans-serif">HOME</text>';
+
+  // Route line
+  const locs = races.map(r=>spFindRaceLoc(r.denumire)).filter(Boolean);
+  if (locs.length>=2) {
+    inner+='<path d="M'+locs.map(([la,ln])=>toX(ln).toFixed(1)+','+toY(la).toFixed(1)).join('L')+'" fill="none" stroke="#ccff00" stroke-width="1" stroke-dasharray="3,4" opacity=".2"/>';
+  }
+
+  // Dots
+  races.forEach((r,i)=>{
+    const loc=spFindRaceLoc(r.denumire); if(!loc) return;
+    const x=toX(loc[1]).toFixed(1),y=toY(loc[0]).toFixed(1);
+    const past=r.data_cursa&&new Date(r.data_cursa)<today;
+    const big=(parseFloat(r.distanta)||0)>=100;
+    if(big&&!past) inner+='<circle cx="'+x+'" cy="'+y+'" r="14" fill="#ccff00" opacity=".06"/>';
+    // Culoarea bazata pe dificultate
+    const diff2 = spCalcDifficulty(r);
+    const dotColors = {
+      'easy':   { fill:'rgba(74,222,128,.25)',  stroke:'#4ade80' },
+      'medium': { fill:'rgba(250,204,21,.2)',   stroke:'#facc15' },
+      'hard':   { fill:'rgba(249,115,22,.2)',   stroke:'#f97316' },
+      'ultra':  { fill:'rgba(239,68,68,.2)',    stroke:'#ef4444' },
+      'beast':  { fill:'rgba(167,139,250,.25)', stroke:'#a78bfa' },
+    };
+    const dc = dotColors[diff2.level] || dotColors.easy;
+    inner+='<circle cx="'+x+'" cy="'+y+'" r="7" fill="'+dc.fill+'" stroke="'+dc.stroke+'" stroke-width="1.5" class="sp-map-dot-circle" id="map-dot-'+i+'" data-race="'+i+'" data-base-r="7" data-default-fill="'+dc.fill+'" data-default-stroke="'+dc.stroke+'" opacity=".8"/>';
+    inner+='<text x="'+x+'" y="'+(parseFloat(y)-10).toFixed(1)+'" font-size="7" fill="rgba(255,255,255,.5)" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700">'+(i+1)+'</text>';
+    inner+='<circle cx="'+x+'" cy="'+y+'" r="18" fill="transparent" data-race="'+i+'" style="cursor:pointer;pointer-events:all"/>';
+  });
+
+  svg.innerHTML = inner;
+
+  // Click handlers
+  // Click pe orice element cu data-race
+  svg.addEventListener('click', (e) => {
+    const target = e.target.closest('[data-race]');
+    if (!target) return;
+    const i = parseInt(target.dataset.race);
+    spSelectRace(i);
+    spOpenRaceDetail(i);
+  });
+}
+
+function spOpenRaceDetail(i) {
+  const r = _spMapRaces[i];
+  if (!r) return;
+  const card = document.getElementById('sp-race-detail-card');
+  if (!card) return;
+  card.style.display = 'block';
+  card.style.animation = 'slideUp .25s ease forwards';
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const past = r.data_cursa && new Date(r.data_cursa) < today;
+  const days = r.data_cursa ? Math.ceil((new Date(r.data_cursa)-today)/86400000) : null;
+
+  document.getElementById('sp-rd-name').textContent = r.denumire||'—';
+  document.getElementById('sp-rd-date').textContent = r.data_cursa
+    ? new Date(r.data_cursa).toLocaleDateString('ro-RO',{weekday:'long',day:'numeric',month:'long',year:'numeric'})
+    : '—';
+
+  // Stats grid
+  const gpp = (DB.nutri?.gel_pret_set24||0)/24;
+  const gelCost = Math.round((r.geluri||0)*gpp);
+  const stats = [
+    { icon:'🏃', val:(r.distanta||'?')+' km',      lbl:'Distanță' },
+    { icon:'⛰️', val:r.denivelare?Math.round(r.denivelare/1000)+'k D+':'—', lbl:'Denivelare' },
+    { icon:'📅', val:past?'✅ Finalizat':days!==null?days+' zile':'—', lbl:'Status' },
+  ];
+  document.getElementById('sp-rd-stats').innerHTML = stats.map(s=>`
+    <div style="background:rgba(255,255,255,.05);border-radius:7px;padding:8px;text-align:center;border:1px solid rgba(255,255,255,.08)">
+      <div style="font-size:16px;margin-bottom:2px">${s.icon}</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--accent);line-height:1">${s.val}</div>
+      <div style="font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;font-family:'Inter',sans-serif">${s.lbl}</div>
+    </div>`).join('');
+
+  // Info rows detaliate
+  const rows = [
+    r.data_plecare  ? { icon:'🚗', lbl:'Plecare',      val: new Date(r.data_plecare).toLocaleDateString('ro-RO',{weekday:'short',day:'numeric',month:'long'}) } : null,
+    r.data_sfarsit  ? { icon:'🏠', lbl:'Întoarcere',   val: new Date(r.data_sfarsit).toLocaleDateString('ro-RO',{weekday:'short',day:'numeric',month:'long'}) } : null,
+    r.cazare!=null  ? { icon:'🏨', lbl:'Cazare',       val: r.cazare>0?r.cazare.toLocaleString('ro-RO')+' RON':(r.cazare===0?'Fără cazare':'—'), ok:r.plata_cazare } : null,
+    r.plata_concurs ? { icon:'🏁', lbl:'Înscriere',    val: r.plata_concurs.toLocaleString('ro-RO')+' RON', ok:r.plata_concurs_ok } : null,
+    r.geluri        ? { icon:'🧃', lbl:'Geluri',       val: r.geluri+' buc'+( gelCost?' · ~'+gelCost+' RON':'') } : null,
+    r.ora_start     ? { icon:'⏰', lbl:'Start',        val: r.ora_start } : null,
+    r.note          ? { icon:'📝', lbl:'Note',         val: r.note } : null,
+  ].filter(Boolean);
+
+  // Adauga adidasi daca exista in equipment
+  const shoes = (DB.equipment||[]).filter(e=>(e.tip||'').toLowerCase().includes('pantof')||(e.tip||'').toLowerCase().includes('trail'));
+  if (shoes.length) {
+    rows.push({ icon:'👟', lbl:'Adidași planificați', val: shoes.map(s=>s.denumire||s.tip||'—').join(', ') });
+  }
+
+  document.getElementById('sp-rd-info').innerHTML = rows.map(row=>`
+    <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;
+                border-bottom:1px solid rgba(255,255,255,.05)">
+      <span style="font-size:13px;flex-shrink:0;width:18px;text-align:center">${row.icon}</span>
+      <span style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;
+                   letter-spacing:.5px;font-family:'Inter',sans-serif;flex-shrink:0;
+                   min-width:72px;margin-top:1px">${row.lbl}</span>
+      <span style="font-size:12px;color:#fff;font-family:'Inter',sans-serif;flex:1;line-height:1.4">${escHtml(String(row.val||'—'))}</span>
+      ${row.ok!==undefined?`<span style="font-size:12px;flex-shrink:0">${row.ok?'✅':'⏳'}</span>`:''}
+    </div>`).join('');
+}
+
+function spCloseRaceDetail() {
+  const card = document.getElementById('sp-race-detail-card');
+  if (!card) return;
+  card.style.animation = 'slideDown .2s ease forwards';
+  setTimeout(()=>{ card.style.display='none'; card.style.animation=''; }, 220);
+  // Deselecteaza lista si harta
+  document.querySelectorAll('.sp-race-row').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.sp-map-dot-circle').forEach(c=>{
+    c.setAttribute('r','6');c.setAttribute('fill','#1a3a1a');
+    c.setAttribute('stroke','#2a4a2a');c.setAttribute('opacity','.5');
+    c.style.filter='';
+  });
+  const nameEl=document.getElementById('sp-map-race-name');
+  const metaEl=document.getElementById('sp-map-race-meta');
+  if(nameEl) nameEl.textContent='—';
+  if(metaEl) metaEl.textContent='';
+}
+
+// Start map animation pentru S2
+function spStartMapAnimationS2() {
+  if (_spMapTimer) clearInterval(_spMapTimer);
+  _spMapIdx = 0;
+  const total = _spMapRaces.length;
+  if (total > 1) {
+    _spMapTimer = setInterval(()=>{
+      if (document.getElementById('sp-race-detail-card')?.style.display === 'block') return;
+      _spMapIdx = (_spMapIdx+1) % total;
+      spSelectRace(_spMapIdx);
+    }, 2000);
+  }
+}
+
+// ── Slide 14: Grafic km pe luni ─────────────────────
+function spDrawKmChart() {
+  const canvas = document.getElementById('sp-km-chart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const acts = DB.activities || [];
+
+  // Agregam km pe luna din mai 2024 pana azi
+  const months = [];
+  const start = new Date(2024, 4, 1); // mai 2024
+  const now   = new Date();
+  let d = new Date(start);
+  while (d <= now) {
+    const key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    const km  = Math.round(acts
+      .filter(a => a.date && a.date.startsWith(key))
+      .reduce((s,a) => s+(a.km||0), 0));
+    months.push({ key, km, label: ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()] + ' ' + String(d.getFullYear()).slice(2) });
+    d = new Date(d.getFullYear(), d.getMonth()+1, 1);
+  }
 
   // Canvas size
   canvas.width  = canvas.offsetWidth * window.devicePixelRatio || 600;
@@ -8608,130 +8674,93 @@ window.addEventListener('load', async () => {
   }
 }
 
-// Swipe to close drawer
-let touchStartX = 0;
-document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, {passive:true});
-document.addEventListener('touchend', e => {
-  const dx = touchStartX - e.changedTouches[0].clientX;
-  if (dx > 60 && document.getElementById('drawer').classList.contains('on')) closeDrawer();
-}, {passive:true});
-function toggleBio() {
-  const full = document.getElementById('bio-full');
-  const btn  = document.getElementById('bio-toggle');
-  const prev = document.querySelector('.bio-preview');
-  if (full.style.display === 'none') {
-    full.style.display = 'block';
-    if(prev) prev.style.display = 'none';
-    btn.textContent = 'Restrânge ▴';
-  } else {
-    full.style.display = 'none';
-    if(prev) prev.style.display = 'block';
-    btn.textContent = 'Vezi mai mult ▾';
+// ── Counter animat ────────────────────────────────────
+function spAnimateCounters() {
+  // Streak: animatie speciala cu emoji
+  const streakEl = document.getElementById('sp-s1-streak');
+  if(streakEl && streakEl.dataset.target) {
+    const target = parseInt(streakEl.dataset.target)||0;
+    const dur = 1000; const start = performance.now();
+    const tick = now => {
+      const pct = Math.min(1,(now-start)/dur);
+      const eased = 1-Math.pow(1-pct,3);
+      streakEl.textContent = Math.round(eased*target)+'🔥';
+      if(pct<1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
   }
+  document.querySelectorAll('#sp-s1 [data-target]').forEach(el => {
+    const target = parseInt(el.dataset.target) || 0;
+    if (target === 0) { el.textContent = '0'; return; }
+    const duration = 1200;
+    const start = performance.now();
+    const tick = now => {
+      const elapsed = now - start;
+      const pct = Math.min(1, elapsed / duration);
+      const eased = 1 - Math.pow(1 - pct, 3);
+      el.textContent = Math.round(eased * target).toLocaleString('ro-RO');
+      if (pct < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
 }
 
-async function fetchITRA() {
-  // ITRA Performance Index hardcodat (actualizat manual)
-  const el = document.getElementById('itra-pi-val');
-  if (el) el.textContent = '536';
-  const rank = document.getElementById('itra-rank');
-  if (rank) rank.textContent = 'Intermediate 1';
+// ── Bar chart animat ──────────────────────────────────
+function spAnimateBars() {
+  // Counter pe slide 3
+  document.querySelectorAll('#sp-s3 [data-target]').forEach(el => {
+    const target = parseInt(el.dataset.target) || 0;
+    if (target === 0) { el.textContent = '0'; return; }
+    const duration = 1000;
+    const start = performance.now();
+    const tick = now => {
+      const pct = Math.min(1, (now-start)/duration);
+      const eased = 1 - Math.pow(1-pct, 3);
+      el.textContent = Math.round(eased*target).toLocaleString('ro-RO');
+      if (pct < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+  // Bare animate
+  setTimeout(() => {
+    document.querySelectorAll('.sp-bar-yr-bar').forEach(b => {
+      b.style.transition = 'height .8s cubic-bezier(.4,0,.2,1)';
+      b.style.height = b.dataset.h + '%';
+    });
+  }, 400);
 }
 
-function go(id, el) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
-  document.getElementById('pg-'+id).classList.add('on');
-  if(el) el.classList.add('on');
-  // Sync bottom nav
-  document.querySelectorAll('.bn').forEach(b=>b.classList.remove('on'));
-  const bnMap = {dash:0,curse:1,stats:2,buget:3,nutri:4};
-  if(bnMap[id]!==undefined) document.querySelectorAll('.bn')[bnMap[id]]?.classList.add('on');
-  // Re-render charts after page visible (offsetWidth is real only when visible)
-  if (id === 'stats') setTimeout(() => renderStats(), 40);
-}
-
-// ══════════════════════════════════════════════════════
-//  RENDER ALL
-// ══════════════════════════════════════════════════════
-function renderAll() {
-  if (!D) return;
-  if (!D.sponsori) D.sponsori = [];
-  renderSidebar();
-  renderDash();
-  renderCurse(curFilter);
-  renderCal();
-  renderBuget();
-  renderEstimare();
-  renderSponsori();
-  renderEchip();
-  renderNutri();
-  renderStats();
-}
-
-// ══════════════════════════════════════════════════════
-//  SIDEBAR
-// ══════════════════════════════════════════════════════
-function renderSidebar() {
-  const c = D.curse;
-  document.getElementById('b-curse').textContent = c.length;
-  document.getElementById('b-sp').textContent = (D.sponsori||[]).length;
-  const km = c.reduce((s,x)=>s+(x.distanta||0),0);
-  document.getElementById('sk-km').textContent = km;
-  document.getElementById('sk-kmsub').textContent = c.length + ' curse înregistrate';
-  const today = new Date(); today.setHours(0,0,0,0);
-  const up = [...c].filter(x=>new Date(x.data_cursa)>=today).sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
-  if (up.length) {
-    const d = Math.ceil((new Date(up[0].data_cursa)-today)/86400000);
-    document.getElementById('sk-next').textContent = d + ' zile';
-    document.getElementById('sk-nextn').textContent = up[0].denumire;
-  } else {
-    document.getElementById('sk-next').textContent = '—';
-    document.getElementById('sk-nextn').textContent = 'Nicio cursă viitoare';
-  }
-  // Sync mobile drawer
-  const dkm = document.getElementById('d-km'); if(dkm) dkm.textContent = km;
-  const dnext = document.getElementById('d-next'); if(dnext) dnext.textContent = up.length ? Math.ceil((new Date(up[0].data_cursa)-today)/86400000)+' zile' : '—';
-  const dbcurse = document.getElementById('db-curse'); if(dbcurse) dbcurse.textContent = c.length;
+// ── Swipe touch ───────────────────────────────────────
+function spInitSwipe() {
+  const el = document.getElementById('sp-prez');
+  if (!el || el._swipeInit) return;
+  el._swipeInit = true;
+  let sx = 0, sy = 0, st = 0;
+  el.addEventListener('touchstart', e => {
+    sx = e.touches[0].clientX;
+    sy = e.touches[0].clientY;
+    st = Date.now();
+  }, { passive:true });
+  el.addEventListener('touchend', e => {
+    const dx = sx - e.changedTouches[0].clientX;
+    const dy = sy - e.changedTouches[0].clientY;
+    const dt = Date.now() - st;
+    // Swipe valid: orizontal > 60px, mai rapid decât vertical, durată < 400ms
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5 && dt < 400) {
+      spNav(dx > 0 ? 1 : -1);
+    }
+  }, { passive:true });
 }
 
 
-  // ── Hero stats ─────────────────────────────────────
-  const totalDplus = c.reduce((s,x)=>s+(x.denivelare||0),0);
-  const upcoming = [...c].filter(x=>new Date(x.data_cursa)>=today).sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
-  const daysToNext = upcoming.length ? Math.ceil((new Date(upcoming[0].data_cursa)-today)/86400000) : null;
-
-  // KM alergați real din activități 2026
-  const allActsHero = getActivities().sort((a,b)=>a.date.localeCompare(b.date));
-  const curYear2 = new Date().getFullYear().toString();
-  const kmReal2026 = Math.round(allActsHero.filter(a=>a.date?.startsWith(curYear2)).reduce((s,a)=>s+(a.km||0),0));
-
-  const dhsKmReal = document.getElementById('dhs-km-real');
-  const dhsCurse  = document.getElementById('dhs-curse');
-  const dhsKm     = document.getElementById('dhs-km');
-  const dhsNext   = document.getElementById('dhs-next');
-  if(dhsKmReal) dhsKmReal.textContent = kmReal2026.toLocaleString('ro');
-  if(dhsCurse)  dhsCurse.textContent  = c.length;
-  if(dhsKm)     dhsKm.textContent     = km.toLocaleString('ro');
-  if(dhsNext)   dhsNext.textContent   = daysToNext !== null ? daysToNext : '—';
-
-  // Streak live
-  const curStreak = calcCurrentStreak(allActsHero);
-  const dhsStreak = document.getElementById('dhs-streak');
-  if (dhsStreak) dhsStreak.textContent = curStreak;
-
-  // Cost curse
-  const tIns = c.reduce((s,x)=>s+(x.plata_concurs||0),0);
-  const tCaz = c.reduce((s,x)=>s+(x.cazare||0),0);
-  const tGel = c.reduce((s,x)=>s+Math.round((x.geluri||0)*gpp),0);
-  const totCurse = tIns + tCaz + tGel;
+// Butonul din sidebar deschide prezentarea
+function toggleSponsorMode() {
+  openSponsorPrez();
+}
 
 
-  // Echipament
-  const echipTotal = (D.echipament||[]).reduce((s,x)=>s+(x.pret||0),0);
-
-  // Total necesar an — curse + recurente + echipament
-  const totalAn = totCurse + totRecurente + echipTotal;
+// Runtime settings object (merged from DB)
+let SETTINGS = { ...DEFAULT_SETTINGS };
 
 // ── Load settings from user_prefs.landing_settings ──
 function loadSettings() {
@@ -8753,133 +8782,73 @@ function loadSettings() {
 //  ORDINE SLIDE-URI PREZENTARE
 // ══════════════════════════════════════════════════════
 
-  // KPI tiles
-  document.getElementById('db-tiles').innerHTML = `
-    <div class="tile">
-      <lbl>Total necesar 2026</lbl>
-      <div class="tv red">${fmt(totalAn)} RON</div>
-      <div class="ts">Curse + recurente + echipament (${fmt(echipTotal)} RON)</div>
-    </div>
-    <div class="tile">
-      <lbl>Sponsorizare angajată</lbl>
-      <div class="tv green">${fmt(spTotal)} RON</div>
-      <div class="ts">${fmt(spPrimit)} RON confirmat · ${spPct}% din necesar</div>
-      <div class="pbar"><div class="pfill" style="width:${spPct}%;background:${spPct>=100?'var(--green)':spPct>=60?'var(--yellow)':'var(--red)'}"></div></div>
-    </div>
-    <div class="tile">
-      <lbl>${deficit>0?'Deficit rămas':'Surplus'}</lbl>
-      <div class="tv ${deficit>0?'red':'green'}">${deficit>0?'-':'+'} ${fmt(Math.abs(deficit))} RON</div>
-      <div class="ts">${deficit>0?'Mai trebuie acoperit':'Depășești necesarul'}</div>
-    </div>
-    <div class="tile">
-      <lbl>Plăți curse restante</lbl>
-      <div class="tv ${totalDePlata>0?'yellow':'green'}">${fmt(totalDePlata)} RON</div>
-      <div class="ts">${fmt(totalPlatit)} RON din ${fmt(tIns+tCaz)} RON achitat</div>
-      <div class="pbar"><div class="pfill" style="width:${(tIns+tCaz)>0?Math.round(totalPlatit/(tIns+tCaz)*100):0}%"></div></div>
-    </div>
-  `;
+const ALL_SLIDES = [
+  { id:'sp-s1',  icon:'🏃', label:'Atletul — km, ITRA, carieră' },
+  { id:'sp-s2',  icon:'🗺️', label:'Curse + Hartă România — interactiv' },
+  { id:'sp-s3',  icon:'📊', label:'Dovada — numere reale' },
+  { id:'sp-s4',  icon:'🤝', label:'Parteneriat + ROI Simulator' },
+  { id:'sp-s4b', icon:'👟', label:'Wishlist Echipament — Susține-mă' },
+  // S5 combinat in S2
+  // { id:'sp-s5',  icon:'📍', label:'Unde apar — hartă România animată' },
+  { id:'sp-s6',  icon:'⏱️', label:'Countdown — next race' },
+  { id:'sp-s7',  icon:'📈', label:'Unde se duc banii — buget' },
+  { id:'sp-s8',  icon:'⚡', label:'Ultima alergare — live Strava' },
+  { id:'sp-s9',  icon:'🧩', label:'De ce eu — 3 motive' },
+  { id:'sp-s10', icon:'💬', label:'Testimonial + CTA final' },
+  { id:'sp-s11', icon:'🏃', label:'Povestea — O singură decizie proprie' },
+  { id:'sp-s12', icon:'⛰️', label:'Povestea — Chin. Măreție. Top 50.' },
+  { id:'sp-s13', icon:'🌩️', label:'Povestea — Km 130' },
+  { id:'sp-s14', icon:'📈', label:'Povestea — De la 5km la 5.000km' },
+];
 
-  // ── DONUT CHART sponsorizare vs necesar ──────────────
-  const spNeacoperit = Math.max(0, totalAn - spTotal);
-  const spNeprimit   = Math.max(0, spTotal - spPrimit);
+// Ordinea curentă — array de id-uri, salvat în SETTINGS
+function getSlideOrder() {
+  const saved = SETTINGS.slide_order;
+  if (saved && Array.isArray(saved) && saved.length > 0) {
+    const merged = [...saved];
+    ALL_SLIDES.forEach(s => {
+      if (!merged.find(o => o.id === s.id)) merged.push({ id: s.id, active: true });
+    });
+    const result = merged.filter(o => ALL_SLIDES.find(s => s.id === o.id));
+    return result;
+  }
+  console.log('[getSlideOrder] no saved order, returning default');
+  return ALL_SLIDES.map(s => ({ id:s.id, active:true }));
+}
 
-  const donutSegs = [
-    { label: 'Primit confirmat', value: spPrimit,     color: 'var(--green)' },
-    { label: 'Angajat (neprimitt)', value: spNeprimit, color: 'var(--yellow)' },
-    { label: 'Deficit rămas',     value: spNeacoperit, color: 'var(--red)' },
-  ].filter(s => s.value > 0);
+function renderSlideOrderEditor() {
+  const el = document.getElementById('set-slides-order');
+  if (!el) return;
+  const order = getSlideOrder();
 
-  drawDonutChart('db-donut', donutSegs, totalAn);
-
-  // Legend
-  document.getElementById('db-donut-legend').innerHTML = donutSegs.map(s => `
-    <div style="display:flex;align-items:center;gap:8px">
-      <div style="width:10px;height:10px;border-radius:50%;background:${s.color};flex-shrink:0"></div>
-      <div>
-        <div style="font-size:11px;color:var(--t2)">${s.label}</div>
-        <div style="font-family:var(--display);font-size:16px;color:${s.color}">${fmt(s.value)} <span style="font-size:10px;font-family:var(--body);color:var(--t3)">RON</span></div>
+  el.innerHTML = order.map((item, i) => {
+    const def = ALL_SLIDES.find(s => s.id === item.id) || { icon:'🎞️', label: item.id };
+    const active = item.active !== false;
+    return `<div class="slide-order-item" data-id="${item.id}" data-i="${i}"
+        draggable="true"
+        ondragstart="slOrderDragStart(event,${i})"
+        ondragover="slOrderDragOver(event,${i})"
+        ondragleave="slOrderDragLeave(event)"
+        ondrop="slOrderDrop(event,${i})">
+      <span class="slide-order-handle">⠿</span>
+      <span class="slide-order-icon">${def.icon}</span>
+      <span class="slide-order-label" style="${active?'':'color:var(--t4);text-decoration:line-through'}">${def.label}</span>
+      <div class="slide-order-arrows">
+        <button class="slide-order-btn" onclick="slOrderMove(${i},-1)" title="Sus">▲</button>
+        <button class="slide-order-btn" onclick="slOrderMove(${i},1)" title="Jos">▼</button>
       </div>
-    </div>`).join('');
-
-  // Breakdown pe categorii
-  document.getElementById('db-donut-breakdown').innerHTML = `
-    <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Defalcare necesar</div>
-    ${[
-      { lbl: '🏁 Curse', v: totCurse },
-      { lbl: '💊 Recurente', v: totRecurente },
-      { lbl: '👟 Echipament', v: echipTotal },
-    ].map(r => `
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <span style="font-size:12px;color:var(--t2)">${r.lbl}</span>
-        <div style="flex:1;margin:0 10px;height:3px;background:var(--s3);border-radius:2px;overflow:hidden">
-          <div style="height:100%;width:${totalAn>0?Math.round(r.v/totalAn*100):0}%;background:var(--accent);border-radius:2px"></div>
-        </div>
-        <span style="font-size:12px;font-weight:600;color:var(--text)">${fmt(r.v)} RON</span>
-      </div>`).join('')}
-    <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:1px solid var(--border)">
-      <span style="font-size:12px;font-weight:700;color:var(--text)">TOTAL</span>
-      <span style="font-family:var(--display);font-size:16px;color:var(--red)">${fmt(totalAn)} RON</span>
+      <button class="slide-order-toggle ${active?'on':'off'}" onclick="slOrderToggle(${i})" title="${active?'Dezactivează':'Activează'}"></button>
     </div>`;
-
-  // ── LISTA SPONSORI ────────────────────────────────────
-  const sponsoriSorted = [...(D.sponsori||[])].sort((a,b) => (b.suma||0)-(a.suma||0));
-  document.getElementById('db-sp-list').innerHTML = sponsoriSorted.length
-    ? sponsoriSorted.map(s => `
-        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
-          <div style="flex:1;min-width:0">
-            <div style="font-size:13px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.denumire}</div>
-            <div style="font-size:10px;color:var(--t3)">${s.tip||'general'}${s.contact?' · '+s.contact:''}</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0">
-            <div style="font-family:var(--display);font-size:16px;color:var(--green)">${fmt(s.suma||0)}</div>
-            <div style="font-size:9px;color:var(--t3)">RON</div>
-          </div>
-          <div style="width:8px;height:8px;border-radius:50%;background:${s.primit?'var(--green)':'var(--yellow)'};flex-shrink:0" title="${s.primit?'Primit':'Angajat'}"></div>
-        </div>`).join('')
-    : '<div style="color:var(--t3);font-size:12px;text-align:center;padding:20px">Niciun sponsor adăugat</div>';
-
-  document.getElementById('db-sp-total').textContent = fmt(spTotal) + ' RON';
-
+  }).join('');
+}
 
 // ── Drag & Drop ───────────────────────────────────────
 let _dragIdx = null;
 
-  const upcomingCards = [...c].filter(x=>new Date(x.data_cursa)>=today).sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa)).slice(0,3);
-  document.getElementById('db-upcoming').innerHTML = upcomingCards.map(rcCard).join('') || '<p style="color:var(--t3)">Nicio cursă viitoare înregistrată.</p>';
-
-  // ── TARGET KM ──────────────────────────────────────────
-  const allActs = getActivities();
-  const curYear = new Date().getFullYear().toString();
-  const actsThisYear = allActs.filter(a => a.date?.startsWith(curYear));
-  const kmActual = Math.round(actsThisYear.reduce((s,a) => s+(a.km||0), 0));
-  const targetKm = D.target_km || 5000;
-
-  // Prediction: pace km/day so far this year → projected end of year
-  const dayOfYear = Math.ceil((today - new Date(`${curYear}-01-01`)) / 86400000) || 1;
-  const daysInYear = 365;
-  const pacePerDay = kmActual / dayOfYear;
-  const predicted = Math.round(pacePerDay * daysInYear);
-  const pct = Math.min(100, Math.round(kmActual / targetKm * 100));
-
-  const tiEl = document.getElementById('db-target-input');
-  if (tiEl && tiEl.value != targetKm) tiEl.value = targetKm;
-  const setEl = id => document.getElementById(id);
-  if (setEl('db-km-actual'))  setEl('db-km-actual').textContent  = kmActual.toLocaleString('ro');
-  if (setEl('db-km-pred'))    setEl('db-km-pred').textContent    = predicted > 0 ? predicted.toLocaleString('ro') : '—';
-  if (setEl('db-target-bar')) setEl('db-target-bar').style.width = pct + '%';
-  if (setEl('db-target-pct')) setEl('db-target-pct').textContent = pct + '% din target';
-  if (setEl('db-target-rem')) setEl('db-target-rem').textContent = Math.max(0, targetKm - kmActual).toLocaleString('ro') + ' km rămași';
-
-  // ── STREAK ─────────────────────────────────────────────
-  const sortedActs = [...allActs].sort((a,b) => a.date.localeCompare(b.date));
-  const curStreakVal  = calcCurrentStreak(sortedActs);
-  const bestStreakVal = calcBestStreak(sortedActs);
-  if (setEl('db-streak-cur'))  setEl('db-streak-cur').textContent  = curStreakVal;
-  if (setEl('db-streak-best')) setEl('db-streak-best').textContent = bestStreakVal;
-
-  // ── HEATMAP ────────────────────────────────────────────
-  if (setEl('db-heatmap-year')) setEl('db-heatmap-year').textContent = curYear;
-  drawHeatmap('db-heatmap', allActs, curYear);
+function slOrderDragStart(e, i) {
+  _dragIdx = i;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
 }
 
 function slOrderDragOver(e, i) {
@@ -9222,29 +9191,115 @@ function initSponsorLanding() {
   }));
 }
 
-  // Echipament — suma totală a tuturor itemelor
-  const echipTotal = (D.echipament||[]).reduce((s,x)=>s+(x.pret||0),0);
+// ── Animate cards on scroll ─────────────────────────
+function slAnimateCards() {
+  const cards = document.querySelectorAll('#sponsor-landing .sl-card, #sponsor-landing .sl-tl-item');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('sl-visible'), i * 180);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  cards.forEach(c => obs.observe(c));
+  // Trigger first visible ones immediately
+  setTimeout(() => {
+    cards.forEach(c => {
+      const rect = c.getBoundingClientRect();
+      if (rect.top < window.innerHeight) c.classList.add('sl-visible');
+    });
+  }, 100);
+}
 
-  const spTotal = (D.sponsori||[]).reduce((s,x)=>s+(x.suma||0),0);
+// ── Populate all sections from DB ──────────────────
+async function populateSponsorLanding() {
+  const races = DB.races || [];
+  const acts  = DB.activities || [];
+  const year  = new Date().getFullYear();
 
-  const totCurse  = tIns + tCaz + tGelC;
-  const totRecur  = suplAnual + gelTrainAnual;
-  const totalAn   = totCurse + totRecur + echipTotal;
-  const deficit   = totalAn - spTotal;
+  // Stats
+  const totalKm    = races.reduce((s,r)=>s+(parseFloat(r.distanta)||0),0);
+  const totalDplus = races.reduce((s,r)=>s+(parseFloat(r.denivelare)||0),0);
+  const ytdKm      = acts.filter(a=>a.date&&a.date.startsWith(String(year))).reduce((s,a)=>s+(a.km||0),0);
+  const targetKm   = parseInt(DB.prefs?.target_km)||5000;
 
-  // ── Tiles ──
-  document.getElementById('est-tiles').innerHTML = `
-    <div class="tile"><lbl>Total costuri curse</lbl><div class="tv red">${fmt(totCurse)} RON</div><div class="ts">Înscrisuri + cazare + geluri curse</div></div>
-    <div class="tile"><lbl>Costuri recurente anuale</lbl><div class="tv yellow">${fmt(totRecur)} RON</div><div class="ts">${fmt(suplLunar+gelTrainLunar)} RON/lună × 12</div></div>
-    <div class="tile"><lbl>Echipament</lbl><div class="tv yellow">${fmt(echipTotal)} RON</div><div class="ts">${(D.echipament||[]).length} item(e) înregistrate</div></div>
-    <div class="tile"><lbl>TOTAL AN 2026</lbl><div class="tv red">${fmt(totalAn)} RON</div><div class="ts">Curse + recurente + echipament</div></div>
-    <div class="tile"><lbl>Sponsorizare</lbl><div class="tv green">${fmt(spTotal)} RON</div><div class="ts">${deficit>0?'Deficit: '+fmt(deficit)+' RON':'Surplus: '+fmt(-deficit)+' RON'}</div><div class="pbar"><div class="pfill" style="width:${totalAn>0?Math.min(100,Math.round(spTotal/totalAn*100)):0}%;background:${spTotal>=totalAn?'var(--green)':spTotal>totalAn*0.6?'var(--yellow)':'var(--red)'}"></div></div></div>
-  `;
+  const setSL = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+  setSL('sl-stat-curse', races.length || 10);
+  setSL('sl-stat-dplus', totalDplus>=1000 ? Math.round(totalDplus/1000)+'k+' : (totalDplus||'35k+'));
+  setSL('sl-km-target', targetKm.toLocaleString());
 
-  // ── Breakdown grid ──
-  const bkInscrieri = c.map(x=>({lbl:x.denumire, v:x.plata_concurs||0, ok:x.plata_concurs_ok}));
-  const bkCazare = c.filter(x=>x.cazare>0).map(x=>({lbl:x.denumire, v:x.cazare, ok:x.plata_cazare}));
-  const bkGelCurse = c.filter(x=>x.geluri>0).map(x=>({lbl:`${x.denumire} (${x.geluri} gel)`, v:Math.round(x.geluri*gpp)}));
+  // Animate km counter
+  slAnimateKm(ytdKm||0, targetKm);
+  // Bara scroll = TOȚI km de când a început să alerge (mai 2024 → azi)
+  const allTimeKm = Math.round(acts.reduce((s,a)=>s+(a.km||0),0));
+  slInitScrollBar(allTimeKm||0);
+
+  // ── Sponsori dinamici (primit:true) ─────────────────
+  const confirmedSponsors = (DB.sponsors||[]).filter(s=>s.primit);
+
+  // Hero badge
+  const heroSp    = document.getElementById('sl-hero-sponsors');
+  const heroSpList= document.getElementById('sl-hero-sponsors-list');
+  if (heroSp && heroSpList && confirmedSponsors.length) {
+    heroSpList.innerHTML = confirmedSponsors.map(s => s.logo_url
+      ? `<a href="${s.website||'#'}" target="_blank" rel="noopener"
+           title="${escHtml(s.denumire)}"
+           style="display:inline-flex;align-items:center;justify-content:center;
+                  background:white;border:1px solid var(--accent-border);border-radius:8px;
+                  padding:5px 10px;text-decoration:none;transition:border-color .2s"
+           onmouseover="this.style.borderColor='var(--accent)'"
+           onmouseout="this.style.borderColor='var(--accent-border)'">
+           <img src="${esc(s.logo_url)}" style="height:42px;max-width:135px;object-fit:contain">
+         </a>`
+      : `<a href="${s.website||'#'}" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:6px;background:var(--s2);
+                  border:1px solid var(--accent-border);border-radius:8px;padding:6px 12px;
+                  text-decoration:none;font-size:13px;font-weight:600;color:var(--accent)">
+           💼 ${escHtml(s.denumire)}
+         </a>`
+    ).join('');
+    heroSp.style.display = 'flex';
+  }
+
+  // Card parteneri
+  const partCard = document.getElementById('sl-current-sponsors-card');
+  const partList = document.getElementById('sl-partners-list');
+  if (partCard && partList && confirmedSponsors.length) {
+    partCard.style.display = '';
+    partList.innerHTML = confirmedSponsors.map(s => `
+      <div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)">
+        <div style="width:78px;height:78px;flex-shrink:0;border-radius:8px;border:1px solid var(--border);
+                    background:white;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:4px">
+          ${s.logo_url
+            ? `<img src="${esc(s.logo_url)}" style="width:100%;height:100%;object-fit:contain"
+                    onerror="this.parentNode.innerHTML='<span style=font-size:22px>💼</span>'">`
+            : `<span style="font-size:22px">💼</span>`}
+        </div>
+        <div style="flex:1;min-width:0">
+          ${s.website
+            ? `<a href="${esc(s.website)}" target="_blank" rel="noopener"
+                  style="font-family:'Bebas Neue',var(--display);font-size:18px;letter-spacing:1px;
+                         color:var(--accent);text-decoration:none">${escHtml(s.denumire)}</a>`
+            : `<div style="font-family:'Bebas Neue',var(--display);font-size:18px;letter-spacing:1px;
+                           color:var(--accent)">${escHtml(s.denumire)}</div>`}
+          <div style="font-size:11px;color:var(--t3);margin-top:2px">${escHtml(s.tip||'general')}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-family:'Bebas Neue',var(--display);font-size:20px;color:var(--green)">${fmt(s.suma||0)} RON</div>
+          <div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px">Sponsor confirmat</div>
+        </div>
+      </div>`).join('').replace(/border-bottom[^"]*";>\s*$/, '">'); // remove last border
+  } else if (partCard) {
+    partCard.style.display = 'none';
+  }
+
+  // WhatsApp phone dinamic
+  const waBtn = document.getElementById('sl-wa-btn');
+  if (waBtn && SETTINGS.whatsapp_phone) {
+    const phone = SETTINGS.whatsapp_phone.replace(/\D/g,'');
+    waBtn.href = 'https://wa.me/' + phone + '?text=Buna%20Gabriel%2C%20sunt%20interesat%20de%20un%20parteneriat%20pentru%20sezonul%202026.';
+  }
 
   // Progress bar
   const pct = Math.min(100, ((ytdKm||0)/targetKm)*100);
@@ -9265,71 +9320,88 @@ function initSponsorLanding() {
     setSL('sl-next-race-date', d.toLocaleDateString('ro-RO',{day:'numeric',month:'long',year:'numeric'}));
   }
 
-  document.getElementById('est-breakdown').innerHTML = `
-    <div class="breakdown-grid">
-      ${bkCard('🏁 Înscrieri curse', tIns, bkInscrieri, true)}
-      ${bkCard('🏨 Cazare curse', tCaz, bkCazare, true)}
-      ${bkCard('🍯 Geluri curse', tGelC, bkGelCurse)}
-      <div class="bk-card">
-        <h4>💊 Suplimente anuale <span>${fmt(suplAnual)} RON</span></h4>
-        ${(D.nutritie.suplimente||[]).map(s=>`<div class="bk-row">
-          <span class="bl">${s.denumire}</span>
-          <span class="bv a">${fmt(s.pret_lunar)} × 12 = ${fmt(s.pret_lunar*12)} RON</span>
-        </div>`).join('')}
-        <div class="bk-total"><span class="bl">Total</span><span class="bv">${fmt(suplAnual)} RON</span></div>
-      </div>
-      <div class="bk-card">
-        <h4>🍯 Geluri training anuale <span>${fmt(gelTrainAnual)} RON</span></h4>
-        <div class="bk-row"><span class="bl">${D.nutritie.gel_training_lunar||8} geluri/lună</span><span class="bv a">${fmt(gelTrainLunar)} RON/lună</span></div>
-        <div class="bk-row"><span class="bl">Anual (×12)</span><span class="bv a">${fmt(gelTrainAnual)} RON</span></div>
-        <div class="bk-total"><span class="bl">Total</span><span class="bv">${fmt(gelTrainAnual)} RON</span></div>
-      </div>
-      <div class="bk-card">
-        <h4>👟 Echipament <span>${fmt(echipTotal)} RON</span></h4>
-        ${(D.echipament||[]).map(e=>`<div class="bk-row">
-          <span class="bl">${e.denumire}<br><span style="font-size:11px;color:var(--t3)">${e.categorie} · ${e.km_max||0}km max</span></span>
-          <span class="bv a">${fmt(e.pret||0)} RON</span>
-        </div>`).join('')}
-        <div class="bk-total"><span class="bl">Total</span><span class="bv">${fmt(echipTotal)} RON</span></div>
-      </div>
-      <div class="bk-card" style="border-color:${deficit<=0?'rgba(79,255,155,.3)':'rgba(255,79,79,.25)'}">
-        <h4>📊 Sumar final <span style="color:${deficit<=0?'var(--green)':'var(--red)'}"> ${fmt(totalAn)} RON</span></h4>
-        <div class="bk-row"><span class="bl">Costuri curse</span><span class="bv">${fmt(totCurse)} RON</span></div>
-        <div class="bk-row"><span class="bl">Costuri recurente</span><span class="bv">${fmt(totRecur)} RON</span></div>
-        <div class="bk-row"><span class="bl">Echipament</span><span class="bv">${fmt(echipTotal)} RON</span></div>
-        <div class="bk-row"><span class="bl" style="font-weight:700">TOTAL NECESAR</span><span class="bv a" style="color:var(--red)">${fmt(totalAn)} RON</span></div>
-        <div class="bk-row"><span class="bl" style="color:var(--green)">Sponsorizare</span><span class="bv" style="color:var(--green)">− ${fmt(spTotal)} RON</span></div>
-        <div class="bk-total" style="border-top-color:${deficit<=0?'rgba(79,255,155,.3)':'rgba(255,79,79,.25)'}">
-          <span class="bl">${deficit<=0?'Surplus':'Deficit'}</span>
-          <span class="bv" style="font-family:var(--display);font-size:22px;color:${deficit<=0?'var(--green)':'var(--red)'}">${deficit<=0?'+':'-'}${fmt(Math.abs(deficit))} RON</span>
-        </div>
-      </div>
-    </div>
-  `;
-
-  // ── Timeline lunar ──
-  const monthly = Array.from({length:12}, (_,m) => ({ m, name: monthsFull[m], short: months[m], items:[], total:0 }));
-
-  for (let m = 0; m < 12; m++) {
-    if (suplLunar > 0) { monthly[m].items.push({lbl:'💊 Suplimente', v:suplLunar}); monthly[m].total += suplLunar; }
-    if (gelTrainLunar > 0) { monthly[m].items.push({lbl:'🍯 Geluri training', v:gelTrainLunar}); monthly[m].total += gelTrainLunar; }
+  // Photo & video from SETTINGS
+  const PHOTO_URL = SETTINGS.photo_url || '';
+  if (PHOTO_URL) {
+    const img = document.getElementById('sl-avatar-img');
+    const emoji = document.getElementById('sl-avatar-emoji');
+    if (img) { img.src = PHOTO_URL; img.style.display = 'block'; }
+    if (emoji) emoji.style.display = 'none';
   }
 
-  // Echipament — distribuit în luna 1 (Ianuarie) ca investiție inițială
-  if (echipTotal > 0) {
-    monthly[0].items.push({lbl:`👟 Echipament (${(D.echipament||[]).length} item)`, v:echipTotal, sub:(D.echipament||[]).map(e=>e.denumire).join(', ')});
-    monthly[0].total += echipTotal;
+  // Video — only show if URL set AND toggle is on
+  const VIDEO_URL = SETTINGS.video_url || '';
+  if (VIDEO_URL && SETTINGS.show_video !== false) {
+    const card = document.getElementById('sl-video-card');
+    const iframe = document.getElementById('sl-video-iframe');
+    if (card) card.style.display = 'block';
+    if (iframe) iframe.src = VIDEO_URL;
+  } else {
+    const card = document.getElementById('sl-video-card');
+    if (card) card.style.display = 'none';
   }
 
-  c.forEach(x => {
-    const dataPlecare = x.data_plecare || x.data_cursa;
-    const m = new Date(dataPlecare).getMonth();
-    if (m < 0 || m > 11) return;
-    const gelCost = Math.round((x.geluri||0)*gpp);
-    const cursaTot = (x.plata_concurs||0) + (x.cazare||0) + gelCost;
-    monthly[m].items.push({lbl:`🏁 ${x.denumire}`, v:cursaTot, sub:`Inscr. ${x.plata_concurs||0} + Caz. ${x.cazare||0} + Gel. ${gelCost}`});
-    monthly[m].total += cursaTot;
-  });
+  // Section visibility — from SETTINGS
+  const showHide = (sel, show) => {
+    const e = typeof sel === 'string' ? document.querySelector(sel) : sel;
+    if (e) e.style.display = show ? '' : 'none';
+  };
+
+  // Landing active guard
+  if (SETTINGS.landing_active === false) {
+    const landing = document.getElementById('sponsor-landing');
+    if (landing) {
+      landing.innerHTML = '<div style="text-align:center;padding:80px 20px;color:var(--t3)"><div style="font-size:48px;margin-bottom:16px">🔒</div><div style="font-size:16px">Pagina nu este disponibilă momentan.</div></div>';
+      return;
+    }
+  }
+
+  // Welcome message
+  const welcomeEl = document.getElementById('sl-welcome-text');
+  if (welcomeEl && SETTINGS.welcome_msg) welcomeEl.textContent = SETTINGS.welcome_msg;
+  showHide('#sl-welcome-card', true); // always visible if landing_active
+
+  // Quote
+  const quoteEl = document.querySelector('.sl-quote-text');
+  if (quoteEl && SETTINGS.quote) quoteEl.textContent = '"' + SETTINGS.quote + '"';
+
+  // Hero sub
+  const subEl = document.querySelector('.sl-sub');
+  if (subEl && SETTINGS.hero_sub) subEl.textContent = SETTINGS.hero_sub;
+
+  // Sections
+  showHide('#sponsor-landing .sl-map-wrap', SETTINGS.show_map !== false);
+
+  // Budget card — find parent card of breakdown
+  const budgetCard = document.getElementById('sl-budget-breakdown')?.closest('.sl-card');
+  showHide(budgetCard, SETTINGS.show_budget !== false);
+
+  // FAQ card
+  const faqCard = document.getElementById('sl-faq-list')?.closest('.sl-card');
+  showHide(faqCard, SETTINGS.show_faq !== false);
+
+  // Timeline card
+  const tlCard = document.getElementById('sl-timeline')?.closest('.sl-card');
+  showHide(tlCard, SETTINGS.show_timeline !== false);
+
+  // ROI card
+  const roiCard = document.querySelector('#sponsor-landing .sl-roi-slider')?.closest('.sl-card');
+  showHide(roiCard, SETTINGS.show_roi !== false);
+
+  // Benefits card
+  const benefitsCards = document.querySelectorAll('#sponsor-landing .sl-benefit');
+  const benefitsCard  = benefitsCards[0]?.closest('.sl-card');
+  showHide(benefitsCard, SETTINGS.show_benefits !== false);
+
+  // FAQ from settings
+  const faqEl = document.getElementById('sl-faq-list');
+  if (faqEl && SETTINGS.faq?.length) {
+    faqEl.innerHTML = SETTINGS.faq.map(f => `
+      <div class="sl-faq-item">
+        <button class="sl-faq-q" onclick="slToggleFaq(this)">${escHtml(f.q)} <span class="sl-faq-arr">▾</span></button>
+        <div class="sl-faq-a">${escHtml(f.a)}</div>
+      </div>`).join('');
+  }
 
   // Packages from settings into ROI simulator
   slUpdateROI(500);
@@ -9800,912 +9872,19 @@ function escHtml(s) {
 }
 
 
-// Keyboard: Escape
-
-// ══════════════════════════════════════════════════════
-//  STATISTICS — ACTIVITIES ENGINE
-// ══════════════════════════════════════════════════════
-
-// Activities stored in D.activities = [{id, date, name, type, km, elev, duration, source}]
-function getActivities() {
-  if (!D.activities) D.activities = [];
-  return D.activities;
-}
-
-// ── IMPORT ────────────────────────────────────────────
-async function importActivities(files) {
-  if (!files || !files.length) return;
-  let imported = 0, errors = 0;
-  const acts = getActivities();
-
-  for (const file of files) {
-    try {
-      const text = await file.text();
-      const ext = file.name.split('.').pop().toLowerCase();
-      let parsed = [];
-
-      if (ext === 'csv') parsed = parseCSV(text, file.name);
-      else if (ext === 'gpx') parsed = parseGPX(text, file.name);
-      else if (ext === 'tcx') parsed = parseTCX(text, file.name);
-      else { errors++; continue; }
-
-      // Deduplicate by date+km
-      parsed.forEach(a => {
-        const dup = acts.find(x => x.date === a.date && Math.abs((x.km||0)-(a.km||0)) < 0.5);
-        if (!dup) { acts.push(a); imported++; }
-      });
-    } catch(e) {
-      console.error('Import error:', file.name, e);
-      errors++;
-    }
-  }
-
-  // Sort by date desc
-  acts.sort((a,b) => b.date.localeCompare(a.date));
-  D.activities = acts;
-  scheduleAutoSave();
-  renderStats();
-  toast(`✅ ${imported} activități importate${errors?` · ${errors} erori`:''}`, imported ? 'ok' : 'err');
-}
-
-function parseCSV(text, filename) {
-  const lines = text.trim().split(/\r?\n/);
-  if (lines.length < 2) return [];
-
-  // Parse quoted CSV properly
-  function splitCSVLine(line) {
-    const cols = [];
-    let cur = '', inQ = false;
-    for (let c of line) {
-      if (c === '"') inQ = !inQ;
-      else if (c === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
-      else cur += c;
-    }
-    cols.push(cur.trim());
-    return cols;
-  }
-
-  const headers = splitCSVLine(lines[0]).map(h => h.replace(/"/g,'').trim().toLowerCase());
-  const results = [];
-
-  // Column name mapping — supports Romanian (Garmin RO) + English (Strava/Garmin EN)
-  const colMap = {
-    date:     ['dată','date','activity date','start date','datum'],
-    name:     ['titlu','activity name','name','title','bezeichnung'],
-    type:     ['tip activitate','activity type','type','sport','sport type'],
-    km:       ['distanță','distance','distanz (km)','distance (km)'],
-    elev:     ['ascensiune totală','elevation gain','total ascent','elev gain','ascent','total elevation gain'],
-    dur:      ['timp','moving time','elapsed time','duration','time','timp deplasare'],
-  };
-
-  function getCol(...keys) {
-    for (const k of keys) {
-      const idx = headers.indexOf(k);
-      if (idx >= 0) return idx;
-    }
-    return -1;
-  }
-
-  const idxDate = getCol(...colMap.date);
-  const idxName = getCol(...colMap.name);
-  const idxType = getCol(...colMap.type);
-  const idxKm   = getCol(...colMap.km);
-  const idxElev = getCol(...colMap.elev);
-  const idxDur  = getCol(...colMap.dur);
-
-  lines.slice(1).forEach((line, i) => {
-    if (!line.trim()) return;
-    const cols = splitCSVLine(line);
-    const get = idx => idx >= 0 ? (cols[idx]||'').replace(/"/g,'').trim() : '';
-
-    const dateRaw = get(idxDate);
-    if (!dateRaw) return;
-    const date = normalizeDate(dateRaw);
-    if (!date) return;
-
-    // Distance — remove spaces and thousands separators, replace comma decimal
-    let kmRaw = get(idxKm).replace(/\s/g,'').replace(/\.(?=\d{3})/g,'').replace(',','.');
-    let km = parseFloat(kmRaw) || 0;
-    // If in meters (very large number), convert
-    if (km > 1000) km = km / 1000;
-    km = Math.round(km * 10) / 10;
-
-    // Elevation — same cleaning
-    let elevRaw = get(idxElev).replace(/\s/g,'').replace(/\.(?=\d{3})/g,'').replace(',','.');
-    const elev = parseInt(elevRaw) || 0;
-
-    // Duration
-    const dur = parseDuration(get(idxDur));
-
-    // Name
-    const name = get(idxName) || `Alergare ${date}`;
-
-    // Type detection
-    const typeRaw = get(idxType).toLowerCase();
-    let type = 'road';
-    if (typeRaw.includes('montană') || typeRaw.includes('montana') || typeRaw.includes('trail') || typeRaw.includes('mountain')) type = 'trail';
-    else if (typeRaw.includes('bandă') || typeRaw.includes('banda') || typeRaw.includes('track') || typeRaw.includes('pistă')) type = 'track';
-
-    // Skip non-running activities — keep all running variants
-    const runKeywords = ['alergare','alergat','run','trail','jogging','montană','bandă','urbană'];
-    const isRun = !typeRaw || runKeywords.some(k => typeRaw.includes(k));
-    if (!isRun) return;
-
-    if (km > 0) {
-      results.push({ id: Date.now() + i, date, name, type, km, elev, dur, source: 'csv' });
-    }
-  });
-
-  return results;
-}
-
-function parseGPX(text, filename) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(text, 'text/xml');
-  const results = [];
-
-  const tracks = doc.querySelectorAll('trk');
-  tracks.forEach((trk, i) => {
-    const name = trk.querySelector('name')?.textContent || filename.replace('.gpx','');
-    const typeEl = trk.querySelector('type')?.textContent?.toLowerCase() || 'road';
-    const type = typeEl.includes('trail') ? 'trail' : 'road';
-
-    const points = [...trk.querySelectorAll('trkpt')];
-    if (!points.length) return;
-
-    // Date from first point
-    const timeEl = points[0].querySelector('time')?.textContent;
-    const date = timeEl ? normalizeDate(timeEl) : normalizeDate(new Date().toISOString());
-
-    // Calculate distance + elevation
-    let km = 0, elev = 0, prevLat, prevLon, prevEle;
-    points.forEach(pt => {
-      const lat = parseFloat(pt.getAttribute('lat'));
-      const lon = parseFloat(pt.getAttribute('lon'));
-      const ele = parseFloat(pt.querySelector('ele')?.textContent || 0);
-
-      if (prevLat !== undefined) {
-        km += haversine(prevLat, prevLon, lat, lon);
-        if (ele > prevEle + 1) elev += (ele - prevEle);
-      }
-      prevLat = lat; prevLon = lon; prevEle = ele;
+// Close overlays on click outside or ESC
+['ov-rc','ov-eq','ov-sp','ov-supl','ov-tr','ov-preview'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('click',e=>{ if(e.target===el) el.classList.remove('on'); });
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') {
+    ['ov-rc','ov-eq','ov-sp','ov-supl','ov-tr','ov-preview'].forEach(id=>{
+      document.getElementById(id)?.classList.remove('on');
     });
-
-    results.push({ id: Date.now() + i, date, name, type, km: Math.round(km*10)/10, elev: Math.round(elev), dur: 0, source: 'gpx' });
-  });
-
-  return results;
-}
-
-function parseTCX(text, filename) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(text, 'text/xml');
-  const results = [];
-
-  const activities = doc.querySelectorAll('Activity');
-  activities.forEach((act, i) => {
-    const sport = (act.getAttribute('Sport') || 'Running').toLowerCase();
-    const type = sport.includes('trail') ? 'trail' : 'road';
-
-    const timeEl = act.querySelector('Id')?.textContent || act.querySelector('StartTime')?.textContent;
-    const date = timeEl ? normalizeDate(timeEl) : normalizeDate(new Date().toISOString());
-
-    const name = act.querySelector('Notes')?.textContent || filename.replace('.tcx','');
-
-    // DistanceMeters from last trackpoint or TotalTimeSeconds
-    const distEls = [...act.querySelectorAll('DistanceMeters')];
-    const lastDist = distEls.length ? parseFloat(distEls[distEls.length-1].textContent) : 0;
-    const km = Math.round(lastDist/100)/10;
-
-    // Elevation from trackpoints
-    let elev = 0, prevEle;
-    act.querySelectorAll('AltitudeMeters').forEach(el => {
-      const e = parseFloat(el.textContent);
-      if (prevEle !== undefined && e > prevEle + 1) elev += (e - prevEle);
-      prevEle = e;
-    });
-
-    const durEl = act.querySelector('TotalTimeSeconds');
-    const dur = durEl ? parseInt(durEl.textContent) : 0;
-
-    if (km > 0) {
-      results.push({ id: Date.now() + i, date, name, type, km, elev: Math.round(elev), dur, source: 'tcx' });
-    }
-  });
-
-  return results;
-}
-
-function haversine(lat1, lon1, lat2, lon2) {
-  const R = 6371, dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
-  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-}
-
-function normalizeDate(raw) {
-  if (!raw) return null;
-  // ISO format
-  const m1 = raw.match(/(\d{4})-(\d{2})-(\d{2})/);
-  if (m1) return `${m1[1]}-${m1[2]}-${m1[3]}`;
-  // DD.MM.YYYY
-  const m2 = raw.match(/(\d{2})\.(\d{2})\.(\d{4})/);
-  if (m2) return `${m2[3]}-${m2[2]}-${m2[1]}`;
-  // MM/DD/YYYY
-  const m3 = raw.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-  if (m3) return `${m3[3]}-${m3[1].padStart(2,'0')}-${m3[2].padStart(2,'0')}`;
-  return null;
-}
-
-function parseDuration(raw) {
-  if (!raw) return 0;
-  // HH:MM:SS
-  const m = raw.match(/(\d+):(\d+):(\d+)/);
-  if (m) return parseInt(m[1])*3600 + parseInt(m[2])*60 + parseInt(m[3]);
-  // MM:SS
-  const m2 = raw.match(/(\d+):(\d+)/);
-  if (m2) return parseInt(m2[1])*60 + parseInt(m2[2]);
-  return parseInt(raw) || 0;
-}
-
-function fmtDur(secs) {
-  if (!secs) return '—';
-  const h = Math.floor(secs/3600), m = Math.floor((secs%3600)/60);
-  return h ? `${h}h${m.toString().padStart(2,'0')}` : `${m}min`;
-}
-
-async function syncStrava() {
-  const SB_FUNC_URL = `${SB_URL}/functions/v1/strava-webhook/sync`;
-  toast('🟠 Se sincronizează cu Strava...', 'info');
-  setSyncStatus('Strava sync...', '#fc5200');
-  try {
-    const res = await fetch(SB_FUNC_URL, {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${SB_KEY}` },
-    });
-    const data = await res.json();
-    if (!data.ok) throw new Error(data.error || 'Eroare sync');
-    // Reload data from Supabase
-    const dbRes = await fetch(
-      `${SB_URL}/rest/v1/${SB_TABLE}?user_id=eq.${currentUser.id}&select=data&limit=1`,
-      { headers: sbHeaders(true) }
-    );
-    const rows = await dbRes.json();
-    if (rows[0]?.data) {
-      D = rows[0].data;
-      renderAll();
-    }
-    setSyncStatus('Sincronizat ☁️', 'var(--green)');
-    toast(`✅ Strava sync: ${data.added} activități noi din ${data.fetched} totale`, 'ok');
-  } catch(e) {
-    setSyncStatus('Eroare sync', 'var(--red)');
-    toast('❌ Strava sync eșuat: ' + e.message, 'err');
+    hideLoginModal();
+    closePreview();
   }
-}
-
-function clearActivities() {
-  if (!confirm('Șterge toate activitățile importate?')) return;
-  D.activities = [];
-  scheduleAutoSave();
-  renderStats();
-  toast('🗑 Activități șterse', 'info');
-}
-
-// ── RENDER STATS ──────────────────────────────────────
-function renderStats() {
-  const all = getActivities();
-  const yearSel = document.getElementById('st-filter-year')?.value || '';
-  const typeSel = document.getElementById('st-filter-type')?.value || '';
-
-  const years = [...new Set(all.map(a => a.date?.substring(0,4)).filter(Boolean))].sort();
-  const yearEl = document.getElementById('st-filter-year');
-  if (yearEl) {
-    const cur = yearEl.value;
-    yearEl.innerHTML = '<option value="">Toți anii</option>' + [...years].reverse().map(y=>`<option value="${y}" ${y===cur?'selected':''}>${y}</option>`).join('');
-  }
-
-  let acts = all.filter(a => {
-    if (yearSel && !a.date?.startsWith(yearSel)) return false;
-    if (typeSel && a.type !== typeSel) return false;
-    return true;
-  });
-
-  const empty = document.getElementById('st-empty');
-  if (all.length === 0) {
-    empty.style.display = 'block';
-    ['st-tiles','st-year-cards','st-growth-row','st-charts-row','st-records','st-activity-list','st-year-tabs'].forEach(id => {
-      const el = document.getElementById(id); if(el) el.innerHTML = '';
-    });
-    return;
-  }
-  empty.style.display = 'none';
-
-  // ── PER YEAR stats ──────────────────────────────────
-  const byYear = {};
-  years.forEach(y => byYear[y] = {km:0, elev:0, dur:0, count:0, longest:0, trail:0, road:0, track:0});
-  all.forEach(a => {
-    const y = a.date?.substring(0,4); if (!y || !byYear[y]) return;
-    byYear[y].km    += a.km  ||0;
-    byYear[y].elev  += a.elev||0;
-    byYear[y].dur   += a.dur ||0;
-    byYear[y].count += 1;
-    if ((a.km||0) > byYear[y].longest) byYear[y].longest = a.km||0;
-    byYear[y][a.type||'road'] += 1;
-  });
-
-  // ── GLOBAL KPIs (filtered) ──────────────────────────
-  const totalKm   = acts.reduce((s,a)=>s+(a.km  ||0),0);
-  const totalElev = acts.reduce((s,a)=>s+(a.elev||0),0);
-  const totalDur  = acts.reduce((s,a)=>s+(a.dur ||0),0);
-  const avgKm     = acts.length ? Math.round(totalKm/acts.length*10)/10 : 0;
-  const longest   = acts.reduce((mx,a)=>(a.km||0)>mx?a.km:mx, 0);
-  const mostElev  = acts.reduce((mx,a)=>(a.elev||0)>mx?a.elev:mx, 0);
-
-  document.getElementById('st-tiles').innerHTML = `
-    <div class="tile"><lbl>Total KM</lbl><div class="tv accent">${Math.round(totalKm).toLocaleString('ro')}</div><div class="ts">${acts.length} activități</div></div>
-    <div class="tile"><lbl>Total D+</lbl><div class="tv green">${Math.round(totalElev).toLocaleString('ro')} m</div><div class="ts">elevație cumulată</div></div>
-    <div class="tile"><lbl>Timp total</lbl><div class="tv yellow">${fmtDur(totalDur)}</div><div class="ts">pe picioare</div></div>
-    <div class="tile"><lbl>Medie / alergare</lbl><div class="tv">${avgKm} km</div><div class="ts">Cel mai lung: ${longest} km</div></div>
-  `;
-
-  // ── YEAR TABS ───────────────────────────────────────
-  document.getElementById('st-year-tabs').innerHTML =
-    `<button class="btn ${!yearSel?'btn-primary':'btn-ghost'} btn-sm" onclick="setYearFilter('')">Toți anii</button>` +
-    [...years].reverse().map(y=>`<button class="btn ${yearSel===y?'btn-primary':'btn-ghost'} btn-sm" onclick="setYearFilter('${y}')">${y}</button>`).join('');
-
-  // ── YEARLY COMPARISON CARDS ─────────────────────────
-  const ymaxKm = Math.max(...years.map(y=>byYear[y].km), 1);
-  document.getElementById('st-year-cards').innerHTML = `
-    <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">📊 Comparație anuală</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
-      ${years.map(y => {
-        const d = byYear[y];
-        const pct = Math.round(d.km/ymaxKm*100);
-        const isSel = yearSel === y;
-        return `<div class="bk-card" style="padding:16px;cursor:pointer;border-color:${isSel?'var(--accent-border)':'var(--border)'};background:${isSel?'var(--accent-dim)':'var(--s1)'}" onclick="setYearFilter('${isSel?'':y}')">
-          <div style="font-family:var(--display);font-size:28px;color:${isSel?'var(--accent)':'var(--t2)'};letter-spacing:2px;margin-bottom:6px">${y}</div>
-          <div style="font-family:var(--display);font-size:22px;color:var(--text)">${Math.round(d.km).toLocaleString('ro')} <span style="font-size:14px;font-family:var(--body);color:var(--t3)">km</span></div>
-          <div style="font-size:12px;color:var(--t3);margin:4px 0 10px">⛰️ ${Math.round(d.elev/1000*10)/10}k m D+ · ${d.count} alergări</div>
-          <div style="background:var(--s3);border-radius:4px;height:5px;overflow:hidden">
-            <div style="height:100%;width:${pct}%;background:${isSel?'var(--accent)':'var(--t3)'};border-radius:4px;transition:width .4s"></div>
-          </div>
-          <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
-            ${d.trail?`<span class="act-tag">Trail ${d.trail}</span>`:''}
-            ${d.road?`<span class="act-tag road">Road ${d.road}</span>`:''}
-            ${d.track?`<span class="act-tag track">Track ${d.track}</span>`:''}
-          </div>
-        </div>`;
-      }).join('')}
-    </div>
-  `;
-
-  // ── GROWTH CARDS ────────────────────────────────────
-  if (years.length >= 2) {
-    const growthCards = [];
-    for (let i = 1; i < years.length; i++) {
-      const yPrev = years[i-1], yCur = years[i];
-      const prev = byYear[yPrev], cur = byYear[yCur];
-      const kmGrowth  = prev.km   > 0 ? Math.round((cur.km  -prev.km  )/prev.km  *100) : null;
-      const elvGrowth = prev.elev > 0 ? Math.round((cur.elev-prev.elev)/prev.elev*100) : null;
-      const cntGrowth = prev.count> 0 ? Math.round((cur.count-prev.count)/prev.count*100) : null;
-
-      const arrow = v => v === null ? '—' : v >= 0 ? `▲ +${v}%` : `▽ ${v}%`;
-      const clr   = v => v === null ? 'var(--t3)' : v >= 0 ? 'var(--green)' : 'var(--red)';
-
-      growthCards.push(`
-        <div class="bk-card" style="padding:16px">
-          <div style="font-size:11px;color:var(--t3);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">${yPrev} → ${yCur}</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
-            <div>
-              <div style="font-size:10px;color:var(--t3);margin-bottom:4px">KM</div>
-              <div style="font-family:var(--display);font-size:20px;color:${clr(kmGrowth)}">${arrow(kmGrowth)}</div>
-              <div style="font-size:10px;color:var(--t4)">${Math.round(prev.km)}→${Math.round(cur.km)}</div>
-            </div>
-            <div>
-              <div style="font-size:10px;color:var(--t3);margin-bottom:4px">D+</div>
-              <div style="font-family:var(--display);font-size:20px;color:${clr(elvGrowth)}">${arrow(elvGrowth)}</div>
-              <div style="font-size:10px;color:var(--t4)">${Math.round(prev.elev/1000)}k→${Math.round(cur.elev/1000)}k</div>
-            </div>
-            <div>
-              <div style="font-size:10px;color:var(--t3);margin-bottom:4px">Alergări</div>
-              <div style="font-family:var(--display);font-size:20px;color:${clr(cntGrowth)}">${arrow(cntGrowth)}</div>
-              <div style="font-size:10px;color:var(--t4)">${prev.count}→${cur.count}</div>
-            </div>
-          </div>
-        </div>
-      `);
-    }
-    document.getElementById('st-growth-row').innerHTML = `
-      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">📈 Creșteri an la an</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">${growthCards.join('')}</div>
-    `;
-  } else {
-    document.getElementById('st-growth-row').innerHTML = '';
-  }
-
-  // ── MONTHLY CHARTS ──────────────────────────────────
-  const mLabels = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
-  const monthlyKm = Array(12).fill(0), monthlyElev = Array(12).fill(0), monthlyDur = Array(12).fill(0);
-  acts.forEach(a => {
-    const m = parseInt(a.date?.substring(5,7))-1;
-    if (m>=0&&m<12) { monthlyKm[m]+=a.km||0; monthlyElev[m]+=a.elev||0; monthlyDur[m]+=a.dur||0; }
-  });
-
-  // ── TARGET + PREDICȚIE ─────────────────────────────
-  const annualTarget = D.annualKmTarget || 5000;
-  const monthlyTarget = Math.round(annualTarget / 12);
-  const curYear = new Date().getFullYear().toString();
-  const isCurrentYear = !yearSel || yearSel === curYear;
-
-  // Progress față de target (doar pentru anul curent)
-  const thisYearKm = all.filter(a => a.date?.startsWith(curYear)).reduce((s,a)=>s+(a.km||0),0);
-  const todayDOY = Math.ceil((new Date() - new Date(curYear+'-01-01')) / 86400000);
-  const yearDays = 365;
-  const expectedByNow = Math.round(annualTarget * todayDOY / yearDays);
-  const predictedEOY  = todayDOY > 0 ? Math.round(thisYearKm / todayDOY * yearDays) : 0;
-  const progressPct   = Math.min(100, Math.round(thisYearKm / annualTarget * 100));
-  const aheadBehind   = thisYearKm - expectedByNow;
-
-  // Show target progress block only when viewing current year or all years
-  const tgtEl = document.getElementById('st-target-block');
-  if (tgtEl) {
-    tgtEl.innerHTML = `
-      <div class="bk-card" style="padding:18px;margin-bottom:20px">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px">
-          <div>
-            <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">🎯 Target ${curYear}</div>
-            <div style="display:flex;align-items:baseline;gap:8px">
-              <span style="font-family:var(--display);font-size:36px;color:var(--accent)">${Math.round(thisYearKm).toLocaleString('ro')}</span>
-              <span style="color:var(--t3);font-size:14px">/ ${annualTarget.toLocaleString('ro')} km</span>
-              <span style="font-family:var(--display);font-size:20px;color:${progressPct>=100?'var(--green)':'var(--t2)'}">${progressPct}%</span>
-            </div>
-          </div>
-          <div style="text-align:right">
-            <div style="font-size:11px;color:var(--t3);margin-bottom:4px">Predicție decembrie</div>
-            <div style="font-family:var(--display);font-size:28px;color:${predictedEOY>=annualTarget?'var(--green)':'var(--yellow)'}">${predictedEOY.toLocaleString('ro')} km</div>
-            <div style="font-size:10px;color:${aheadBehind>=0?'var(--green)':'var(--red)'};margin-top:2px">
-              ${aheadBehind>=0?'▲ +':'▽ '}${Math.abs(aheadBehind).toLocaleString('ro')} km față de ritmul necesar
-            </div>
-          </div>
-          ${document.body.classList.contains('readonly') ? '' : `
-          <div style="display:flex;align-items:center;gap:8px">
-            <input type="number" id="target-km-input" value="${annualTarget}" min="100" max="20000" step="100"
-              style="width:90px;padding:6px 8px;font-size:13px;background:var(--s2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--body)">
-            <button class="btn btn-ghost btn-sm" onclick="saveTargetKm()">Setează</button>
-          </div>`}
-        </div>
-        <div style="background:var(--s3);border-radius:6px;height:8px;overflow:hidden;position:relative">
-          <div style="position:absolute;height:100%;background:var(--border2);width:${Math.min(100,Math.round(todayDOY/yearDays*100))}%;border-radius:6px"></div>
-          <div style="position:absolute;height:100%;background:${progressPct>=100?'var(--green)':progressPct>=80?'var(--yellow)':'var(--accent)'};width:${progressPct}%;border-radius:6px;transition:width .5s"></div>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--t4)">
-          <span>0</span><span>Azi — zi ${todayDOY}</span><span>${annualTarget.toLocaleString('ro')} km</span>
-        </div>
-      </div>
-    `;
-  }
-
-  const label = yearSel ? `An ${yearSel}` : 'Toți anii cumulat';
-  document.getElementById('chart-km-month-sub').textContent = label;
-  document.getElementById('chart-cum-sub').textContent = `${Math.round(totalKm).toLocaleString('ro')} km total · ${acts.length} activități`;
-
-  // Pass monthly target line only when showing current year
-  const monthTarget = (isCurrentYear && !yearSel) ? null : (yearSel === curYear ? monthlyTarget : null);
-  drawBarChart('chart-km-month',   mLabels, monthlyKm.map(v=>Math.round(v)),   'var(--accent)', v=>v+' km', yearSel === curYear ? monthlyTarget : null);
-  drawBarChart('chart-elev-month', mLabels, monthlyElev.map(v=>Math.round(v)), 'var(--green)',  v=>v+' m');
-  drawBarChart('chart-dur-month',  mLabels, monthlyDur.map(v=>Math.round(v/3600*10)/10), 'var(--yellow)', v=>v+'h');
-
-  // ── PIE CHART ────────────────────────────────────────
-  const typeCount = {trail:0, road:0, track:0};
-  acts.forEach(a => { typeCount[a.type||'road']++; });
-  drawPieChart('chart-pie', [
-    {label:'Trail', value:typeCount.trail, color:'var(--accent)'},
-    {label:'Road',  value:typeCount.road,  color:'#4fc8ff'},
-    {label:'Track', value:typeCount.track, color:'var(--yellow)'},
-  ].filter(s=>s.value>0), acts.length);
-
-  // ── CUMULATIVE LINE ───────────────────────────────────
-  const sortedAll = [...acts].sort((a,b)=>a.date.localeCompare(b.date));
-  let cum = 0;
-  const cumPoints = sortedAll.map(a => { cum += a.km||0; return {date:a.date, km:Math.round(cum)}; });
-  drawLineChart('chart-cumulative', cumPoints);
-
-  // ── PERSONAL RECORDS ─────────────────────────────────
-  const byMonth = {};
-  acts.forEach(a => {
-    const k = a.date?.substring(0,7);
-    if (!k) return;
-    if (!byMonth[k]) byMonth[k] = {km:0, elev:0, count:0};
-    byMonth[k].km    += a.km  ||0;
-    byMonth[k].elev  += a.elev||0;
-    byMonth[k].count += 1;
-  });
-  const bestMonth = Object.entries(byMonth).sort((a,b)=>b[1].km-a[1].km)[0];
-  const bestMonthElev = Object.entries(byMonth).sort((a,b)=>b[1].elev-a[1].elev)[0];
-
-  const bestStreak = calcBestStreak(sortedAll);
-  const currentStreak = calcCurrentStreak(sortedAll);
-
-  document.getElementById('st-records').innerHTML = `
-    <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">🏆 Recorduri personale</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
-      <div class="bk-card" style="padding:14px;text-align:center">
-        <div style="font-size:20px;margin-bottom:6px">🏁</div>
-        <div style="font-family:var(--display);font-size:24px;color:var(--accent)">${longest} km</div>
-        <div style="font-size:11px;color:var(--t3);margin-top:4px">Cea mai lungă alergare</div>
-      </div>
-      <div class="bk-card" style="padding:14px;text-align:center">
-        <div style="font-size:20px;margin-bottom:6px">⛰️</div>
-        <div style="font-family:var(--display);font-size:24px;color:var(--green)">${mostElev} m</div>
-        <div style="font-size:11px;color:var(--t3);margin-top:4px">Max D+ într-o alergare</div>
-      </div>
-      ${bestMonth ? `<div class="bk-card" style="padding:14px;text-align:center">
-        <div style="font-size:20px;margin-bottom:6px">📅</div>
-        <div style="font-family:var(--display);font-size:24px;color:var(--yellow)">${Math.round(bestMonth[1].km)} km</div>
-        <div style="font-size:11px;color:var(--t3);margin-top:4px">Cea mai bună lună<br>${bestMonth[0]}</div>
-      </div>` : ''}
-      ${bestMonthElev ? `<div class="bk-card" style="padding:14px;text-align:center">
-        <div style="font-size:20px;margin-bottom:6px">🗻</div>
-        <div style="font-family:var(--display);font-size:24px;color:var(--green)">${Math.round(bestMonthElev[1].elev/1000*10)/10}k m</div>
-        <div style="font-size:11px;color:var(--t3);margin-top:4px">Max D+ într-o lună<br>${bestMonthElev[0]}</div>
-      </div>` : ''}
-      <div class="bk-card" style="padding:14px;text-align:center">
-        <div style="font-size:20px;margin-bottom:6px">🔥</div>
-        <div style="font-family:var(--display);font-size:24px;color:var(--orange)">${bestStreak}</div>
-        <div style="font-size:11px;color:var(--t3);margin-top:4px">Zile consecutive (best streak)</div>
-      </div>
-      <div class="bk-card" style="padding:14px;text-align:center;border-color:${currentStreak>0?'var(--accent-border)':'var(--border)'}">
-        <div style="font-size:20px;margin-bottom:6px">⚡</div>
-        <div style="font-family:var(--display);font-size:24px;color:${currentStreak>0?'var(--accent)':'var(--t3)'}">${currentStreak}</div>
-        <div style="font-size:11px;color:var(--t3);margin-top:4px">Streak curent azi</div>
-      </div>
-      <div class="bk-card" style="padding:14px;text-align:center">
-        <div style="font-size:20px;margin-bottom:6px">📆</div>
-        <div style="font-family:var(--display);font-size:24px;color:var(--accent)">${acts.length}</div>
-        <div style="font-size:11px;color:var(--t3);margin-top:4px">Total activități</div>
-      </div>
-    </div>
-  `;
-
-  // ── HEATMAP ───────────────────────────────────────────
-  drawHeatmap('st-heatmap', all, yearSel || curYear);
-
-  // ── ACTIVITY LIST ─────────────────────────────────────
-  const monthNames = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
-  document.getElementById('st-activity-list').innerHTML = `
-    <div class="act-row-head"><span>Data</span><span>Activitate</span><span>KM</span><span>D+</span><span>Timp</span><span>Tip</span></div>
-    ${acts.slice(0,300).map(a => {
-      const d = new Date(a.date+'T00:00:00');
-      const dateStr = `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
-      return `<div class="act-row">
-        <span style="color:var(--t3);font-size:11px">${dateStr}</span>
-        <span class="act-name">${a.name}</span>
-        <span style="font-weight:600;color:var(--accent)">${a.km} km</span>
-        <span style="color:var(--green)">${a.elev ? a.elev+'m' : '—'}</span>
-        <span style="color:var(--t2)">${fmtDur(a.dur)}</span>
-        <span><span class="act-tag ${a.type||'road'}">${a.type||'road'}</span></span>
-      </div>`;
-    }).join('')}
-    ${acts.length > 300 ? `<div style="text-align:center;padding:12px;color:var(--t3);font-size:12px">+ ${acts.length-300} mai vechi</div>` : ''}
-  `;
-}
-
-function setYearFilter(y) {
-  const sel = document.getElementById('st-filter-year');
-  if (sel) { sel.value = y; renderStats(); }
-}
-
-function calcBestStreak(sortedActs) {
-  if (!sortedActs.length) return 0;
-  let best = 1, cur = 1;
-  for (let i = 1; i < sortedActs.length; i++) {
-    const prev = new Date(sortedActs[i-1].date);
-    const curr = new Date(sortedActs[i].date);
-    const diff = Math.round((curr-prev)/86400000);
-    if (diff === 1) { cur++; if (cur > best) best = cur; }
-    else if (diff > 1) cur = 1;
-  }
-  return best;
-}
-
-function calcCurrentStreak(sortedActs) {
-  if (!sortedActs.length) return 0;
-  const today = new Date(); today.setHours(0,0,0,0);
-  let streak = 0;
-  let check = new Date(today);
-  const dateSet = new Set(sortedActs.map(a => a.date?.substring(0,10)));
-  for (let i = 0; i < 1000; i++) {
-    const ds = check.toISOString().substring(0,10);
-    if (dateSet.has(ds)) { streak++; }
-    else if (streak > 0) break;
-    check.setDate(check.getDate() - 1);
-  }
-  return streak;
-}
-
-function saveTarget(val) {
-  const v = parseInt(val);
-  if (isNaN(v) || v < 1) return;
-  D.target_km = v;
-  scheduleAutoSave();
-  renderDash();
-}
-
-function drawHeatmap(containerId, activities, year) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-
-  // Build day→km map for the year
-  const dayMap = {};
-  activities.forEach(a => {
-    if (!a.date?.startsWith(year)) return;
-    dayMap[a.date] = (dayMap[a.date] || 0) + (a.km || 0);
-  });
-
-  const start = new Date(`${year}-01-01`);
-  const end   = new Date(`${year}-12-31`);
-  const startDow = start.getDay(); // 0=Sun
-
-  const cellSize = 13, gap = 2;
-  const cols = Math.ceil((366 + startDow) / 7);
-  const W = cols * (cellSize + gap);
-  const H = 7 * (cellSize + gap) + 24;
-
-  const monthLabels = ['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
-  let monthLabelSvg = '';
-  let lastMonth = -1;
-
-  let cells = '';
-  let d = new Date(start);
-  let col = 0, row = startDow;
-
-  while (d <= end) {
-    const dateStr = d.toISOString().substring(0, 10);
-    const km = dayMap[dateStr] || 0;
-    const month = d.getMonth();
-    const x = col * (cellSize + gap);
-    const y = row * (cellSize + gap) + 20;
-
-    // Month label at first day of month
-    if (month !== lastMonth) {
-      monthLabelSvg += `<text x="${x}" y="12" font-size="9" fill="var(--t4)">${monthLabels[month]}</text>`;
-      lastMonth = month;
-    }
-
-    let fill, opacity;
-    if (km === 0) { fill = 'var(--s3)'; opacity = 1; }
-    else if (km < 10) { fill = 'var(--accent)'; opacity = 0.3; }
-    else if (km < 20) { fill = 'var(--accent)'; opacity = 0.55; }
-    else if (km < 35) { fill = 'var(--accent)'; opacity = 0.75; }
-    else { fill = 'var(--accent)'; opacity = 1; }
-
-    const today = new Date(); today.setHours(0,0,0,0);
-    const isFuture = d > today;
-
-    cells += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" rx="2"
-      fill="${isFuture ? 'transparent' : fill}" opacity="${isFuture ? 0.08 : opacity}"
-      stroke="${isFuture ? 'var(--border)' : 'none'}" stroke-width="1">
-      <title>${dateStr}${km ? ': ' + Math.round(km) + ' km' : ''}</title>
-    </rect>`;
-
-    row++;
-    if (row === 7) { row = 0; col++; }
-    d.setDate(d.getDate() + 1);
-  }
-
-  // Day labels (Mon, Wed, Fri)
-  const dowLabels = ['D','L','M','M','J','V','S'];
-  let dowSvg = dowLabels.map((l,i) => i % 2 === 1
-    ? `<text x="${-12}" y="${i*(cellSize+gap)+20+10}" font-size="8" fill="var(--t4)" text-anchor="end">${l}</text>`
-    : '').join('');
-
-  // Legend
-  const legX = W - 80;
-  const legend = `<text x="${legX}" y="${H}" font-size="8" fill="var(--t4)">mai puțin</text>
-    ${[0.2,0.4,0.65,0.85,1].map((o,i) =>
-      `<rect x="${legX+46+(i*14)}" y="${H-9}" width="${cellSize-1}" height="${cellSize-1}" rx="2" fill="var(--accent)" opacity="${o}"/>`
-    ).join('')}
-    <text x="${legX+122}" y="${H}" font-size="8" fill="var(--t4)">mai mult</text>`;
-
-  el.innerHTML = `<svg viewBox="-16 0 ${W+16+80} ${H+4}" width="100%" style="min-width:${Math.min(W,300)}px">
-    ${dowSvg}${monthLabelSvg}${cells}${legend}
-  </svg>`;
-}
-
-// ── CHART HELPERS ─────────────────────────────────────
-function drawBarChart(containerId, labels, values, color, tipFn, targetValue) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  // Force a real width — use parent if el has no width yet
-  const W = el.offsetWidth || el.parentElement?.offsetWidth || 400;
-  const H = el.offsetHeight || 160;
-  if (W < 10) { setTimeout(() => drawBarChart(containerId, labels, values, color, tipFn, targetValue), 80); return; }
-  const pad = {t: 18, r: 8, b: 22, l: 42};
-  const max = Math.max(...values, targetValue || 0, 1);
-  const slotW = (W - pad.l - pad.r) / labels.length;
-  const bw = Math.max(4, Math.floor(slotW * 0.6));
-  const bx = i => pad.l + i * slotW + (slotW - bw) / 2;
-  const by = v => pad.t + (1 - v / max) * (H - pad.t - pad.b);
-
-  const tickCount = 4;
-  const ticks = Array.from({length: tickCount + 1}, (_, i) => Math.round(max * i / tickCount));
-
-  let bars = labels.map((lbl, i) => {
-    const v = values[i] || 0;
-    const barH = Math.max(v > 0 ? 2 : 0, (v / max) * (H - pad.t - pad.b));
-    const tip = tipFn ? tipFn(v) : v;
-    return `<g class="bar-g">
-      <rect x="${bx(i).toFixed(1)}" y="${(H - pad.b - barH).toFixed(1)}" width="${bw}" height="${Math.max(0, barH).toFixed(1)}"
-        rx="3" fill="${color}" opacity="${v ? 0.85 : 0.12}">
-        <title>${lbl}: ${tip}</title>
-      </rect>
-      ${v > 0 ? `<text x="${(bx(i)+bw/2).toFixed(1)}" y="${(H-pad.b-barH-4).toFixed(1)}" text-anchor="middle" font-size="8" fill="${color}" opacity="0.8">${v>=1000?(v/1000).toFixed(1)+'k':v}</text>` : ''}
-      <text x="${(bx(i) + bw/2).toFixed(1)}" y="${(H - pad.b + 13).toFixed(1)}"
-        text-anchor="middle" font-size="9" fill="var(--t4)">${lbl}</text>
-    </g>`;
-  }).join('');
-
-  let yAxis = ticks.map(v => `
-    <line x1="${pad.l}" y1="${by(v).toFixed(1)}" x2="${W - pad.r}" y2="${by(v).toFixed(1)}"
-      stroke="var(--border)" stroke-width="1" stroke-dasharray="${v > 0 ? '3,3' : 'none'}"/>
-    <text x="${(pad.l - 5).toFixed(1)}" y="${(by(v) + 3).toFixed(1)}"
-      text-anchor="end" font-size="9" fill="var(--t4)">${v >= 1000 ? (v/1000).toFixed(1)+'k' : v}</text>
-  `).join('');
-
-  let targetLine = '';
-  if (targetValue) {
-    const ty = by(targetValue).toFixed(1);
-    targetLine = `
-      <line x1="${pad.l}" y1="${ty}" x2="${W - pad.r}" y2="${ty}"
-        stroke="var(--red)" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
-      <text x="${W - pad.r - 2}" y="${(parseFloat(ty) - 4).toFixed(1)}"
-        text-anchor="end" font-size="9" fill="var(--red)" opacity="0.8">${tipFn ? tipFn(targetValue) : targetValue}</text>
-    `;
-  }
-
-  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" height="100%" style="overflow:visible">
-    ${yAxis}${bars}${targetLine}
-  </svg>`;
-}
-
-function drawLineChart(containerId, points) {
-  const el = document.getElementById(containerId);
-  if (!el || points.length < 2) return;
-  const W = el.offsetWidth || 600, H = el.offsetHeight || 180;
-  const pad = {t:10, r:10, b:25, l:50};
-  const maxKm = Math.max(...points.map(p=>p.km), 1);
-
-  const px = i => pad.l + (i/(points.length-1))*(W-pad.l-pad.r);
-  const py = v => pad.t + (1 - v/maxKm)*(H-pad.t-pad.b);
-
-  const pathD = points.map((p,i) => `${i===0?'M':'L'}${px(i).toFixed(1)},${py(p.km).toFixed(1)}`).join(' ');
-  const areaD = pathD + ` L${px(points.length-1)},${H-pad.b} L${px(0)},${H-pad.b} Z`;
-
-  // Y axis ticks
-  const ticks = [0, Math.round(maxKm/2), maxKm];
-
-  // X axis — show year labels at year boundaries
-  const xLabels = [];
-  let lastYear = '';
-  points.forEach((p,i) => {
-    const y = p.date?.substring(0,4);
-    if (y !== lastYear) { xLabels.push({i, y}); lastYear = y; }
-  });
-
-  el.innerHTML = `<svg class="st-line-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-    <defs>
-      <linearGradient id="lg-cum" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.3"/>
-        <stop offset="100%" stop-color="var(--accent)" stop-opacity="0.02"/>
-      </linearGradient>
-    </defs>
-    ${ticks.map(v=>`
-      <line x1="${pad.l}" y1="${py(v)}" x2="${W-pad.r}" y2="${py(v)}" stroke="var(--border)" stroke-width="1"/>
-      <text x="${pad.l-6}" y="${py(v)+3}" text-anchor="end" class="st-axis">${v.toLocaleString('ro')}</text>
-    `).join('')}
-    ${xLabels.map(({i,y})=>`
-      <line x1="${px(i)}" y1="${pad.t}" x2="${px(i)}" y2="${H-pad.b}" stroke="var(--border2)" stroke-width="1" stroke-dasharray="3,3"/>
-      <text x="${px(i)}" y="${H-5}" text-anchor="middle" class="st-axis">${y}</text>
-    `).join('')}
-    <path d="${areaD}" fill="url(#lg-cum)"/>
-    <path d="${pathD}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-    <circle cx="${px(points.length-1)}" cy="${py(points[points.length-1].km)}" r="4" fill="var(--accent)"/>
-    <text x="${px(points.length-1)+6}" y="${py(points[points.length-1].km)+4}" class="st-axis" fill="var(--accent)">${points[points.length-1].km.toLocaleString('ro')} km</text>
-  </svg>`;
-}
-
-function drawDonutChart(containerId, segments, total) {
-  const el = document.getElementById(containerId);
-  if (!el || !segments.length) return;
-  const size = 120, cx = size/2, cy = size/2, r = 46, inner = 28;
-  let angle = -Math.PI/2, paths = '';
-
-  segments.forEach(s => {
-    const pct = s.value / total;
-    if (pct <= 0) return;
-    const a1 = angle, a2 = angle + pct * Math.PI * 2;
-    const x1 = cx+r*Math.cos(a1), y1 = cy+r*Math.sin(a1);
-    const x2 = cx+r*Math.cos(a2), y2 = cy+r*Math.sin(a2);
-    const ix1 = cx+inner*Math.cos(a1), iy1 = cy+inner*Math.sin(a1);
-    const ix2 = cx+inner*Math.cos(a2), iy2 = cy+inner*Math.sin(a2);
-    const large = pct > 0.5 ? 1 : 0;
-    paths += `<path d="M${ix1.toFixed(1)},${iy1.toFixed(1)} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${large} 1 ${x2.toFixed(1)},${y2.toFixed(1)} L${ix2.toFixed(1)},${iy2.toFixed(1)} A${inner},${inner} 0 ${large} 0 ${ix1.toFixed(1)},${iy1.toFixed(1)}" fill="${s.color}" opacity="0.9"><title>${s.label}: ${s.value.toLocaleString('ro')} RON</title></path>`;
-    angle = a2;
-  });
-
-  const covPct = total > 0 ? Math.round(segments.filter(s=>s.label!=='Deficit rămas').reduce((a,s)=>a+s.value,0)/total*100) : 0;
-  paths += `<text x="${cx}" y="${cy-4}" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="20" fill="var(--text)">${covPct}%</text>
-    <text x="${cx}" y="${cy+12}" text-anchor="middle" font-size="8" fill="var(--t3)">acoperit</text>`;
-
-  el.innerHTML = `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">${paths}</svg>`;
-}
-
-function deduplicateActivities() {
-  const acts = getActivities();
-  const before = acts.length;
-  const sorted = [...acts].sort((a,b) => {
-    if (a.source==='strava' && b.source!=='strava') return -1;
-    if (b.source==='strava' && a.source!=='strava') return 1;
-    return 0;
-  });
-  const seen = new Map();
-  const deduped = [];
-  for (const act of sorted) {
-    const dateKey = act.date?.substring(0,10);
-    if (!dateKey) { deduped.push(act); continue; }
-    let isDupe = false;
-    for (const [key, existing] of seen) {
-      const eDate = key.split('_')[0];
-      if (eDate === dateKey && Math.abs((act.km||0)-(existing.km||0)) <= 1.0) { isDupe = true; break; }
-    }
-    if (!isDupe) { seen.set(`${dateKey}_${act.km}`, act); deduped.push(act); }
-  }
-  const removed = before - deduped.length;
-  if (removed === 0) { toast('✅ Niciun duplicat găsit!', 'ok'); return; }
-  D.activities = deduped;
-  scheduleAutoSave();
-  renderAll();
-  toast(`🧹 ${removed} duplicate eliminate · ${deduped.length} activități rămase`, 'ok');
-}
-
-function drawPieChart(containerId, segments, total) {
-  const el = document.getElementById(containerId);
-  if (!el || !segments.length || !total) return;
-  const size = 140, cx = size/2, cy = size/2, r = 54, inner = 30;
-  let angle = -Math.PI/2;
-  let paths = '';
-
-  segments.forEach(s => {
-    const pct = s.value / total;
-    if (pct <= 0) return;
-    const a1 = angle, a2 = angle + pct * Math.PI * 2;
-    const x1 = cx + r*Math.cos(a1), y1 = cy + r*Math.sin(a1);
-    const x2 = cx + r*Math.cos(a2), y2 = cy + r*Math.sin(a2);
-    const ix1 = cx + inner*Math.cos(a1), iy1 = cy + inner*Math.sin(a1);
-    const ix2 = cx + inner*Math.cos(a2), iy2 = cy + inner*Math.sin(a2);
-    const large = pct > 0.5 ? 1 : 0;
-    paths += `<path d="M${ix1.toFixed(1)},${iy1.toFixed(1)} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${large} 1 ${x2.toFixed(1)},${y2.toFixed(1)} L${ix2.toFixed(1)},${iy2.toFixed(1)} A${inner},${inner} 0 ${large} 0 ${ix1.toFixed(1)},${iy1.toFixed(1)}" fill="${s.color}" opacity="0.9"/>`;
-    angle = a2;
-  });
-
-  paths += `<text x="${cx}" y="${cy-3}" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="20" fill="var(--text)">${total}</text>
-    <text x="${cx}" y="${cy+13}" text-anchor="middle" font-size="9" fill="var(--t3)">activități</text>`;
-
-  const legendHTML = segments.map(s => `
-    <div style="display:flex;align-items:center;gap:6px;font-size:12px">
-      <div style="width:9px;height:9px;border-radius:50%;background:${s.color};flex-shrink:0"></div>
-      <span style="color:var(--t2)">${s.label}</span>
-      <span style="color:var(--text);font-weight:600;margin-left:auto;padding-left:8px">${s.value}</span>
-      <span style="color:var(--t3);font-size:10px;min-width:28px">${Math.round(s.value/total*100)}%</span>
-    </div>`).join('');
-
-  el.innerHTML = `
-    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;height:100%">
-      <svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">${paths}</svg>
-      <div style="display:flex;flex-direction:column;gap:10px;min-width:90px">${legendHTML}</div>
-    </div>`;
-}
-document.addEventListener('keydown', e => {
-  if ((e.ctrlKey||e.metaKey) && e.key==='s') { e.preventDefault(); saveFile(); }
 });
 
 
