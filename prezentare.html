@@ -5634,7 +5634,15 @@ function spStartCountdown() {
 // ── Slide 7: ROI ─────────────────────────────────────
 function spInitROI() {
   const slider = document.getElementById('sp-roi-slider');
-  if (slider) spUpdateROI(parseInt(slider.value)||500);
+  if (!slider) return;
+  // Attach listener only once
+  if (!slider._roiInit) {
+    slider._roiInit = true;
+    slider.addEventListener('input', function() {
+      spUpdateROI(parseInt(this.value));
+    });
+  }
+  spUpdateROI(parseInt(slider.value)||500);
 }
 
 function spUpdateROI(amount) {
@@ -5740,7 +5748,15 @@ function spPopulateBudget() {
 
 function spAnimateBudget() {
   spPopulateBudget();
-  setTimeout(()=>{ document.querySelectorAll('.sp-budget-bar-fill').forEach(b=>{ b.style.width=b.dataset.pct+'%'; }); }, 200);
+  // Force reflow then animate
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.sp-budget-bar-fill').forEach(b => {
+        b.style.transition = 'width .8s cubic-bezier(.4,0,.2,1)';
+        b.style.width = b.dataset.pct + '%';
+      });
+    });
+  });
 }
 
 

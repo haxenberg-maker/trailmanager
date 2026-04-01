@@ -142,6 +142,8 @@
     color: var(--t4); border-style: dashed; cursor: default;
     pointer-events: none;
   }
+  /* Force override - toate butoanele doc la fel */
+  a.doc-btn { color: var(--accent) !important; background: var(--card) !important; }
 
   /* ── Amount row ── */
   .amount-row {
@@ -344,12 +346,12 @@ function renderCurse(races) {
         factura: r.factura_caz || null,
         facturaLbl: 'Factură'
       } : null,
-      r.link_dovada_factura ? {
+      (r.link_dovada_factura || r.factura_desc) ? {
         icon: '🚗',
         lbl: r.factura_desc || 'Factură transport',
         val: '',
-        status: 'Factură',
-        link: r.link_dovada_factura,
+        status: r.link_dovada_factura ? 'Factură' : '',
+        link: r.link_dovada_factura || null,
         linkLbl: 'Factură'
       } : null,
     ].filter(Boolean);
@@ -376,7 +378,7 @@ function renderCurse(races) {
               ? `<a href="${esc(it.link)}" target="_blank" rel="noopener" class="doc-btn">📋 ${esc(it.linkLbl)}</a>`
               : `<span class="doc-btn missing">📋 Lipsă</span>`}
             ${it.factura
-              ? `<a href="${esc(it.factura)}" target="_blank" rel="noopener" class="doc-btn" style="color:#2563eb;background:rgba(37,99,235,.07)">🧾 Factură</a>`
+              ? `<a href="${esc(it.factura)}" target="_blank" rel="noopener" class="doc-btn">🧾 Factură</a>`
               : ''}
           </div>
         </div>`).join('')}
