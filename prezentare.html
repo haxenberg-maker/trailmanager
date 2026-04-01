@@ -1139,7 +1139,7 @@ body.readonly [data-owner-only] { display:none !important }
 }
 .sp-why-nr {
   font-family:'Bebas Neue',sans-serif;
-  font-size:32px;color:var(--accent);opacity:.4;
+  font-size:32px;color:var(--accent);opacity:.6;
   line-height:1;flex-shrink:0;min-width:36px;
 }
 .sp-why-title {
@@ -1437,9 +1437,7 @@ body.readonly [data-owner-only] { display:none !important }
   opacity:0;transform:translateY(18px);
   transition:opacity .55s ease, transform .55s ease;
 }
-.sp-slide.on .sp-reveal { opacity:1;transform:none; }
-
-/* ── MOBILE ── */
+.sp-slide.on /* ── MOBILE ── */
 @media(max-width:600px){
   .sp-split { grid-template-columns:1fr;grid-template-rows:160px 1fr; }
   .sp-split-img { padding:16px 20px; }
@@ -2038,8 +2036,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
               <span style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;font-family:'Inter',sans-serif">Buget lunar ales</span>
               <span style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--accent);letter-spacing:1px" id="sp-roi-amount">500 RON</span>
             </div>
-            <div style="position:relative;margin-bottom:16px">
-              <input type="range" id="sp-roi-slider" min="100" max="5000" step="100" value="500" class="sp-roi-range">
+            <div style="position:relative;margin-bottom:16px;overflow:visible">
+              <input type="range" id="sp-roi-slider" min="100" max="5000" step="100" value="500" class="sp-roi-range" oninput="spUpdateROI(parseInt(this.value))">
               <div style="display:flex;justify-content:space-between;margin-top:4px">
                 <span style="font-size:9px;color:rgba(255,255,255,.3);font-family:'Inter',sans-serif">100 RON</span>
                 <span style="font-size:9px;color:rgba(255,255,255,.3);font-family:'Inter',sans-serif">5.000 RON</span>
@@ -2192,17 +2190,17 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
           <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(26px,4vw,48px)">DE CE SĂ NE<br>PARTENERIĂM.</h2>
           <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px">
             <div class="sp-why-item sp-reveal" data-delay="250">
-              <div class="sp-why-nr">01</div>
+              <div class="sp-why-nr">🏔️</div>
               <div><div class="sp-why-title">BÂRLADUL PE HARTA TRAIL-ULUI</div>
               <div class="sp-why-desc">La fiecare dintre cele 10 curse — Brașov, Sinaia, Bucovina — logo-ul tău e prezent fizic, în mișcare, în fața a mii de oameni.</div></div>
             </div>
             <div class="sp-why-item sp-reveal" data-delay="400">
-              <div class="sp-why-nr">02</div>
+              <div class="sp-why-nr">📊</div>
               <div><div class="sp-why-title">TRANSPARENȚĂ TOTALĂ</div>
               <div class="sp-why-desc">Ești pe pagina de răspuns. Fiecare km, fiecare cursă, fiecare cheltuială — live, în timp real.</div></div>
             </div>
             <div class="sp-why-item sp-reveal" data-delay="550">
-              <div class="sp-why-nr">03</div>
+              <div class="sp-why-nr">🤝</div>
               <div><div class="sp-why-title">PARTENERIATUL AUTENTIC</div>
               <div class="sp-why-desc">Nu reclamă. Asociere reală cu un om real din Bârlad care demonstrează că se poate.</div></div>
             </div>
@@ -5590,12 +5588,11 @@ function spGoSlide(idx) {
   requestAnimationFrame(() => {
     target.classList.add('on');
     // Reveal animatii pentru story slides
-    if (['sp-s11','sp-s12','sp-s13','sp-s14'].includes(targetId)) {
-      target.querySelectorAll('.sp-reveal').forEach(el => {
-        const delay = parseInt(el.dataset.delay)||0;
-        el.style.transitionDelay = delay + 'ms';
-      });
-    }
+    // Apply reveal delays for ALL slides
+    target.querySelectorAll('.sp-reveal').forEach(el => {
+      const delay = parseInt(el.dataset.delay)||0;
+      el.style.transitionDelay = delay + 'ms';
+    });
     // Porneste video pe slide-ul activ, opreste pe celelalte
     document.querySelectorAll('[data-story-video]').forEach(v => {
       const onActiveSlide = v.closest('.sp-slide') === target;
@@ -5763,23 +5760,14 @@ function spPopulateBudget() {
 }
 
 function spAnimateBudget() {
-  console.log('[Budget] spAnimateBudget called');
   spPopulateBudget();
-  // After populate, find bars (they're just created by spPopulateBudget)
-  setTimeout(() => {
-    const bars = document.querySelectorAll('.sp-budget-bar-fill');
-    console.log('[Budget] bars found:', bars.length);
-    bars.forEach(b => { b.style.transition='none'; b.style.width='0%'; });
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        bars.forEach(b => {
-          b.style.transition = 'width .8s cubic-bezier(.4,0,.2,1)';
-          b.style.width = (b.dataset.pct || '0') + '%';
-          console.log('[Budget] animating bar to', b.dataset.pct+'%');
-        });
-      });
+  // Bars start at width:0 via CSS default, then animate to target
+  // Need 2 frames: populate → browser processes → animate
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.querySelectorAll('.sp-budget-bar-fill').forEach(b => {
+      b.style.width = (b.dataset.pct || '0') + '%';
     });
-  }, 50);
+  }));
 }
 
 
