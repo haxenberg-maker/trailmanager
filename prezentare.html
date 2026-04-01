@@ -1152,13 +1152,21 @@ body.readonly [data-owner-only] { display:none !important }
 }
 
 /* ── ROI Slider dark ── */
+#sp-roi-slider {
+  -webkit-appearance:none;appearance:none;
+  width:100%;height:6px;background:rgba(255,255,255,.2);
+  border-radius:3px;outline:none;cursor:pointer;
+}
 #sp-roi-slider::-webkit-slider-thumb {
-  -webkit-appearance:none;width:22px;height:22px;border-radius:50%;
-  background:var(--accent);cursor:pointer;border:none;
+  -webkit-appearance:none;appearance:none;
+  width:24px;height:24px;border-radius:50%;
+  background:var(--accent);cursor:pointer;border:2px solid #000;
+  box-shadow:0 0 8px rgba(204,255,0,.4);
 }
 #sp-roi-slider::-moz-range-thumb {
-  width:22px;height:22px;border-radius:50%;
-  background:var(--accent);cursor:pointer;border:none;
+  width:24px;height:24px;border-radius:50%;
+  background:var(--accent);cursor:pointer;border:2px solid #000;
+  box-shadow:0 0 8px rgba(204,255,0,.4);
 }
 .sp-roi-range {
   width:100%;height:4px;-webkit-appearance:none;appearance:none;
@@ -5587,14 +5595,14 @@ function spGoSlide(idx) {
   const _sid2 = _allIds2[idx] || '?';
   console.log('[SLIDE]', (idx+1) + '/' + (window._spTotalDynamic||SP_TOTAL), '·', _sid2.toUpperCase());
 
+  // Set delays BEFORE adding 'on' so transitions fire correctly
+  target.querySelectorAll('.sp-reveal').forEach(el => {
+    const delay = parseInt(el.dataset.delay)||0;
+    el.style.transitionDelay = delay + 'ms';
+  });
+
   requestAnimationFrame(() => {
     target.classList.add('on');
-    // Reveal animatii pentru story slides
-    // Apply reveal delays for ALL slides
-    target.querySelectorAll('.sp-reveal').forEach(el => {
-      const delay = parseInt(el.dataset.delay)||0;
-      el.style.transitionDelay = delay + 'ms';
-    });
     // Porneste video pe slide-ul activ, opreste pe celelalte
     document.querySelectorAll('[data-story-video]').forEach(v => {
       const onActiveSlide = v.closest('.sp-slide') === target;
