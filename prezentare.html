@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>BÂRLADUL PE FUGĂ · Prezentare Sponsori 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --accent:#ccff00;
+  --accent-dim:rgba(204,255,0,.15);
+  --bg:#000;
+  --s1:#0a0a0a;
+  --s2:#111;
+  --s3:#1a1a1a;
+  --border:rgba(255,255,255,.08);
+  --text:#f0f0f0;
+  --t2:rgba(255,255,255,.65);
+  --t3:rgba(255,255,255,.35);
+  --t4:rgba(255,255,255,.15);
+  --green:#4ade80;
+  --red:#ef4444;
+  --orange:#f97316;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--text);
+  font-family:'Inter',sans-serif;touch-action:pan-y}
+
+/* ── SPLASH ── */
+#sp-splash{
+  position:fixed;inset:0;z-index:200;
+  background:#000;
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+  opacity:0;transition:opacity .5s ease;
+}
+#sp-splash.on{display:flex}
+#sp-splash.vis{opacity:1}
+.splash-club{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(28px,8vw,64px);
+  letter-spacing:6px;color:#fff;
+  text-align:center;line-height:1.1;
+  opacity:0;transform:translateY(20px);
+  transition:all .6s ease .1s;
+}
+.splash-sub{
+  font-size:clamp(11px,2.5vw,14px);
+  letter-spacing:3px;color:rgba(255,255,255,.4);
+  text-transform:uppercase;
+  opacity:0;transition:all .6s ease .25s;
+}
+#sp-splash.vis .splash-club,
+#sp-splash.vis .splash-sub{opacity:1;transform:none}
+.splash-bar-wrap{width:min(280px,60vw);height:2px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden}
+.splash-bar-fill{height:100%;width:0;background:var(--accent);transition:width .1s linear}
+#sp-splash-btn{
+  display:none;
+  background:var(--accent);color:#000;border:none;
+  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;
+  padding:14px 40px;border-radius:10px;cursor:pointer;
+  transition:transform .1s,opacity .1s;
+}
+#sp-splash-btn:active{transform:scale(.97)}
+
+/* ── PREZENTARE WRAPPER ── */
+#sp-prez{
+  position:fixed;inset:0;z-index:100;
+  background:#000;
+  display:none;opacity:0;
+  transition:opacity .5s ease;
+  overflow:hidden;
+}
+#sp-prez.on{display:block}
+#sp-prez.vis{opacity:1}
+
+/* ── PROGRESS BAR ── */
+#sp-progress{position:absolute;top:0;left:0;right:0;height:2px;background:rgba(255,255,255,.08);z-index:20}
+#sp-progress-fill{height:100%;background:var(--accent);transition:width .4s ease;width:0%}
+
+/* ── NAV DOTS ── */
+#sp-counter{
+  position:absolute;top:10px;left:50%;transform:translateX(-50%);
+  display:flex;gap:5px;z-index:20;
+}
+.sp-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(255,255,255,.2);cursor:pointer;
+  transition:background .2s,transform .2s;
+}
+.sp-dot.on{background:var(--accent);transform:scale(1.3)}
+
+/* ── NAV ARROWS ── */
+.sp-nav-btn{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:20;color:rgba(255,255,255,.6);
+  font-size:18px;transition:all .15s;
+  backdrop-filter:blur(4px);
+}
+.sp-nav-btn:hover{background:rgba(255,255,255,.15);color:#fff}
+#sp-nav-prev{left:10px}
+#sp-nav-next{right:10px}
+
+/* ── CLOSE BTN ── */
+#sp-close{
+  position:absolute;top:12px;right:14px;z-index:20;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:rgba(255,255,255,.5);font-size:14px;
+  transition:all .15s;
+}
+#sp-close:hover{background:rgba(255,255,255,.2);color:#fff}
+
+/* ── SLIDE ── */
+.sp-slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  overflow:hidden;
+  opacity:0;transform:scale(.97);
+  transition:opacity .45s ease, transform .45s ease;
+  pointer-events:none;
+}
+.sp-slide.on{opacity:1;transform:scale(1);pointer-events:auto}
+
+/* ── SPLIT LAYOUT ── */
+.sp-split{
+  display:grid;grid-template-columns:1fr 1fr;
+  width:100%;height:100%;
+}
+.sp-split-img{
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:28px 24px;
+}
+.sp-split-content{
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding:32px 28px;
+  overflow:hidden;
+  background:rgba(0,0,0,.4);
+  backdrop-filter:blur(2px);
+}
+.sp-split-year{
+  position:absolute;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(80px,15vw,180px);
+  color:rgba(255,255,255,.04);
+  letter-spacing:-4px;line-height:1;
+  user-select:none;pointer-events:none;
+  z-index:0;
+}
+.sp-split-eyebrow{
+  font-size:clamp(9px,1.2vw,11px);
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--accent);font-weight:600;
+  margin-bottom:10px;font-family:'Inter',sans-serif;
+}
+.sp-split-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(28px,5vw,58px);
+  line-height:1.0;letter-spacing:1px;color:#fff;
+  margin-bottom:16px;
+}
+.sp-split-quote{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(20px,3.5vw,40px);
+  line-height:1.2;color:#fff;letter-spacing:1px;
+  position:relative;z-index:1;
+  text-align:center;
+}
+.sp-split-km-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  border:1px solid rgba(204,255,0,.3);
+  padding:5px 14px;border-radius:20px;
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(12px,2vw,16px);
+  letter-spacing:1px;margin-top:12px;color:var(--accent);
+  background:rgba(204,255,0,.08);
+}
+/* Stats S1 */
+.sp-s1-stats{display:flex;gap:clamp(16px,4vw,40px);margin-bottom:16px}
+.sp-s1-stat{display:flex;flex-direction:column;gap:2px}
+.sp-s1-val{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(26px,4.5vw,54px);
+  color:var(--accent);letter-spacing:1px;line-height:1;
+}
+.sp-s1-lbl{
+  font-size:clamp(8px,1.1vw,11px);color:var(--t3);
+  text-transform:uppercase;letter-spacing:1.5px;
+  font-family:'Inter',sans-serif;
+}
+
+/* Reveal animation */
+.sp-reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.sp-slide.on .sp-reveal{opacity:1;transform:none}
+
+/* Race rows */
+.sp-race-row{
+  display:flex;align-items:stretch;
+  border-radius:9px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.07);
+  background:rgba(255,255,255,.03);
+  transition:background .15s,border-color .15s;
+  overflow:hidden;position:relative;
+}
+.sp-race-row:hover{background:rgba(255,255,255,.07)}
+.sp-race-row.active{background:rgba(204,255,0,.07);border-color:rgba(204,255,0,.35)}
+.sp-race-row.past{opacity:.5}
+.sp-race-diff-bar{width:4px;flex-shrink:0}
+.sp-race-row-body{flex:1;padding:8px 10px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.sp-race-row-top{display:flex;align-items:center;gap:7px}
+.sp-race-row-nr{font-family:'Bebas Neue',sans-serif;font-size:12px;color:rgba(255,255,255,.3);flex-shrink:0}
+.sp-race-row.active .sp-race-row-nr{color:var(--accent)}
+.sp-race-row-name{font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-race-row-badge{flex-shrink:0;font-size:9px;font-weight:700;letter-spacing:.4px;padding:2px 5px;border-radius:3px;text-transform:uppercase;font-family:'Inter',sans-serif}
+.sp-race-row-meta{font-size:10px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;line-height:1.3}
+.sp-race-row-right{flex-shrink:0;display:flex;align-items:center;padding:0 8px}
+/* Difficulty bars */
+.diff-easy   .sp-race-diff-bar{background:#4ade80}
+.diff-medium .sp-race-diff-bar{background:#facc15}
+.diff-hard   .sp-race-diff-bar{background:#f97316}
+.diff-ultra  .sp-race-diff-bar{background:#ef4444}
+.diff-beast  .sp-race-diff-bar{background:linear-gradient(180deg,#ef4444,#7c3aed)}
+.badge-easy  {background:rgba(74,222,128,.15);color:#4ade80}
+.badge-medium{background:rgba(250,204,21,.12);color:#facc15}
+.badge-hard  {background:rgba(249,115,22,.15);color:#f97316}
+.badge-ultra {background:rgba(239,68,68,.15);color:#ef4444}
+.badge-beast {background:linear-gradient(90deg,rgba(239,68,68,.2),rgba(124,58,237,.2));color:#f87171;border:1px solid rgba(239,68,68,.3)}
+/* Race detail overlay */
+.sp-race-detail{
+  position:absolute;bottom:0;left:0;right:0;z-index:20;
+  background:rgba(2,12,2,.97);border-top:2px solid var(--accent);
+  display:none;animation:slideUp .25s ease forwards;
+  overflow-y:auto;max-height:65%;padding:14px 16px;
+}
+@keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes slideDown{from{transform:translateY(0);opacity:1}to{transform:translateY(100%);opacity:0}}
+
+/* S4 ROI */
+.roi-pkg{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;padding:10px 12px;
+  cursor:pointer;transition:all .15s;
+}
+.roi-pkg:hover,.roi-pkg.active{background:rgba(204,255,0,.08);border-color:rgba(204,255,0,.3)}
+.roi-pkg-price{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent);letter-spacing:1px}
+.roi-pkg-title{font-size:11px;color:var(--t2);margin-top:2px;font-family:'Inter',sans-serif}
+
+/* S6 countdown */
+.sp-cd-box{
+  display:flex;flex-direction:column;align-items:center;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:16px 14px;min-width:70px;
+}
+.sp-cd-val{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,64px);color:var(--accent);line-height:1}
+.sp-cd-lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;font-family:'Inter',sans-serif}
+
+/* S7 budget bar */
+.sp-bud-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sp-bud-lbl{font-size:11px;color:var(--t2);min-width:140px;font-family:'Inter',sans-serif}
+.sp-bud-bar{flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.sp-bud-fill{height:100%;background:var(--accent);border-radius:3px;width:0;transition:width .8s ease}
+.sp-bud-amt{font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--accent);min-width:80px;text-align:right}
+
+/* S9 why */
+.sp-why-item{
+  display:flex;align-items:flex-start;gap:14px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:14px;margin-bottom:8px;
+}
+.sp-why-nr{
+  font-family:'Bebas Neue',sans-serif;font-size:32px;
+  color:var(--accent);line-height:1;flex-shrink:0;
+  opacity:.5;
+}
+.sp-why-title{font-size:12px;font-weight:700;color:#fff;margin-bottom:4px;font-family:'Inter',sans-serif}
+.sp-why-desc{font-size:11px;color:var(--t3);line-height:1.5;font-family:'Inter',sans-serif}
+
+/* S11-S14 story */
+.sp-story-left{
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:28px;
+}
+.sp-story-line{
+  font-size:clamp(12px,1.8vw,16px);
+  line-height:1.7;color:var(--t2);margin-bottom:10px;
+  font-family:'Inter',sans-serif;
+}
+.sp-story-line strong{color:#fff;font-weight:700}
+
+/* Mobile */
+@media(max-width:768px){
+  .sp-split{grid-template-columns:1fr;grid-template-rows:35% 65%}
+  .sp-split-content{padding:18px 16px}
+  .sp-split-img{padding:18px}
+  .sp-nav-btn{display:none}
+}
+
+/* Loading */
+#prez-loading{
+  position:fixed;inset:0;z-index:300;background:#000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+}
+.prez-spinner{
+  width:40px;height:40px;border:3px solid rgba(255,255,255,.1);
+  border-top-color:var(--accent);border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<!-- Loading -->
+<div id="prez-loading">
+  <div class="prez-spinner"></div>
+  <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:3px;color:rgba(255,255,255,.4)">SE ÎNCARCĂ...</div>
+</div>
+
+<!-- Splash -->
+<div id="sp-splash">
+  <div class="splash-club" id="splash-club">BÂRLADUL PE FUGĂ</div>
+  <div class="splash-sub">⛰️ SEZON 2026 · TRAIL RUNNING</div>
+  <div class="splash-bar-wrap"><div class="splash-bar-fill" id="splash-fill"></div></div>
+  <button id="sp-splash-btn" onclick="startPrez()">▶ &nbsp;ATLET BALAN GABRIEL</button>
+</div>
+
+<!-- Prezentare -->
+<div id="sp-prez">
+  <div id="sp-progress"><div id="sp-progress-fill"></div></div>
+  <div id="sp-counter"></div>
+  <button class="sp-nav-btn" id="sp-nav-prev" onclick="spNav(-1)">‹</button>
+  <button class="sp-nav-btn" id="sp-nav-next" onclick="spNav(1)">›</button>
+  <div id="sp-close" onclick="goBack()">✕</div>
+
+  <!-- ── S1 — ATLETUL ── -->
+  <div class="sp-slide" id="sp-s1">
+    <div style="position:absolute;inset:0;background:linear-gradient(160deg,#000510 0%,#001030 50%,#000 100%)"></div>
+    <div class="sp-split">
+      <div class="sp-split-img" style="background:linear-gradient(160deg,#000510 0%,#001030 50%,#000 100%)">
+        <div id="sp-s1-bg" style="position:absolute;inset:0;background-size:cover;background-position:center top;opacity:.55;z-index:0"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,20,.6),rgba(0,10,0,.3));z-index:1"></div>
+        <div class="sp-split-year" style="z-index:2">2026</div>
+        <div style="position:relative;z-index:2;text-align:center">
+          <div class="sp-split-quote" id="sp-s1-aka">HAX · BÂRLAD</div>
+          <div class="sp-split-km-pill"><span id="sp-s1-streak-pill">🔥 —</span> zile streak</div>
+        </div>
+      </div>
+      <div class="sp-split-content">
+        <div class="sp-split-eyebrow sp-reveal" data-delay="0">⛰️ SEZON 2026 · TRAIL RUNNING</div>
+        <h2 class="sp-split-title sp-reveal" data-delay="100" id="sp-s1-name" style="font-size:clamp(32px,6vw,72px)">BALAN GABRIEL</h2>
+        <div class="sp-s1-stats sp-reveal" data-delay="250">
+          <div class="sp-s1-stat"><span class="sp-s1-val" id="sp-s1-km" data-target="0">0</span><span class="sp-s1-lbl">km 2026</span></div>
+          <div class="sp-s1-stat"><span class="sp-s1-val" id="sp-s1-total" data-target="0">0</span><span class="sp-s1-lbl">km total</span></div>
+          <div class="sp-s1-stat"><span class="sp-s1-val" id="sp-s1-curse">0</span><span class="sp-s1-lbl">curse 2026</span></div>
+          <div class="sp-s1-stat"><span class="sp-s1-val" id="sp-s1-itra">—</span><span class="sp-s1-lbl">ITRA PI</span></div>
+        </div>
+        <div style="margin-top:4px" class="sp-reveal" data-delay="400">
+          <span class="sp-s1-val" id="sp-s1-streak" style="color:#ff6b35;font-size:clamp(20px,3.5vw,44px)" data-target="0">0🔥</span>
+          <span class="sp-s1-lbl" style="margin-left:6px">streak zile</span>
+        </div>
+        <!-- Susținut de -->
+        <div id="sp-s1-partners" class="sp-reveal" data-delay="500"
+          style="margin-top:16px;display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:2px;font-family:'Inter',sans-serif">Susținut de</div>
+          <div id="sp-s1-partners-list" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S2 — CURSE + HARTĂ ── -->
+  <div class="sp-slide" id="sp-s2">
+    <div style="position:absolute;inset:0;background:linear-gradient(160deg,#020a1a 0%,#040d1f 50%,#000 100%)"></div>
+    <div class="sp-split">
+      <div class="sp-split-img" style="background:#020a1a;padding:0;overflow:hidden;position:relative">
+        <svg id="sp-map-svg" viewBox="0 0 460 340" style="width:100%;height:100%;display:block" preserveAspectRatio="xMidYMid meet"></svg>
+        <div style="position:absolute;bottom:8px;left:8px;right:8px;z-index:5">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;letter-spacing:1px" id="sp-map-race-name">—</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif" id="sp-map-race-meta"></div>
+        </div>
+      </div>
+      <div class="sp-split-content" style="padding:0;overflow:hidden;display:flex;flex-direction:column;position:relative;height:100%">
+        <div style="padding:14px 16px 10px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🗺️ CALENDAR 2026</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="80" id="sp-s2-nr" style="font-size:clamp(22px,4vw,44px);margin-bottom:0">— CURSE PLANIFICATE</h2>
+        </div>
+        <div id="sp-races-list" style="flex:1;overflow-y:auto;padding:6px 8px;display:flex;flex-direction:column;gap:4px;min-height:0;scroll-behavior:smooth"></div>
+        <div id="sp-race-detail-card" class="sp-race-detail"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S3 — DOVADA ── -->
+  <div class="sp-slide" id="sp-s3">
+    <div style="position:absolute;inset:0;background:linear-gradient(160deg,#080018 0%,#0a001a 50%,#000 100%)"></div>
+    <div class="sp-split">
+      <div class="sp-split-img" style="background:linear-gradient(160deg,#080018 0%,#0a001a 50%,#000 100%)">
+        <div class="sp-split-year" style="opacity:.06">DATA</div>
+        <div style="position:relative;z-index:1;text-align:center">
+          <div class="sp-split-quote">Cifrele<br>nu mint.</div>
+          <div class="sp-split-km-pill" id="sp-s3-total-pill" style="margin-top:16px">— km total</div>
+        </div>
+      </div>
+      <div class="sp-split-content">
+        <div class="sp-split-eyebrow sp-reveal" data-delay="0">📊 DOVADA — NUMERE REALE</div>
+        <h2 class="sp-split-title sp-reveal" data-delay="80" style="font-size:clamp(24px,4vw,48px)">CE AM<br>CONSTRUIT</h2>
+        <div id="sp-s3-stats" class="sp-reveal" data-delay="200" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S4 — PARTENERIAT ROI ── -->
+  <div class="sp-slide" id="sp-s4">
+    <div style="position:absolute;inset:0;background:linear-gradient(160deg,#000a00 0%,#041400 50%,#000 100%)"></div>
+    <div class="sp-split">
+      <div class="sp-split-img" style="background:linear-gradient(160deg,#000a00 0%,#041400 50%,#000 100%)">
+        <div class="sp-split-year" style="opacity:.05">ROI</div>
+        <div style="position:relative;z-index:1;text-align:center">
+          <div class="sp-split-quote">Investiție<br>cu vizibilitate<br>reală.</div>
+          <div class="sp-split-km-pill" style="margin-top:16px" id="sp-s4-reach-pill">— de persoane estimate</div>
+        </div>
+      </div>
+      <div class="sp-split-content">
+        <div class="sp-split-eyebrow sp-reveal" data-delay="0">🤝 PARTENERIAT 2026</div>
+        <h2 class="sp-split-title sp-reveal" data-delay="80" style="font-size:clamp(22px,3.8vw,44px)">ALEGE<br>NIVELUL</h2>
+        <div id="sp-s4-packages" class="sp-reveal" data-delay="200" style="display:flex;flex-direction:column;gap:7px;margin-top:4px"></div>
+        <div class="sp-reveal" data-delay="400" style="margin-top:10px;padding:10px 12px;background:rgba(204,255,0,.06);border:1px solid rgba(204,255,0,.2);border-radius:8px">
+          <div style="font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;font-family:'Inter',sans-serif">ROI simulat</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)" id="sp-s4-roi">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S4b — WISHLIST ECHIPAMENT ── -->
+  <div class="sp-slide" id="sp-s4b">
+    <div style="position:absolute;inset:0;background:linear-gradient(160deg,#080010 0%,#130020 50%,#000 100%)"></div>
+    <div class="sp-split">
+      <div class="sp-split-img" style="background:linear-gradient(160deg,#080010 0%,#130020 50%,#000 100%)">
+        <div class="sp-split-year" style="opacity:.06">GEAR</div>
+        <div style="position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center">
+          <div style="font-size:52px">👟</div>
+          <div class="sp-split-quote" style="font-size:clamp(18px,3vw,28px)">Echipament<br>înseamnă<br>siguranță.</div>
+          <div class="sp-split-km-pill" id="sp-wish-total-pill" style="background:rgba(167,139,250,.15);color:#a78bfa;border-color:rgba(167,139,250,.3);margin:0">— RON total</div>
+        </div>
+      </div>
+      <div class="sp-split-content" style="padding:0;overflow:hidden;display:flex;flex-direction:column">
+        <div style="padding:14px 16px 10px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🎯 SUSȚINE-MĂ CU ECHIPAMENT</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="80" style="font-size:clamp(20px,3.2vw,38px);margin-bottom:0">CE AM NEVOIE<br>PENTRU SEZON</h2>
+        </div>
+        <div id="sp-wishlist-grid" class="sp-reveal" data-delay="200"
+          style="flex:1;overflow-y:auto;padding:8px 10px;display:flex;flex-direction:column;gap:5px"></div>
+        <div style="padding:10px 14px;border-top:1px solid rgba(255,255,255,.07);flex-shrink:0" class="sp-reveal" data-delay="450">
+          <a id="sp-wish-wa-btn" href="#" target="_blank" rel="noopener"
+            style="display:flex;align-items:center;justify-content:center;gap:10px;
+              background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3);
+              border-radius:10px;padding:11px;text-decoration:none;
+              font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;
+              color:#25d366;transition:background .2s">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            VREAU SĂ SUSȚIN ECHIPAMENTUL
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S6 — COUNTDOWN ── -->
+  <div class="sp-slide" id="sp-s6">
+    <div style="position:absolute;inset:0;background:linear-gradient(160deg,#020010 0%,#050018 50%,#000 100%)"></div>
+    <div class="sp-split">
+      <div class="sp-split-img" style="background:linear-gradient(160deg,#020010 0%,#050018 50%,#000 100%)">
+        <div class="sp-split-year" style="opacity:.05">NEXT</div>
+        <div style="position:relative;z-index:1;text-align:center">
+          <div class="sp-split-quote" id="sp-s6-race-name" style="font-size:clamp(18px,3vw,32px)">—</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:8px;font-family:'Inter',sans-serif" id="sp-s6-race-date">—</div>
+          <div class="sp-split-km-pill" id="sp-s6-km-pill" style="margin-top:12px">— km · — D+</div>
+        </div>
+      </div>
+      <div class="sp-split-content">
+        <div class="sp-split-eyebrow sp-reveal" data-delay="0">⏱️ URMĂTOAREA CURSĂ</div>
+        <h2 class="sp-split-title sp-reveal" data-delay="80" style="font-size:clamp(24px,4vw,48px)">COUNTDOWN</h2>
+        <div class="sp-reveal" data-delay="200" style="display:flex;gap:10px;flex-wrap:wrap">
+          <div class="sp-cd-box"><div class="sp-cd-val" id="sp-cd-days">—</div><div class="sp-cd-lbl">Zile</div></div>
+          <div class="sp-cd-box"><div class="sp-cd-val" id="sp-cd-hours">—</div><div class="sp-cd-lbl">Ore</div></div>
+          <div class="sp-cd-box"><div class="sp-cd-val" id="sp-cd-mins">—</div><div class="sp-cd-lbl">Min</div></div>
+          <div class="sp-cd-box"><div class="sp-cd-val" id="sp-cd-secs">—</div><div class="sp-cd-lbl">Sec</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S7 — BUGET ── -->
+  <div class="sp-slide" id="sp-s7">
+    <div style="position:absolute;inset:0;background:linear-gradient(160deg,#060008 0%,#0a000e 50%,#000 100%)"></div>
+    <div class="sp-split">
+      <div class="sp-split-img" style="background:linear-gradient(160deg,#060008 0%,#0a000e 50%,#000 100%)">
+        <div class="sp-split-year" style="opacity:.05">RON</div>
+        <div style="position:relative;z-index:1;text-align:center">
+          <div class="sp-split-quote">Transparență<br>totală.</div>
+          <div class="sp-split-km-pill" id="sp-s7-total-pill" style="margin-top:16px">— RON / sezon</div>
+        </div>
+      </div>
+      <div class="sp-split-content">
+        <div class="sp-split-eyebrow sp-reveal" data-delay="0">📈 BUGET SEZON 2026</div>
+        <h2 class="sp-split-title sp-reveal" data-delay="80" style="font-size:clamp(24px,4vw,48px)">UNDE SE DUC<br>BANII</h2>
+        <div id="sp-s7-bars" class="sp-reveal" data-delay="200" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S9 — DE CE EU ── -->
+  <div class="sp-slide" id="sp-s9">
+    <div style="position:absolute;inset:0;background:linear-gradient(160deg,#0a0400 0%,#180800 50%,#000 100%)"></div>
+    <div class="sp-split">
+      <div class="sp-split-img" style="background:linear-gradient(160deg,#0a0400 0%,#180800 50%,#000 100%)">
+        <div class="sp-split-year" style="opacity:.05">WHY</div>
+        <div style="position:relative;z-index:1;text-align:center">
+          <div class="sp-split-quote">Nu e<br>reclamă.<br>E real.</div>
+        </div>
+      </div>
+      <div class="sp-split-content">
+        <div class="sp-split-eyebrow sp-reveal" data-delay="0">🧩 DE CE EU</div>
+        <h2 class="sp-split-title sp-reveal" data-delay="80" style="font-size:clamp(24px,4vw,48px)">3 MOTIVE</h2>
+        <div id="sp-s9-why" class="sp-reveal" data-delay="200" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S10 — TESTIMONIAL + CTA ── -->
+  <div class="sp-slide" id="sp-s10">
+    <div style="position:absolute;inset:0;background:linear-gradient(160deg,#080005 0%,#12000a 50%,#000 100%)"></div>
+    <div class="sp-split">
+      <div class="sp-split-img" style="background:linear-gradient(160deg,#080005 0%,#12000a 50%,#000 100%)">
+        <div class="sp-split-year" style="opacity:.05">ACT</div>
+        <div style="position:relative;z-index:1;text-align:center;padding:0 16px">
+          <div style="font-size:40px;margin-bottom:16px">"</div>
+          <div id="sp-s10-quote" style="font-family:'Inter',sans-serif;font-size:clamp(13px,2vw,17px);color:rgba(255,255,255,.8);line-height:1.6;font-style:italic">—</div>
+          <div id="sp-s10-author" style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:rgba(255,255,255,.4);letter-spacing:2px;margin-top:12px">—</div>
+        </div>
+      </div>
+      <div class="sp-split-content">
+        <div class="sp-split-eyebrow sp-reveal" data-delay="0">💬 ACUM E RÂNDUL TĂU</div>
+        <h2 class="sp-split-title sp-reveal" data-delay="80" style="font-size:clamp(24px,4vw,48px)">FACI<br>PARTE?</h2>
+        <div class="sp-reveal" data-delay="200" style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+          <a id="sp-s10-wa" href="#" target="_blank" rel="noopener"
+            style="display:flex;align-items:center;justify-content:center;gap:10px;
+              background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.3);
+              border-radius:10px;padding:13px;text-decoration:none;
+              font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;
+              color:#25d366">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            CONTACTEAZĂ-MĂ
+          </a>
+          <div style="text-align:center;font-size:10px;color:rgba(255,255,255,.25);font-family:'Inter',sans-serif">sau</div>
+          <a href="/plati" target="_blank"
+            style="display:flex;align-items:center;justify-content:center;gap:8px;
+              background:rgba(204,255,0,.08);border:1px solid rgba(204,255,0,.2);
+              border-radius:10px;padding:13px;text-decoration:none;
+              font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;
+              color:var(--accent)">
+            📊 PAGINA DE TRANSPARENȚĂ
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /sp-prez -->
+
+
+<script>
+const SB_URL = 'https://jqhtistewpmiphuoxfmp.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxaHRpc3Rld3BtaXBodW94Zm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMzkwOTUsImV4cCI6MjA4ODcxNTA5NX0.NWG60gy3twOCAjVlHuuIB1eTXum5rJVKN4L2EqgPa7I';
+
+const H = { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY };
+let DB = { races:[], activities:[], equipment:[], supplements:[], sponsors:[], nutri:{}, prefs:{} };
+let SETTINGS = {};
+let _spSlide=0, _spTotal=0, _spActiveOrder=[];
+let _spMapRaces=[], _spCdTimer=null, _spMapTimer=null, _spMapIdx=0;
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmt(n){ return Number(n||0).toLocaleString('ro-RO'); }
+function setNum(id,val){ const el=document.getElementById(id); if(el){el.dataset.target=val;el.textContent=val.toLocaleString('ro-RO');} }
+
+async function loadData() {
+  async function sf(table, params) {
+    params = params || 'limit=500';
+    try { const r=await fetch(SB_URL+'/rest/v1/'+table+'?'+params,{headers:H}); return r.ok?r.json():[]; }
+    catch(e){ return []; }
+  }
+  const [prefs,races,sponsors,eq,nutri,supls,acts] = await Promise.all([
+    sf('user_prefs','limit=1'), sf('races','order=data_cursa.asc&limit=200'),
+    sf('sponsors','limit=100'), sf('equipment','limit=200'),
+    sf('nutrition','limit=1'), sf('supplements','limit=100'),
+    sf('activities','order=date.desc&limit=500'),
+  ]);
+  DB.prefs=prefs[0]||{}; DB.races=races||[]; DB.sponsors=sponsors||[];
+  DB.equipment=eq||[]; DB.nutri=nutri[0]||{}; DB.supplements=supls||[]; DB.activities=acts||[];
+  try {
+    let raw=DB.prefs?.landing_settings;
+    if(raw){ if(typeof raw==='string')raw=JSON.parse(raw); if(typeof raw==='string')raw=JSON.parse(raw); SETTINGS=raw; }
+  } catch(e){}
+}
+
+async function init() {
+  const splash=document.getElementById('sp-splash');
+  splash.classList.add('on');
+  requestAnimationFrame(()=>splash.classList.add('vis'));
+  const fill=document.getElementById('splash-fill');
+  let pct=0;
+  const timer=setInterval(()=>{ pct=Math.min(pct+2,90); if(fill)fill.style.width=pct+'%'; },50);
+  await loadData();
+  clearInterval(timer);
+  if(fill){ fill.style.transition='width .3s ease'; fill.style.width='100%'; }
+  setTimeout(()=>{
+    document.getElementById('sp-splash-btn').style.display='block';
+    document.getElementById('splash-loading').style.display='none';
+    document.getElementById('prez-loading').style.display='none';
+  },400);
+}
+
+function startPrez() {
+  const splash=document.getElementById('sp-splash');
+  splash.style.transition='opacity .35s ease'; splash.style.opacity='0';
+  setTimeout(()=>{ splash.classList.remove('on'); splash.style.opacity=''; },350);
+  openPrez();
+}
+function goBack(){ if(document.referrer)window.history.back(); else window.location.href='/'; }
+
+function openPrez() {
+  const prez=document.getElementById('sp-prez'); if(!prez)return;
+  prez.classList.add('on');
+  document.body.style.overflow='hidden'; document.body.style.position='fixed'; document.body.style.width='100%';
+  const ALL=['sp-s1','sp-s2','sp-s3','sp-s4','sp-s4b','sp-s6','sp-s7','sp-s9','sp-s10'];
+  _spActiveOrder=ALL.filter(id=>document.getElementById(id));
+  _spTotal=_spActiveOrder.length;
+  document.getElementById('sp-counter').innerHTML=_spActiveOrder.map((_,i)=>
+    '<div class="sp-dot'+(i===0?' on':'')+'" data-s="'+i+'" onclick="spGoSlide('+i+')"></div>'
+  ).join('');
+  populateAll();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    prez.classList.add('vis');
+    requestAnimationFrame(()=>{ spGoSlide(0); initSwipe(); document.addEventListener('keydown',spKeyHandler); });
+  }));
+}
+
+function calcDiff(r) {
+  const km=parseFloat(r.distanta)||0, d=parseFloat(r.denivelare)||0;
+  const name=(r.denumire||'').toLowerCase();
+  if(name.includes('bucovina')||name.includes('utmb')||(name.includes('transylvania')&&km>=100))
+    return {level:'beast',label:'BEAST \uD83D\uDC80',barClass:'diff-beast',badgeClass:'badge-beast'};
+  if(km>=80||d>=5000) return {level:'ultra',label:'ULTRA \uD83D\uDD25',barClass:'diff-ultra',badgeClass:'badge-ultra'};
+  if(km>=40||d>=2500) return {level:'hard', label:'HARD \u26A1',barClass:'diff-hard',badgeClass:'badge-hard'};
+  if(km>=20)          return {level:'medium',label:'MEDIUM',barClass:'diff-medium',badgeClass:'badge-medium'};
+  return {level:'easy',label:'EASY',barClass:'diff-easy',badgeClass:'badge-easy'};
+}
+
+function calcStreak(acts) {
+  if(!acts.length)return{current:0,best:0};
+  const days=new Set(acts.map(a=>a.date).filter(Boolean));
+  const today=new Date();today.setHours(0,0,0,0);
+  let current=0;const d=new Date(today);
+  while(true){ const key=d.toISOString().slice(0,10); if(days.has(key)){current++;d.setDate(d.getDate()-1);}else{if(d.getTime()===today.getTime()){d.setDate(d.getDate()-1);continue;}break;} }
+  const sorted=[...days].sort();let streak=1,maxS=1;
+  for(let i=1;i<sorted.length;i++){ const diff=(new Date(sorted[i])-new Date(sorted[i-1]))/86400000; if(diff===1){streak++;if(streak>maxS)maxS=streak;}else streak=1; }
+  return{current,best:Math.max(current,maxS)};
+}
+
+function populateAll() {
+  const races=DB.races||[],acts=DB.activities||[];
+  const today=new Date();today.setHours(0,0,0,0);
+  const year=today.getFullYear();
+  const photo=SETTINGS.photo_url||'https://i.imgur.com/7VqAGjI.jpeg';
+  const bgEl=document.getElementById('sp-s1-bg');
+  if(bgEl&&photo)bgEl.style.backgroundImage="url('"+photo+"')";
+  const ytdKm=acts.filter(a=>a.date&&a.date.startsWith(String(year))).reduce((s,a)=>s+(a.km||0),0);
+  const totalKm=acts.reduce((s,a)=>s+(a.km||0),0);
+  const streak=calcStreak(acts);
+  setNum('sp-s1-km',Math.round(ytdKm));setNum('sp-s1-total',Math.round(totalKm));
+  document.getElementById('sp-s1-curse').textContent=races.length;
+  document.getElementById('sp-s1-itra').textContent=DB.prefs?.itra_pi||'536';
+  const sEl=document.getElementById('sp-s1-streak');if(sEl){sEl.dataset.target=streak.current;sEl.textContent='0\uD83D\uDD25';}
+  const pEl=document.getElementById('sp-s1-streak-pill');if(pEl)pEl.textContent='\uD83D\uDD25 '+streak.current;
+  const partList=document.getElementById('sp-s1-partners-list');
+  if(partList){
+    const partners=SETTINGS.s1_partners||[];
+    document.getElementById('sp-s1-partners').style.display=partners.length?'flex':'none';
+    partList.innerHTML=partners.map(p=>{
+      const inner=p.logo_url
+        ?'<img src="'+esc(p.logo_url)+'" alt="'+esc(p.name)+'" style="max-height:28px;max-width:80px;object-fit:contain">'
+        :'<span style="font-family:\'Bebas Neue\',sans-serif;font-size:11px;color:rgba(255,255,255,.7);letter-spacing:1px">'+esc(p.name)+'</span>';
+      return p.website
+        ?'<a href="'+esc(p.website)+'" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:7px;padding:5px 10px;text-decoration:none">'+inner+'</a>'
+        :'<div style="display:inline-flex;align-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:7px;padding:5px 10px">'+inner+'</div>';
+    }).join('');
+  }
+  drawMap(races,today);
+  populateRaceList(races,today);
+  const s3Pill=document.getElementById('sp-s3-total-pill');if(s3Pill)s3Pill.textContent=fmt(Math.round(totalKm))+' km total';
+  const sg=document.getElementById('sp-s3-stats');
+  if(sg){
+    const monthKm=acts.filter(a=>{if(!a.date)return false;const d=new Date(a.date);return d.getFullYear()===year&&d.getMonth()===today.getMonth();}).reduce((s,a)=>s+(a.km||0),0);
+    const pastR=races.filter(r=>r.data_cursa&&new Date(r.data_cursa)<today).length;
+    sg.innerHTML=[
+      {val:fmt(Math.round(ytdKm))+' km',lbl:'km \u00een 2026'},{val:fmt(Math.round(monthKm))+' km',lbl:'km luna asta'},
+      {val:streak.best+'\uD83D\uDD25',lbl:'streak maxim'},{val:races.length,lbl:'curse 2026'},
+      {val:pastR+'/'+races.length,lbl:'finalizate'},{val:DB.prefs?.itra_pi||'536',lbl:'ITRA PI'},
+    ].map(s=>'<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:10px 12px"><div style="font-family:\'Bebas Neue\',sans-serif;font-size:clamp(20px,3vw,32px);color:var(--accent);line-height:1">'+s.val+'</div><div style="font-size:9px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px;font-family:\'Inter\',sans-serif;margin-top:3px">'+s.lbl+'</div></div>').join('');
+  }
+  const pkgs=SETTINGS.packages||[{min:500,icon:'\uD83E\uDD49',title:'BRONZE',desc:'Logo kit'},{min:1000,icon:'\uD83E\uDD48',title:'SILVER',desc:'Logo + social'},{min:2000,icon:'\uD83E\uDD47',title:'GOLD',desc:'Logo echipament'}];
+  const pkgEl=document.getElementById('sp-s4-packages');
+  if(pkgEl){pkgEl.innerHTML=pkgs.slice(0,3).map((p,i)=>'<div class="roi-pkg'+(i===1?' active':'')+'" onclick="selectPkg(this,'+p.min+')"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">'+p.icon+'</span><div><div class="roi-pkg-price">'+fmt(p.min)+' RON</div><div class="roi-pkg-title">'+esc(p.title)+'</div></div></div></div>').join('');computeROI(pkgs[1]?.min||1000);}
+  const reachEl=document.getElementById('sp-s4-reach-pill');if(reachEl)reachEl.textContent='10.000+ de persoane estimate';
+  populateWishlist();
+  const upcoming=races.filter(r=>r.data_cursa&&new Date(r.data_cursa)>today).sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+  if(upcoming.length){
+    const next=upcoming[0];
+    document.getElementById('sp-s6-race-name').textContent=next.denumire||'—';
+    document.getElementById('sp-s6-race-date').textContent=new Date(next.data_cursa).toLocaleDateString('ro-RO',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const kp=document.getElementById('sp-s6-km-pill');if(kp)kp.textContent=(next.distanta||'?')+'km'+(next.denivelare?' \u00b7 '+Math.round(next.denivelare/1000)+'k D+':'');
+    startCountdown(next.data_cursa);
+  }
+  const eq=DB.equipment||[],supls=DB.supplements||[];
+  const ins=races.reduce((s,r)=>s+(r.plata_concurs||0),0),caz=races.reduce((s,r)=>s+(r.cazare||0),0);
+  const eqTot=eq.reduce((s,e)=>s+(parseFloat(e.pret)||0),0),spl=supls.reduce((s,x)=>s+(x.pret_lunar||0)*12,0);
+  const gpp=(DB.nutri?.gel_pret_set24||120)/24,gel=Math.round(races.reduce((s,r)=>s+(r.geluri||0),0)*gpp);
+  const transp=races.reduce((s,r)=>s+(r.cost_transport||0),0),total=ins+caz+eqTot+spl+gel+transp;
+  const s7p=document.getElementById('sp-s7-total-pill');if(s7p)s7p.textContent=fmt(total)+' RON / sezon';
+  const bars=document.getElementById('sp-s7-bars');
+  if(bars){
+    const items=[{lbl:'Tax\u0103 \u00eenscriere',val:ins||4200},{lbl:'Cazare',val:caz||2800},{lbl:'Transport',val:transp||1500},{lbl:'Echipament',val:eqTot||3200},{lbl:'Nutri\u021bie',val:gel||800},{lbl:'Suplimente',val:spl||900}];
+    const maxV=Math.max(...items.map(i=>i.val),1);
+    bars.innerHTML=items.map(item=>'<div class="sp-bud-row"><div class="sp-bud-lbl">'+item.lbl+'</div><div class="sp-bud-bar"><div class="sp-bud-fill" data-pct="'+Math.round(item.val/maxV*100)+'"></div></div><div class="sp-bud-amt">'+fmt(item.val)+'</div></div>').join('');
+    setTimeout(()=>bars.querySelectorAll('.sp-bud-fill').forEach(b=>b.style.width=b.dataset.pct+'%'),400);
+  }
+  const whyEl=document.getElementById('sp-s9-why');
+  const why=SETTINGS.why_items||[{title:'B\u00C2RLADUL PE HARTA TRAIL-ULUI',desc:'La fiecare din cele 10 curse \u2014 logo-ul t\u0103u prezent fizic.'},{title:'TRANSPAREN\u021a\u0102 TOTAL\u0102',desc:'Fiecare km, fiecare curs\u0103, fiecare cheltuial\u0103 \u2014 live.'},{title:'PARTENERIAT AUTENTIC',desc:'Nu reclam\u0103. Asociere real\u0103 cu un om real din B\u00e2rlad.'}];
+  if(whyEl)whyEl.innerHTML=why.slice(0,3).map((w,i)=>'<div class="sp-why-item"><div class="sp-why-nr">0'+(i+1)+'</div><div><div class="sp-why-title">'+esc(w.title)+'</div><div class="sp-why-desc">'+esc(w.desc)+'</div></div></div>').join('');
+  document.getElementById('sp-s10-quote').textContent=SETTINGS.testimonial_text||'Un atlet care demonstreaz\u0103 c\u0103 din B\u00e2rlad se poate face trail de performan\u021b\u0103.';
+  document.getElementById('sp-s10-author').textContent=SETTINGS.testimonial_author||'\u2014 PRISCOM, B\u00e2rlad';
+  const waPhone=(SETTINGS.whatsapp_phone||'').replace(/\D/g,'')||'40763829093';
+  const waBtn=document.getElementById('sp-s10-wa');
+  if(waBtn)waBtn.href='https://wa.me/'+waPhone+'?text='+encodeURIComponent('Bun\u0103! Sunt interesat de un parteneriat pentru sezonul 2026.');
+}
+
+function selectPkg(el,amount){document.querySelectorAll('.roi-pkg').forEach(p=>p.classList.remove('active'));el.classList.add('active');computeROI(amount);}
+function computeROI(amount){const equiv=Math.round(10000/1000*15);const ratio=amount>0?(equiv/amount*100).toFixed(0):'—';const r=document.getElementById('sp-s4-roi');if(r)r.textContent=fmt(equiv)+' RON valoare media \u00b7 ROI '+ratio+'%';}
+
+function populateWishlist(){
+  const items=(DB.equipment||[]).filter(e=>e.status==='wishlist');
+  const grid=document.getElementById('sp-wishlist-grid'),pill=document.getElementById('sp-wish-total-pill'),waBtn=document.getElementById('sp-wish-wa-btn');
+  if(!grid)return;
+  const total=items.reduce((s,e)=>s+(parseFloat(e.pret)||0),0);
+  if(pill)pill.textContent=total>0?fmt(total)+' RON total':'Wishlist gol';
+  const wp=(SETTINGS.whatsapp_phone||'').replace(/\D/g,'')||'40763829093';
+  if(waBtn)waBtn.href='https://wa.me/'+wp+'?text='+encodeURIComponent('Bun\u0103! Am v\u0103zut wishlist-ul de echipament!');
+  if(!items.length){grid.innerHTML='<div style="padding:24px;text-align:center;color:rgba(255,255,255,.3);font-size:13px;font-family:Inter,sans-serif">Nu exist\u0103 articole \u00een wishlist.</div>';return;}
+  const IC={'Pantofi Curse Scurte':'\uD83D\uDC9F','Pantofi Curse Lungi':'\uD83D\uDC9F','Rucsac':'\uD83C\uDF92','Bastoane':'\uD83E\uDD62','Altele':'\uD83D\uDCE6'};
+  grid.innerHTML=items.map(e=>'<div style="background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.15);border-radius:9px;padding:10px 12px;display:flex;align-items:center;gap:10px"><span style="font-size:22px;flex-shrink:0">'+(IC[e.categorie]||'\uD83D\uDCE6')+'</span><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:700;color:#fff">'+esc(e.denumire||'\u2014')+'</div><div style="font-size:10px;color:rgba(255,255,255,.4);font-family:Inter,sans-serif">'+esc(e.categorie||'')+'</div></div><div style="text-align:right;flex-shrink:0"><div style="font-family:\'Bebas Neue\',sans-serif;font-size:18px;color:#a78bfa">'+(e.pret?fmt(e.pret)+' RON':'\u2014')+'</div>'+(e.product_link?'<a href="'+esc(e.product_link)+'" target="_blank" style="font-size:9px;color:rgba(167,139,250,.7);text-decoration:none">Vezi produs \u203a</a>':'')+'</div></div>').join('');
+}
+const COUNTIES = ["M163.4,38.0L169.8,47.4L162.0,53.5L157.0,52.6L152.6,53.4L152.7,55.3L157.5,57.4L157.7,59.6L153.6,66.4L151.4,66.6L147.3,63.6L140.2,72.6L141.5,74.4L145.7,75.2L146.6,77.0L143.7,81.1L137.7,77.3L132.7,76.0L122.8,80.7L121.7,77.1L118.4,74.8L112.5,75.1L104.3,62.7L106.1,57.5L109.0,54.2L114.5,53.4L115.8,50.4L117.2,50.0L122.0,52.0L125.4,51.1L130.5,47.4L131.0,44.3L139.3,38.2L138.2,35.7L141.8,37.2L145.7,35.7L147.5,29.8L152.0,30.8L157.8,36.5L163.4,38.0Z","M70.9,124.3L74.0,125.1L89.0,124.3L95.8,127.2L101.0,127.6L103.6,129.7L106.2,135.0L114.4,139.5L115.6,141.9L128.5,143.3L130.6,145.6L127.7,147.8L124.6,153.2L118.5,153.2L116.8,154.6L114.8,168.1L111.0,172.9L107.0,174.6L102.7,173.8L99.9,170.9L94.8,168.7L92.8,169.0L91.8,171.8L89.0,171.1L88.5,173.8L84.3,170.9L82.0,174.0L78.1,168.1L75.5,167.7L74.7,165.4L72.5,165.0L68.2,169.5L66.0,168.3L63.2,169.6L60.4,166.2L58.9,166.9L58.3,169.1L56.9,169.2L55.1,166.2L48.3,165.1L45.7,161.2L38.7,155.7L40.5,154.9L40.3,151.9L42.9,149.9L51.9,151.0L53.4,152.3L58.4,148.9L60.0,142.3L64.5,140.2L62.9,136.2L65.4,127.8L69.7,126.4L70.9,124.3Z","M104.3,62.7L112.5,75.1L118.4,74.8L122.1,77.9L122.4,82.5L119.0,89.9L123.3,97.9L129.0,103.2L127.6,107.0L130.9,108.7L130.9,110.6L126.7,116.0L133.0,126.8L132.8,130.9L129.4,130.7L127.8,134.2L128.5,143.3L115.6,141.9L114.4,139.5L106.2,135.0L103.6,129.7L101.0,127.6L95.8,127.2L89.0,124.3L74.0,125.1L70.9,124.3L74.4,121.3L73.0,118.7L74.5,114.6L78.1,111.8L78.4,107.8L81.0,105.5L82.0,102.2L80.3,100.3L86.2,94.9L88.7,90.4L90.6,82.2L96.9,75.9L97.1,67.8L104.3,62.7Z","M38.7,156.5L45.7,161.2L48.9,165.5L55.1,166.2L57.5,169.3L60.4,166.2L63.2,169.6L66.0,168.3L68.2,169.5L72.5,165.0L74.7,165.4L75.5,167.7L78.1,168.1L82.0,174.0L84.3,170.9L88.5,173.8L89.0,171.1L91.8,171.8L93.7,168.7L99.9,170.9L102.7,173.8L106.7,174.6L111.0,172.9L112.7,170.8L118.9,182.2L120.5,182.0L121.0,183.2L118.4,186.0L117.1,189.5L111.8,190.7L108.6,194.7L104.7,193.4L102.0,195.4L98.4,195.9L98.4,198.0L99.5,198.5L97.1,200.1L95.2,199.9L92.4,196.4L87.2,198.8L81.9,196.2L78.5,197.2L77.5,200.6L73.7,203.7L73.2,208.7L76.2,212.0L76.8,214.9L75.6,221.1L73.7,223.2L70.1,220.1L62.7,218.2L58.2,213.3L56.1,214.3L51.1,211.4L41.5,201.8L43.0,198.4L40.9,193.5L42.3,183.8L41.4,182.9L39.7,184.9L38.0,184.4L32.8,174.9L23.0,169.1L18.0,160.4L19.8,158.1L27.0,157.9L28.1,156.1L34.0,159.0L37.8,158.0L38.7,156.5Z","M142.0,292.4L137.4,290.9L127.8,284.0L127.3,278.9L122.9,277.4L119.4,272.4L118.5,266.1L121.4,265.4L122.8,261.8L128.2,263.4L130.8,261.9L131.1,260.7L128.2,257.5L123.1,256.3L118.5,251.4L115.9,250.8L110.5,254.5L104.5,265.8L101.5,265.5L98.6,261.1L98.3,259.8L104.4,259.0L104.0,253.6L107.0,245.7L114.5,249.6L116.1,249.2L122.2,231.7L125.5,227.2L130.0,231.1L134.2,231.4L137.9,235.0L138.8,243.7L146.3,251.8L157.0,255.8L163.6,262.8L154.7,264.9L155.5,265.8L151.4,269.3L150.8,271.6L153.9,274.4L149.4,276.4L147.5,283.5L147.9,287.8L145.7,288.3L142.0,292.4Z","M142.0,292.4L145.7,288.3L147.9,287.8L147.5,283.5L149.4,276.4L153.9,274.4L150.8,271.6L151.4,269.3L155.5,265.8L154.7,264.9L162.9,263.6L167.7,259.8L174.5,258.0L175.1,250.7L177.3,254.6L180.7,256.8L184.6,264.2L182.4,268.9L188.8,274.5L193.6,281.6L197.7,284.6L198.9,292.3L196.4,292.4L195.6,296.0L199.3,297.9L199.6,299.7L197.9,301.6L198.1,306.1L193.2,315.1L174.9,309.3L168.2,309.7L163.4,306.8L156.2,306.5L147.5,309.0L138.0,309.9L134.9,307.3L136.0,300.8L137.4,298.7L142.7,296.9L143.4,294.9L142.0,292.4Z","M332.3,291.0L325.5,289.5L322.2,287.4L315.8,288.7L309.9,291.9L294.8,294.8L296.7,289.5L296.4,285.4L288.7,277.9L289.2,276.1L292.3,271.8L296.6,268.7L294.8,265.2L299.9,262.5L303.8,264.4L307.8,262.0L311.3,264.4L319.9,265.0L325.3,266.9L340.5,265.6L351.9,268.2L355.9,271.5L366.8,275.7L364.3,280.6L353.8,285.2L346.5,286.1L341.6,289.9L334.1,289.0L332.3,291.0Z","M264.2,317.5L249.4,322.0L242.6,318.4L229.7,315.5L220.2,316.2L216.1,315.1L219.9,311.2L214.7,298.4L215.9,296.1L224.2,291.4L224.6,273.4L230.5,273.3L239.8,269.2L246.0,270.4L249.1,266.0L249.0,264.3L255.3,266.5L253.4,272.3L254.9,276.1L256.0,277.3L260.6,278.1L263.5,282.2L263.5,288.5L261.5,289.5L260.0,296.0L264.2,317.5Z","M288.7,277.9L296.4,285.4L296.7,289.5L294.8,294.8L281.3,299.1L266.3,316.6L264.2,317.5L260.0,296.0L261.5,289.5L263.5,288.5L263.5,282.2L260.6,278.1L256.0,277.3L254.9,276.1L253.4,272.3L255.3,267.5L254.3,265.7L258.2,262.7L272.0,261.8L273.1,264.3L271.1,272.7L271.9,274.7L282.7,281.9L285.2,281.5L288.7,277.9Z","M332.3,291.0L334.1,289.0L341.6,289.9L346.5,286.1L353.8,285.2L356.3,283.2L362.8,281.5L365.5,279.0L370.7,268.9L369.7,265.8L366.1,264.0L367.2,257.1L360.6,251.3L361.8,248.0L366.4,249.2L372.3,247.6L378.4,252.3L380.4,251.8L381.4,249.0L383.9,249.0L386.2,251.8L389.4,253.2L395.9,252.3L401.0,254.3L401.3,256.6L404.8,255.5L406.7,253.2L406.0,251.9L409.9,253.5L408.9,257.0L407.9,257.3L409.4,254.9L408.5,253.2L408.7,254.4L407.0,254.1L400.5,259.5L401.4,257.3L400.2,257.3L399.6,258.7L401.1,260.4L398.6,261.7L398.6,262.7L399.3,261.8L400.5,262.7L399.8,268.4L400.7,265.6L406.4,260.4L407.3,258.2L403.6,266.5L397.5,273.9L396.9,276.2L395.6,276.1L394.3,278.2L395.9,287.9L394.1,288.8L395.9,299.2L391.7,316.0L385.3,316.4L375.7,314.6L364.9,308.9L361.9,299.4L353.3,302.4L349.4,297.0L338.2,298.0L333.8,294.2L332.3,291.0Z","M193.2,315.1L198.1,306.1L197.9,301.6L199.6,299.7L199.3,297.9L195.6,296.0L196.4,292.4L198.9,292.3L198.0,285.2L193.6,281.6L188.8,274.5L182.2,267.9L186.3,263.1L188.3,263.1L190.2,265.0L193.2,261.8L197.5,261.1L198.9,258.2L200.3,261.1L201.4,260.7L199.3,250.0L202.3,242.4L205.1,238.9L206.9,245.0L211.7,240.4L214.8,249.2L219.2,250.9L217.4,252.6L219.7,260.2L220.8,271.6L224.6,273.4L224.2,291.4L215.0,297.4L214.8,299.6L219.9,311.2L216.1,315.1L207.4,312.0L202.5,314.8L193.2,315.1Z","M73.7,223.2L75.6,221.1L76.8,214.9L76.2,212.0L73.2,208.7L73.7,203.7L77.5,200.6L79.3,196.6L82.7,196.4L87.2,198.8L92.4,196.4L95.2,199.9L97.1,200.1L99.5,198.5L98.4,198.0L98.4,195.9L102.0,195.4L104.7,193.4L108.6,194.7L111.8,190.7L116.8,189.7L118.5,193.1L120.9,194.0L121.1,195.8L122.6,196.0L127.2,200.9L128.1,206.1L127.1,208.7L128.4,213.1L126.8,217.5L122.0,223.6L125.2,224.9L125.5,227.2L122.2,231.7L116.1,249.2L114.5,249.6L108.1,245.6L106.7,246.0L104.2,252.8L104.6,258.1L103.5,259.7L98.3,259.8L96.5,255.7L91.0,253.2L85.9,254.5L81.4,253.8L77.9,247.9L70.4,247.4L67.3,244.3L68.5,242.1L76.0,240.5L75.1,237.6L70.3,236.0L67.7,233.4L70.9,231.2L71.8,227.2L74.1,225.4L73.7,223.2Z","M340.3,64.2L334.7,65.2L331.4,69.5L325.1,67.7L324.2,69.0L325.1,71.9L323.5,73.1L319.0,70.5L309.0,69.4L305.6,73.8L303.8,73.5L301.3,70.4L299.7,61.4L288.8,47.5L281.8,42.2L280.7,37.5L284.8,35.9L291.8,23.5L295.8,23.3L297.1,21.5L301.8,21.6L302.0,20.1L303.9,20.3L306.0,18.0L312.2,19.1L316.8,23.9L318.2,22.6L320.9,25.1L319.5,26.6L323.1,28.0L322.8,31.0L325.9,33.9L325.3,35.7L326.4,35.2L328.5,37.2L328.2,41.2L332.3,47.4L330.8,48.3L333.9,52.3L333.6,56.2L340.3,64.2Z","M305.6,73.8L309.0,69.4L319.0,70.5L323.5,73.1L325.1,71.9L324.2,69.0L325.1,67.7L331.4,69.5L334.7,65.2L340.3,64.2L342.2,69.5L346.8,71.5L346.6,77.1L349.5,81.6L353.8,83.7L357.1,92.3L363.1,98.7L367.1,99.6L370.4,106.1L371.3,112.2L367.2,113.7L364.9,112.7L363.8,113.8L358.3,112.2L358.0,107.2L356.2,109.8L349.0,103.5L348.8,107.7L350.9,108.1L350.0,109.7L346.0,109.1L344.7,111.0L342.3,111.6L330.1,111.0L327.4,105.4L331.7,102.3L328.2,97.2L325.9,96.9L322.7,99.7L319.1,99.3L317.1,101.5L309.7,97.4L305.2,96.8L303.1,91.5L297.8,85.1L302.0,83.5L298.8,78.8L305.1,78.9L306.4,75.3L305.6,73.8Z","M330.1,111.0L342.3,111.6L344.7,111.0L346.0,109.1L350.0,109.7L350.9,108.1L348.8,107.7L349.0,103.5L356.2,109.8L358.0,107.2L358.3,112.2L363.8,113.8L364.9,112.7L367.2,113.7L371.3,112.2L377.1,126.8L375.6,134.4L376.8,139.4L373.8,148.7L370.8,152.1L372.3,155.5L370.6,161.2L368.3,161.6L361.5,159.3L358.4,162.2L357.0,160.1L349.3,159.1L348.5,159.9L349.9,163.4L349.6,166.8L348.3,167.4L344.9,159.9L342.4,141.4L336.1,129.1L335.5,123.3L331.1,118.7L330.1,111.0Z","M344.9,159.9L348.8,167.8L349.9,164.0L348.5,159.9L349.3,159.1L357.0,160.1L358.4,162.2L361.5,159.3L368.3,161.6L370.6,161.2L369.5,166.6L371.4,172.9L370.9,179.0L372.7,183.2L373.3,191.7L370.6,192.2L368.6,194.2L373.2,198.4L373.2,200.8L375.4,203.7L374.2,206.0L371.0,205.1L367.2,207.3L357.7,206.2L352.5,201.9L349.5,202.0L345.8,199.5L343.7,192.2L337.9,185.4L332.2,169.5L332.7,166.7L335.8,163.2L344.9,159.9Z","M280.7,37.5L281.8,42.2L288.8,47.5L299.7,61.4L301.6,71.0L306.3,74.7L305.1,78.9L298.8,78.8L301.7,84.0L297.8,85.1L295.5,82.8L293.0,82.3L286.1,85.1L275.3,84.9L271.3,86.6L266.4,83.5L267.7,88.9L262.5,93.7L261.4,98.0L258.4,98.6L256.8,98.6L248.8,92.6L245.3,93.7L243.4,97.4L234.4,95.0L234.7,86.8L232.5,85.5L233.8,81.1L231.4,76.4L233.5,75.5L233.1,73.2L235.3,70.0L229.3,63.5L232.7,61.5L228.7,54.8L234.9,53.0L243.0,42.7L280.7,37.5Z","M145.7,75.2L140.2,73.5L144.2,67.2L147.3,63.6L152.8,66.9L157.7,59.6L157.5,57.4L152.7,55.3L152.6,53.4L157.0,52.6L162.0,53.5L169.8,47.4L163.4,38.0L166.8,35.7L171.5,37.1L176.6,36.9L180.3,40.5L186.9,38.6L190.8,40.2L191.5,41.7L195.8,42.8L202.2,41.6L204.8,39.2L211.6,40.0L215.6,43.0L216.9,46.6L222.7,49.5L225.8,54.6L228.7,54.8L232.6,60.8L232.0,62.6L225.5,63.5L220.5,66.5L212.1,66.8L202.9,65.0L199.1,67.0L197.4,70.1L192.1,71.8L191.3,74.8L186.8,80.5L179.3,79.9L175.8,81.8L171.1,77.8L162.1,77.8L152.6,74.4L145.7,75.2Z","M401.0,254.3L395.9,252.3L389.4,253.2L386.2,251.8L383.9,249.0L381.4,249.0L380.4,251.8L378.4,252.3L374.6,248.5L368.3,247.9L371.5,240.1L371.7,227.4L373.8,224.4L370.2,221.2L371.3,216.8L367.7,216.3L365.2,214.0L367.8,206.2L371.0,205.1L373.9,206.1L376.5,203.5L378.6,205.5L380.6,212.0L390.9,216.9L397.8,218.5L401.3,217.3L399.9,215.2L401.8,213.3L401.2,212.1L408.1,214.9L409.5,212.0L425.1,204.1L436.2,207.3L440.1,211.3L440.5,218.1L438.6,219.4L440.5,222.5L442.0,222.6L440.4,225.6L438.0,243.2L435.8,245.1L417.6,247.4L410.7,253.7L409.5,250.0L415.0,248.0L417.1,244.7L415.0,241.5L415.3,243.8L413.3,244.3L412.8,243.3L412.5,238.1L415.1,236.1L415.2,234.6L409.4,232.5L405.3,236.2L404.5,238.4L405.0,241.5L408.5,244.7L407.3,245.6L408.2,248.7L402.0,251.2L401.0,254.3Z","M132.8,130.9L132.8,126.3L126.7,116.0L130.9,110.6L130.9,108.7L127.6,107.0L129.0,103.2L135.7,103.6L138.7,108.2L142.4,110.0L150.4,110.1L152.5,106.0L153.7,108.0L157.2,108.9L158.0,107.1L157.0,104.5L163.2,102.1L162.0,97.5L163.4,96.7L164.5,93.5L169.5,92.0L172.9,88.5L177.7,87.4L178.1,81.0L179.3,79.9L186.8,80.5L183.6,85.6L184.5,91.6L192.1,96.4L193.7,104.8L197.2,108.4L195.3,116.0L193.5,116.5L191.4,120.4L191.9,125.2L188.5,126.9L187.9,132.4L185.2,135.4L185.9,138.5L180.9,137.8L172.6,138.9L171.0,141.2L169.0,139.6L169.6,136.5L165.8,136.2L159.7,132.9L155.2,133.7L152.7,135.7L148.5,135.0L145.1,137.6L141.5,132.6L134.1,132.2L132.8,130.9Z","M229.3,63.5L235.3,70.0L233.1,73.2L233.5,75.5L231.4,76.4L233.8,81.1L232.5,85.5L234.7,86.8L234.4,95.0L226.8,97.4L223.0,100.4L219.4,108.8L215.0,107.4L212.6,108.7L208.1,117.1L202.0,118.5L195.3,116.0L196.9,107.5L193.7,104.8L192.1,96.4L184.8,92.2L183.6,86.4L191.3,74.8L191.9,72.1L196.5,70.7L199.1,67.0L203.6,64.8L212.1,66.8L220.5,66.5L225.5,63.5L229.3,63.5Z","M122.8,80.7L132.7,76.0L137.7,77.3L143.7,81.1L146.6,78.0L145.7,75.2L152.6,74.4L162.1,77.8L171.1,77.8L175.2,81.6L178.1,81.0L178.8,82.5L177.7,87.4L172.9,88.5L169.5,92.0L164.5,93.5L163.4,96.7L162.0,97.5L163.2,102.1L157.0,104.5L157.6,108.6L153.7,108.0L152.5,106.0L150.8,109.8L146.1,110.2L138.7,108.2L135.7,103.6L129.0,103.2L123.3,97.9L118.9,89.0L122.8,80.7Z","M254.3,265.7L249.0,264.3L246.9,269.5L243.8,270.3L245.5,261.8L241.0,258.3L239.7,255.2L241.1,253.6L239.5,251.2L241.0,242.5L240.1,235.5L241.9,232.8L239.1,227.3L238.6,223.5L240.0,220.5L241.9,222.2L243.1,221.3L246.3,211.1L245.2,207.7L247.9,207.0L250.6,203.5L251.9,211.4L254.5,214.4L254.9,218.6L261.6,229.4L263.2,236.1L266.7,236.8L268.3,243.9L272.4,245.4L277.4,250.5L273.9,255.2L275.6,257.7L272.0,261.8L258.2,262.7L254.3,265.7Z","M295.6,264.6L294.6,266.4L296.7,267.9L296.3,269.3L291.5,272.6L288.7,277.9L284.6,281.8L281.3,281.4L271.4,273.9L273.1,264.3L272.0,261.8L275.6,257.7L273.9,255.2L278.0,249.5L284.5,248.5L291.3,249.8L292.3,254.0L295.8,256.7L292.6,261.9L295.6,264.6Z","M243.8,270.3L237.8,269.6L229.8,273.5L221.5,272.5L219.0,256.2L217.4,252.6L219.2,250.9L214.8,249.2L211.7,240.4L207.7,244.9L206.6,244.7L206.1,243.1L209.4,238.9L208.3,235.9L210.6,224.3L208.7,219.1L208.4,213.0L209.6,210.3L208.6,204.6L210.6,198.4L210.1,196.3L221.1,193.6L224.1,196.2L230.6,195.1L235.6,195.8L240.5,199.3L245.9,209.0L246.0,212.2L243.4,220.6L241.9,222.2L240.0,220.5L238.6,223.5L239.1,227.3L241.8,232.2L240.0,236.6L241.0,242.5L239.5,251.2L241.1,253.6L239.8,256.0L242.7,260.2L245.5,261.8L243.8,270.3Z","M163.6,262.8L157.0,255.8L146.3,251.8L138.8,243.7L137.9,235.0L133.7,231.1L129.2,230.6L125.5,227.2L125.2,224.9L122.2,224.1L122.5,222.0L126.8,217.5L136.8,213.8L142.1,216.2L145.7,214.9L149.4,215.6L157.6,212.1L161.3,213.3L167.9,210.1L178.6,211.9L179.4,221.6L176.6,235.4L177.0,247.7L176.4,251.5L174.6,251.1L174.7,257.6L167.7,259.8L163.6,262.8Z","M112.7,170.8L115.6,165.9L115.0,162.8L116.8,154.6L118.5,153.2L124.6,153.2L127.7,147.8L130.6,145.6L133.2,147.1L137.8,146.8L140.1,153.1L144.6,155.4L145.9,158.4L144.6,159.3L145.0,160.7L149.3,166.5L151.7,167.6L155.8,175.6L160.0,193.7L167.6,200.5L167.9,210.1L161.3,213.3L157.6,212.1L149.4,215.6L145.7,214.9L142.1,216.2L136.8,213.8L126.8,217.5L128.5,212.1L127.1,208.7L128.1,206.1L127.2,200.9L117.1,191.2L118.0,186.7L121.2,182.7L118.9,182.2L112.7,170.8Z","M184.6,264.2L180.7,256.8L177.0,254.2L176.4,251.5L176.6,235.4L179.4,220.8L178.9,212.4L177.4,211.1L167.9,210.1L167.8,203.9L171.2,203.4L177.2,199.9L189.5,200.6L194.0,198.0L200.9,196.3L210.1,196.3L210.6,198.4L208.6,204.6L209.6,210.3L208.4,213.0L208.7,219.1L210.6,224.3L208.3,235.9L209.4,238.9L206.1,243.1L206.2,240.1L204.3,239.2L199.3,250.0L201.4,260.7L200.3,261.1L198.9,258.2L197.5,261.1L193.2,261.8L190.2,265.0L187.3,262.8L184.6,264.2Z","M277.4,250.5L272.4,245.4L268.3,243.9L267.2,237.3L262.8,235.4L261.6,229.4L254.9,218.6L254.5,214.4L251.9,211.4L251.3,203.0L260.5,201.4L266.7,202.1L269.2,204.5L270.8,203.5L272.1,199.8L273.7,199.7L278.2,201.6L283.3,206.9L287.9,218.9L291.6,219.4L293.1,221.2L294.8,220.2L294.8,222.6L297.2,225.5L298.1,231.6L302.0,234.7L300.5,238.1L303.2,242.1L300.1,245.7L296.4,245.9L294.5,247.5L291.4,246.7L288.2,249.1L278.0,249.5L277.4,250.5Z","M297.9,166.1L294.3,173.0L293.8,184.0L290.9,192.6L288.9,193.6L286.6,192.1L285.1,195.3L280.6,196.2L271.4,186.1L265.8,183.0L261.4,183.9L261.3,181.7L256.3,177.1L256.7,165.0L254.0,164.7L251.4,161.5L253.6,156.7L262.3,148.3L264.7,150.3L267.0,156.0L271.6,159.9L275.8,160.2L287.4,157.7L291.1,155.7L294.5,158.6L293.9,160.7L297.9,166.1Z","M344.3,156.8L344.9,159.9L335.8,163.2L332.2,168.1L337.9,185.4L343.7,192.2L347.0,200.8L342.6,203.2L340.0,207.9L334.8,207.2L333.3,204.7L330.7,203.7L327.6,205.0L327.1,202.5L323.2,203.4L319.9,198.2L316.8,197.4L316.2,199.2L313.9,198.8L306.1,192.4L301.6,192.2L293.2,180.5L294.3,173.0L297.9,166.1L303.0,166.9L306.2,162.5L319.7,163.5L321.8,161.4L326.0,162.2L330.3,157.4L334.7,156.1L339.5,157.6L341.3,156.2L344.3,156.8Z","M303.2,242.1L300.5,238.1L302.0,234.7L298.1,231.6L297.2,225.5L294.8,222.6L294.8,220.2L293.1,221.2L291.6,219.4L287.9,218.9L285.5,214.6L283.9,207.9L278.2,201.6L280.6,196.2L285.1,195.3L286.2,192.3L290.4,193.2L293.8,184.0L293.2,180.5L301.6,192.2L306.1,192.4L313.9,198.8L316.2,199.2L316.8,197.4L319.9,198.2L323.2,203.4L327.1,202.5L327.6,205.0L330.7,203.7L333.3,204.7L334.8,207.2L340.0,207.9L338.3,213.0L334.9,214.5L334.6,217.9L328.5,217.6L323.8,220.0L324.8,223.1L327.8,221.2L330.4,229.2L333.0,230.1L332.0,236.7L328.8,239.2L330.1,241.6L330.0,245.1L328.8,246.3L329.9,248.0L326.5,249.0L326.1,246.4L323.3,244.9L320.3,246.2L317.3,244.7L306.5,244.3L303.2,242.1Z","M250.6,203.5L247.9,207.0L245.2,207.7L240.5,199.3L235.6,195.8L230.6,195.1L224.1,196.2L221.8,193.8L218.2,193.9L215.6,182.2L220.3,179.3L218.5,173.6L222.3,171.0L224.2,171.0L224.1,168.6L229.5,164.7L230.7,160.7L232.7,159.0L245.3,156.5L250.4,159.2L254.0,164.7L256.7,165.0L256.3,177.1L261.3,181.7L261.4,183.9L265.8,183.0L271.4,186.1L280.6,196.2L278.2,201.6L272.7,199.6L269.2,204.5L266.7,202.1L260.5,201.4L250.6,203.5Z","M218.2,193.9L210.1,196.3L200.9,196.3L194.0,198.0L189.5,200.6L177.2,199.9L169.7,203.6L170.9,201.7L169.1,196.8L170.0,192.6L169.1,186.5L170.7,182.1L173.4,181.1L175.9,176.5L173.5,175.4L173.0,172.8L179.1,172.5L180.4,171.1L180.7,166.3L184.3,165.7L187.1,167.2L188.3,163.9L195.1,157.0L195.1,151.5L200.0,151.1L203.3,152.3L216.7,150.1L216.7,157.8L218.2,161.9L225.6,160.8L230.5,163.4L224.1,168.6L224.2,171.0L222.3,171.0L218.5,173.6L220.3,179.3L215.6,182.2L218.2,193.9Z","M234.4,95.0L240.5,96.8L243.1,103.0L243.9,123.7L238.7,129.8L232.9,134.3L231.9,138.6L228.3,140.7L229.6,143.6L225.5,146.2L230.1,151.9L233.8,152.4L239.7,158.1L232.7,159.0L230.7,160.7L230.5,163.4L225.6,160.8L218.8,162.2L216.9,159.5L216.7,150.1L203.3,152.3L200.0,151.1L195.1,151.5L192.9,147.0L187.6,143.3L189.0,139.4L185.0,136.2L187.9,132.4L188.5,126.9L191.9,125.2L191.2,121.2L193.9,116.1L202.0,118.5L208.1,117.1L212.6,108.7L215.0,107.4L219.4,108.8L223.0,100.4L226.8,97.4L234.4,95.0Z","M240.5,96.8L244.0,97.2L245.3,93.7L248.8,92.6L256.8,98.6L261.4,98.0L264.9,100.0L270.4,108.6L267.9,110.4L268.6,122.8L272.1,126.2L272.4,122.9L276.5,123.6L276.7,128.5L279.3,135.5L277.2,137.6L277.2,140.4L282.7,142.2L283.7,147.4L287.9,146.0L289.5,147.1L287.4,157.7L275.8,160.2L271.6,159.9L267.0,156.0L264.7,150.3L262.3,148.3L258.4,151.0L251.7,160.6L245.3,156.5L239.7,158.1L233.8,152.4L230.1,151.9L225.8,146.7L225.9,145.4L229.8,143.1L228.3,140.7L231.9,138.6L232.9,134.3L238.7,129.8L243.9,123.7L244.3,117.7L242.7,112.4L243.3,104.0L240.5,96.8Z","M297.8,85.1L303.1,91.5L305.2,96.8L309.7,97.4L315.2,101.1L317.7,101.4L319.1,99.3L322.7,99.7L325.9,96.9L328.2,97.2L331.7,102.3L327.4,105.4L329.9,110.2L331.1,118.7L329.3,119.6L323.9,118.1L319.7,118.6L316.2,114.0L313.6,120.2L308.2,118.9L302.2,123.7L296.5,123.7L294.4,125.8L289.6,125.8L287.5,121.2L281.7,124.3L272.9,122.7L272.1,126.2L271.2,125.8L268.4,121.9L267.9,110.4L270.2,109.4L270.1,107.5L264.3,99.2L261.4,98.0L262.5,93.7L268.0,88.2L266.1,83.8L271.3,86.6L275.3,84.9L286.1,85.1L293.9,82.3L297.8,85.1Z","M331.1,118.7L335.5,123.3L336.1,129.1L342.4,141.4L344.3,156.8L331.4,156.8L326.0,162.2L321.8,161.4L319.7,163.5L306.2,162.5L303.0,166.9L297.1,165.7L293.9,160.7L294.5,158.6L291.5,155.9L287.4,157.7L289.5,147.1L287.9,146.0L283.7,147.4L282.7,142.2L277.2,140.4L277.2,137.6L279.3,135.5L276.7,128.5L276.5,123.6L282.6,124.1L287.5,121.2L289.6,125.8L294.4,125.8L296.5,123.7L302.2,123.7L308.2,118.9L313.6,120.2L316.2,114.0L319.7,118.6L323.9,118.1L329.3,119.6L331.1,118.7Z","M130.6,145.6L128.5,143.3L127.6,135.8L128.9,131.4L130.6,130.3L134.1,132.2L141.5,132.6L145.1,137.6L148.5,135.0L152.7,135.7L155.2,133.7L159.7,132.9L165.8,136.2L169.6,136.5L169.0,139.6L171.0,141.2L172.1,139.0L176.5,138.2L187.7,138.1L188.8,139.1L187.4,142.8L192.9,147.0L195.1,151.5L195.3,156.5L188.3,163.9L187.1,167.2L184.3,165.7L180.7,166.3L180.4,171.1L179.1,172.5L173.0,172.8L173.5,175.4L175.9,176.5L173.4,181.1L170.7,182.1L169.1,186.5L170.0,192.6L169.1,196.8L170.9,201.7L169.7,203.6L167.8,203.9L167.3,200.1L160.0,193.7L155.8,175.6L151.7,167.6L149.3,166.5L145.0,160.7L144.6,159.3L145.9,158.4L144.6,155.4L140.1,153.1L137.8,146.8L133.2,147.1L130.6,145.6Z","M368.3,247.9L365.6,249.0L358.3,245.5L351.7,247.3L337.1,246.0L334.4,246.8L330.0,245.1L330.1,241.6L328.8,239.2L332.0,236.7L333.0,230.1L330.4,229.2L327.8,221.2L324.8,223.1L323.8,220.0L328.5,217.6L334.6,217.9L334.9,214.5L338.3,213.0L341.5,204.7L347.0,200.8L352.5,201.9L357.7,206.2L367.2,207.3L365.2,214.0L367.7,216.3L371.3,216.8L370.2,221.2L373.8,224.4L371.7,227.4L371.5,240.1L368.3,247.9Z","M366.8,275.7L355.9,271.5L351.9,268.2L341.8,265.7L325.3,266.9L319.9,265.0L311.3,264.4L307.8,262.0L304.5,264.3L299.9,262.5L295.6,264.6L292.6,261.9L295.8,256.7L292.3,254.0L291.3,249.8L288.2,249.1L291.4,246.7L294.5,247.5L296.4,245.9L300.1,245.7L303.2,242.1L306.5,244.3L317.3,244.7L320.3,246.2L323.3,244.9L326.1,246.4L326.9,249.1L329.9,248.0L328.8,246.3L330.0,245.1L334.4,246.8L337.1,246.0L351.7,247.3L359.3,245.7L361.8,248.0L360.3,250.1L361.2,252.4L364.8,254.3L367.3,257.5L366.1,264.0L369.7,265.8L370.4,267.5L370.7,269.9L366.8,275.7Z","M284.9,272.5L282.8,271.8L283.8,276.5L282.6,277.5L275.0,270.7L275.0,268.6L278.0,268.3L278.0,266.2L275.6,265.2L277.8,261.2L280.8,260.0L281.2,264.5L284.7,265.4L283.6,268.7L285.6,270.5L284.9,272.5Z"];
+
+function drawMap(races,today){
+  const svg=document.getElementById('sp-map-svg');if(!svg)return;
+  _spMapRaces=[...races].sort((a,b)=>new Date(a.data_cursa)-new Date(b.data_cursa));
+  const W=460,H=340,pad=18,lngMin=20.24,lngMax=29.70,latMin=43.65,latMax=48.27;
+  const toX=lng=>pad+(lng-lngMin)/(lngMax-lngMin)*(W-pad*2);
+  const toY=lat=>pad+(latMax-lat)/(latMax-latMin)*(H-pad*2);
+  let inner='<rect width="'+W+'" height="'+H+'" fill="#020a02" rx="0"/>';
+  COUNTIES.forEach(d=>{inner+='<path d="'+d+'" fill="#0a1a0a" stroke="#122012" stroke-width="0.5"/>';});
+  const hx=toX(27.67).toFixed(1),hy=toY(46.23).toFixed(1);
+  inner+='<circle cx="'+hx+'" cy="'+hy+'" r="4" fill="none" stroke="#ccff00" stroke-width="1.5" opacity=".7"/>';
+  inner+='<text x="'+hx+'" y="'+(parseFloat(hy)-7).toFixed(1)+'" font-size="6.5" fill="#ccff00" text-anchor="middle" font-weight="bold" font-family="Inter,sans-serif">HOME</text>';
+  const LOCS={'transylvania':[46.54,25.08],'brasov':[45.65,25.61],'bra\u015fov':[45.65,25.61],'skyrace':[45.36,25.56],'nemirei':[46.10,26.65],'predeal':[45.50,25.57],'bucovina':[47.55,25.93],'utmb':[47.55,25.93],'2x2':[45.40,23.82],'ciucas':[45.53,26.08],'ciuca\u015f':[45.53,26.08],'azuga':[45.43,25.57],'istrita':[44.88,26.82],'istri\u021ba':[44.88,26.82]};
+  const findLoc=d=>{if(!d)return null;const dl=d.toLowerCase();for(const[k,v]of Object.entries(LOCS))if(dl.includes(k))return v;return null;};
+  const locs=_spMapRaces.map(r=>findLoc(r.denumire)).filter(Boolean);
+  if(locs.length>=2)inner+='<path d="M'+locs.map(([la,ln])=>toX(ln).toFixed(1)+','+toY(la).toFixed(1)).join('L')+'" fill="none" stroke="#ccff00" stroke-width="1" stroke-dasharray="3,4" opacity=".2"/>';
+  _spMapRaces.forEach((r,i)=>{
+    const loc=findLoc(r.denumire);if(!loc)return;
+    const x=toX(loc[1]).toFixed(1),y=toY(loc[0]).toFixed(1);
+    const past=r.data_cursa&&new Date(r.data_cursa)<today;
+    const diff=calcDiff(r);
+    const DC={easy:{fill:'rgba(74,222,128,.25)',stroke:'#4ade80'},medium:{fill:'rgba(250,204,21,.2)',stroke:'#facc15'},hard:{fill:'rgba(249,115,22,.2)',stroke:'#f97316'},ultra:{fill:'rgba(239,68,68,.2)',stroke:'#ef4444'},beast:{fill:'rgba(167,139,250,.25)',stroke:'#a78bfa'}};
+    const dc=DC[diff.level]||DC.easy;
+    inner+='<circle cx="'+x+'" cy="'+y+'" r="7" fill="'+(past?'rgba(120,120,120,.3)':dc.fill)+'" stroke="'+(past?'#888':dc.stroke)+'" stroke-width="1.5" class="sp-map-dot-circle" id="map-dot-'+i+'" data-race="'+i+'" opacity=".8"/>';
+    inner+='<text x="'+x+'" y="'+(parseFloat(y)-10).toFixed(1)+'" font-size="7" fill="rgba(255,255,255,.5)" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700">'+(i+1)+'</text>';
+    inner+='<circle cx="'+x+'" cy="'+y+'" r="18" fill="transparent" data-race="'+i+'" style="cursor:pointer;pointer-events:all"/>';
+  });
+  svg.innerHTML=inner;
+  svg.addEventListener('click',e=>{const t=e.target.closest('[data-race]');if(!t)return;const i=parseInt(t.dataset.race);selectRace(i);openRaceDetail(i);});
+}
+
+function populateRaceList(races,today){
+  const list=document.getElementById('sp-races-list');if(!list)return;
+  document.getElementById('sp-s2-nr').textContent=_spMapRaces.length+' CURSE PLANIFICATE';
+  list.innerHTML=_spMapRaces.map((r,i)=>{
+    const past=r.data_cursa&&new Date(r.data_cursa)<today;
+    const days=r.data_cursa?Math.ceil((new Date(r.data_cursa)-today)/86400000):null;
+    const diff=calcDiff(r);
+    const dateStr=r.data_cursa?new Date(r.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'short'}):'';
+    return '<div class="sp-race-row '+(past?'past ':'')+diff.barClass+'" id="sp-race-row-'+i+'" data-i="'+i+'" onclick="selectRace('+i+');openRaceDetail('+i+')">'
+      +'<div class="sp-race-diff-bar"></div><div class="sp-race-row-body"><div class="sp-race-row-top">'
+      +'<span class="sp-race-row-nr">#'+(r.nr||i+1)+'</span>'
+      +'<span class="sp-race-row-name">'+esc(r.denumire||'\u2014')+'</span>'
+      +'<span class="sp-race-row-badge '+diff.badgeClass+'">'+diff.label+'</span>'
+      +'</div><div class="sp-race-row-meta">'
+      +(r.distanta?'<strong style="color:rgba(255,255,255,.7)">'+r.distanta+'km</strong>':'')
+      +(r.denivelare?' \u00b7 '+Math.round(r.denivelare/1000)+'k D+':'')
+      +(dateStr?' \u00b7 '+dateStr:'')
+      +(past?' \u00b7 \u2705':days!==null&&days<=30?' \u00b7 <span style="color:#facc15">'+days+'z</span>':days!==null?' \u00b7 '+days+'z':'')
+      +'</div></div><div class="sp-race-row-right">'
+      +(past?'<span style="font-size:14px">\u2705</span>':'<span style="color:rgba(204,255,0,.5);font-size:16px">\u203a</span>')
+      +'</div></div>';
+  }).join('');
+}
+
+function selectRace(i){
+  document.querySelectorAll('.sp-race-row').forEach(el=>el.classList.remove('active'));
+  const row=document.getElementById('sp-race-row-'+i);
+  if(row){row.classList.add('active');row.scrollIntoView({block:'nearest',behavior:'smooth'});}
+  activateMapDot(i);
+  const r=_spMapRaces[i];if(!r)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  const past=r.data_cursa&&new Date(r.data_cursa)<today;
+  const days=r.data_cursa?Math.ceil((new Date(r.data_cursa)-today)/86400000):null;
+  const n=document.getElementById('sp-map-race-name'),m=document.getElementById('sp-map-race-meta');
+  if(n)n.textContent=r.denumire||'\u2014';
+  if(m)m.textContent=(r.distanta||'?')+'km'+(r.denivelare?' \u00b7 '+Math.round(r.denivelare/1000)+'k D+':'')+(past?' \u00b7 \u2705':days!==null?' \u00b7 '+days+' zile':'');
+}
+
+function activateMapDot(i){
+  document.querySelectorAll('.sp-map-dot-circle').forEach(c=>{c.setAttribute('r','7');c.setAttribute('fill','#1a3a1a');c.setAttribute('stroke','#2a4a2a');c.setAttribute('stroke-width','1.5');c.setAttribute('opacity','.8');});
+  const old=document.getElementById('sp-map-glow');if(old)old.remove();
+  const dot=document.getElementById('map-dot-'+i);if(!dot)return;
+  dot.setAttribute('r','11');dot.setAttribute('fill','#ccff00');dot.setAttribute('stroke','#ccff00');dot.setAttribute('stroke-width','2.5');dot.setAttribute('opacity','1');
+  const svg=document.getElementById('sp-map-svg');
+  if(svg){const g=document.createElementNS('http://www.w3.org/2000/svg','circle');g.setAttribute('id','sp-map-glow');g.setAttribute('cx',dot.getAttribute('cx'));g.setAttribute('cy',dot.getAttribute('cy'));g.setAttribute('r','18');g.setAttribute('fill','rgba(204,255,0,.2)');g.setAttribute('stroke','rgba(204,255,0,.4)');g.setAttribute('stroke-width','1');g.setAttribute('pointer-events','none');const first=svg.querySelector('.sp-map-dot-circle');if(first)svg.insertBefore(g,first);else svg.appendChild(g);}
+}
+
+function openRaceDetail(i){
+  const r=_spMapRaces[i];if(!r)return;
+  const card=document.getElementById('sp-race-detail-card');if(!card)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  const past=r.data_cursa&&new Date(r.data_cursa)<today;
+  const days=r.data_cursa?Math.ceil((new Date(r.data_cursa)-today)/86400000):null;
+  const gpp=(DB.nutri?.gel_pret_set24||120)/24,gelCost=Math.round((r.geluri||0)*gpp);
+  card.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:18px;color:#fff;letter-spacing:1px">'+esc(r.denumire||'\u2014')+'</div><div style="font-size:11px;color:rgba(255,255,255,.4);font-family:Inter,sans-serif">'+(r.data_cursa?new Date(r.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'long',year:'numeric'}):'—')+'</div></div><button onclick="closeRaceDetail()" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:16px;padding:4px 8px">\u2715 \u00cenchide</button></div>'
+  +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px">'
+  +[{icon:'\uD83C\uDFC3',val:(r.distanta||'?')+' km',lbl:'Distan\u021b\u0103'},{icon:'\u26F0\uFE0F',val:r.denivelare?Math.round(r.denivelare/1000)+'k D+':'\u2014',lbl:'Denivelare'},{icon:'\uD83D\uDCC5',val:past?'\u2705 Finalizat':days!==null?days+' zile':'\u2014',lbl:'Status'}].map(s=>'<div style="background:rgba(255,255,255,.05);border-radius:7px;padding:8px;text-align:center;border:1px solid rgba(255,255,255,.08)"><div style="font-size:14px;margin-bottom:2px">'+s.icon+'</div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:14px;color:var(--accent);line-height:1">'+s.val+'</div><div style="font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;font-family:Inter,sans-serif">'+s.lbl+'</div></div>').join('')
+  +'</div>'
+  +[r.data_plecare?{icon:'\uD83D\uDE97',lbl:'Plecare',val:new Date(r.data_plecare).toLocaleDateString('ro-RO',{weekday:'short',day:'numeric',month:'long'})}:null,r.cazare!=null?{icon:'\uD83C\uDFE8',lbl:'Cazare',val:(r.cazare>0?fmt(r.cazare)+' RON':'F\u0103r\u0103 cazare'),ok:r.plata_cazare}:null,r.plata_concurs?{icon:'\uD83C\uDFC1',lbl:'\u00censcriere',val:fmt(r.plata_concurs)+' RON',ok:r.plata_concurs_ok}:null,r.geluri?{icon:'\uD83E\uDDE3',lbl:'Geluri',val:r.geluri+' buc'+(gelCost?' \u00b7 ~'+fmt(gelCost)+' RON':'')}:null,r.ora_start?{icon:'\u23F0',lbl:'Start',val:r.ora_start}:null,r.note?{icon:'\uD83D\uDCDD',lbl:'Note',val:r.note}:null].filter(Boolean).map(row=>'<div style="display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="font-size:12px;flex-shrink:0;width:18px">'+row.icon+'</span><span style="font-size:10px;color:rgba(255,255,255,.4);min-width:72px;margin-top:1px;font-family:Inter,sans-serif;text-transform:uppercase;letter-spacing:.4px">'+row.lbl+'</span><span style="font-size:12px;color:#fff;font-family:Inter,sans-serif;flex:1;line-height:1.4">'+esc(String(row.val))+'</span>'+(row.ok!==undefined?'<span style="font-size:12px">'+(row.ok?'\u2705':'\u23F3')+'</span>':'')+'</div>').join('');
+  card.style.display='block';card.style.animation='slideUp .25s ease forwards';
+}
+
+function closeRaceDetail(){
+  const card=document.getElementById('sp-race-detail-card');if(!card)return;
+  card.style.animation='slideDown .2s ease forwards';
+  setTimeout(()=>{card.style.display='none';card.style.animation='';},220);
+  document.querySelectorAll('.sp-race-row').forEach(el=>el.classList.remove('active'));
+  const n=document.getElementById('sp-map-race-name');if(n)n.textContent='\u2014';
+  document.querySelectorAll('.sp-map-dot-circle').forEach(c=>{c.setAttribute('r','7');c.setAttribute('fill','#1a3a1a');c.setAttribute('stroke','#2a4a2a');c.setAttribute('opacity','.8');});
+  const old=document.getElementById('sp-map-glow');if(old)old.remove();
+}
+
+function startCountdown(ds){
+  if(_spCdTimer)clearInterval(_spCdTimer);
+  const target=new Date(ds);
+  function tick(){const diff=target-new Date();if(diff<=0){clearInterval(_spCdTimer);return;}const days=Math.floor(diff/86400000),hrs=Math.floor((diff%86400000)/3600000),mins=Math.floor((diff%3600000)/60000),secs=Math.floor((diff%60000)/1000);const pad=n=>String(n).padStart(2,'0');const s=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};s('sp-cd-days',days);s('sp-cd-hours',pad(hrs));s('sp-cd-mins',pad(mins));s('sp-cd-secs',pad(secs));}
+  tick();_spCdTimer=setInterval(tick,1000);
+}
+
+function spGoSlide(idx){
+  _spSlide=Math.max(0,Math.min(idx,_spTotal-1));
+  document.querySelectorAll('.sp-slide').forEach(s=>{s.classList.remove('on');s.querySelectorAll('.sp-reveal').forEach(el=>el.style.transitionDelay='');});
+  document.querySelectorAll('.sp-dot').forEach((d,i)=>d.classList.toggle('on',i===_spSlide));
+  const slideId=_spActiveOrder[_spSlide];
+  const el=document.getElementById(slideId);
+  if(el){el.querySelectorAll('.sp-reveal[data-delay]').forEach(r=>{r.style.transitionDelay=(parseInt(r.dataset.delay)||0)+'ms';});el.classList.add('on');}
+  const fill=document.getElementById('sp-progress-fill');if(fill)fill.style.width=((_spSlide+1)/_spTotal*100)+'%';
+  if(slideId==='sp-s1')setTimeout(animateCounters,200);
+  if(slideId==='sp-s7')setTimeout(()=>{document.querySelectorAll('.sp-bud-fill').forEach(b=>b.style.width=b.dataset.pct+'%');},400);
+  if(slideId==='sp-s2')startMapCycle();
+  else{if(_spMapTimer){clearInterval(_spMapTimer);_spMapTimer=null;}}
+}
+
+function spNav(dir){spGoSlide(_spSlide+dir);}
+function spKeyHandler(e){if(e.key==='ArrowRight'||e.key===' ')spNav(1);else if(e.key==='ArrowLeft')spNav(-1);else if(e.key==='Escape')goBack();}
+function initSwipe(){
+  const el=document.getElementById('sp-prez');if(!el||el._sw)return;el._sw=true;
+  let sx=0,sy=0,st=0;
+  el.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;st=Date.now();},{passive:true});
+  el.addEventListener('touchend',e=>{const dx=sx-e.changedTouches[0].clientX,dy=sy-e.changedTouches[0].clientY;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5&&Date.now()-st<400)spNav(dx>0?1:-1);},{passive:true});
+}
+function startMapCycle(){
+  if(_spMapTimer)clearInterval(_spMapTimer);_spMapIdx=0;
+  if(_spMapRaces.length>1){_spMapTimer=setInterval(()=>{if(document.getElementById('sp-race-detail-card')?.style.display==='block')return;_spMapIdx=(_spMapIdx+1)%_spMapRaces.length;selectRace(_spMapIdx);},2000);}
+}
+function animateCounters(){
+  document.querySelectorAll('#sp-s1 [data-target]').forEach(el=>{
+    const target=parseInt(el.dataset.target)||0;if(!target){el.textContent=el.id==='sp-s1-streak'?'0\uD83D\uDD25':'0';return;}
+    const dur=1200,start=performance.now(),isSt=el.id==='sp-s1-streak';
+    const tick=now=>{const pct=Math.min(1,(now-start)/dur),e=1-Math.pow(1-pct,3);el.textContent=Math.round(e*target).toLocaleString('ro-RO')+(isSt?'\uD83D\uDD25':'');if(pct<1)requestAnimationFrame(tick);};
+    requestAnimationFrame(tick);
+  });
+}
+
+window.addEventListener('load', init);
+
+</script>
+</body>
+</html>
