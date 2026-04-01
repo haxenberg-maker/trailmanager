@@ -8,7 +8,65 @@
 <title>BÂRLADUL PE FUGĂ · Prezentare Sponsori 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
+<style>:root {
+  /* Fundal - Un gri-antracit neutru (fără verdele ăla ciudat) */
+  --bg: #0f1111;      /* Mai adânc, dar nu negru pur */
+  --s1: #1a1d1d;      /* Suprafețe clare */
+  --s2: #242929;      /* Carduri și input-uri */
+  --s3: #2f3535;      /* State-uri de hover */
+
+  /* Borduri - Mai luminoase să dea formă */
+  --border: #3a4141;
+  --border2: #4f5858;
+
+  /* Accent - Am păstrat ideea de Lime, dar mai saturat și vizibil */
+  --accent: #ccff00;  
+  --accent-dim: rgba(204, 255, 0, 0.1);
+  --accent-border: rgba(204, 255, 0, 0.25);
+
+  /* Culori de stare standard */
+  --green: #2ecc71;
+  --orange: #ff9f43;
+  --yellow: #f1c40f;
+  --red: #ee5253;
+
+  /* Text - Maximă lizibilitate */
+  --text: #f5f6f7;    /* Alb-curat, nu gri-verzui */
+  --t2: #a0a9a9;      /* Text secundar mult mai "soft" și lizibil */
+  --t3: #6c757d;      /* Text terțiar */
+  --t4: #495057;      /* Placeholder */
+
+  /* Layout & Fonts */
+  --r: 12px;          /* Rotunjire un pic mai modernă */
+  --display: 'Inter', 'Bebas Neue', sans-serif; /* Inter e mult mai lizibil ca font de bază */
+  --body: 'Inter', 'DM Sans', sans-serif;
+}
+
+/* Prezentare standalone: dark theme forced */
+:root {
+  --bg: #0f1111;
+  --s1: #1a1d1d;
+  --s2: #242929;
+  --s3: #2f3535;
+  --border: #3a4141;
+  --border2: #4f5858;
+  --accent: #ccff00;
+  --accent-dim: rgba(204,255,0,.1);
+  --accent-border: rgba(204,255,0,.25);
+  --green: #2ecc71;
+  --orange: #ff9f43;
+  --yellow: #f1c40f;
+  --red: #ee5253;
+  --text: #f5f6f7;
+  --t2: #a0a9a9;
+  --t3: #6c757d;
+  --t4: #495057;
+  --r: 12px;
+  --display: 'Bebas Neue', sans-serif;
+  --body: 'Inter', sans-serif;
+}
+
+
 
 /* Temele sunt în themes.css — linkuit în <head> */
 /* ═══════════════════════════════════════
@@ -1160,13 +1218,13 @@ body.readonly [data-owner-only] { display:none !important }
 #sp-roi-slider::-webkit-slider-thumb {
   -webkit-appearance:none;appearance:none;
   width:24px;height:24px;border-radius:50%;
-  background:var(--accent);cursor:pointer;border:2px solid #000;
-  box-shadow:0 0 8px rgba(204,255,0,.4);
+  background:#ccff00;cursor:pointer;border:none;
+  box-shadow:0 0 10px rgba(204,255,0,.6), 0 2px 6px rgba(0,0,0,.5);
 }
 #sp-roi-slider::-moz-range-thumb {
   width:24px;height:24px;border-radius:50%;
-  background:var(--accent);cursor:pointer;border:2px solid #000;
-  box-shadow:0 0 8px rgba(204,255,0,.4);
+  background:#ccff00;cursor:pointer;border:none;
+  box-shadow:0 0 10px rgba(204,255,0,.6);
 }
 .sp-roi-range {
   width:100%;height:4px;-webkit-appearance:none;appearance:none;
