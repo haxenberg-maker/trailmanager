@@ -5579,6 +5579,14 @@ function spGoSlide(idx) {
   const target = targetId ? document.getElementById(targetId) : null;
   if (!target) return;
 
+  // Update debug bar
+  const dbg = document.getElementById('sp-debug-bar');
+  if (dbg) {
+    const allIds = window._spActiveOrder || ALL_SLIDES.map(s=>s.id);
+    const sid = allIds[idx] || '?';
+    dbg.textContent = 'SLIDE ' + (idx+1) + '/' + (window._spTotalDynamic||SP_TOTAL) + ' · ' + sid.toUpperCase();
+  }
+
   requestAnimationFrame(() => {
     target.classList.add('on');
     // Reveal animatii pentru story slides
@@ -5635,20 +5643,28 @@ function spStartCountdown() {
 function spInitROI() {
   const slider = document.getElementById('sp-roi-slider');
   if (!slider) return;
-  // Attach listener only once
   if (!slider._roiInit) {
     slider._roiInit = true;
     slider.addEventListener('input', function() {
       spUpdateROI(parseInt(this.value));
     });
   }
-  spUpdateROI(parseInt(slider.value)||500);
+  // Populate cu delay pentru a lăsa slide-ul să se randeze
+  requestAnimationFrame(() => {
+    spUpdateROI(parseInt(slider.value)||500);
+  });
 }
 
 function spUpdateROI(amount) {
   const amEl = document.getElementById('sp-roi-amount');
   if (amEl) amEl.textContent = amount.toLocaleString('ro-RO') + ' RON';
-  const tiers = SETTINGS.packages || [];
+  const tiers = (SETTINGS.packages && SETTINGS.packages.length)
+    ? SETTINGS.packages
+    : DEFAULT_SETTINGS.packages || [
+        { min:500,  icon:'🥉', title:'BRONZE', desc:'Logo kit & mulțumiri' },
+        { min:1000, icon:'🥈', title:'SILVER', desc:'Logo + social media' },
+        { min:2500, icon:'🥇', title:'GOLD',   desc:'Logo echipament + prezentare' },
+      ];
   const grid = document.getElementById('sp-roi-grid');
   if (grid) grid.innerHTML = tiers.map(t => {
     const on = amount >= (t.min||0);
@@ -5748,10 +5764,13 @@ function spPopulateBudget() {
 
 function spAnimateBudget() {
   spPopulateBudget();
+  // Reset + reanimate bars
+  const bars = document.querySelectorAll('.sp-budget-bar-fill');
+  bars.forEach(b => { b.style.transition='none'; b.style.width='0%'; });
   // Force reflow then animate
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      document.querySelectorAll('.sp-budget-bar-fill').forEach(b => {
+      bars.forEach(b => {
         b.style.transition = 'width .8s cubic-bezier(.4,0,.2,1)';
         b.style.width = b.dataset.pct + '%';
       });

@@ -5461,7 +5461,11 @@ function openRC(id) {
   v('f-dp',x.data_plecare); v('f-di',x.data_sfarsit);
   v('f-gel',x.geluri); v('f-caz',x.cazare); v('f-ins',x.plata_concurs);
   ck('f-rez',x.rezervat); ck('f-pcaz',x.plata_cazare); ck('f-pins',x.plata_concurs_ok);
-  v('f-note',x.note); v('f-link-ins',x.link_dovada_ins); v('f-link-caz',x.link_dovada_caz);
+  v('f-note',x.note);
+  v('f-link-ins',x.link_dovada_ins); v('f-factura-ins',x.factura_ins);
+  v('f-link-caz',x.link_dovada_caz); v('f-factura-caz',x.factura_caz);
+  v('f-link-factura',x.link_dovada_factura); v('f-factura-desc',x.factura_desc);
+  if(document.getElementById('f-nr')) document.getElementById('f-nr').value = x.nr||'';
   document.getElementById('ov-rc').classList.add('on');
 }
 
@@ -5499,6 +5503,9 @@ async function saveRC() {
     factura_ins: document.getElementById('f-factura-ins')?.value.trim()||null,
     factura_caz: document.getElementById('f-factura-caz')?.value.trim()||null,
     link_dovada_caz: document.getElementById('f-link-caz').value.trim()||null,
+    link_dovada_factura: document.getElementById('f-link-factura')?.value.trim()||null,
+    factura_desc: document.getElementById('f-factura-desc')?.value.trim()||null,
+    nr: +document.getElementById('f-nr')?.value||null,
   };
   try {
     if (editRCid) {
