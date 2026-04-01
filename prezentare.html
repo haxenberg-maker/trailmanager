@@ -1390,7 +1390,10 @@ body.readonly [data-owner-only] { display:none !important }
   display:flex;flex-direction:column;justify-content:center;
   padding:clamp(28px,5vw,60px) clamp(24px,4vw,56px);
   overflow-y:auto;
+  /* slider thumb needs overflow visible */
 }
+/* S4 ROI — slider neclipat */
+#sp-s4 .sp-split-content { overflow:visible; }
 .sp-split-eyebrow {
   font-size:10px;color:var(--accent);letter-spacing:3px;
   text-transform:uppercase;margin-bottom:16px;
@@ -5579,13 +5582,10 @@ function spGoSlide(idx) {
   const target = targetId ? document.getElementById(targetId) : null;
   if (!target) return;
 
-  // Update debug bar
-  const dbg = document.getElementById('sp-debug-bar');
-  if (dbg) {
-    const allIds = window._spActiveOrder || ALL_SLIDES.map(s=>s.id);
-    const sid = allIds[idx] || '?';
-    dbg.textContent = 'SLIDE ' + (idx+1) + '/' + (window._spTotalDynamic||SP_TOTAL) + ' · ' + sid.toUpperCase();
-  }
+  // Debug în consolă
+  const _allIds2 = window._spActiveOrder || ALL_SLIDES.map(s=>s.id);
+  const _sid2 = _allIds2[idx] || '?';
+  console.log('[SLIDE]', (idx+1) + '/' + (window._spTotalDynamic||SP_TOTAL), '·', _sid2.toUpperCase());
 
   requestAnimationFrame(() => {
     target.classList.add('on');
@@ -5763,19 +5763,23 @@ function spPopulateBudget() {
 }
 
 function spAnimateBudget() {
+  console.log('[Budget] spAnimateBudget called');
   spPopulateBudget();
-  // Reset + reanimate bars
-  const bars = document.querySelectorAll('.sp-budget-bar-fill');
-  bars.forEach(b => { b.style.transition='none'; b.style.width='0%'; });
-  // Force reflow then animate
-  requestAnimationFrame(() => {
+  // After populate, find bars (they're just created by spPopulateBudget)
+  setTimeout(() => {
+    const bars = document.querySelectorAll('.sp-budget-bar-fill');
+    console.log('[Budget] bars found:', bars.length);
+    bars.forEach(b => { b.style.transition='none'; b.style.width='0%'; });
     requestAnimationFrame(() => {
-      bars.forEach(b => {
-        b.style.transition = 'width .8s cubic-bezier(.4,0,.2,1)';
-        b.style.width = b.dataset.pct + '%';
+      requestAnimationFrame(() => {
+        bars.forEach(b => {
+          b.style.transition = 'width .8s cubic-bezier(.4,0,.2,1)';
+          b.style.width = (b.dataset.pct || '0') + '%';
+          console.log('[Budget] animating bar to', b.dataset.pct+'%');
+        });
       });
     });
-  });
+  }, 50);
 }
 
 
