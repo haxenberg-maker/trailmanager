@@ -1965,45 +1965,85 @@ body.readonly label.btn { display:none !important }
 </div>
 
 <!-- MODAL SUPLIMENT -->
-<div class="overlay" id="ov-supl">
-<div class="modal" style="max-width:480px">
+<div class="overlay" id="ov-supl"><div class="modal" style="max-width:500px">
   <div class="mh"><h3 id="supl-title">SUPLIMENT NOU</h3><button class="mx" onclick="closeSupl()">✕</button></div>
   <div class="mb">
     <div class="fg">
-      <div class="fi fgrow"><lbl>Denumire *</lbl><input id="supl-den" placeholder="ex: Creatina"></div>
-      <div class="sl">Cantitate & porții</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-        <div class="fi"><lbl>Cantitate totală</lbl><input id="supl-cant-total" placeholder="ex: 600" oninput="suplCalcPortii()"></div>
-        <div class="fi"><lbl>Unitate</lbl>
-          <select id="supl-cant-unit" onchange="suplCalcPortii()" style="height:36px;border-radius:7px;border:1px solid var(--border);background:var(--s2);color:var(--text);padding:0 8px">
-            <option value="gr">gr</option>
-            <option value="ml">ml</option>
-            <option value="capsule">capsule</option>
-            <option value="comprimate">comprimate</option>
-            <option value="plicuri">plicuri</option>
-          </select>
+      <!-- Denumire -->
+      <div class="fi fgrow"><lbl>Denumire *</lbl><input id="supl-den" placeholder="ex: Colagen, Creatina, Magneziu"></div>
+
+      <!-- Sectiune: O comandă -->
+      <div class="sl">📦 O comandă (ce cumperi o dată)</div>
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px">
+        <div class="fi"><lbl>Cantitate per buc cumpărată</lbl>
+          <div style="display:flex;gap:6px;align-items:center">
+            <input type="number" id="supl-cant-total" placeholder="ex: 500" oninput="suplCalcAll()" style="flex:1">
+            <select id="supl-cant-unit" onchange="suplCalcAll()" style="height:36px;border-radius:7px;border:1px solid var(--border);background:var(--s2);color:var(--text);padding:0 8px;flex-shrink:0">
+              <option value="gr">gr</option>
+              <option value="ml">ml</option>
+              <option value="capsule">capsule</option>
+              <option value="comprimate">comprimate</option>
+              <option value="plicuri">plicuri</option>
+              <option value="buc">buc</option>
+            </select>
+          </div>
         </div>
-        <div class="fi"><lbl>Portie (gr/buc)</lbl><input type="number" id="supl-cant-portie" placeholder="ex: 5" oninput="suplCalcPortii()"></div>
+        <div class="fi"><lbl>Preț / buc (RON)</lbl><input type="number" id="supl-pret" placeholder="ex: 111" oninput="suplCalcAll()"></div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:8px 10px;background:var(--s2);border-radius:8px;margin-top:-4px">
-        <span style="font-size:12px;color:var(--t3)">Porții calculate:</span>
-        <span id="supl-portii-calc" style="font-size:14px;font-weight:700;color:var(--accent)">-</span>
-        <span style="font-size:11px;color:var(--t3)" id="supl-portii-hint">completează cantitate și porție/buc</span>
-      </div>
-      <div class="sl">Stoc & comandă</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div class="fi"><lbl>Stoc curent (porții)</lbl><input type="number" id="supl-stoc" placeholder="ex: 120" oninput="suplUpdateRamas()"></div>
-        <div class="fi"><lbl>Consum zilnic (porții)</lbl><input type="number" id="supl-consum-zi" placeholder="ex: 1" oninput="suplUpdateRamas()"></div>
+        <div class="fi"><lbl>Porție per utilizare</lbl>
+          <div style="display:flex;gap:6px;align-items:center">
+            <input type="number" id="supl-cant-portie" placeholder="ex: 10" oninput="suplCalcAll()" style="flex:1">
+            <span id="supl-portie-unit-lbl" style="font-size:11px;color:var(--t3);white-space:nowrap">gr</span>
+          </div>
+        </div>
+        <div class="fi"><lbl>Utilizări / zi</lbl><input type="number" id="supl-consum-zi" placeholder="ex: 1" value="1" oninput="suplCalcAll()"></div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:8px 10px;background:var(--s2);border-radius:8px;margin-top:-4px">
-        <span style="font-size:12px;color:var(--t3)">Ajunge pentru:</span>
-        <span id="supl-ramas-calc" style="font-size:14px;font-weight:700;color:var(--green)">-</span>
+
+      <!-- Auto-calc summary -->
+      <div id="supl-calc-summary" style="background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:10px 12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:0">
+        <div style="text-align:center">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent)" id="supl-calc-portii">—</div>
+          <div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">porții/buc</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent)" id="supl-calc-zile">—</div>
+          <div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">zile/buc</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent)" id="supl-calc-lunar">—</div>
+          <div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">RON/lună</div>
+        </div>
       </div>
-      <div class="sl">Cost & note</div>
-      <div class="fi fgrow"><lbl>Cost per comandă (RON)</lbl><input type="number" id="supl-pret" placeholder="ex: 45"></div>
-      <div class="fi fgrow"><lbl>Frecvența comandă (luni)</lbl><input type="number" id="supl-frecv" placeholder="ex: 2" value="1"></div>
+
+      <!-- Sectiune: Nevoie an + stoc -->
+      <div class="sl">📅 Plan anual & stoc curent</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="fi"><lbl>Stoc curent (porții)</lbl><input type="number" id="supl-stoc" placeholder="ex: 50" oninput="suplCalcAll()"></div>
+        <div class="fi"><lbl>Data achiziție</lbl><input type="date" id="supl-data-ach"></div>
+      </div>
+      <div id="supl-plan-summary" style="background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:10px 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:0">
+        <div>
+          <div style="font-size:11px;color:var(--t3);margin-bottom:3px">Stocul ajunge până:</div>
+          <div style="font-size:13px;font-weight:700;color:var(--text)" id="supl-plan-pana">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--t3);margin-bottom:3px">Comenzi necesare / an:</div>
+          <div style="font-size:13px;font-weight:700;" id="supl-plan-comenzi">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--t3);margin-bottom:3px">Cost total anual:</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--accent)" id="supl-plan-anual">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--t3);margin-bottom:3px">Cost lunar mediu:</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--green)" id="supl-plan-lunar2">—</div>
+        </div>
+      </div>
+
+      <!-- Note + dovadă -->
+      <div class="sl">📝 Note & dovadă</div>
       <div class="fi fgrow"><lbl>Note / link produs</lbl><textarea id="supl-note" rows="2" placeholder="https://gymbeam.ro/... sau observații"></textarea></div>
-      <div class="sl">Dovadă achiziție</div>
       <div class="fi fgrow"><lbl>Link factură / comandă</lbl>
         <div style="display:flex;gap:6px;align-items:center">
           <input id="supl-link" placeholder="https://..." style="flex:1">
@@ -2018,8 +2058,6 @@ body.readonly label.btn { display:none !important }
     <button class="btn btn-primary" onclick="saveSupl()">Salvează</button>
   </div>
 </div>
-</div>
-
 <!-- MODAL TRANSPORT -->
 <div class="overlay" id="ov-tr">
 <div class="modal" style="max-width:480px">
@@ -3548,7 +3586,8 @@ function openSupl(id) {
   v('supl-cant-total',x.cant_total); v('supl-cant-unit',x.cant_unit||'gr'); v('supl-cant-portie',x.cant_portie);
   v('supl-stoc',x.stoc_portii); v('supl-consum-zi',x.consum_zi); v('supl-frecv',x.frecventa_luni||1);
   v('supl-pret',x.pret_comanda||x.pret_lunar); v('supl-note',x.note); v('supl-link',x.link_dovada);
-  setTimeout(suplCalcPortii, 50);
+  if(document.getElementById('supl-data-ach')) document.getElementById('supl-data-ach').value=x.data_achizitie||'';
+  setTimeout(suplCalcAll, 50);
   const pw=document.getElementById('supl-link-preview-wrap');
   if(pw) pw.innerHTML = x.link_dovada ? `<button class="btn btn-ghost btn-sm" onclick="openPreview('${(x.link_dovada||'').replace(/'/g,"\'")}','Dovadă supliment — ${(x.denumire||'').replace(/'/g,"\'")}')">👁️ Previzualizare</button>` : '';
   document.getElementById('ov-supl').classList.add('on');
@@ -3556,36 +3595,63 @@ function openSupl(id) {
 function closeSupl() { document.getElementById('ov-supl').classList.remove('on'); editSuplId=null; }
 
 // ── Supliment helpers ─────────────────────────────────
-function suplCalcPortii() {
-  const total   = +document.getElementById('supl-cant-total')?.value || 0;
-  const portie  = +document.getElementById('supl-cant-portie')?.value || 0;
-  const calcEl  = document.getElementById('supl-portii-calc');
-  const hintEl  = document.getElementById('supl-portii-hint');
-  if (total && portie) {
-    const p = Math.floor(total / portie);
-    if (calcEl) { calcEl.textContent = p + ' porții'; calcEl.style.color = 'var(--accent)'; }
-    if (hintEl) hintEl.textContent = '';
+function suplCalcAll() {
+  const cantTotal  = +document.getElementById('supl-cant-total')?.value  || 0;
+  const cantPortie = +document.getElementById('supl-cant-portie')?.value || 0;
+  const consumZi   = +document.getElementById('supl-consum-zi')?.value   || 1;
+  const pret       = +document.getElementById('supl-pret')?.value        || 0;
+  const stoc       = +document.getElementById('supl-stoc')?.value        || 0;
+  const unit       = document.getElementById('supl-cant-unit')?.value    || 'gr';
+
+  // Sync unit label next to portie input
+  const unitLbl = document.getElementById('supl-portie-unit-lbl');
+  if (unitLbl) unitLbl.textContent = unit;
+
+  // Calc porții per bucată
+  const portiiPerBuc = cantTotal && cantPortie ? Math.floor(cantTotal / cantPortie) : 0;
+  // Zile cât ține o bucată
+  const zilePerBuc   = portiiPerBuc && consumZi ? Math.floor(portiiPerBuc / consumZi) : 0;
+  // Cost lunar (1 buc / zilePerBuc * 30)
+  const pretLunar    = pret && zilePerBuc > 0 ? Math.round(pret / zilePerBuc * 30) : 0;
+
+  // Summary box 1
+  const s = id => document.getElementById(id);
+  if (s('supl-calc-portii')) s('supl-calc-portii').textContent = portiiPerBuc || '—';
+  if (s('supl-calc-zile'))   s('supl-calc-zile').textContent   = zilePerBuc   || '—';
+  if (s('supl-calc-lunar'))  s('supl-calc-lunar').textContent  = pretLunar ? pretLunar+' RON' : '—';
+
+  // Plan anual
+  // Porții totale stoc curent
+  const zileStoc = stoc && consumZi ? Math.floor(stoc / consumZi) : 0;
+  const dataAch  = document.getElementById('supl-data-ach')?.value;
+  if (zileStoc > 0 && dataAch) {
+    const startDate = new Date(dataAch);
+    const panaDate  = new Date(startDate.getTime() + zileStoc * 86400000);
+    if (s('supl-plan-pana')) s('supl-plan-pana').textContent =
+      panaDate.toLocaleDateString('ro-RO', {day:'numeric',month:'long',year:'numeric'});
+  } else if (zileStoc > 0) {
+    const panaDate = new Date(Date.now() + zileStoc * 86400000);
+    if (s('supl-plan-pana')) s('supl-plan-pana').textContent =
+      'aprox. '+panaDate.toLocaleDateString('ro-RO', {day:'numeric',month:'long'});
   } else {
-    if (calcEl) { calcEl.textContent = '-'; }
-    if (hintEl) hintEl.textContent = 'completează cantitate și porție/buc';
+    if (s('supl-plan-pana')) s('supl-plan-pana').textContent = '—';
   }
-  suplUpdateRamas();
+
+  // Comenzi necesare pe an (365 zile / zile per buc)
+  const comenziAn = zilePerBuc > 0 ? Math.ceil(365 / zilePerBuc) : 0;
+  const costAnual = comenziAn * pret;
+  const costLunarMed = costAnual > 0 ? Math.round(costAnual / 12) : 0;
+  if (s('supl-plan-comenzi')) {
+    s('supl-plan-comenzi').textContent = comenziAn ? comenziAn+' buc/an' : '—';
+    s('supl-plan-comenzi').style.color = comenziAn > 6 ? 'var(--orange)' : 'var(--text)';
+  }
+  if (s('supl-plan-anual'))  s('supl-plan-anual').textContent  = costAnual  ? costAnual.toLocaleString('ro-RO')+' RON' : '—';
+  if (s('supl-plan-lunar2')) s('supl-plan-lunar2').textContent = costLunarMed ? costLunarMed.toLocaleString('ro-RO')+' RON' : '—';
 }
 
-function suplUpdateRamas() {
-  const stoc    = +document.getElementById('supl-stoc')?.value || 0;
-  const consum  = +document.getElementById('supl-consum-zi')?.value || 0;
-  const ramasEl = document.getElementById('supl-ramas-calc');
-  if (!ramasEl) return;
-  if (stoc && consum) {
-    const zile = Math.floor(stoc / consum);
-    ramasEl.textContent = zile + ' zile';
-    ramasEl.style.color = zile < 14 ? 'var(--red)' : zile < 30 ? 'var(--orange)' : 'var(--green)';
-  } else {
-    ramasEl.textContent = '-';
-    ramasEl.style.color = 'var(--t3)';
-  }
-}
+// backwards compat
+function suplCalcPortii() { suplCalcAll(); }
+function suplUpdateRamas() { suplCalcAll(); }
 
 async function saveSupl() {
   if (!isOwnerLoggedIn()) return;
@@ -3609,6 +3675,7 @@ async function saveSupl() {
     stoc_portii: +document.getElementById('supl-stoc')?.value||null,
     consum_zi: +document.getElementById('supl-consum-zi')?.value||null,
     frecventa_luni: frecv,
+    data_achizitie: document.getElementById('supl-data-ach')?.value||null,
     pret_comanda: pretComanda,
     pret_lunar: pretLunar,
     note:document.getElementById('supl-note').value.trim(),

@@ -332,6 +332,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--tex
   <div class="splash-club" id="splash-club">BÂRLADUL PE FUGĂ</div>
   <div class="splash-sub">⛰️ SEZON 2026 · TRAIL RUNNING</div>
   <div class="splash-bar-wrap"><div class="splash-bar-fill" id="splash-fill"></div></div>
+  <div id="splash-loading" style="font-size:11px;color:rgba(255,255,255,.3);letter-spacing:2px;font-family:'Inter',sans-serif">SE ÎNCARCĂ...</div>
   <button id="sp-splash-btn" onclick="startPrez()">▶ &nbsp;ATLET BALAN GABRIEL</button>
 </div>
 
@@ -604,7 +605,7 @@ async function loadData() {
   const [prefs,races,sponsors,eq,nutri,supls,acts] = await Promise.all([
     sf('user_prefs','limit=1'), sf('races','order=data_cursa.asc&limit=200'),
     sf('sponsors','limit=100'), sf('equipment','limit=200'),
-    sf('nutrition','limit=1'), sf('supplements','limit=100'),
+    sf('nutrition_settings','limit=1'), sf('supplements','limit=100'),
     sf('activities','order=date.desc&limit=500'),
   ]);
   DB.prefs=prefs[0]||{}; DB.races=races||[]; DB.sponsors=sponsors||[];
@@ -626,9 +627,12 @@ async function init() {
   clearInterval(timer);
   if(fill){ fill.style.transition='width .3s ease'; fill.style.width='100%'; }
   setTimeout(()=>{
-    document.getElementById('sp-splash-btn').style.display='block';
-    document.getElementById('splash-loading').style.display='none';
-    document.getElementById('prez-loading').style.display='none';
+    const splashBtn=document.getElementById('sp-splash-btn');
+    const splashLoad=document.getElementById('splash-loading');
+    const prezLoad=document.getElementById('prez-loading');
+    if(splashBtn)splashBtn.style.display='block';
+    if(splashLoad)splashLoad.style.display='none';
+    if(prezLoad)prezLoad.style.display='none';
   },400);
 }
 

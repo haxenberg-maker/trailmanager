@@ -179,6 +179,16 @@
     .tabs { flex-wrap: wrap; }
     .tab { flex: none; flex-basis: calc(33% - 4px); }
   }
+
+/* ── Filtre ── */
+.filter-btn {
+  padding: 5px 14px; border-radius: 20px;
+  border: 1px solid var(--border,#e2e5ea); background: var(--card,#fff);
+  font-size: 11px; font-weight: 500; color: var(--t2,#555);
+  cursor: pointer; transition: all .15s; font-family: 'Inter', sans-serif;
+}
+.filter-btn.active { background: var(--text,#222); color: #fff; border-color: var(--text,#222); }
+.filter-btn:not(.active):hover { background: var(--bg,#f4f5f7); }
 </style>
 </head>
 <body>
@@ -212,6 +222,15 @@
     <button class="tab" onclick="setTab(this,'tab-supl')">💊 Suplimente</button>
   </div>
 
+  <!-- Filtre -->
+  <div id="filter-bar" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+    <button class="filter-btn active" data-filter="all" onclick="setFilter(this,'all')">Toate</button>
+    <button class="filter-btn" data-filter="paid" onclick="setFilter(this,'paid')">✅ Plătite</button>
+    <button class="filter-btn" data-filter="pending" onclick="setFilter(this,'pending')">⏳ De plătit</button>
+    <button class="filter-btn" data-filter="factura" onclick="setFilter(this,'factura')">📄 Cu factură</button>
+    <button class="filter-btn" data-filter="nofactura" onclick="setFilter(this,'nofactura')">⚠️ Fără factură</button>
+  </div>
+
   <div id="tab-curse" class="panel active">
     <div class="loading"><div class="spinner"></div>Se încarcă...</div>
   </div>
@@ -242,12 +261,7 @@ function fmt(n) {
   return Number(n||0).toLocaleString('ro-RO');
 }
 
-function setTab(btn, id) {
-  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(id).classList.add('active');
-}
+// setTab defined below with filter support
 
 async function load() {
   try {
@@ -316,7 +330,7 @@ function renderCurse(races) {
         val: fmt(r.plata_concurs)+' RON',
         status: r.plata_concurs_ok ? 'Plătit' : 'Neachitat',
         link: r.link_dovada_ins,
-        linkLbl: 'Dovadă înscriere'
+        linkLbl: 'Dovadă'
       } : null,
       r.cazare > 0 ? {
         icon: r.plata_cazare ? '✅' : '⏳',
@@ -324,19 +338,28 @@ function renderCurse(races) {
         val: fmt(r.cazare)+' RON',
         status: r.plata_cazare ? 'Plătit' : 'Neachitat',
         link: r.link_dovada_caz,
-        linkLbl: 'Dovadă cazare'
+        linkLbl: 'Dovadă'
       } : null,
       r.link_dovada_factura ? {
         icon: '📄',
-        lbl: r.factura_desc || 'Factură',
+        lbl: r.factura_desc || 'Factură transport',
         val: '',
-        status: '',
+        status: 'Factură',
         link: r.link_dovada_factura,
         linkLbl: 'Factură'
-      } : null,
+      } : {
+        icon: '📄',
+        lbl: 'Factură transport',
+        val: '',
+        status: '',
+        link: null,
+        linkLbl: 'Lipsă'
+      },
     ].filter(Boolean);
 
-    return `<div class="card">
+    const isPaid = r.plata_concurs_ok && (!r.cazare || r.plata_cazare);
+    const hasFactura = !!(r.link_dovada_ins || r.link_dovada_caz || r.link_dovada_factura);
+    return `<div class="card" data-paid="${isPaid}" data-factura="${hasFactura}" data-pending="${!isPaid}">
       <div class="card-head">
         <div>
           <div class="card-title">${esc(r.denumire||'—')}</div>
@@ -426,6 +449,36 @@ function renderSupl(supls) {
       </div>` : ''}
     </div>`;
   }).join('');
+}
+
+let _activeFilter = 'all';
+
+function setFilter(btn, filter) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  _activeFilter = filter;
+  applyFilter();
+}
+
+function applyFilter() {
+  const f = _activeFilter;
+  document.querySelectorAll('.card[data-paid]').forEach(card => {
+    let show = true;
+    if (f === 'paid')      show = card.dataset.paid === 'true';
+    if (f === 'pending')   show = card.dataset.pending === 'true';
+    if (f === 'factura')   show = card.dataset.factura === 'true';
+    if (f === 'nofactura') show = card.dataset.factura === 'false';
+    card.style.display = show ? '' : 'none';
+  });
+}
+
+// Re-apply filter after tab switch
+function setTab(btn, id) {
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  applyFilter();
 }
 
 load();
