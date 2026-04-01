@@ -329,32 +329,29 @@ function renderCurse(races) {
         lbl: 'Înscriere',
         val: fmt(r.plata_concurs)+' RON',
         status: r.plata_concurs_ok ? 'Plătit' : 'Neachitat',
-        link: r.link_dovada_ins,
-        linkLbl: 'Dovadă'
+        link: r.link_dovada_ins || null,
+        linkLbl: 'Dovadă',
+        factura: r.factura_ins || null,
+        facturaLbl: 'Factură'
       } : null,
       r.cazare > 0 ? {
         icon: r.plata_cazare ? '✅' : '⏳',
         lbl: 'Cazare',
         val: fmt(r.cazare)+' RON',
         status: r.plata_cazare ? 'Plătit' : 'Neachitat',
-        link: r.link_dovada_caz,
-        linkLbl: 'Dovadă'
+        link: r.link_dovada_caz || null,
+        linkLbl: 'Dovadă',
+        factura: r.factura_caz || null,
+        facturaLbl: 'Factură'
       } : null,
       r.link_dovada_factura ? {
-        icon: '📄',
+        icon: '🚗',
         lbl: r.factura_desc || 'Factură transport',
         val: '',
         status: 'Factură',
         link: r.link_dovada_factura,
         linkLbl: 'Factură'
-      } : {
-        icon: '📄',
-        lbl: 'Factură transport',
-        val: '',
-        status: '',
-        link: null,
-        linkLbl: 'Lipsă'
-      },
+      } : null,
     ].filter(Boolean);
 
     const isPaid = r.plata_concurs_ok && (!r.cazare || r.plata_cazare);
@@ -374,9 +371,14 @@ function renderCurse(races) {
             <div class="item-lbl">${esc(it.lbl)}</div>
             ${it.val ? `<div class="item-val">${it.val}${it.status?' · <span style="color:var(--t3)">'+ esc(it.status)+'</span>':''}</div>` : ''}
           </div>
-          ${it.link
-            ? `<a href="${esc(it.link)}" target="_blank" rel="noopener" class="doc-btn">📄 ${esc(it.linkLbl)}</a>`
-            : `<span class="doc-btn missing">📄 Lipsă</span>`}
+          <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0">
+            ${it.link
+              ? `<a href="${esc(it.link)}" target="_blank" rel="noopener" class="doc-btn">📋 ${esc(it.linkLbl)}</a>`
+              : `<span class="doc-btn missing">📋 Lipsă</span>`}
+            ${it.factura
+              ? `<a href="${esc(it.factura)}" target="_blank" rel="noopener" class="doc-btn" style="color:#2563eb;background:rgba(37,99,235,.07)">🧾 Factură</a>`
+              : ''}
+          </div>
         </div>`).join('')}
       </div>` : '<div style="font-size:12px;color:var(--t3)">Niciun detaliu de plată</div>'}
     </div>`;
