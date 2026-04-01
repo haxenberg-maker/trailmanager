@@ -1437,7 +1437,9 @@ body.readonly [data-owner-only] { display:none !important }
   opacity:0;transform:translateY(18px);
   transition:opacity .55s ease, transform .55s ease;
 }
-.sp-slide.on /* ── MOBILE ── */
+.sp-slide.on .sp-reveal { opacity:1; transform:none; }
+
+/* ── MOBILE ── */
 @media(max-width:600px){
   .sp-split { grid-template-columns:1fr;grid-template-rows:160px 1fr; }
   .sp-split-img { padding:16px 20px; }
@@ -5761,13 +5763,15 @@ function spPopulateBudget() {
 
 function spAnimateBudget() {
   spPopulateBudget();
-  // Bars start at width:0 via CSS default, then animate to target
-  // Need 2 frames: populate → browser processes → animate
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    document.querySelectorAll('.sp-budget-bar-fill').forEach(b => {
+  // Elements just created by innerHTML — need real layout tick before animating
+  setTimeout(() => {
+    const bars = document.querySelectorAll('.sp-budget-bar-fill');
+    // Force reflow by reading offsetWidth
+    bars.forEach(b => void b.offsetWidth);
+    bars.forEach(b => {
       b.style.width = (b.dataset.pct || '0') + '%';
     });
-  }));
+  }, 80);
 }
 
 
