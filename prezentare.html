@@ -1875,6 +1875,28 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 #sp-splash.vis{opacity:1}
 #sp-prez{display:none;}
 #sp-prez.on{display:block;}
+
+/* ── Mobile S2: hide race list, show modal ── */
+@media(max-width:600px) {
+  #sp-s2 .sp-split { grid-template-columns:1fr !important; grid-template-rows:1fr !important; }
+  #sp-s2 .sp-split-img { height:100% !important; }
+  #sp-s2 .sp-split-content { display:none !important; }
+  /* Modal mobil pentru detalii cursă */
+  #sp-race-mobile-modal {
+    display:none;position:fixed;inset:0;z-index:500;
+    background:rgba(0,0,0,.92);
+    flex-direction:column;
+    animation:fadeInModal .2s ease;
+  }
+  #sp-race-mobile-modal.open { display:flex; }
+}
+@media(min-width:601px) {
+  #sp-race-mobile-modal { display:none !important; }
+}
+@keyframes fadeInModal {
+  from { opacity:0;transform:translateY(20px); }
+  to   { opacity:1;transform:translateY(0); }
+}
 </style>
 </head>
 <body>
@@ -1911,8 +1933,24 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
     <div class="sp-dot" data-s="13"></div>
   </div>
 
-  <!-- Close -->
-  <div id="sp-close" onclick="closeSponsorPrez()">✕</div>
+  <!-- Close → dashboard -->
+  <div id="sp-close" onclick="window.location.href='/'" title="Înapoi la dashboard">✕</div>
+
+  <!-- WhatsApp floating button -->
+  <a id="sp-wa-float" href="#" target="_blank" rel="noopener"
+    style="position:absolute;bottom:20px;right:20px;z-index:20;
+      display:flex;align-items:center;gap:7px;
+      background:rgba(37,211,102,.18);border:1px solid rgba(37,211,102,.4);
+      border-radius:24px;padding:8px 14px;text-decoration:none;
+      font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;
+      color:#25d366;transition:background .2s;backdrop-filter:blur(6px)"
+    onmouseover="this.style.background='rgba(37,211,102,.3)'"
+    onmouseout="this.style.background='rgba(37,211,102,.18)'">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    CONTACTEAZĂ
+  </a>
 
   <!-- Nav -->
   <div class="sp-nav" id="sp-prev" onclick="spNav(-1)">‹</div>
@@ -2406,11 +2444,48 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
           <div class="sp-reveal" data-delay="1100" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px;margin-top:8px">
             <canvas id="sp-km-chart" height="80" style="width:100%;display:block"></canvas>
           </div>
+          <!-- Buton /plati -->
+          <a href="/plati" target="_blank" rel="noopener" class="sp-reveal" data-delay="1200"
+            style="display:flex;align-items:center;justify-content:center;gap:10px;
+              background:rgba(204,255,0,.08);border:1px solid rgba(204,255,0,.25);
+              border-radius:10px;padding:11px 16px;text-decoration:none;
+              font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;
+              color:var(--accent);margin-top:10px;transition:background .2s"
+            onmouseover="this.style.background='rgba(204,255,0,.18)'"
+            onmouseout="this.style.background='rgba(204,255,0,.08)'">
+            📊 TRANSPARENȚĂ FINANCIARĂ
+          </a>
         </div>
       </div>
     </div>
 
     </div>
+
+<!-- ── Modal mobil detalii cursă (S2 mobile) ── -->
+<div id="sp-race-mobile-modal">
+  <div style="display:flex;align-items:center;justify-content:space-between;
+    padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0">
+    <div>
+      <div style="font-size:9px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;
+        font-family:'Inter',sans-serif;margin-bottom:4px">📍 DETALII CURSĂ</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;letter-spacing:1px"
+        id="mob-race-name">—</div>
+    </div>
+    <button onclick="closeMobileRaceModal()"
+      style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+        border-radius:50%;width:36px;height:36px;color:#fff;font-size:18px;cursor:pointer;
+        display:flex;align-items:center;justify-content:center">✕</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:16px 18px">
+    <div id="mob-race-stats"
+      style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px"></div>
+    <div id="mob-race-info" style="display:flex;flex-direction:column;gap:0"></div>
+  </div>
+  <div style="padding:12px 16px;border-top:1px solid rgba(255,255,255,.1);flex-shrink:0">
+    <div style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;
+      font-family:'Inter',sans-serif">swipe stânga/dreapta pentru slide-uri</div>
+  </div>
+</div>
 
 <script>
 
@@ -5998,6 +6073,7 @@ function spPopulateAll() {
   applyStorySlides();
   // Slide 4B — wishlist
   spPopulateWishlist();
+  spInitWAFloat();
   // S9 — De ce eu
   const wi = SETTINGS.why_items || [];
   ['1','2','3'].forEach((n,i) => {
@@ -8233,6 +8309,66 @@ document.addEventListener('keydown',e=>{
 
 
 
+
+
+// ── WhatsApp float button ──────────────────────────────
+function spInitWAFloat() {
+  const btn = document.getElementById('sp-wa-float');
+  if (!btn) return;
+  const phone = (SETTINGS.whatsapp_phone || DEFAULT_SETTINGS.whatsapp_phone || '40763829093').replace(/\D/g,'');
+  btn.href = 'https://wa.me/' + phone + '?text=' + encodeURIComponent('Bună! Am văzut prezentarea ta și sunt interesat de un parteneriat pentru sezonul 2026.');
+}
+
+// ── Mobile race modal ──────────────────────────────────
+function openMobileRaceModal(i) {
+  const r = _spMapRaces[i];
+  if (!r) return;
+  const modal = document.getElementById('sp-race-mobile-modal');
+  if (!modal) return;
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const past  = r.data_cursa && new Date(r.data_cursa) < today;
+  const days  = r.data_cursa ? Math.ceil((new Date(r.data_cursa)-today)/86400000) : null;
+  const gpp   = (DB.nutri?.gel_pret_set24||120)/24;
+  const gelCost = Math.round((r.geluri||0)*gpp);
+
+  document.getElementById('mob-race-name').textContent = r.denumire || '—';
+
+  document.getElementById('mob-race-stats').innerHTML = [
+    { icon:'🏃', val:(r.distanta||'?')+' km', lbl:'Distanță' },
+    { icon:'⛰️', val:r.denivelare?Math.round(r.denivelare/1000)+'k D+':'—', lbl:'Denivelare' },
+    { icon:'📅', val:past?'✅ Fin.':days!==null?days+'z':'—', lbl:'Status' },
+  ].map(s => `<div style="background:rgba(255,255,255,.06);border-radius:8px;padding:10px;text-align:center">
+    <div style="font-size:16px;margin-bottom:3px">${s.icon}</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--accent);line-height:1">${s.val}</div>
+    <div style="font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;font-family:'Inter',sans-serif">${s.lbl}</div>
+  </div>`).join('');
+
+  const rows = [
+    r.data_cursa ? { icon:'📅', lbl:'Data', val: new Date(r.data_cursa).toLocaleDateString('ro-RO',{weekday:'short',day:'numeric',month:'long',year:'numeric'}) } : null,
+    r.data_plecare ? { icon:'🚗', lbl:'Plecare', val: new Date(r.data_plecare).toLocaleDateString('ro-RO',{weekday:'short',day:'numeric',month:'long'}) } : null,
+    r.cazare!=null ? { icon:'🏨', lbl:'Cazare', val: r.cazare>0?fmt(r.cazare)+' RON':'Fără cazare', ok:r.plata_cazare } : null,
+    r.plata_concurs ? { icon:'🏁', lbl:'Înscriere', val: fmt(r.plata_concurs)+' RON', ok:r.plata_concurs_ok } : null,
+    r.geluri ? { icon:'🧃', lbl:'Geluri', val: r.geluri+' buc'+(gelCost?' · ~'+fmt(gelCost)+' RON':'') } : null,
+    r.ora_start ? { icon:'⏰', lbl:'Start', val: r.ora_start } : null,
+    r.note ? { icon:'📝', lbl:'Note', val: r.note } : null,
+  ].filter(Boolean);
+
+  document.getElementById('mob-race-info').innerHTML = rows.map(row => `
+    <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+      <span style="font-size:13px;flex-shrink:0;width:20px">${row.icon}</span>
+      <span style="font-size:10px;color:rgba(255,255,255,.4);min-width:64px;text-transform:uppercase;letter-spacing:.4px;font-family:'Inter',sans-serif;margin-top:1px">${row.lbl}</span>
+      <span style="font-size:13px;color:#fff;flex:1;font-family:'Inter',sans-serif">${String(row.val||'—')}</span>
+      ${row.ok!==undefined?`<span>${row.ok?'✅':'⏳'}</span>`:''}
+    </div>`).join('');
+
+  modal.classList.add('open');
+}
+
+function closeMobileRaceModal() {
+  const modal = document.getElementById('sp-race-mobile-modal');
+  if (modal) modal.classList.remove('open');
+}
 
 // ── Standalone stubs ─────────────────────────────────
 function isOwnerLoggedIn() { return false; }
