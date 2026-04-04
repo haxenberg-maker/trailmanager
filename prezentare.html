@@ -2120,33 +2120,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
   --t4: #4a3d60;      /* Elemente discrete */
 }
 
-/* ── THEME TOGGLE BUTTON ── */
-#sp-theme-toggle {
-  position: absolute;
-  top: 12px; left: 50%; transform: translateX(-50%);
-  z-index: 20;
-  display: flex;
-  background: rgba(255,255,255,.07);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 20px;
-  overflow: hidden;
-  backdrop-filter: blur(6px);
-}
-.sp-theme-btn {
-  padding: 5px 11px;
-  font-family: 'Inter', sans-serif;
-  font-size: 10px; font-weight: 600;
-  letter-spacing: .8px; text-transform: uppercase;
-  color: rgba(255,255,255,.4);
-  cursor: pointer; border: none;
-  background: transparent;
-  transition: all .15s;
-  white-space: nowrap;
-}
-.sp-theme-btn.active {
-  background: rgba(255,255,255,.15);
-  color: #fff;
-}
+
 
 
 /* ── Theme overrides pentru conținut slide-uri ── */
@@ -2182,9 +2156,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 [data-theme="vulcan"] #sp-close { background: rgba(0,0,0,.1) !important; border-color: rgba(0,0,0,.15) !important; color: var(--text) !important; }
 [data-theme="vulcan"] #sp-nav-prev,
 [data-theme="vulcan"] #sp-nav-next { background: rgba(0,0,0,.08) !important; color: var(--text) !important; }
-[data-theme="vulcan"] #sp-theme-toggle { background: rgba(0,0,0,.08) !important; border-color: rgba(0,0,0,.12) !important; }
-[data-theme="vulcan"] .sp-theme-btn { color: rgba(0,0,0,.4) !important; }
-[data-theme="vulcan"] .sp-theme-btn.active { background: rgba(0,0,0,.15) !important; color: var(--text) !important; }
+
 [data-theme="vulcan"] .sp-budget-label { color: var(--t2) !important; }
 [data-theme="vulcan"] .sp-budget-amount { color: var(--accent) !important; }
 [data-theme="vulcan"] .sp-budget-bar-wrap { background: rgba(0,0,0,.1) !important; }
@@ -2210,9 +2182,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 [data-theme="ghetar"] .sp-dot.on { background: var(--accent) !important; }
 [data-theme="ghetar"] #sp-close { background: rgba(0,0,0,.08) !important; border-color: rgba(0,0,0,.12) !important; color: var(--text) !important; }
 [data-theme="ghetar"] #sp-nav-prev,[data-theme="ghetar"] #sp-nav-next { background: rgba(0,0,0,.07) !important; color: var(--text) !important; }
-[data-theme="ghetar"] #sp-theme-toggle { background: rgba(0,0,0,.07) !important; border-color: rgba(0,0,0,.1) !important; }
-[data-theme="ghetar"] .sp-theme-btn { color: rgba(0,0,0,.4) !important; }
-[data-theme="ghetar"] .sp-theme-btn.active { background: rgba(0,0,0,.12) !important; color: var(--text) !important; }
+
 [data-theme="ghetar"] .sp-budget-label { color: var(--t2) !important; }
 [data-theme="ghetar"] .sp-budget-amount { color: var(--accent) !important; }
 [data-theme="ghetar"] .sp-budget-bar-wrap { background: rgba(0,0,0,.08) !important; }
@@ -2262,14 +2232,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
     <div class="sp-dot" data-s="11"></div>
     <div class="sp-dot" data-s="12"></div>
     <div class="sp-dot" data-s="13"></div>
-  </div>
-
-  <!-- Theme toggle -->
-  <div id="sp-theme-toggle">
-    <button class="sp-theme-btn active" data-theme="" onclick="spSetTheme('')">⚫ Dark</button>
-    <button class="sp-theme-btn" data-theme="vulcan" onclick="spSetTheme('vulcan')">🟤 Vulcan</button>
-    <button class="sp-theme-btn" data-theme="ghetar" onclick="spSetTheme('ghetar')">🔵 Ghetar</button>
-    <button class="sp-theme-btn" data-theme="noapte" onclick="spSetTheme('noapte')">🟣 Noapte</button>
   </div>
 
   <!-- Close → dashboard -->
@@ -8793,24 +8755,16 @@ function spPopulateSuportSlide() {
 
 
 // ── Tema prezentare ────────────────────────────────────
-function spSetTheme(name) {
-  // Same mechanism as index.html — applies to <html data-theme="...">
-  if (name) {
-    document.documentElement.setAttribute('data-theme', name);
-  } else {
-    document.documentElement.removeAttribute('data-theme');
-  }
-  document.querySelectorAll('.sp-theme-btn').forEach(b => {
-    b.classList.toggle('active', (b.dataset.theme || '') === (name || ''));
-  });
-  try { localStorage.setItem('prez_theme', name || ''); } catch(e) {}
-}
-
 function spLoadTheme() {
+  // Preia tema din index.html (salvată ca tm_theme în localStorage)
   try {
-    const saved = localStorage.getItem('prez_theme') || '';
-    spSetTheme(saved);
-  } catch(e) { spSetTheme(''); }
+    const saved = localStorage.getItem('tm_theme') || 'default';
+    if (saved && saved !== 'default') {
+      document.documentElement.setAttribute('data-theme', saved);
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  } catch(e) {}
 }
 
 // ── WhatsApp float button ──────────────────────────────
