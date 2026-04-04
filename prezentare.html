@@ -1979,88 +1979,146 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 }
 
 /* ══════════════════════════════════════════════════
-   TEME PREZENTARE
-   Aplicat pe <body data-prez-theme="dark|light">
+   TEME PREZENTARE — folosind aceleași vars ca themes.css
+   Toggle pe <html data-theme="dark|vulcan|ghetar|noapte">
    ══════════════════════════════════════════════════ */
 
-/* ── DARK (default — deja în :root) ── */
+/* Dark (default) — deja definit în :root de mai sus */
 
-/* ── LIGHT ── */
-[data-prez-theme="light"] {
-  --sp-bg:      #f2f2f0;
-  --sp-bg2:     #e8e8e5;
-  --sp-card:    #ffffff;
-  --sp-border:  rgba(0,0,0,.1);
-  --sp-text:    #1a1a1a;
-  --sp-t2:      rgba(0,0,0,.55);
-  --sp-t3:      rgba(0,0,0,.35);
-  --sp-accent:  #1a1a1a;       /* text dark pe fond deschis */
-  --sp-accent2: #ccff00;       /* accent lime rămâne */
-  --sp-overlay: rgba(255,255,255,.6);
+/* Vulcan, Ghetar, Noapte — exact din themes.css */
+ {
+  /* Fundal - Un gri-antracit neutru (fără verdele ăla ciudat) */
+  --bg: #0f1111;      /* Mai adânc, dar nu negru pur */
+  --s1: #1a1d1d;      /* Suprafețe clare */
+  --s2: #242929;      /* Carduri și input-uri */
+  --s3: #2f3535;      /* State-uri de hover */
+
+  /* Borduri - Mai luminoase să dea formă */
+  --border: #3a4141;
+  --border2: #4f5858;
+
+  /* Accent - Am păstrat ideea de Lime, dar mai saturat și vizibil */
+  --accent: #ccff00;  
+  --accent-dim: rgba(204, 255, 0, 0.1);
+  --accent-border: rgba(204, 255, 0, 0.25);
+
+  /* Culori de stare standard */
+  --green: #2ecc71;
+  --orange: #ff9f43;
+  --yellow: #f1c40f;
+  --red: #ee5253;
+
+  /* Text - Maximă lizibilitate */
+  --text: #f5f6f7;    /* Alb-curat, nu gri-verzui */
+  --t2: #a0a9a9;      /* Text secundar mult mai "soft" și lizibil */
+  --t3: #6c757d;      /* Text terțiar */
+  --t4: #495057;      /* Placeholder */
+
+  /* Layout & Fonts */
+  --r: 12px;          /* Rotunjire un pic mai modernă */
+  --display: 'Inter', 'Bebas Neue', sans-serif; /* Inter e mult mai lizibil ca font de bază */
+  --body: 'Inter', 'DM Sans', sans-serif;
+
+
+/* Apply theme vars to sp-prez elements */
+#sp-prez,
+#sp-prez * {
+  /* Inherit CSS vars — works automatically via var(--accent) etc. */
 }
 
-/* Variables wrapper — dark default */
-:root {
-  --sp-bg:      #000;
-  --sp-bg2:     #0a0a0a;
-  --sp-card:    rgba(255,255,255,.04);
-  --sp-border:  rgba(255,255,255,.1);
-  --sp-text:    #f0f0f0;
-  --sp-t2:      rgba(255,255,255,.6);
-  --sp-t3:      rgba(255,255,255,.35);
-  --sp-accent:  var(--accent); /* #ccff00 */
-  --sp-accent2: var(--accent);
-  --sp-overlay: rgba(0,0,0,.5);
+/* Slide backgrounds adopt theme */
+.sp-slide .sp-bg { transition: background .3s ease; }
+
+/* Split content uses theme surface color */
+.sp-split-content {
+  background: rgba(var(--bg-rgb, 0,0,0), .0);
 }
 
-/* ── Apply sp-* vars to presentation elements ── */
-#sp-prez { background: var(--sp-bg) !important; }
+/* ── Theme vars from themes.css ── */
+[data-theme="vulcan"] {
+  /* Fundal - Un pic mai închis, spre culoarea nisipului sau a hârtiei reciclate */
+  --bg: #f2e9e4;      /* Un gri-bej odihnitor */
+  --s1: #e9ddd5;      /* Suprafețe de nivel 1 */
+  --s2: #dfcec3;      /* Carduri și input-uri */
+  --s3: #d5beb1;      /* Hover/Active - se simte solid */
 
-/* Light theme: invert slides */
-[data-prez-theme="light"] #sp-prez { background: var(--sp-bg) !important; }
-[data-prez-theme="light"] .sp-slide .sp-bg { filter: brightness(1.5) invert(0); }
-[data-prez-theme="light"] .sp-split-content { background: var(--sp-card) !important; }
-[data-prez-theme="light"] .sp-split-eyebrow { color: #555 !important; }
-[data-prez-theme="light"] .sp-split-title { color: #111 !important; }
-[data-prez-theme="light"] .sp-split-quote { color: #222 !important; }
-[data-prez-theme="light"] .sp-split-km-pill { 
-  background: rgba(0,0,0,.08) !important; 
-  border-color: rgba(0,0,0,.2) !important; 
-  color: #333 !important; 
+  /* Borduri - Mai pronunțate, să nu pară "ștearsă" */
+  --border: #c9ada1;
+  --border2: #9a8c98;
+
+  /* Accent - Un portocaliu ars, intens, care "mușcă" din fundal */
+  --accent: #d9480f;  
+  --accent-dim: rgba(217, 72, 15, 0.1);
+  --accent-border: rgba(217, 72, 15, 0.3);
+
+  /* Culori de stare - Mai profunde */
+  --green: #386641;
+  --orange: #bc4749;
+  --yellow: #bc6c25;
+  --red: #a4161a;
+
+  /* Text - Contrast solid, negru-maroniu */
+  --text: #221a18;    /* Foarte vizibil pe fundalul bej */
+  --t2: #4a3f3b;      /* Text secundar clar */
+  --t3: #6d5952;      /* Text terțiar */
+  --t4: #8d7e79;      /* Placeholder */
 }
-[data-prez-theme="light"] .sp-why-title { color: #111 !important; }
-[data-prez-theme="light"] .sp-why-desc { color: #555 !important; }
-[data-prez-theme="light"] .sp-why-item { 
-  background: rgba(0,0,0,.04) !important; 
-  border-color: rgba(0,0,0,.1) !important; 
+[data-theme="ghetar"] {
+  /* Fundal - Un albastru-alb înghețat (foarte deschis, dar cu tentă) */
+  --bg: #f0f4f8;      
+  --s1: #e1e9f1;      /* Suprafețe nivel 1 */
+  --s2: #d1dde9;      /* Suprafețe nivel 2 (carduri) */
+  --s3: #c2d2e1;      /* Hover/Active */
+
+  /* Borduri - Albastru oțelit, să dea structură */
+  --border: #a8bbc9;
+  --border2: #8ba0b3;
+
+  /* Accent - Albastru electric puternic (să sară în ochi pe telefon) */
+  --accent: #0077cc;  
+  --accent-dim: rgba(0, 119, 204, 0.1);
+  --accent-border: rgba(0, 119, 204, 0.25);
+
+  /* Culori de stare - Mai profunde pentru lizibilitate pe alb */
+  --green: #008f80;
+  --orange: #5a45d6;
+  --yellow: #005a9e;
+  --red: #d62851;
+
+  /* Text - Contrast maxim pentru citit clar */
+  --text: #0a1118;    /* Albastru-negru foarte închis */
+  --t2: #334e68;      /* Albastru mediu pentru text secundar */
+  --t3: #627d98;      /* Text terțiar */
+  --t4: #9fb3c8;      /* Placeholder */
 }
-[data-prez-theme="light"] .sp-budget-label { color: rgba(0,0,0,.6) !important; }
-[data-prez-theme="light"] .sp-budget-amount { color: #1a1a1a !important; }
-[data-prez-theme="light"] .sp-budget-bar-wrap { background: rgba(0,0,0,.1) !important; }
-[data-prez-theme="light"] .sp-roi-item { 
-  background: rgba(0,0,0,.04) !important; 
-  border-color: rgba(0,0,0,.1) !important; 
+[data-theme="noapte"] {
+  /* Fundal - Un mov-gri închis, nu negru total (ajută la reflexii) */
+  --bg: #1a1625;      
+  --s1: #241f33;      /* Suprafețe vizibile */
+  --s2: #2d2741;      /* Carduri care se disting clar de fundal */
+  --s3: #393152;      /* Hover - solid, nu șters */
+
+  /* Borduri - Trebuie să fie luminoase să delimiteze zonele */
+  --border: #4a3d60;
+  --border2: #624f80;
+
+  /* Accent - Mov electric, dar cu contrast mare */
+  --accent: #d69dff;  
+  --accent-dim: rgba(214, 157, 255, 0.15);
+  --accent-border: rgba(214, 157, 255, 0.3);
+
+  /* Culori de stare - Mai vibrante pe fundal dark */
+  --green: #80ffdb;
+  --orange: #ffb366;
+  --yellow: #f8c8ff;
+  --red: #ff7096;
+
+  /* Text - Aici e marea diferență de lizibilitate */
+  --text: #f3efff;    /* Aproape alb, cu o tentă de violet */
+  --t2: #b1a2cc;      /* Text secundar mult mai deschis (era prea șters) */
+  --t3: #7b6a96;      /* Text terțiar vizibil sub soare */
+  --t4: #4a3d60;      /* Elemente discrete */
 }
-[data-prez-theme="light"] .sp-roi-item-title { color: #111 !important; }
-[data-prez-theme="light"] #sp-progress { background: rgba(0,0,0,.1) !important; }
-[data-prez-theme="light"] .sp-dot { background: rgba(0,0,0,.2) !important; }
-[data-prez-theme="light"] .sp-dot.on { background: #1a1a1a !important; }
-[data-prez-theme="light"] #sp-close { 
-  background: rgba(0,0,0,.08) !important; 
-  color: #333 !important; 
-}
-[data-prez-theme="light"] #sp-wa-float {
-  background: rgba(37,211,102,.15) !important;
-  color: #1a8a45 !important;
-}
-[data-prez-theme="light"] .sp-nav { 
-  background: rgba(0,0,0,.08) !important; 
-  color: #333 !important; 
-}
-/* Story slides pe light */
-[data-prez-theme="light"] .sp-story-wrap { background: var(--sp-bg) !important; }
-[data-prez-theme="light"] .sp-story-body { color: rgba(0,0,0,.7) !important; }
-[data-prez-theme="light"] .sp-story-title { color: #111 !important; }
 
 /* ── THEME TOGGLE BUTTON ── */
 #sp-theme-toggle {
@@ -2068,35 +2126,108 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
   top: 12px; left: 50%; transform: translateX(-50%);
   z-index: 20;
   display: flex;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12);
   border-radius: 20px;
   overflow: hidden;
   backdrop-filter: blur(6px);
 }
-[data-prez-theme="light"] #sp-theme-toggle {
-  background: rgba(0,0,0,.08);
-  border-color: rgba(0,0,0,.15);
-}
 .sp-theme-btn {
-  padding: 5px 12px;
+  padding: 5px 11px;
   font-family: 'Inter', sans-serif;
   font-size: 10px; font-weight: 600;
-  letter-spacing: 1px; text-transform: uppercase;
+  letter-spacing: .8px; text-transform: uppercase;
   color: rgba(255,255,255,.4);
   cursor: pointer; border: none;
   background: transparent;
   transition: all .15s;
+  white-space: nowrap;
 }
 .sp-theme-btn.active {
   background: rgba(255,255,255,.15);
   color: #fff;
 }
-[data-prez-theme="light"] .sp-theme-btn { color: rgba(0,0,0,.4); }
-[data-prez-theme="light"] .sp-theme-btn.active { 
-  background: rgba(0,0,0,.12); 
-  color: #111; 
+
+
+/* ── Theme overrides pentru conținut slide-uri ── */
+
+/* VULCAN — fundal bej */
+[data-theme="vulcan"] .sp-split-content {
+  background: rgba(242,233,228,.92) !important;
+  backdrop-filter: blur(4px);
 }
+[data-theme="vulcan"] #sp-prez { background: var(--bg) !important; }
+[data-theme="vulcan"] .sp-split-eyebrow { color: var(--accent) !important; }
+[data-theme="vulcan"] .sp-split-title { color: var(--text) !important; }
+[data-theme="vulcan"] .sp-split-quote { color: var(--text) !important; }
+[data-theme="vulcan"] .sp-split-km-pill {
+  background: rgba(0,0,0,.08) !important;
+  border-color: rgba(0,0,0,.15) !important;
+  color: var(--text) !important;
+}
+[data-theme="vulcan"] .sp-why-item {
+  background: rgba(0,0,0,.05) !important;
+  border-color: rgba(0,0,0,.1) !important;
+}
+[data-theme="vulcan"] .sp-why-title { color: var(--text) !important; }
+[data-theme="vulcan"] .sp-why-desc { color: var(--t2) !important; }
+[data-theme="vulcan"] .sp-roi-item {
+  background: rgba(0,0,0,.05) !important;
+  border-color: rgba(0,0,0,.1) !important;
+}
+[data-theme="vulcan"] #sp-progress { background: rgba(0,0,0,.1) !important; }
+[data-theme="vulcan"] #sp-progress-fill { background: var(--accent) !important; }
+[data-theme="vulcan"] .sp-dot { background: rgba(0,0,0,.2) !important; }
+[data-theme="vulcan"] .sp-dot.on { background: var(--accent) !important; }
+[data-theme="vulcan"] #sp-close { background: rgba(0,0,0,.1) !important; border-color: rgba(0,0,0,.15) !important; color: var(--text) !important; }
+[data-theme="vulcan"] #sp-nav-prev,
+[data-theme="vulcan"] #sp-nav-next { background: rgba(0,0,0,.08) !important; color: var(--text) !important; }
+[data-theme="vulcan"] #sp-theme-toggle { background: rgba(0,0,0,.08) !important; border-color: rgba(0,0,0,.12) !important; }
+[data-theme="vulcan"] .sp-theme-btn { color: rgba(0,0,0,.4) !important; }
+[data-theme="vulcan"] .sp-theme-btn.active { background: rgba(0,0,0,.15) !important; color: var(--text) !important; }
+[data-theme="vulcan"] .sp-budget-label { color: var(--t2) !important; }
+[data-theme="vulcan"] .sp-budget-amount { color: var(--accent) !important; }
+[data-theme="vulcan"] .sp-budget-bar-wrap { background: rgba(0,0,0,.1) !important; }
+[data-theme="vulcan"] #sp-race-mobile-modal { background: var(--bg) !important; color: var(--text) !important; }
+
+/* GHETAR — fundal alb-albăstrui */
+[data-theme="ghetar"] .sp-split-content {
+  background: rgba(240,244,248,.93) !important;
+  backdrop-filter: blur(4px);
+}
+[data-theme="ghetar"] #sp-prez { background: var(--bg) !important; }
+[data-theme="ghetar"] .sp-split-eyebrow { color: var(--accent) !important; }
+[data-theme="ghetar"] .sp-split-title { color: var(--text) !important; }
+[data-theme="ghetar"] .sp-split-quote { color: var(--text) !important; }
+[data-theme="ghetar"] .sp-split-km-pill { background: rgba(0,0,0,.06) !important; border-color: rgba(0,0,0,.12) !important; color: var(--text) !important; }
+[data-theme="ghetar"] .sp-why-item { background: rgba(0,0,0,.04) !important; border-color: rgba(0,0,0,.08) !important; }
+[data-theme="ghetar"] .sp-why-title { color: var(--text) !important; }
+[data-theme="ghetar"] .sp-why-desc { color: var(--t2) !important; }
+[data-theme="ghetar"] .sp-roi-item { background: rgba(0,0,0,.04) !important; border-color: rgba(0,0,0,.08) !important; }
+[data-theme="ghetar"] #sp-progress { background: rgba(0,0,0,.08) !important; }
+[data-theme="ghetar"] #sp-progress-fill { background: var(--accent) !important; }
+[data-theme="ghetar"] .sp-dot { background: rgba(0,0,0,.15) !important; }
+[data-theme="ghetar"] .sp-dot.on { background: var(--accent) !important; }
+[data-theme="ghetar"] #sp-close { background: rgba(0,0,0,.08) !important; border-color: rgba(0,0,0,.12) !important; color: var(--text) !important; }
+[data-theme="ghetar"] #sp-nav-prev,[data-theme="ghetar"] #sp-nav-next { background: rgba(0,0,0,.07) !important; color: var(--text) !important; }
+[data-theme="ghetar"] #sp-theme-toggle { background: rgba(0,0,0,.07) !important; border-color: rgba(0,0,0,.1) !important; }
+[data-theme="ghetar"] .sp-theme-btn { color: rgba(0,0,0,.4) !important; }
+[data-theme="ghetar"] .sp-theme-btn.active { background: rgba(0,0,0,.12) !important; color: var(--text) !important; }
+[data-theme="ghetar"] .sp-budget-label { color: var(--t2) !important; }
+[data-theme="ghetar"] .sp-budget-amount { color: var(--accent) !important; }
+[data-theme="ghetar"] .sp-budget-bar-wrap { background: rgba(0,0,0,.08) !important; }
+[data-theme="ghetar"] #sp-race-mobile-modal { background: var(--bg) !important; color: var(--text) !important; }
+
+/* NOAPTE — mov închis */
+[data-theme="noapte"] .sp-split-content {
+  background: rgba(36,31,51,.92) !important;
+  backdrop-filter: blur(4px);
+}
+[data-theme="noapte"] #sp-prez { background: var(--bg) !important; }
+[data-theme="noapte"] .sp-split-title { color: var(--text) !important; }
+[data-theme="noapte"] .sp-split-quote { color: var(--text) !important; }
+[data-theme="noapte"] .sp-budget-bar-fill { background: var(--accent) !important; }
+[data-theme="noapte"] #sp-race-mobile-modal { background: var(--bg) !important; }
 </style>
 </head>
 <body>
@@ -2135,8 +2266,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 
   <!-- Theme toggle -->
   <div id="sp-theme-toggle">
-    <button class="sp-theme-btn active" data-theme="dark" onclick="spSetTheme('dark')">🌙 Dark</button>
-    <button class="sp-theme-btn" data-theme="light" onclick="spSetTheme('light')">☀️ Light</button>
+    <button class="sp-theme-btn active" data-theme="" onclick="spSetTheme('')">⚫ Dark</button>
+    <button class="sp-theme-btn" data-theme="vulcan" onclick="spSetTheme('vulcan')">🟤 Vulcan</button>
+    <button class="sp-theme-btn" data-theme="ghetar" onclick="spSetTheme('ghetar')">🔵 Ghetar</button>
+    <button class="sp-theme-btn" data-theme="noapte" onclick="spSetTheme('noapte')">🟣 Noapte</button>
   </div>
 
   <!-- Close → dashboard -->
@@ -8661,18 +8794,23 @@ function spPopulateSuportSlide() {
 
 // ── Tema prezentare ────────────────────────────────────
 function spSetTheme(name) {
-  document.body.setAttribute('data-prez-theme', name);
+  // Same mechanism as index.html — applies to <html data-theme="...">
+  if (name) {
+    document.documentElement.setAttribute('data-theme', name);
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+  }
   document.querySelectorAll('.sp-theme-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.theme === name);
+    b.classList.toggle('active', (b.dataset.theme || '') === (name || ''));
   });
-  try { localStorage.setItem('prez_theme', name); } catch(e) {}
+  try { localStorage.setItem('prez_theme', name || ''); } catch(e) {}
 }
 
 function spLoadTheme() {
   try {
-    const saved = localStorage.getItem('prez_theme') || 'dark';
+    const saved = localStorage.getItem('prez_theme') || '';
     spSetTheme(saved);
-  } catch(e) { spSetTheme('dark'); }
+  } catch(e) { spSetTheme(''); }
 }
 
 // ── WhatsApp float button ──────────────────────────────
