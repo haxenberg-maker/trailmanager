@@ -1946,6 +1946,35 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
   /* Formular 230 button full width */
   #sp-s4b .f230ro-lansare { font-size:12px !important; padding:7px 10px !important; }
 }
+
+/* ── S4B mobile: layout fix ── */
+@media(max-width:600px) {
+  #sp-s4b .sp-split {
+    grid-template-rows: auto 1fr !important;
+    overflow: hidden;
+  }
+  #sp-s4b .sp-split-img {
+    height: auto !important;
+    max-height: 42vh;
+    overflow-y: auto !important;
+    padding: 12px 14px !important;
+    gap: 6px !important;
+  }
+  #sp-s4b .sp-split-img [style*="sp-s4b-budget-list"],
+  #sp-s4b #sp-s4b-budget-list { gap: 5px !important; }
+  #sp-s4b .sp-split-content { 
+    padding: 10px 14px !important;
+    overflow-y: auto !important;
+  }
+  /* Carduri metode mai compacte */
+  #sp-s4b .sp-split-content > [class*="sp-reveal"],
+  #sp-s4b .sp-split-content > div[style*="border-radius:9px"] {
+    padding: 8px 10px !important;
+    margin-bottom: 6px !important;
+  }
+  #sp-s4b .sp-split-title { font-size: 22px !important; margin-bottom: 8px !important; }
+  #sp-s4b .sp-split-eyebrow { margin-bottom: 6px !important; }
+}
 </style>
 </head>
 <body>
@@ -2232,7 +2261,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
               color:rgba(255,255,255,.4);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">
               📊 Unde se duc banii — Sezon 2026
             </div>
-            <div id="sp-s4b-budget-list" style="display:flex;flex-direction:column;gap:7px"></div>
+            <div id="sp-s4b-budget-list" style="display:flex;flex-direction:column;gap:6px;overflow:hidden"></div>
             <div style="border-top:1px solid rgba(255,255,255,.1);margin-top:10px;padding-top:10px;
               display:flex;justify-content:space-between;align-items:center">
               <span style="font-size:11px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;
@@ -5467,7 +5496,8 @@ let touchStartX=0;
 document.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;},{passive:true});
 document.addEventListener('touchend',e=>{
   const dx=touchStartX-e.changedTouches[0].clientX;
-  if(dx>60&&document.getElementById('drawer').classList.contains('on')) closeDrawer();
+  const drawer=document.getElementById('drawer');
+  if(dx>60&&drawer&&drawer.classList.contains('on')) closeDrawer();
 },{passive:true});
 
 function toggleBio() {
@@ -7357,14 +7387,21 @@ const ALL_SLIDES = [
 function getSlideOrder() {
   const saved = SETTINGS.slide_order;
   if (saved && Array.isArray(saved) && saved.length > 0) {
+    // Add any new slides not in saved order
     const merged = [...saved];
     ALL_SLIDES.forEach(s => {
       if (!merged.find(o => o.id === s.id)) merged.push({ id: s.id, active: true });
     });
     const result = merged.filter(o => ALL_SLIDES.find(s => s.id === o.id));
+    // If result has fewer slides than ALL_SLIDES, something is wrong — reset
+    const activeInResult = result.filter(o => o.active !== false).length;
+    const activeInAll    = ALL_SLIDES.length;
+    if (activeInResult < Math.floor(activeInAll * 0.6)) {
+      console.warn('[getSlideOrder] saved order incomplete, using default');
+      return ALL_SLIDES.map(s => ({ id:s.id, active:true }));
+    }
     return result;
   }
-  console.log('[getSlideOrder] no saved order, returning default');
   return ALL_SLIDES.map(s => ({ id:s.id, active:true }));
 }
 
