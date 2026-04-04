@@ -1915,17 +1915,19 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
   #sp-s2 .sp-split { grid-template-columns:1fr !important; grid-template-rows:1fr !important; }
   #sp-s2 .sp-split-img { height:100% !important; }
   #sp-s2 .sp-split-content { display:none !important; }
-  /* Modal mobil pentru detalii cursă */
-  #sp-race-mobile-modal {
-    display:none;position:fixed;inset:0;z-index:500;
-    background:rgba(0,0,0,.92);
-    flex-direction:column;
-    animation:fadeInModal .2s ease;
-  }
-  #sp-race-mobile-modal.open { display:flex; }
 }
+/* Modal detalii cursă — MEREU fixed, z-index deasupra sp-prez */
+#sp-race-mobile-modal {
+  display:none;
+  position:fixed;inset:0;
+  z-index:200000;  /* deasupra sp-prez care e 99999 */
+  background:rgba(2,8,2,.97);
+  flex-direction:column;
+  animation:fadeInModal .2s ease;
+}
+#sp-race-mobile-modal.open { display:flex; }
 @media(min-width:601px) {
-  #sp-race-mobile-modal { display:none !important; }
+  /* Pe desktop ascundem lista de hover, nu modalul */
 }
 @keyframes fadeInModal {
   from { opacity:0;transform:translateY(20px); }
@@ -1975,6 +1977,126 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
   #sp-s4b .sp-split-title { font-size: 22px !important; margin-bottom: 8px !important; }
   #sp-s4b .sp-split-eyebrow { margin-bottom: 6px !important; }
 }
+
+/* ══════════════════════════════════════════════════
+   TEME PREZENTARE
+   Aplicat pe <body data-prez-theme="dark|light">
+   ══════════════════════════════════════════════════ */
+
+/* ── DARK (default — deja în :root) ── */
+
+/* ── LIGHT ── */
+[data-prez-theme="light"] {
+  --sp-bg:      #f2f2f0;
+  --sp-bg2:     #e8e8e5;
+  --sp-card:    #ffffff;
+  --sp-border:  rgba(0,0,0,.1);
+  --sp-text:    #1a1a1a;
+  --sp-t2:      rgba(0,0,0,.55);
+  --sp-t3:      rgba(0,0,0,.35);
+  --sp-accent:  #1a1a1a;       /* text dark pe fond deschis */
+  --sp-accent2: #ccff00;       /* accent lime rămâne */
+  --sp-overlay: rgba(255,255,255,.6);
+}
+
+/* Variables wrapper — dark default */
+:root {
+  --sp-bg:      #000;
+  --sp-bg2:     #0a0a0a;
+  --sp-card:    rgba(255,255,255,.04);
+  --sp-border:  rgba(255,255,255,.1);
+  --sp-text:    #f0f0f0;
+  --sp-t2:      rgba(255,255,255,.6);
+  --sp-t3:      rgba(255,255,255,.35);
+  --sp-accent:  var(--accent); /* #ccff00 */
+  --sp-accent2: var(--accent);
+  --sp-overlay: rgba(0,0,0,.5);
+}
+
+/* ── Apply sp-* vars to presentation elements ── */
+#sp-prez { background: var(--sp-bg) !important; }
+
+/* Light theme: invert slides */
+[data-prez-theme="light"] #sp-prez { background: var(--sp-bg) !important; }
+[data-prez-theme="light"] .sp-slide .sp-bg { filter: brightness(1.5) invert(0); }
+[data-prez-theme="light"] .sp-split-content { background: var(--sp-card) !important; }
+[data-prez-theme="light"] .sp-split-eyebrow { color: #555 !important; }
+[data-prez-theme="light"] .sp-split-title { color: #111 !important; }
+[data-prez-theme="light"] .sp-split-quote { color: #222 !important; }
+[data-prez-theme="light"] .sp-split-km-pill { 
+  background: rgba(0,0,0,.08) !important; 
+  border-color: rgba(0,0,0,.2) !important; 
+  color: #333 !important; 
+}
+[data-prez-theme="light"] .sp-why-title { color: #111 !important; }
+[data-prez-theme="light"] .sp-why-desc { color: #555 !important; }
+[data-prez-theme="light"] .sp-why-item { 
+  background: rgba(0,0,0,.04) !important; 
+  border-color: rgba(0,0,0,.1) !important; 
+}
+[data-prez-theme="light"] .sp-budget-label { color: rgba(0,0,0,.6) !important; }
+[data-prez-theme="light"] .sp-budget-amount { color: #1a1a1a !important; }
+[data-prez-theme="light"] .sp-budget-bar-wrap { background: rgba(0,0,0,.1) !important; }
+[data-prez-theme="light"] .sp-roi-item { 
+  background: rgba(0,0,0,.04) !important; 
+  border-color: rgba(0,0,0,.1) !important; 
+}
+[data-prez-theme="light"] .sp-roi-item-title { color: #111 !important; }
+[data-prez-theme="light"] #sp-progress { background: rgba(0,0,0,.1) !important; }
+[data-prez-theme="light"] .sp-dot { background: rgba(0,0,0,.2) !important; }
+[data-prez-theme="light"] .sp-dot.on { background: #1a1a1a !important; }
+[data-prez-theme="light"] #sp-close { 
+  background: rgba(0,0,0,.08) !important; 
+  color: #333 !important; 
+}
+[data-prez-theme="light"] #sp-wa-float {
+  background: rgba(37,211,102,.15) !important;
+  color: #1a8a45 !important;
+}
+[data-prez-theme="light"] .sp-nav { 
+  background: rgba(0,0,0,.08) !important; 
+  color: #333 !important; 
+}
+/* Story slides pe light */
+[data-prez-theme="light"] .sp-story-wrap { background: var(--sp-bg) !important; }
+[data-prez-theme="light"] .sp-story-body { color: rgba(0,0,0,.7) !important; }
+[data-prez-theme="light"] .sp-story-title { color: #111 !important; }
+
+/* ── THEME TOGGLE BUTTON ── */
+#sp-theme-toggle {
+  position: absolute;
+  top: 12px; left: 50%; transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 20px;
+  overflow: hidden;
+  backdrop-filter: blur(6px);
+}
+[data-prez-theme="light"] #sp-theme-toggle {
+  background: rgba(0,0,0,.08);
+  border-color: rgba(0,0,0,.15);
+}
+.sp-theme-btn {
+  padding: 5px 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: rgba(255,255,255,.4);
+  cursor: pointer; border: none;
+  background: transparent;
+  transition: all .15s;
+}
+.sp-theme-btn.active {
+  background: rgba(255,255,255,.15);
+  color: #fff;
+}
+[data-prez-theme="light"] .sp-theme-btn { color: rgba(0,0,0,.4); }
+[data-prez-theme="light"] .sp-theme-btn.active { 
+  background: rgba(0,0,0,.12); 
+  color: #111; 
+}
 </style>
 </head>
 <body>
@@ -2009,6 +2131,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
     <div class="sp-dot" data-s="11"></div>
     <div class="sp-dot" data-s="12"></div>
     <div class="sp-dot" data-s="13"></div>
+  </div>
+
+  <!-- Theme toggle -->
+  <div id="sp-theme-toggle">
+    <button class="sp-theme-btn active" data-theme="dark" onclick="spSetTheme('dark')">🌙 Dark</button>
+    <button class="sp-theme-btn" data-theme="light" onclick="spSetTheme('light')">☀️ Light</button>
   </div>
 
   <!-- Close → dashboard -->
@@ -6233,6 +6361,7 @@ function spPopulateAll() {
   // Slide 4B — wishlist
   spPopulateSuportSlide();
   spInitWAFloat();
+  spLoadTheme();
   // S9 — De ce eu
   const wi = SETTINGS.why_items || [];
   ['1','2','3'].forEach((n,i) => {
@@ -8527,6 +8656,23 @@ function spPopulateSuportSlide() {
     const phone = (SETTINGS.whatsapp_phone||DEFAULT_SETTINGS.whatsapp_phone||'40763829093').replace(/\D/g,'');
     waBtn.href = 'https://wa.me/'+phone+'?text='+encodeURIComponent('Bună! Am văzut wishlist-ul de echipament și vreau să te susțin!');
   }
+}
+
+
+// ── Tema prezentare ────────────────────────────────────
+function spSetTheme(name) {
+  document.body.setAttribute('data-prez-theme', name);
+  document.querySelectorAll('.sp-theme-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.theme === name);
+  });
+  try { localStorage.setItem('prez_theme', name); } catch(e) {}
+}
+
+function spLoadTheme() {
+  try {
+    const saved = localStorage.getItem('prez_theme') || 'dark';
+    spSetTheme(saved);
+  } catch(e) { spSetTheme('dark'); }
 }
 
 // ── WhatsApp float button ──────────────────────────────
