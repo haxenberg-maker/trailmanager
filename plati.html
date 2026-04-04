@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transparență Financiară · Balan Gabriel · Sezon 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+  :root {
+    --bg:     #f4f5f7;
+    --card:   #ffffff;
+    --border: #e2e5ea;
+    --text:   #1a1d23;
+    --t2:     #4a5568;
+    --t3:     #8896a8;
+    --t4:     #b8c2cc;
+    --accent: #2563eb;
+    --accent-dim: rgba(37,99,235,.1);
+    --green:  #16a34a;
+    --orange: #d97706;
+    --red:    #dc2626;
+    --display: 'Bebas Neue', sans-serif;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+    position: sticky; top:0; z-index:10;
+  }
+  .header-inner {
+    max-width: 860px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .header-brand {
+    font-family: var(--display);
+    font-size: clamp(16px, 3vw, 22px);
+    letter-spacing: 2px; color: var(--accent);
+    line-height: 1.1;
+  }
+  .header-sub {
+    font-size: 11px; color: var(--t3); margin-top: 2px;
+  }
+  .header-back {
+    font-size: 12px; color: var(--t2); text-decoration: none;
+    padding: 6px 14px; border: 1px solid var(--border);
+    border-radius: 8px; transition: background .15s;
+    white-space: nowrap;
+  }
+  .header-back:hover { background: var(--bg); }
+
+  /* ── Layout ── */
+  .wrap { max-width: 860px; margin: 0 auto; padding: 20px 16px 40px; }
+
+  /* ── Summary cards ── */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px; margin-bottom: 24px;
+  }
+  .summary-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 12px; text-align: center;
+  }
+  .summary-val {
+    font-family: var(--display); font-size: 22px;
+    letter-spacing: 1px; color: var(--accent); line-height: 1;
+  }
+  .summary-lbl {
+    font-size: 10px; color: var(--t3); text-transform: uppercase;
+    letter-spacing: .5px; margin-top: 4px;
+  }
+
+  /* ── Tabs ── */
+  .tabs {
+    display: flex; gap: 4px; margin-bottom: 16px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 4px;
+  }
+  .tab {
+    flex: 1; padding: 8px 10px; border: none; border-radius: 7px;
+    background: transparent; cursor: pointer; font-size: 12px;
+    font-weight: 500; color: var(--t2); transition: all .15s;
+    font-family: 'Inter', sans-serif;
+  }
+  .tab.active { background: var(--accent); color: #fff; font-weight: 600; }
+  .tab:not(.active):hover { background: var(--bg); }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px; margin-bottom: 10px;
+  }
+  .card-head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 12px; margin-bottom: 12px;
+  }
+  .card-title { font-size: 14px; font-weight: 700; color: var(--text); }
+  .card-sub   { font-size: 11px; color: var(--t3); margin-top: 2px; }
+  .badge {
+    font-size: 10px; font-weight: 700; padding: 3px 10px;
+    border-radius: 12px; white-space: nowrap; flex-shrink: 0;
+  }
+  .badge-ok      { background: rgba(22,163,74,.1);  color: var(--green); }
+  .badge-partial { background: rgba(217,119,6,.1);  color: var(--orange); }
+  .badge-none    { background: rgba(150,150,150,.1); color: var(--t3); }
+
+  /* ── Items grid ── */
+  .items { display: flex; flex-direction: column; gap: 6px; }
+  .item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px; border-radius: 8px; background: var(--bg);
+    border: 1px solid var(--border);
+  }
+  .item-icon { font-size: 15px; flex-shrink: 0; }
+  .item-body { flex: 1; min-width: 0; }
+  .item-lbl  { font-size: 10px; color: var(--t3); text-transform: uppercase; letter-spacing: .4px; }
+  .item-val  { font-size: 13px; font-weight: 600; color: var(--text); }
+  .doc-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 12px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--card);
+    color: var(--accent); font-size: 11px; font-weight: 600;
+    cursor: pointer; text-decoration: none; transition: background .15s;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .doc-btn:hover { background: var(--accent-dim); }
+  .doc-btn.missing {
+    color: var(--t4); border-style: dashed; cursor: default;
+    pointer-events: none;
+  }
+  /* Force override - toate butoanele doc la fel */
+  a.doc-btn { color: var(--accent) !important; background: var(--card) !important; }
+
+  /* ── Amount row ── */
+  .amount-row {
+    display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    margin-top: 8px; padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .amount-val {
+    font-family: var(--display); font-size: 20px;
+    letter-spacing: 1px; color: var(--accent);
+  }
+  .amount-sub { font-size: 11px; color: var(--t3); }
+
+  /* ── Loading / empty ── */
+  .loading, .empty {
+    text-align: center; padding: 48px 20px; color: var(--t3);
+    font-size: 14px;
+  }
+  .loading .spinner {
+    width: 32px; height: 32px; border: 3px solid var(--border);
+    border-top-color: var(--accent); border-radius: 50%;
+    animation: spin .7s linear infinite; margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center; padding: 24px; font-size: 11px; color: var(--t4);
+    border-top: 1px solid var(--border); margin-top: 16px;
+  }
+
+  @media(max-width:600px) {
+    .summary-grid { grid-template-columns: 1fr 1fr; }
+    .tabs { flex-wrap: wrap; }
+    .tab { flex: none; flex-basis: calc(33% - 4px); }
+  }
+
+/* ── Filtre ── */
+.filter-btn {
+  padding: 5px 14px; border-radius: 20px;
+  border: 1px solid var(--border,#e2e5ea); background: var(--card,#fff);
+  font-size: 11px; font-weight: 500; color: var(--t2,#555);
+  cursor: pointer; transition: all .15s; font-family: 'Inter', sans-serif;
+}
+.filter-btn.active { background: var(--text,#222); color: #fff; border-color: var(--text,#222); }
+.filter-btn:not(.active):hover { background: var(--bg,#f4f5f7); }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <div class="header-brand">BALAN GABRIEL · TRANSPARENȚĂ FINANCIARĂ</div>
+      <div class="header-sub">Sezon 2026 · Toate dovezile de plată, actualizate în timp real</div>
+    </div>
+    <a href="/" class="header-back">← Înapoi</a>
+  </div>
+</div>
+
+<!-- Content -->
+<div class="wrap">
+
+  <!-- Summary -->
+  <div class="summary-grid" id="summary">
+    <div class="summary-card"><div class="spinner" style="width:20px;height:20px;border-width:2px;margin:auto"></div></div>
+    <div class="summary-card"></div>
+    <div class="summary-card"></div>
+    <div class="summary-card"></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="setTab(this,'tab-curse')">🏁 Curse</button>
+    <button class="tab" onclick="setTab(this,'tab-echip')">👟 Echipament</button>
+    <button class="tab" onclick="setTab(this,'tab-supl')">💊 Suplimente</button>
+  </div>
+
+  <!-- Filtre -->
+  <div id="filter-bar" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+    <button class="filter-btn active" data-filter="all" onclick="setFilter(this,'all')">Toate</button>
+    <button class="filter-btn" data-filter="paid" onclick="setFilter(this,'paid')">✅ Plătite</button>
+    <button class="filter-btn" data-filter="pending" onclick="setFilter(this,'pending')">⏳ De plătit</button>
+    <button class="filter-btn" data-filter="factura" onclick="setFilter(this,'factura')">📄 Cu factură</button>
+    <button class="filter-btn" data-filter="nofactura" onclick="setFilter(this,'nofactura')">⚠️ Fără factură</button>
+  </div>
+
+  <div id="tab-curse" class="panel active">
+    <div class="loading"><div class="spinner"></div>Se încarcă...</div>
+  </div>
+  <div id="tab-echip" class="panel">
+    <div class="loading"><div class="spinner"></div>Se încarcă...</div>
+  </div>
+  <div id="tab-supl" class="panel">
+    <div class="loading"><div class="spinner"></div>Se încarcă...</div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Date sincronizate în timp real din planificatorul de sezon · Balan Gabriel · Trail Running 2026
+</div>
+
+<script>
+const SB_URL = 'https://jqhtistewpmiphuoxfmp.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxaHRpc3Rld3BtaXBodW94Zm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMzkwOTUsImV4cCI6MjA4ODcxNTA5NX0.NWG60gy3twOCAjVlHuuIB1eTXum5rJVKN4L2EqgPa7I';
+
+const H = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fmt(n) {
+  return Number(n||0).toLocaleString('ro-RO');
+}
+
+// setTab defined below with filter support
+
+async function load() {
+  try {
+    const [racesR, eqR, suplR] = await Promise.all([
+      fetch(`${SB_URL}/rest/v1/races?order=data_cursa.asc&limit=200`, {headers:H}),
+      fetch(`${SB_URL}/rest/v1/equipment?limit=200`, {headers:H}),
+      fetch(`${SB_URL}/rest/v1/supplements?limit=200`, {headers:H}),
+    ]);
+    const races = racesR.ok ? await racesR.json() : [];
+    const eq    = eqR.ok    ? await eqR.json()    : [];
+    const supls = suplR.ok  ? await suplR.json()  : [];
+
+    renderSummary(races, eq, supls);
+    renderCurse(races);
+    renderEchip(eq);
+    renderSupl(supls);
+  } catch(e) {
+    console.error(e);
+    document.getElementById('tab-curse').innerHTML =
+      '<div class="empty">⚠️ Eroare la încărcare. Încearcă din nou.</div>';
+  }
+}
+
+function renderSummary(races, eq, supls) {
+  const totalPlatit = races.reduce((s,r) =>
+    s + (r.plata_concurs_ok ? r.plata_concurs||0 : 0)
+      + (r.plata_cazare     ? r.cazare||0 : 0), 0);
+  const totalPending = races.reduce((s,r) =>
+    s + (!r.plata_concurs_ok ? r.plata_concurs||0 : 0)
+      + (!r.plata_cazare && r.cazare > 0 ? r.cazare||0 : 0), 0);
+  const totalEchip  = eq.reduce((s,e) => s + (parseFloat(e.pret)||0), 0);
+  const totalDovezi = races.filter(r => r.link_dovada_ins||r.link_dovada_caz||r.link_dovada_factura).length
+    + eq.filter(e => e.link_dovada).length
+    + supls.filter(s => s.link_dovada).length;
+
+  document.getElementById('summary').innerHTML = [
+    { val: fmt(totalPlatit)+' RON', lbl: 'Total plătit curse' },
+    { val: fmt(totalPending)+' RON', lbl: 'De plătit curse' },
+    { val: fmt(totalEchip)+' RON', lbl: 'Echipament total' },
+    { val: totalDovezi, lbl: 'Dovezi disponibile' },
+  ].map(s => `<div class="summary-card">
+    <div class="summary-val">${s.val}</div>
+    <div class="summary-lbl">${s.lbl}</div>
+  </div>`).join('');
+}
+
+function renderCurse(races) {
+  if (!races.length) {
+    document.getElementById('tab-curse').innerHTML = '<div class="empty">Nicio cursă adăugată</div>';
+    return;
+  }
+  document.getElementById('tab-curse').innerHTML = races.map(r => {
+    const date = r.data_cursa
+      ? new Date(r.data_cursa).toLocaleDateString('ro-RO',{day:'numeric',month:'long',year:'numeric'})
+      : '—';
+    const hasDovezi = r.link_dovada_ins || r.link_dovada_caz || r.link_dovada_factura;
+    const allPaid   = r.plata_concurs_ok && (!r.cazare || r.plata_cazare);
+    const badge = hasDovezi
+      ? (allPaid ? ['badge-ok','✓ Toate plătite'] : ['badge-partial','Parțial plătit'])
+      : ['badge-none','Fără dovezi'];
+
+    const items = [
+      r.plata_concurs ? {
+        icon: r.plata_concurs_ok ? '✅' : '⏳',
+        lbl: 'Înscriere',
+        val: fmt(r.plata_concurs)+' RON',
+        status: r.plata_concurs_ok ? 'Plătit' : 'Neachitat',
+        link: r.link_dovada_ins || null,
+        linkLbl: 'Dovadă',
+        factura: r.factura_ins || null,
+        facturaLbl: 'Factură'
+      } : null,
+      r.cazare > 0 ? {
+        icon: r.plata_cazare ? '✅' : '⏳',
+        lbl: 'Cazare',
+        val: fmt(r.cazare)+' RON',
+        status: r.plata_cazare ? 'Plătit' : 'Neachitat',
+        link: r.link_dovada_caz || null,
+        linkLbl: 'Dovadă',
+        factura: r.factura_caz || null,
+        facturaLbl: 'Factură'
+      } : null,
+      (r.link_dovada_factura || r.factura_desc) ? {
+        icon: '🚗',
+        lbl: r.factura_desc || 'Factură transport',
+        val: '',
+        status: r.link_dovada_factura ? 'Factură' : '',
+        link: r.link_dovada_factura || null,
+        linkLbl: 'Factură'
+      } : null,
+    ].filter(Boolean);
+
+    const isPaid = r.plata_concurs_ok && (!r.cazare || r.plata_cazare);
+    const hasFactura = !!(r.link_dovada_ins || r.link_dovada_caz || r.link_dovada_factura);
+    return `<div class="card" data-paid="${isPaid}" data-factura="${hasFactura}" data-pending="${!isPaid}">
+      <div class="card-head">
+        <div>
+          <div class="card-title">${esc(r.denumire||'—')}</div>
+          <div class="card-sub">${date} · ${r.distanta||'?'} km${r.denivelare?' · '+Math.round(r.denivelare/1000)+'k D+':''}</div>
+        </div>
+        <span class="badge ${badge[0]}">${badge[1]}</span>
+      </div>
+      ${items.length ? `<div class="items">
+        ${items.map(it => `<div class="item">
+          <span class="item-icon">${it.icon}</span>
+          <div class="item-body">
+            <div class="item-lbl">${esc(it.lbl)}</div>
+            ${it.val ? `<div class="item-val">${it.val}${it.status?' · <span style="color:var(--t3)">'+ esc(it.status)+'</span>':''}</div>` : ''}
+          </div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0">
+            ${it.link
+              ? `<a href="${esc(it.link)}" target="_blank" rel="noopener" class="doc-btn">📋 ${esc(it.linkLbl)}</a>`
+              : `<span class="doc-btn missing">📋 Lipsă</span>`}
+            ${it.factura
+              ? `<a href="${esc(it.factura)}" target="_blank" rel="noopener" class="doc-btn">🧾 Factură</a>`
+              : ''}
+          </div>
+        </div>`).join('')}
+      </div>` : '<div style="font-size:12px;color:var(--t3)">Niciun detaliu de plată</div>'}
+    </div>`;
+  }).join('');
+}
+
+function renderEchip(eq) {
+  if (!eq.length) {
+    document.getElementById('tab-echip').innerHTML = '<div class="empty">Niciun echipament adăugat</div>';
+    return;
+  }
+  document.getElementById('tab-echip').innerHTML = eq.map(e => {
+    const badge = e.link_dovada
+      ? ['badge-ok','✓ Factură disponibilă']
+      : ['badge-none','Fără factură'];
+    return `<div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">${esc(e.denumire||'—')}</div>
+          <div class="card-sub">${esc(e.categorie||'')}${e.km_actuali?' · '+e.km_actuali+' km parcurși':''}</div>
+        </div>
+        <span class="badge ${badge[0]}">${badge[1]}</span>
+      </div>
+      <div class="amount-row">
+        <div>
+          <div class="amount-val">${fmt(e.pret)} RON</div>
+        </div>
+        ${e.link_dovada
+          ? `<a href="${esc(e.link_dovada)}" target="_blank" rel="noopener" class="doc-btn">📄 Factură / dovadă</a>`
+          : `<span class="doc-btn missing">📄 Factură lipsă</span>`}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderSupl(supls) {
+  if (!supls.length) {
+    document.getElementById('tab-supl').innerHTML = '<div class="empty">Niciun supliment adăugat</div>';
+    return;
+  }
+  document.getElementById('tab-supl').innerHTML = supls.map(s => {
+    const badge = s.link_dovada
+      ? ['badge-ok','✓ Factură disponibilă']
+      : ['badge-none','Fără factură'];
+    const pretVal = s.pret_comanda || s.pret_lunar || 0;
+    return `<div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">${esc(s.denumire||'—')}</div>
+          <div class="card-sub">
+            ${s.cantitate ? esc(s.cantitate) : ''}
+            ${s.stoc_portii ? ' · Stoc: '+s.stoc_portii+' porții' : ''}
+          </div>
+        </div>
+        <span class="badge ${badge[0]}">${badge[1]}</span>
+      </div>
+      <div class="amount-row">
+        <div>
+          <div class="amount-val">${fmt(pretVal)} RON${s.frecventa_luni > 1 ? '/'+s.frecventa_luni+'luni' : '/comandă'}</div>
+          ${s.pret_lunar ? `<div class="amount-sub">~${fmt(s.pret_lunar)} RON/lună</div>` : ''}
+        </div>
+        ${s.link_dovada
+          ? `<a href="${esc(s.link_dovada)}" target="_blank" rel="noopener" class="doc-btn">📄 Factură / comandă</a>`
+          : `<span class="doc-btn missing">📄 Factură lipsă</span>`}
+      </div>
+      ${s.note && s.note.startsWith('http') ? `<div style="margin-top:8px">
+        <a href="${esc(s.note)}" target="_blank" rel="noopener" class="doc-btn" style="font-size:10px">
+          🛒 Link produs
+        </a>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+let _activeFilter = 'all';
+
+function setFilter(btn, filter) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  _activeFilter = filter;
+  applyFilter();
+}
+
+function applyFilter() {
+  const f = _activeFilter;
+  document.querySelectorAll('.card[data-paid]').forEach(card => {
+    let show = true;
+    if (f === 'paid')      show = card.dataset.paid === 'true';
+    if (f === 'pending')   show = card.dataset.pending === 'true';
+    if (f === 'factura')   show = card.dataset.factura === 'true';
+    if (f === 'nofactura') show = card.dataset.factura === 'false';
+    card.style.display = show ? '' : 'none';
+  });
+}
+
+// Re-apply filter after tab switch
+function setTab(btn, id) {
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  applyFilter();
+}
+
+load();
+</script>
+</body>
+</html>

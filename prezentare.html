@@ -2,44 +2,72 @@
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trail Running Manager 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;1,9..40,300&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-<meta name="theme-color" content="#0c0e0d">
-<script>
-// Apply theme immediately — before any rendering — to prevent flash
-(function(){
-  var t = localStorage.getItem('tm_theme');
-  if(t && t !== 'default') document.documentElement.setAttribute('data-theme', t);
-})();
-</script>
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Trail Manager">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230c0e0d'/><text y='.9em' font-size='80'>⛰️</text></svg>">
-<script>
-// PWA manifest inline
-const manifestData = {
-  name: "Trail Running Manager 2026",
-  short_name: "Trail Manager",
-  description: "Sezonul de alergare 2026 — Balan Gabriel",
-  start_url: "/",
-  display: "standalone",
-  background_color: "#0c0e0d",
-  theme_color: "#0c0e0d",
-  orientation: "portrait-primary",
-  icons: [
-    { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%230c0e0d'/><text y='.85em' font-size='400' x='56'>⛰️</text></svg>", sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
-  ]
-};
-const blob = new Blob([JSON.stringify(manifestData)], {type:'application/json'});
-const link = document.createElement('link');
-link.rel = 'manifest';
-link.href = URL.createObjectURL(blob);
-document.currentScript.parentNode.appendChild(link);
-</script>
-<link rel="stylesheet" href="themes.css">
-<style>
+<title>BÂRLADUL PE FUGĂ · Prezentare Sponsori 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>:root {
+  /* Fundal - Un gri-antracit neutru (fără verdele ăla ciudat) */
+  --bg: #0f1111;      /* Mai adânc, dar nu negru pur */
+  --s1: #1a1d1d;      /* Suprafețe clare */
+  --s2: #242929;      /* Carduri și input-uri */
+  --s3: #2f3535;      /* State-uri de hover */
+
+  /* Borduri - Mai luminoase să dea formă */
+  --border: #3a4141;
+  --border2: #4f5858;
+
+  /* Accent - Am păstrat ideea de Lime, dar mai saturat și vizibil */
+  --accent: #ccff00;  
+  --accent-dim: rgba(204, 255, 0, 0.1);
+  --accent-border: rgba(204, 255, 0, 0.25);
+
+  /* Culori de stare standard */
+  --green: #2ecc71;
+  --orange: #ff9f43;
+  --yellow: #f1c40f;
+  --red: #ee5253;
+
+  /* Text - Maximă lizibilitate */
+  --text: #f5f6f7;    /* Alb-curat, nu gri-verzui */
+  --t2: #a0a9a9;      /* Text secundar mult mai "soft" și lizibil */
+  --t3: #6c757d;      /* Text terțiar */
+  --t4: #495057;      /* Placeholder */
+
+  /* Layout & Fonts */
+  --r: 12px;          /* Rotunjire un pic mai modernă */
+  --display: 'Inter', 'Bebas Neue', sans-serif; /* Inter e mult mai lizibil ca font de bază */
+  --body: 'Inter', 'DM Sans', sans-serif;
+}
+
+/* Prezentare standalone: dark theme forced */
+:root {
+  --bg: #0f1111;
+  --s1: #1a1d1d;
+  --s2: #242929;
+  --s3: #2f3535;
+  --border: #3a4141;
+  --border2: #4f5858;
+  --accent: #ccff00;
+  --accent-dim: rgba(204,255,0,.1);
+  --accent-border: rgba(204,255,0,.25);
+  --green: #2ecc71;
+  --orange: #ff9f43;
+  --yellow: #f1c40f;
+  --red: #ee5253;
+  --text: #f5f6f7;
+  --t2: #a0a9a9;
+  --t3: #6c757d;
+  --t4: #495057;
+  --r: 12px;
+  --display: 'Bebas Neue', sans-serif;
+  --body: 'Inter', sans-serif;
+}
+
+
+
 /* Temele sunt în themes.css — linkuit în <head> */
 /* ═══════════════════════════════════════
    SPONSOR LANDING PAGE v2
@@ -1169,7 +1197,7 @@ body.readonly [data-owner-only] { display:none !important }
 }
 .sp-why-nr {
   font-family:'Bebas Neue',sans-serif;
-  font-size:32px;color:var(--accent);opacity:.4;
+  font-size:32px;color:var(--accent);opacity:.6;
   line-height:1;flex-shrink:0;min-width:36px;
 }
 .sp-why-title {
@@ -1182,13 +1210,21 @@ body.readonly [data-owner-only] { display:none !important }
 }
 
 /* ── ROI Slider dark ── */
+#sp-roi-slider {
+  -webkit-appearance:none;appearance:none;
+  width:100%;height:6px;background:rgba(255,255,255,.2);
+  border-radius:3px;outline:none;cursor:pointer;
+}
 #sp-roi-slider::-webkit-slider-thumb {
-  -webkit-appearance:none;width:22px;height:22px;border-radius:50%;
-  background:var(--accent);cursor:pointer;border:none;
+  -webkit-appearance:none;appearance:none;
+  width:24px;height:24px;border-radius:50%;
+  background:#ccff00;cursor:pointer;border:none;
+  box-shadow:0 0 10px rgba(204,255,0,.6), 0 2px 6px rgba(0,0,0,.5);
 }
 #sp-roi-slider::-moz-range-thumb {
-  width:22px;height:22px;border-radius:50%;
-  background:var(--accent);cursor:pointer;border:none;
+  width:24px;height:24px;border-radius:50%;
+  background:#ccff00;cursor:pointer;border:none;
+  box-shadow:0 0 10px rgba(204,255,0,.6);
 }
 .sp-roi-range {
   width:100%;height:4px;-webkit-appearance:none;appearance:none;
@@ -1420,7 +1456,10 @@ body.readonly [data-owner-only] { display:none !important }
   display:flex;flex-direction:column;justify-content:center;
   padding:clamp(28px,5vw,60px) clamp(24px,4vw,56px);
   overflow-y:auto;
+  /* slider thumb needs overflow visible */
 }
+/* S4 ROI — slider neclipat */
+#sp-s4 .sp-split-content { overflow:visible; }
 .sp-split-eyebrow {
   font-size:10px;color:var(--accent);letter-spacing:3px;
   text-transform:uppercase;margin-bottom:16px;
@@ -1464,21 +1503,55 @@ body.readonly [data-owner-only] { display:none !important }
   opacity:0;transform:translateY(18px);
   transition:opacity .55s ease, transform .55s ease;
 }
-.sp-slide.on .sp-reveal { opacity:1;transform:none; }
+.sp-slide.on .sp-reveal { opacity:1; transform:none; }
 
 /* ── MOBILE ── */
 @media(max-width:600px){
-  .sp-split { grid-template-columns:1fr;grid-template-rows:160px 1fr; }
-  .sp-split-img { padding:16px 20px; }
-  .sp-split-year { font-size:36px;top:12px;left:14px; }
-  .sp-split-quote { font-size:16px; }
-  .sp-split-km-pill { font-size:11px;padding:4px 12px; }
-  .sp-split-title { font-size:clamp(24px,8vw,40px);margin-bottom:14px; }
-  .sp-split-content { padding:16px 16px;overflow-y:auto; }
+  /* Split layout: stânga sus 38%, dreapta jos 62% */
+  .sp-split {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 38vh 1fr !important;
+    height: 100%;
+  }
+  .sp-split-img {
+    height: 38vh !important;
+    min-height: 0 !important;
+    padding: 14px 16px !important;
+    overflow: hidden;
+  }
+  .sp-split-img .sp-split-year { font-size:clamp(60px,18vw,90px);opacity:.05; }
+  .sp-split-img .sp-split-quote { font-size:clamp(14px,4vw,18px); }
+  .sp-split-img .sp-split-km-pill { font-size:11px;padding:4px 12px; }
+
+  /* Content dreapta: scrollabil, nu depășește */
+  .sp-split-content {
+    padding: 14px 16px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    max-height: calc(62vh - 0px);
+  }
+  .sp-split-eyebrow { font-size:9px;margin-bottom:8px; }
+  .sp-split-title { font-size:clamp(22px,7vw,36px) !important;margin-bottom:10px !important; }
   .sp-split-lines p { font-size:13px; }
-  .sp-split-eyebrow { font-size:9px;margin-bottom:10px; }
-  .sp-s1-stats { gap:12px!important;flex-wrap:wrap; }
-  .sp-s1-val { font-size:clamp(24px,6vw,36px)!important; }
+
+  /* S1 stats */
+  .sp-s1-stats { gap:10px !important;flex-wrap:wrap; }
+  .sp-s1-val { font-size:clamp(20px,5.5vw,30px) !important; }
+
+  /* Why items mai compacte */
+  .sp-why-item { padding:8px 10px; gap:8px; }
+  .sp-why-nr { font-size:20px; }
+  .sp-why-title { font-size:11px; }
+  .sp-why-desc { font-size:10px;line-height:1.4; }
+
+  /* ROI items mai mici */
+  .sp-roi-item { padding:6px 10px; }
+  .sp-roi-item-title { font-size:10px; }
+
+  /* Budget bars */
+  .sp-budget-row { gap:6px; }
+  .sp-budget-label { font-size:10px;min-width:72px; }
+  .sp-budget-amount { font-size:12px;min-width:52px; }
 }
 
 /* ── STORY SLIDES (vechi, pastrat pentru compatibilitate) ── */
@@ -1537,9 +1610,9 @@ body.readonly [data-owner-only] { display:none !important }
 
   /* Slide base - padding mai mic, text mai mic */
   .sp-slide {
-    padding:52px 14px 20px;
-    justify-content:flex-start;
-    overflow-y:hidden;
+    padding: 52px 0 0 0;
+    justify-content: flex-start;
+    overflow: hidden !important;
   }
 
   /* Titluri slide-uri */
@@ -1826,9 +1899,309 @@ body.readonly [data-owner-only] { display:none !important }
   .set-2col { grid-template-columns:1fr; }
   .set-content { max-height:none; }
 }
+
+/* ── Standalone overrides ── */
+html,body{width:100%;height:100%;overflow:hidden;background:#000}
+#sp-splash{display:none;position:fixed;inset:0;z-index:200;
+  background:#000;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+  opacity:0;transition:opacity .5s ease;}
+#sp-splash.on{display:flex}
+#sp-splash.vis{opacity:1}
+#sp-prez{display:none;}
+#sp-prez.on{display:block;}
+
+/* ── Mobile S2: hide race list, show modal ── */
+@media(max-width:600px) {
+  #sp-s2 .sp-split { grid-template-columns:1fr !important; grid-template-rows:1fr !important; }
+  #sp-s2 .sp-split-img { height:100% !important; }
+  #sp-s2 .sp-split-content { display:none !important; }
+}
+/* Modal detalii cursă — MEREU fixed, z-index deasupra sp-prez */
+#sp-race-mobile-modal {
+  display:none;
+  position:fixed;inset:0;
+  z-index:200000;  /* deasupra sp-prez care e 99999 */
+  background:rgba(2,8,2,.97);
+  flex-direction:column;
+  animation:fadeInModal .2s ease;
+}
+#sp-race-mobile-modal.open { display:flex; }
+@media(min-width:601px) {
+  /* Pe desktop ascundem lista de hover, nu modalul */
+}
+@keyframes fadeInModal {
+  from { opacity:0;transform:translateY(20px); }
+  to   { opacity:1;transform:translateY(0); }
+}
+
+/* ── S4b mobile: budget compact + metode sus/jos ── */
+@media(max-width:600px) {
+  #sp-s4b .sp-split-img {
+    padding: 12px 14px !important;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+  #sp-s4b .sp-split-content {
+    padding: 10px 14px !important;
+  }
+  /* Formular 230 button full width */
+  #sp-s4b .f230ro-lansare { font-size:12px !important; padding:7px 10px !important; }
+}
+
+/* ── S4B mobile: layout fix ── */
+@media(max-width:600px) {
+  #sp-s4b .sp-split {
+    grid-template-rows: auto 1fr !important;
+    overflow: hidden;
+  }
+  #sp-s4b .sp-split-img {
+    height: auto !important;
+    max-height: 42vh;
+    overflow-y: auto !important;
+    padding: 12px 14px !important;
+    gap: 6px !important;
+  }
+  #sp-s4b .sp-split-img [style*="sp-s4b-budget-list"],
+  #sp-s4b #sp-s4b-budget-list { gap: 5px !important; }
+  #sp-s4b .sp-split-content { 
+    padding: 10px 14px !important;
+    overflow-y: auto !important;
+  }
+  /* Carduri metode mai compacte */
+  #sp-s4b .sp-split-content > [class*="sp-reveal"],
+  #sp-s4b .sp-split-content > div[style*="border-radius:9px"] {
+    padding: 8px 10px !important;
+    margin-bottom: 6px !important;
+  }
+  #sp-s4b .sp-split-title { font-size: 22px !important; margin-bottom: 8px !important; }
+  #sp-s4b .sp-split-eyebrow { margin-bottom: 6px !important; }
+}
+
+/* ══════════════════════════════════════════════════
+   TEME PREZENTARE — folosind aceleași vars ca themes.css
+   Toggle pe <html data-theme="dark|vulcan|ghetar|noapte">
+   ══════════════════════════════════════════════════ */
+
+/* Dark (default) — deja definit în :root de mai sus */
+
+/* Vulcan, Ghetar, Noapte — exact din themes.css */
+ {
+  /* Fundal - Un gri-antracit neutru (fără verdele ăla ciudat) */
+  --bg: #0f1111;      /* Mai adânc, dar nu negru pur */
+  --s1: #1a1d1d;      /* Suprafețe clare */
+  --s2: #242929;      /* Carduri și input-uri */
+  --s3: #2f3535;      /* State-uri de hover */
+
+  /* Borduri - Mai luminoase să dea formă */
+  --border: #3a4141;
+  --border2: #4f5858;
+
+  /* Accent - Am păstrat ideea de Lime, dar mai saturat și vizibil */
+  --accent: #ccff00;  
+  --accent-dim: rgba(204, 255, 0, 0.1);
+  --accent-border: rgba(204, 255, 0, 0.25);
+
+  /* Culori de stare standard */
+  --green: #2ecc71;
+  --orange: #ff9f43;
+  --yellow: #f1c40f;
+  --red: #ee5253;
+
+  /* Text - Maximă lizibilitate */
+  --text: #f5f6f7;    /* Alb-curat, nu gri-verzui */
+  --t2: #a0a9a9;      /* Text secundar mult mai "soft" și lizibil */
+  --t3: #6c757d;      /* Text terțiar */
+  --t4: #495057;      /* Placeholder */
+
+  /* Layout & Fonts */
+  --r: 12px;          /* Rotunjire un pic mai modernă */
+  --display: 'Inter', 'Bebas Neue', sans-serif; /* Inter e mult mai lizibil ca font de bază */
+  --body: 'Inter', 'DM Sans', sans-serif;
+
+
+/* Apply theme vars to sp-prez elements */
+#sp-prez,
+#sp-prez * {
+  /* Inherit CSS vars — works automatically via var(--accent) etc. */
+}
+
+/* Slide backgrounds adopt theme */
+.sp-slide .sp-bg { transition: background .3s ease; }
+
+/* Split content uses theme surface color */
+.sp-split-content {
+  background: rgba(var(--bg-rgb, 0,0,0), .0);
+}
+
+/* ── Theme vars from themes.css ── */
+[data-theme="vulcan"] {
+  /* Fundal - Un pic mai închis, spre culoarea nisipului sau a hârtiei reciclate */
+  --bg: #f2e9e4;      /* Un gri-bej odihnitor */
+  --s1: #e9ddd5;      /* Suprafețe de nivel 1 */
+  --s2: #dfcec3;      /* Carduri și input-uri */
+  --s3: #d5beb1;      /* Hover/Active - se simte solid */
+
+  /* Borduri - Mai pronunțate, să nu pară "ștearsă" */
+  --border: #c9ada1;
+  --border2: #9a8c98;
+
+  /* Accent - Un portocaliu ars, intens, care "mușcă" din fundal */
+  --accent: #d9480f;  
+  --accent-dim: rgba(217, 72, 15, 0.1);
+  --accent-border: rgba(217, 72, 15, 0.3);
+
+  /* Culori de stare - Mai profunde */
+  --green: #386641;
+  --orange: #bc4749;
+  --yellow: #bc6c25;
+  --red: #a4161a;
+
+  /* Text - Contrast solid, negru-maroniu */
+  --text: #221a18;    /* Foarte vizibil pe fundalul bej */
+  --t2: #4a3f3b;      /* Text secundar clar */
+  --t3: #6d5952;      /* Text terțiar */
+  --t4: #8d7e79;      /* Placeholder */
+}
+[data-theme="ghetar"] {
+  /* Fundal - Un albastru-alb înghețat (foarte deschis, dar cu tentă) */
+  --bg: #f0f4f8;      
+  --s1: #e1e9f1;      /* Suprafețe nivel 1 */
+  --s2: #d1dde9;      /* Suprafețe nivel 2 (carduri) */
+  --s3: #c2d2e1;      /* Hover/Active */
+
+  /* Borduri - Albastru oțelit, să dea structură */
+  --border: #a8bbc9;
+  --border2: #8ba0b3;
+
+  /* Accent - Albastru electric puternic (să sară în ochi pe telefon) */
+  --accent: #0077cc;  
+  --accent-dim: rgba(0, 119, 204, 0.1);
+  --accent-border: rgba(0, 119, 204, 0.25);
+
+  /* Culori de stare - Mai profunde pentru lizibilitate pe alb */
+  --green: #008f80;
+  --orange: #5a45d6;
+  --yellow: #005a9e;
+  --red: #d62851;
+
+  /* Text - Contrast maxim pentru citit clar */
+  --text: #0a1118;    /* Albastru-negru foarte închis */
+  --t2: #334e68;      /* Albastru mediu pentru text secundar */
+  --t3: #627d98;      /* Text terțiar */
+  --t4: #9fb3c8;      /* Placeholder */
+}
+[data-theme="noapte"] {
+  /* Fundal - Un mov-gri închis, nu negru total (ajută la reflexii) */
+  --bg: #1a1625;      
+  --s1: #241f33;      /* Suprafețe vizibile */
+  --s2: #2d2741;      /* Carduri care se disting clar de fundal */
+  --s3: #393152;      /* Hover - solid, nu șters */
+
+  /* Borduri - Trebuie să fie luminoase să delimiteze zonele */
+  --border: #4a3d60;
+  --border2: #624f80;
+
+  /* Accent - Mov electric, dar cu contrast mare */
+  --accent: #d69dff;  
+  --accent-dim: rgba(214, 157, 255, 0.15);
+  --accent-border: rgba(214, 157, 255, 0.3);
+
+  /* Culori de stare - Mai vibrante pe fundal dark */
+  --green: #80ffdb;
+  --orange: #ffb366;
+  --yellow: #f8c8ff;
+  --red: #ff7096;
+
+  /* Text - Aici e marea diferență de lizibilitate */
+  --text: #f3efff;    /* Aproape alb, cu o tentă de violet */
+  --t2: #b1a2cc;      /* Text secundar mult mai deschis (era prea șters) */
+  --t3: #7b6a96;      /* Text terțiar vizibil sub soare */
+  --t4: #4a3d60;      /* Elemente discrete */
+}
+
+
+
+
+/* ── Theme overrides pentru conținut slide-uri ── */
+
+/* VULCAN — fundal bej */
+[data-theme="vulcan"] .sp-split-content {
+  background: rgba(242,233,228,.92) !important;
+  backdrop-filter: blur(4px);
+}
+[data-theme="vulcan"] #sp-prez { background: var(--bg) !important; }
+[data-theme="vulcan"] .sp-split-eyebrow { color: var(--accent) !important; }
+[data-theme="vulcan"] .sp-split-title { color: var(--text) !important; }
+[data-theme="vulcan"] .sp-split-quote { color: var(--text) !important; }
+[data-theme="vulcan"] .sp-split-km-pill {
+  background: rgba(0,0,0,.08) !important;
+  border-color: rgba(0,0,0,.15) !important;
+  color: var(--text) !important;
+}
+[data-theme="vulcan"] .sp-why-item {
+  background: rgba(0,0,0,.05) !important;
+  border-color: rgba(0,0,0,.1) !important;
+}
+[data-theme="vulcan"] .sp-why-title { color: var(--text) !important; }
+[data-theme="vulcan"] .sp-why-desc { color: var(--t2) !important; }
+[data-theme="vulcan"] .sp-roi-item {
+  background: rgba(0,0,0,.05) !important;
+  border-color: rgba(0,0,0,.1) !important;
+}
+[data-theme="vulcan"] #sp-progress { background: rgba(0,0,0,.1) !important; }
+[data-theme="vulcan"] #sp-progress-fill { background: var(--accent) !important; }
+[data-theme="vulcan"] .sp-dot { background: rgba(0,0,0,.2) !important; }
+[data-theme="vulcan"] .sp-dot.on { background: var(--accent) !important; }
+[data-theme="vulcan"] #sp-close { background: rgba(0,0,0,.1) !important; border-color: rgba(0,0,0,.15) !important; color: var(--text) !important; }
+[data-theme="vulcan"] #sp-nav-prev,
+[data-theme="vulcan"] #sp-nav-next { background: rgba(0,0,0,.08) !important; color: var(--text) !important; }
+
+[data-theme="vulcan"] .sp-budget-label { color: var(--t2) !important; }
+[data-theme="vulcan"] .sp-budget-amount { color: var(--accent) !important; }
+[data-theme="vulcan"] .sp-budget-bar-wrap { background: rgba(0,0,0,.1) !important; }
+[data-theme="vulcan"] #sp-race-mobile-modal { background: var(--bg) !important; color: var(--text) !important; }
+
+/* GHETAR — fundal alb-albăstrui */
+[data-theme="ghetar"] .sp-split-content {
+  background: rgba(240,244,248,.93) !important;
+  backdrop-filter: blur(4px);
+}
+[data-theme="ghetar"] #sp-prez { background: var(--bg) !important; }
+[data-theme="ghetar"] .sp-split-eyebrow { color: var(--accent) !important; }
+[data-theme="ghetar"] .sp-split-title { color: var(--text) !important; }
+[data-theme="ghetar"] .sp-split-quote { color: var(--text) !important; }
+[data-theme="ghetar"] .sp-split-km-pill { background: rgba(0,0,0,.06) !important; border-color: rgba(0,0,0,.12) !important; color: var(--text) !important; }
+[data-theme="ghetar"] .sp-why-item { background: rgba(0,0,0,.04) !important; border-color: rgba(0,0,0,.08) !important; }
+[data-theme="ghetar"] .sp-why-title { color: var(--text) !important; }
+[data-theme="ghetar"] .sp-why-desc { color: var(--t2) !important; }
+[data-theme="ghetar"] .sp-roi-item { background: rgba(0,0,0,.04) !important; border-color: rgba(0,0,0,.08) !important; }
+[data-theme="ghetar"] #sp-progress { background: rgba(0,0,0,.08) !important; }
+[data-theme="ghetar"] #sp-progress-fill { background: var(--accent) !important; }
+[data-theme="ghetar"] .sp-dot { background: rgba(0,0,0,.15) !important; }
+[data-theme="ghetar"] .sp-dot.on { background: var(--accent) !important; }
+[data-theme="ghetar"] #sp-close { background: rgba(0,0,0,.08) !important; border-color: rgba(0,0,0,.12) !important; color: var(--text) !important; }
+[data-theme="ghetar"] #sp-nav-prev,[data-theme="ghetar"] #sp-nav-next { background: rgba(0,0,0,.07) !important; color: var(--text) !important; }
+
+[data-theme="ghetar"] .sp-budget-label { color: var(--t2) !important; }
+[data-theme="ghetar"] .sp-budget-amount { color: var(--accent) !important; }
+[data-theme="ghetar"] .sp-budget-bar-wrap { background: rgba(0,0,0,.08) !important; }
+[data-theme="ghetar"] #sp-race-mobile-modal { background: var(--bg) !important; color: var(--text) !important; }
+
+/* NOAPTE — mov închis */
+[data-theme="noapte"] .sp-split-content {
+  background: rgba(36,31,51,.92) !important;
+  backdrop-filter: blur(4px);
+}
+[data-theme="noapte"] #sp-prez { background: var(--bg) !important; }
+[data-theme="noapte"] .sp-split-title { color: var(--text) !important; }
+[data-theme="noapte"] .sp-split-quote { color: var(--text) !important; }
+[data-theme="noapte"] .sp-budget-bar-fill { background: var(--accent) !important; }
+[data-theme="noapte"] #sp-race-mobile-modal { background: var(--bg) !important; }
 </style>
 </head>
-<body class="readonly">
+<body>
+
 <div id="sp-splash">
   <div class="sp-splash-name" id="sp-splash-name">BÂRLADUL PE FUGĂ</div>
   <div class="sp-splash-sub" id="sp-splash-sub">⛰️ SEZON 2026 · TRAIL RUNNING</div>
@@ -1839,510 +2212,6 @@ body.readonly [data-owner-only] { display:none !important }
   <div id="sp-splash-loading" class="sp-splash-loading">Se încarcă...</div>
 </div>
 
-<!-- ══════════════════════════════════════
-     SPONSOR LANDING PAGE  v2
-     Vizibil doar cu ?sponsor=1 în URL
-     ══════════════════════════════════════ -->
-<div id="sponsor-landing">
-
-    <!-- ── SCROLL KM BAR CSS ── -->
-    <style>
-    #sl-km-scrollbar {
-      position:fixed;
-      top:0; left:0;       /* JS setează left corect */
-      height:100vh;
-      width:28px;          /* lățime fixă, conținută */
-      display:none;
-      flex-direction:column;
-      align-items:center;
-      padding:20px 0 16px;
-      pointer-events:none;
-      z-index:10000;
-      gap:0;
-    }
-    #sl-km-scrollbar.visible { display:flex; }
-
-    /* Track — linia verticală */
-    .sl-ksb-track {
-      flex:1;
-      width:3px;
-      background:var(--s3);
-      border-radius:2px;
-      position:relative;
-      overflow:visible;
-      min-height:0;
-    }
-
-    /* Fill — se umple de sus în jos */
-    .sl-ksb-fill {
-      position:absolute;
-      top:0; left:0; right:0; bottom:100%;
-      background:linear-gradient(to bottom, var(--t4) 0%, var(--accent) 100%);
-      border-radius:2px;
-      transition:bottom .07s linear;
-    }
-
-    /* Dot indicator */
-    .sl-ksb-dot {
-      position:absolute;
-      bottom:100%;
-      left:50%; transform:translate(-50%, 50%);
-      width:10px; height:10px; border-radius:50%;
-      background:var(--accent);
-      border:2px solid var(--bg);
-      box-shadow:0 0 8px var(--accent);
-      transition:bottom .07s linear;
-    }
-
-    /* Km live — badge centrat, deasupra dot-ului */
-    .sl-ksb-live {
-      position:absolute;
-      bottom:100%;
-      left:50%;
-      transform:translate(-50%, -18px);
-      transition:bottom .07s linear;
-      font-family:'Bebas Neue',sans-serif;
-      font-size:11px; color:var(--accent);
-      white-space:nowrap;
-      background:var(--bg);
-      padding:1px 4px;
-      border:1px solid var(--accent-border);
-      border-radius:3px;
-      line-height:1.4;
-    }
-
-    /* Milestone — linie + label rotit în bara */
-    .sl-ksb-ms {
-      position:absolute;
-      left:-6px; right:-6px;
-      height:1px;
-      background:var(--border2);
-    }
-    .sl-ksb-ms-lbl {
-      position:absolute;
-      left:calc(100% + 8px);
-      top:50%;
-      transform:translateY(-50%);
-      font-size:8px;
-      font-weight:600;
-      color:var(--text);
-      white-space:nowrap;
-      line-height:1.3;
-      background:var(--s2);
-      border:1px solid var(--border2);
-      border-radius:4px;
-      padding:2px 5px;
-      pointer-events:none;
-    }
-
-    /* Finish line */
-    .sl-ksb-finish {
-      position:absolute;
-      bottom:-1px; left:-5px; right:-5px;
-      height:2px;
-      background:var(--accent);
-      border-radius:1px;
-    }
-    .sl-ksb-flag {
-      position:absolute;
-      bottom:3px; left:50%;
-      transform:translateX(-50%);
-      font-size:11px; line-height:1;
-    }
-
-    /* Label sus și jos — text vertical rotit */
-    .sl-ksb-top-lbl, .sl-ksb-bot-lbl {
-      font-size:7px;
-      color:var(--t3);
-      letter-spacing:.5px;
-      writing-mode:vertical-rl;
-      transform:rotate(180deg);
-      white-space:nowrap;
-      line-height:1;
-    }
-    .sl-ksb-top-lbl { margin-bottom:6px; }
-    .sl-ksb-bot-lbl {
-      margin-top:6px;
-      color:var(--accent);
-      font-family:'Bebas Neue',sans-serif;
-      font-size:9px;
-    }
-
-    /* Mobile — identic, bara nu iese din pagină */
-    @media(max-width:560px){
-      #sl-km-scrollbar { width:20px; }
-      .sl-ksb-live { font-size:9px; padding:1px 3px; }
-      .sl-ksb-ms-lbl {
-        left:calc(100% + 5px);
-        font-size:7px;
-        padding:1px 4px;
-      }
-    }
-    </style>
-
-    <div class="sl-wrap">
-      <!-- bara sticky în interiorul scroll-ului landing -->
-      <div id="sl-km-scrollbar">
-        <div class="sl-ksb-top-lbl">Mai 2024</div>
-        <div class="sl-ksb-track" id="sl-ksb-track">
-          <div class="sl-ksb-fill" id="sl-ksb-fill"></div>
-          <div class="sl-ksb-dot"  id="sl-ksb-dot"></div>
-          <div class="sl-ksb-live" id="sl-ksb-live">0</div>
-          <div id="sl-ksb-ms"></div>
-          <div class="sl-ksb-finish"><div class="sl-ksb-flag">🏁</div></div>
-        </div>
-        <div class="sl-ksb-bot-lbl" id="sl-ksb-total">—</div>
-      </div>
-
-
-
-    <!-- ── HERO ── -->
-    <div class="sl-hero">
-      <div class="sl-avatar" id="sl-avatar-wrap">
-        <img id="sl-avatar-img" src="" alt="Balan Gabriel" style="display:none" onerror="this.style.display='none';document.getElementById('sl-avatar-emoji').style.display='block'">
-        <span id="sl-avatar-emoji">🏔️</span>
-      </div>
-      <div class="sl-name">BALAN GABRIEL</div>
-      <span class="sl-tag">Trail Runner · HAX · Bârlad</span>
-      <div class="sl-sub">Ultra-trail runner din Bârlad. Sezonul 2026 — 10 curse, 517km de munte, un singur obiectiv.</div>
-      <!-- Sponsor principal — dinamic din DB -->
-      <div id="sl-hero-sponsors" style="margin-top:18px;display:none;flex-direction:column;align-items:center;gap:6px">
-        <div style="font-size:9px;color:var(--t4);letter-spacing:2px;text-transform:uppercase">Susținut de</div>
-        <div id="sl-hero-sponsors-list" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center"></div>
-      </div>
-    </div>
-
-    <!-- ── COUNTDOWN
-
-    <!-- ── COUNTDOWN ── -->
-    <div class="sl-card sl-countdown-card">
-      <div class="sl-card-title">⏱️ Până la următoarea cursă</div>
-      <div class="sl-countdown-race" id="sl-next-race-name">—</div>
-      <div class="sl-countdown-date" id="sl-next-race-date">—</div>
-      <div class="sl-countdown-grid">
-        <div class="sl-cd-block"><div class="sl-cd-val" id="sl-cd-days">—</div><div class="sl-cd-lbl">zile</div></div>
-        <div class="sl-cd-sep">:</div>
-        <div class="sl-cd-block"><div class="sl-cd-val" id="sl-cd-hours">—</div><div class="sl-cd-lbl">ore</div></div>
-        <div class="sl-cd-sep">:</div>
-        <div class="sl-cd-block"><div class="sl-cd-val" id="sl-cd-mins">—</div><div class="sl-cd-lbl">min</div></div>
-        <div class="sl-cd-sep">:</div>
-        <div class="sl-cd-block"><div class="sl-cd-val" id="sl-cd-secs">—</div><div class="sl-cd-lbl">sec</div></div>
-      </div>
-      <div class="sl-pulse-wrap"><div class="sl-pulse-dot"></div><div class="sl-pulse-ring"></div><div class="sl-pulse-ring sl-pulse-ring2"></div></div>
-    </div>
-
-    <!-- ── PROGRES
-
-    <!-- ── PROGRES KM ── -->
-    <div class="sl-card">
-      <div class="sl-card-title">📈 Progres km 2026</div>
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
-        <div style="font-family:'Bebas Neue',var(--display);font-size:32px;color:var(--accent);line-height:1" id="sl-km-count">0</div>
-        <div style="font-size:12px;color:var(--t3)">din <span id="sl-km-target">5000</span> km target</div>
-      </div>
-      <div class="sl-progress-track">
-        <div class="sl-progress-fill" id="sl-progress-fill" style="width:0%"></div>
-        <div class="sl-progress-marker" id="sl-progress-marker"></div>
-      </div>
-      <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--t4)">
-        <span>Ian 2026</span><span>Dec 2026</span>
-      </div>
-      <div class="sl-stats" style="margin-top:14px">
-        <div class="sl-stat"><div class="sl-stat-val" id="sl-stat-curse">10</div><div class="sl-stat-lbl">curse</div></div>
-        <div class="sl-stat"><div class="sl-stat-val" id="sl-stat-dplus">35k+</div><div class="sl-stat-lbl">D+ total</div></div>
-        <div class="sl-stat"><div class="sl-stat-val">536</div><div class="sl-stat-lbl">ITRA PI</div></div>
-      </div>
-    </div>
-
-    <!-- ── MESAJ
-
-    <!-- ── CITAT ── -->
-    <div class="sl-card sl-quote-card">
-      <div class="sl-quote-text">"Nu alerg să câștig. Alerg ca să demonstrez că din Bârlad se poate."</div>
-      <div class="sl-quote-author">— Balan Gabriel</div>
-    </div>
-
-    <!-- ── VIDEO
-
-    <!-- ── VIDEO ── -->
-    <div class="sl-card" id="sl-video-card" style="display:none">
-      <div class="sl-card-title">🎥 Pe teren</div>
-      <div class="sl-video-wrap">
-        <iframe id="sl-video-iframe" src="" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width:100%;aspect-ratio:9/16;max-height:480px;border-radius:8px;display:block"></iframe>
-      </div>
-    </div>
-
-    <!-- ── HARTA
-
-    <!-- ── HARTA INTERACTIVA ── -->
-    <div class="sl-card">
-      <div class="sl-card-title">🗺️ Traseul sezonului</div>
-      <div class="sl-map-wrap" id="sl-map-wrap">
-        <svg id="sl-map-svg" viewBox="0 0 340 260" style="width:100%;height:auto;display:block"></svg>
-        <div class="sl-map-tooltip" id="sl-map-tooltip" style="display:none"></div>
-      </div>
-      <div class="sl-map-legend" id="sl-map-legend"></div>
-    </div>
-
-    <!-- ── TIMELINE
-
-    <!-- ── TIMELINE CARIERA ── -->
-    <div class="sl-card">
-      <div class="sl-card-title">⛰️ Povestea — 2024 → 2026</div>
-      <div class="sl-timeline" id="sl-timeline">
-        <div class="sl-tl-item sl-tl-left">
-          <div class="sl-tl-dot"></div>
-          <div class="sl-tl-content">
-            <div class="sl-tl-year">Mai 2024</div>
-            <div class="sl-tl-title">Prima alergare</div>
-            <div class="sl-tl-desc">De la primele km pe străzile Bârladului la Bucharest 10K — PR spart, stomac mai puțin fericit.</div>
-          </div>
-        </div>
-        <div class="sl-tl-item sl-tl-right">
-          <div class="sl-tl-dot"></div>
-          <div class="sl-tl-content">
-            <div class="sl-tl-year">Oct 2024</div>
-            <div class="sl-tl-title">Triple Crown Challenge</div>
-            <div class="sl-tl-desc">5K + 21K + 15K în zile diferite. Prima întâlnire cu trail-ul montan. Febra de „mentenanță" inclusă.</div>
-          </div>
-        </div>
-        <div class="sl-tl-item sl-tl-left">
-          <div class="sl-tl-dot"></div>
-          <div class="sl-tl-content">
-            <div class="sl-tl-year">Ian 2025</div>
-            <div class="sl-tl-title">Challenge zilnic — 500km</div>
-            <div class="sl-tl-desc">Zi 1 = 1km, Zi 30 = 30km. Peste 500km în ianuarie, după muncă, zi de zi.</div>
-          </div>
-        </div>
-        <div class="sl-tl-item sl-tl-right">
-          <div class="sl-tl-dot"></div>
-          <div class="sl-tl-content">
-            <div class="sl-tl-year">Iul 2025</div>
-            <div class="sl-tl-title">BUCOVINA — km 130</div>
-            <div class="sl-tl-desc">100 mile prin furtună. 3 deshidratări, insolații, o oră de somn. La km 130 furtuna a oprit cursa. Eu nu m-am oprit.</div>
-          </div>
-        </div>
-        <div class="sl-tl-item sl-tl-left">
-          <div class="sl-tl-dot"></div>
-          <div class="sl-tl-content">
-            <div class="sl-tl-year">Dec 2025</div>
-            <div class="sl-tl-title">600km în decembrie</div>
-            <div class="sl-tl-desc">10km dimineața + 10km seara, pe lângă muncă. 3.000km total în 2025. Pregătire finală pentru 2026.</div>
-          </div>
-        </div>
-        <div class="sl-tl-item sl-tl-right sl-tl-highlight">
-          <div class="sl-tl-dot sl-tl-dot-accent"></div>
-          <div class="sl-tl-content">
-            <div class="sl-tl-year">2026 →</div>
-            <div class="sl-tl-title">Sezonul complet</div>
-            <div class="sl-tl-desc">10 curse. 517km. Obiectiv: BUCOVINA ULTRA ROCKS 114KM — terminat.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── SIMULATOR
-
-    <!-- ── SIMULATOR ROI ── -->
-    <div class="sl-card">
-      <div class="sl-card-title">💰 Simulator parteneriat</div>
-      <div style="margin-bottom:14px">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-          <span style="font-size:12px;color:var(--t2)">Buget sponsorizare</span>
-          <span style="font-family:'Bebas Neue',var(--display);font-size:24px;color:var(--accent)" id="sl-roi-amount">500 RON</span>
-        </div>
-        <input type="range" class="sl-roi-slider" id="sl-roi-slider" min="100" max="5000" step="100" value="500">
-        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t4);margin-top:4px">
-          <span>100 RON</span><span>5.000 RON</span>
-        </div>
-      </div>
-      <div id="sl-roi-benefits" class="sl-roi-grid"></div>
-      <div class="sl-roi-summary" id="sl-roi-summary"></div>
-    </div>
-
-    <!-- ── UNDE SE DUC
-
-    <!-- ── CE PRIMESTI ── -->
-    <div class="sl-card">
-      <div class="sl-card-title">🤝 De ce să mă susții</div>
-      <div class="sl-benefit">
-        <div class="sl-benefit-icon">🏙️</div>
-        <div class="sl-benefit-text">
-          <div class="sl-benefit-title">Reprezinți Bârladul la nivel național</div>
-          <div class="sl-benefit-desc">La fiecare cursă — de la Transylvania 100 la UTMB Bucovina — numele tău e asociat cu un atlet care pune Bârladul pe harta trail-ului românesc.</div>
-        </div>
-      </div>
-      <div class="sl-benefit">
-        <div class="sl-benefit-icon">🌱</div>
-        <div class="sl-benefit-text">
-          <div class="sl-benefit-title">Aduci sportul în Bârlad</div>
-          <div class="sl-benefit-desc">Susținând un atlet local, contribui concret la cultura sportivă din oraș — inspiri oameni care văd că se poate, chiar din Bârlad.</div>
-        </div>
-      </div>
-      <div class="sl-benefit">
-        <div class="sl-benefit-icon">👕</div>
-        <div class="sl-benefit-text">
-          <div class="sl-benefit-title">Logo la 10 curse, 10 locații diferite</div>
-          <div class="sl-benefit-desc">Echipament cu brandul tău la start și finish în fața a sute de concurenți și spectatori — la Brașov, Sibiu, Bucovina și nu numai.</div>
-        </div>
-      </div>
-    </div>
-
-    
-
-    <!-- ── FAQ ── -->
-    <div class="sl-card">
-      <div class="sl-card-title">❓ Întrebări frecvente</div>
-      <div class="sl-faq" id="sl-faq-list">
-        <div class="sl-faq-item">
-          <button class="sl-faq-q" onclick="slToggleFaq(this)">De ce să sponsorizez un alergător necunoscut? <span class="sl-faq-arr">▾</span></button>
-          <div class="sl-faq-a">Tocmai asta e oportunitatea. Când voi deveni cunoscut, sponsorii vor fi mulți și costul va fi mare. Acum ești primul — parteneriat real, nu reclamă. Și eu nu voi uita asta niciodată.</div>
-        </div>
-        <div class="sl-faq-item">
-          <button class="sl-faq-q" onclick="slToggleFaq(this)">Ce vizibilitate am dacă nu ai mulți urmăritori? <span class="sl-faq-arr">▾</span></button>
-          <div class="sl-faq-a">Vizibilitatea principală e fizică — logo pe echipament la curse cu sute de participanți și spectatori. Dashboard-ul live e un instrument de credibilitate, nu de reach. Iar Bârladul e un oraș mic — toată lumea va ști că firma ta susține sportul local.</div>
-        </div>
-        <div class="sl-faq-item">
-          <button class="sl-faq-q" onclick="slToggleFaq(this)">Cum știu că banii se duc unde spui? <span class="sl-faq-arr">▾</span></button>
-          <div class="sl-faq-a">Ești pe pagina de răspuns. Acest dashboard arată în timp real fiecare cursă, fiecare km, fiecare cheltuială planificată. Nu există alt atlet cu un nivel de transparență ca ăsta.</div>
-        </div>
-        <div class="sl-faq-item">
-          <button class="sl-faq-q" onclick="slToggleFaq(this)">Ce se întâmplă dacă nu termini o cursă? <span class="sl-faq-arr">▾</span></button>
-          <div class="sl-faq-a">La Bucovina 2025 am ajuns la km 130 din 161 când furtuna a oprit cursa. Am continuat sezonul. Sponsorizarea nu e pe rezultate — e pe prezență, determinare și reprezentare. Acele lucruri nu se opresc la km 130.</div>
-        </div>
-        <div class="sl-faq-item">
-          <button class="sl-faq-q" onclick="slToggleFaq(this)">Suma minimă de sponsorizare? <span class="sl-faq-arr">▾</span></button>
-          <div class="sl-faq-a">Nu există minim. O contribuție de 200 RON e la fel de apreciată ca una de 2.000 RON — și va fi tratată cu același respect. Folosește simulatorul de mai sus să vezi ce primești în schimb.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── PARTENERI
-
-    <!-- ── PARTENERI ACTUALI — dinamic din DB ── -->
-    <div class="sl-card" id="sl-current-sponsors-card" style="display:none">
-      <div class="sl-card-title">✅ Parteneri actuali — Sezon 2026</div>
-      <div id="sl-partners-list"></div>
-      <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--t3);line-height:1.6">
-        💡 <em>Locuri disponibile — contactează-mă pentru detalii.</em>
-      </div>
-    </div>
-
-    <!-- ── CTA
-
-    <!-- ── CTA ── -->
-    <div class="sl-cta">
-      <button class="sl-btn-primary" onclick="slEnterDash()">📈 Vezi dashboardul live →</button>
-      <a id="sl-wa-btn" href="https://wa.me/40700000000?text=Buna%20Gabriel%2C%20sunt%20interesat%20de%20un%20parteneriat%20pentru%20sezonul%202026." target="_blank" rel="noopener"
-         style="width:100%;padding:12px;background:rgba(37,211,102,.1);color:#25d366;font-size:13px;font-weight:600;border:1px solid rgba(37,211,102,.3);border-radius:var(--r);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Scrie-mi pe WhatsApp
-      </a>
-    </div>
-    <div style="text-align:center;margin-top:24px;font-size:10px;color:var(--t4);letter-spacing:1px">TRAIL MANAGER 2026 · BALAN GABRIEL · HAX</div>
-  </div>
-</div>
-
-<!-- ── LOGIN SCREEN ── -->
-<div class="login-screen" id="login-screen" style="display:none" onclick="if(event.target===this)hideLoginModal()">
-  <div class="login-box">
-    <button onclick="hideLoginModal()" style="position:absolute;top:12px;right:14px;background:none;border:none;color:var(--t3);font-size:20px;cursor:pointer;line-height:1">✕</button>
-    <div class="login-logo">
-      <div class="login-logo-mark">⛰️ TRAIL</div>
-      <div class="login-logo-sub">Running Manager 2026</div>
-    </div>
-    <div class="login-tabs">
-      <button class="login-tab on" onclick="switchLoginTab('login',this)">Intră în cont</button>
-      <button class="login-tab" onclick="switchLoginTab('signup',this)">Cont nou</button>
-    </div>
-    <div class="login-fields">
-      <div class="fi">
-        <span class="lbl" style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Email</span>
-        <input type="email" id="auth-email" placeholder="email@exemplu.com" autocomplete="email">
-      </div>
-      <div class="fi">
-        <span class="lbl" style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Parolă</span>
-        <input type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password"
-          onkeydown="if(event.key==='Enter') doAuth()">
-      </div>
-      <div class="fi" id="auth-pass2-wrap" style="display:none">
-        <span class="lbl" style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Confirmă parola</span>
-        <input type="password" id="auth-pass2" placeholder="••••••••" autocomplete="new-password"
-          onkeydown="if(event.key==='Enter') doAuth()">
-      </div>
-    </div>
-    <div class="login-err" id="auth-err"></div>
-    <button class="login-btn" id="auth-btn" onclick="doAuth()">Intră în cont</button>
-    <div class="login-sep" id="auth-reset-wrap">
-      <a href="#" onclick="resetPassword()" style="color:var(--t3);text-decoration:none;font-size:12px">Am uitat parola</a>
-    </div>
-  </div>
-</div>
-
-<!-- ── MOBILE TOP BAR ── -->
-<div class="mobile-topbar">
-  <div class="mobile-logo"><span>⛰️</span>TRAIL MANAGER</div>
-  <div class="mobile-topbar-right">
-    <div class="mobile-sync">
-      <span id="m-sync-dot" style="width:6px;height:6px;border-radius:50%;background:var(--t4);display:inline-block"></span>
-      <span id="m-sync-status">—</span>
-    </div>
-    <button id="m-login-btn" onclick="showLoginModal()" style="background:none;border:1px solid var(--accent-border);color:var(--accent);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer">🔑</button>
-    <button id="m-logout-btn" onclick="doLogout()" style="display:none;background:none;border:1px solid rgba(255,79,79,.2);color:var(--red);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer">🚪</button>
-    <button class="hamburger" onclick="openDrawer()">☰</button>
-  </div>
-</div>
-
-<!-- ── MOBILE DRAWER ── -->
-<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
-<div class="drawer" id="drawer">
-  <div class="drawer-head">
-    <div class="drawer-logo">⛰️ TRAIL</div>
-    <button class="drawer-close" onclick="closeDrawer()">✕</button>
-  </div>
-  <div class="drawer-nav">
-    <div class="nav-group">Principal</div>
-    <div class="ni" onclick="go('dash',this);closeDrawer()"><span class="ico">🏠</span>Dashboard</div>
-    <div class="ni" onclick="go('curse',this);closeDrawer()"><span class="ico">🏁</span>Curse <span class="badge" id="db-curse">0</span></div>
-    <div class="ni" onclick="go('cal',this);closeDrawer()"><span class="ico">📅</span>Calendar</div>
-    <div class="nav-group">Finanțe & Gear</div>
-    <div class="ni" onclick="go('buget',this);closeDrawer()"><span class="ico">💰</span>Buget Curse</div>
-    <div class="ni" onclick="go('estimare',this);closeDrawer()"><span class="ico">📊</span>Estimare An</div>
-    <div class="ni" onclick="go('sponsori',this);closeDrawer()"><span class="ico">💼</span>Sponsori</div>
-    <div class="ni" onclick="go('echip',this);closeDrawer()"><span class="ico">👟</span>Echipament</div>
-    <div class="ni" onclick="go('nutri',this);closeDrawer()"><span class="ico">🍌</span>Nutriție</div>
-    <div class="nav-group">Performanță</div>
-    <div class="ni" onclick="go('stats',this);closeDrawer()"><span class="ico">📈</span>Statistici</div>
-    <div class="ni owner-only" id="nav-profil-drawer" onclick="go('profil',this);closeDrawer()" style="display:none"><span class="ico">👤</span>Setări Profil</div>
-    <div class="ni owner-only" id="nav-setari-drawer" onclick="go('setari',this);closeDrawer()" style="display:none"><span class="ico">⚙️</span>Setări Landing</div>
-  </div>
-  <div class="drawer-kpi">
-    <div class="drawer-kpi-row"><span>Total km sezon</span><strong id="d-km">—</strong></div>
-    <div class="drawer-kpi-row"><span>Urmează în</span><strong id="d-next">—</strong></div>
-  </div>
-  <div class="drawer-save">
-    <button class="save-btn" onclick="saveData();closeDrawer()">☁️ Salvează</button>
-    <button class="save-btn" onclick="exportJSON();closeDrawer()" style="color:var(--t2);border-color:var(--border)">💾 Export JSON</button>
-  </div>
-</div>
-
-<!-- ── BOTTOM NAV ── -->
-<nav class="bottom-nav" id="bottom-nav">
-  <button class="bn on" onclick="goBN('dash',this)"><span class="bn-ico">🏠</span>Home</button>
-  <button class="bn" onclick="goBN('curse',this)"><span class="bn-ico">🏁</span>Curse</button>
-  <button class="bn" onclick="goBN('stats',this)"><span class="bn-ico">📈</span>Stats</button>
-  <button class="bn" onclick="goBN('buget',this)"><span class="bn-ico">💰</span>Buget</button>
-  <button class="bn" onclick="goBN('nutri',this)"><span class="bn-ico">🍌</span>Nutriție</button>
-</nav>
-
-<!-- GUEST BANNER -->
-<div class="guest-banner" id="guest-banner" style="display:none">
-  👁️ <strong>Mod vizualizare</strong> — ești logat ca vizitator. Doar Balan Gabriel poate edita datele.
-</div>
-
-<!-- ════════════════════════════════════════════════════
-     PREZENTARE SPONSOR — Full-screen overlay
-     ════════════════════════════════════════════════════ -->
 <div id="sp-prez">
   <!-- Progress -->
   <div id="sp-progress"><div id="sp-progress-fill" style="width:25%"></div></div>
@@ -2365,8 +2234,24 @@ body.readonly [data-owner-only] { display:none !important }
     <div class="sp-dot" data-s="13"></div>
   </div>
 
-  <!-- Close -->
-  <div id="sp-close" onclick="closeSponsorPrez()">✕</div>
+  <!-- Close → dashboard -->
+  <div id="sp-close" onclick="window.location.href='/'" title="Înapoi la dashboard">✕</div>
+
+  <!-- WhatsApp floating button -->
+  <a id="sp-wa-float" href="#" target="_blank" rel="noopener"
+    style="position:absolute;bottom:20px;right:20px;z-index:20;
+      display:flex;align-items:center;gap:7px;
+      background:rgba(37,211,102,.18);border:1px solid rgba(37,211,102,.4);
+      border-radius:24px;padding:8px 14px;text-decoration:none;
+      font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;
+      color:#25d366;transition:background .2s;backdrop-filter:blur(6px)"
+    onmouseover="this.style.background='rgba(37,211,102,.3)'"
+    onmouseout="this.style.background='rgba(37,211,102,.18)'">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    CONTACTEAZĂ
+  </a>
 
   <!-- Nav -->
   <div class="sp-nav" id="sp-prev" onclick="spNav(-1)">‹</div>
@@ -2558,8 +2443,8 @@ body.readonly [data-owner-only] { display:none !important }
               <span style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;font-family:'Inter',sans-serif">Buget lunar ales</span>
               <span style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--accent);letter-spacing:1px" id="sp-roi-amount">500 RON</span>
             </div>
-            <div style="position:relative;margin-bottom:16px">
-              <input type="range" id="sp-roi-slider" min="100" max="5000" step="100" value="500" class="sp-roi-range">
+            <div style="position:relative;margin-bottom:16px;overflow:visible">
+              <input type="range" id="sp-roi-slider" min="100" max="5000" step="100" value="500" class="sp-roi-range" oninput="spUpdateROI(parseInt(this.value))">
               <div style="display:flex;justify-content:space-between;margin-top:4px">
                 <span style="font-size:9px;color:rgba(255,255,255,.3);font-family:'Inter',sans-serif">100 RON</span>
                 <span style="font-size:9px;color:rgba(255,255,255,.3);font-family:'Inter',sans-serif">5.000 RON</span>
@@ -2582,6 +2467,10 @@ body.readonly [data-owner-only] { display:none !important }
 
 
     <!-- ── SLIDE 4B — WISHLIST ECHIPAMENT ── -->
+    
+
+
+    <!-- ── SLIDE 4B — SUSȚINE SEZONUL ── -->
     <div class="sp-slide" id="sp-s4b">
       <div class="sp-bg" style="background:#000"></div>
       <div class="sp-split">
@@ -2704,6 +2593,7 @@ body.readonly [data-owner-only] { display:none !important }
         </div>
       </div>
     </div>
+
 
     <!-- ── SLIDE 5 — HARTĂ ── -->
     <!-- ── SLIDE 5 — REDIRECT LA S2 (combinat) ── -->
@@ -2843,6 +2733,7 @@ body.readonly [data-owner-only] { display:none !important }
         </div>
       </div>
     </div>
+
 <!-- ── SLIDE 11 — POVESTE A: ORIGINEA ── -->
     <div class="sp-slide" id="sp-s11">
       <div class="sp-bg" style="background:#000"></div>
@@ -2943,1312 +2834,42 @@ body.readonly [data-owner-only] { display:none !important }
           <div class="sp-reveal" data-delay="1100" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px;margin-top:8px">
             <canvas id="sp-km-chart" height="80" style="width:100%;display:block"></canvas>
           </div>
+
         </div>
       </div>
     </div>
 
-    </div><!-- /sp-slides -->
-</div><!-- /sp-prez -->
+    </div>
 
-<div class="shell">
-
-<!-- ── SIDEBAR ── -->
-<aside class="sidebar">
-  <div class="logo">
-    <div class="logo-mark"><span>⛰️</span>TRAIL<br>MANAGER</div>
-    <div class="logo-sub">Sezon 2026</div>
+<!-- ── Modal mobil detalii cursă (S2 mobile) ── -->
+<div id="sp-race-mobile-modal">
+  <div style="display:flex;align-items:center;justify-content:space-between;
+    padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0">
+    <div>
+      <div style="font-size:9px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;
+        font-family:'Inter',sans-serif;margin-bottom:4px">📍 DETALII CURSĂ</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;letter-spacing:1px"
+        id="mob-race-name">—</div>
+    </div>
+    <button onclick="closeMobileRaceModal()"
+      style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+        border-radius:50%;width:36px;height:36px;color:#fff;font-size:18px;cursor:pointer;
+        display:flex;align-items:center;justify-content:center">✕</button>
   </div>
-  <nav class="nav">
-    <div class="nav-group">Principal</div>
-    <div class="ni on" onclick="go('dash',this)"><span class="ico">🏠</span>Dashboard</div>
-    <div class="ni" onclick="go('curse',this)"><span class="ico">🏁</span>Curse <span class="badge" id="b-curse">0</span></div>
-    <div class="ni" onclick="go('cal',this)"><span class="ico">📅</span>Calendar</div>
-    <div class="nav-group">Finanțe & Gear</div>
-    <div class="ni" onclick="go('buget',this)"><span class="ico">💰</span>Buget Curse</div>
-    <div class="ni" onclick="go('estimare',this)"><span class="ico">📊</span>Estimare An</div>
-    <div class="ni" onclick="go('sponsori',this)"><span class="ico">💼</span>Sponsori <span class="badge" id="b-sp">0</span></div>
-    <div class="ni" onclick="go('echip',this)"><span class="ico">👟</span>Echipament</div>
-    <div class="ni" onclick="go('nutri',this)"><span class="ico">🍌</span>Nutriție & Transport</div>
-    <div class="nav-group">Performanță</div>
-    <div class="ni" onclick="go('stats',this)"><span class="ico">📈</span>Statistici Alergări</div>
-    <div class="ni owner-only" id="nav-profil-sidebar" onclick="go('profil',this)" style="display:none"><span class="ico">👤</span>Setări Profil</div>
-    <div class="ni owner-only" id="nav-setari-sidebar" onclick="go('setari',this)" style="display:none"><span class="ico">⚙️</span>Setări Landing</div>
-  </nav>
-  <div class="sidebar-bottom">
-    <div class="kpi">
-      <span class="kpi-label">Total km sezon</span>
-      <div class="kpi-val" id="sk-km">—</div>
-      <div class="kpi-sub" id="sk-kmsub">curse înregistrate</div>
-    </div>
-    <div class="kpi" style="margin-bottom:10px">
-      <span class="kpi-label">Urmează în</span>
-      <div class="kpi-val" id="sk-next">—</div>
-      <div class="kpi-sub" id="sk-nextn" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</div>
-    </div>
-    <div style="font-size:10px;color:var(--t3);margin-bottom:6px;display:flex;align-items:center;gap:6px">
-      <span id="sync-dot" style="width:7px;height:7px;border-radius:50%;background:var(--t4);display:inline-block"></span>
-      <span id="sync-status">Neconectat</span>
-    </div>
-    <div style="font-size:11px;color:var(--t3);margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="user-email-display"></div>
-    <button class="save-btn" id="save-btn" onclick="saveData()">☁️ Salvează</button>
-    <!-- Mod Sponsor toggle — owner only -->
-    <button class="save-btn owner-only" id="sponsor-mode-btn"
-      onclick="toggleSponsorMode()"
-      style="display:none;margin-top:6px;color:var(--t2);border-color:var(--border)">
-      👔 Mod Sponsor
-    </button>
-    <button class="save-btn" id="export-btn" onclick="exportJSON()" style="margin-top:6px;color:var(--t2);border-color:var(--border)">💾 Export JSON</button>
-    <button class="save-btn" id="login-btn" onclick="showLoginModal()" style="margin-top:6px;color:var(--accent);border-color:var(--accent-border);background:var(--accent-dim)">🔑 Login</button>
-    <button class="save-btn" id="logout-btn" onclick="doLogout()" style="margin-top:6px;color:var(--red);border-color:rgba(255,79,79,.2);background:rgba(255,79,79,.05);display:none">🚪 Deconectare</button>
-    <!-- Sponsori strip -->
-    <div id="sidebar-sponsors" style="display:none;margin-top:12px;border-top:1px solid var(--border);padding-top:10px">
-      <div style="font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Susținut de</div>
-      <div id="sidebar-sponsors-list" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center"></div>
-    </div>
-    <!-- Theme switcher — owner only -->
-    <div id="theme-switcher" style="display:none;margin-top:14px;border-top:1px solid var(--border);padding-top:12px">
-      <div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">🎨 Temă</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
-        <button onclick="setTheme('default')" data-t="default" class="theme-btn">🌿 Verde</button>
-        <button onclick="setTheme('vulcan')"  data-t="vulcan"  class="theme-btn">🌋 Vulcan</button>
-        <button onclick="setTheme('ghetar')"  data-t="ghetar"  class="theme-btn">🧊 Ghetar</button>
-        <button onclick="setTheme('noapte')"  data-t="noapte"  class="theme-btn">🌙 Noapte</button>
-      </div>
-    </div>
+  <div style="flex:1;overflow-y:auto;padding:16px 18px">
+    <div id="mob-race-stats"
+      style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px"></div>
+    <div id="mob-race-info" style="display:flex;flex-direction:column;gap:0"></div>
   </div>
-</aside>
-
-<!-- ── MAIN ── -->
-<main class="main">
-<div id="filebanner-wrap" style="display:none"></div>
-
-<!-- DASHBOARD -->
-<div class="page on" id="pg-dash">
-
-  <!-- HERO SEZON -->
-  <div class="dash-hero">
-    <div class="dash-hero-eyebrow">⛰️ SEZON DE ALERGARE</div>
-    <div class="dash-hero-title">BALAN GABRIEL</div>
-    <div class="dash-hero-aka">HAX · 2026</div>
-    <div class="dash-hero-stats" id="dash-hero-stats">
-      <div class="dhs"><span id="dhs-km-real" style="color:var(--accent)">—</span><small>km alergați 2026</small></div>
-      <div class="dhs"><span id="dhs-curse">—</span><small>curse planificate</small></div>
-      <div class="dhs"><span id="dhs-km">—</span><small>km curse</small></div>
-      <div class="dhs"><span id="dhs-next">—</span><small>zile până la start</small></div>
-      <div class="dhs"><span id="dhs-streak" style="color:var(--orange)">—</span><small>🔥 streak</small></div>
-    </div>
-  </div>
-
-  <!-- BIO CARD -->
-  <div class="bio-card" id="bio-card">
-    <div class="bio-head">
-      <div class="bio-icon">🏃</div>
-      <div class="bio-head-info">
-        <div class="bio-name">Balan Gabriel <span class="bio-tag">HAX</span></div>
-        <div class="bio-sub">Alergător · Bârlad · Din mai 2024</div>
-        <div class="bio-badges">
-          <a href="https://www.strava.com/athletes/136130375" target="_blank" class="bio-link strava-link" title="Strava">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="display:block"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>&nbsp;Strava
-          </a>
-          <a href="https://itra.run/RunnerSpace/BALAN.Gabriel%20Zaharia/5688809" target="_blank" class="bio-link itra-link" title="ITRA Profile">ITRA</a>
-          <span class="bio-itra-pi" title="ITRA Performance Index">PI <span id="itra-pi-val">—</span>&nbsp;<span id="itra-rank" style="font-size:10px;color:var(--t3);font-family:var(--body);font-weight:400"></span></span>
-        </div>
-      </div>
-      <button class="bio-toggle" id="bio-toggle" onclick="toggleBio()">Vezi mai mult ▾</button>
-    </div>
-    <div class="bio-preview">
-      Totul a început cu o simplă întrebare, în mai 2024 — de la primele alergări pe străzile Bârladului, la <strong>Bucharest 10K</strong> terminat în pragul de a vomita cu spargere de PR, și de acolo... n-am mai oprit.
-    </div>
-    <div class="bio-full" id="bio-full" style="display:none">
-      <p>Primul contact cu <strong>trail-ul</strong> a venit printr-un challenge: <em>Triple Crown Challenge</em> — 5K, 21K și 15K în zile diferite. La prima cursă, pe urcare, am realizat la ce m-am înhamat. Am terminat totuși toate probele, cu febra de „mentenanță", și de acolo m-am îndrăgostit de alergările montane.</p>
-      <p><strong>2025</strong> a început cu un challenge zilnic: alerg în fiecare zi numărul zilei în km — 1 ianuarie = 1km, 30 ianuarie = 30km... peste <strong>500km</strong> strânși. Am dat totul, zi de zi, după muncă. Apoi a venit prăbușirea din februarie, iar din aprilie am dat din nou bice.</p>
-      <p>Am făcut prima alergare de <strong>peste 100km</strong> — local, la Bârlad — ca să mă calific la <em>Transylvania 100K</em>, care era cerință pentru marele obiectiv: <strong>BUCOVINA ULTRA ROCKS, 100 MILE — THE BEAST</strong>.</p>
-      <p>Am ajuns la start, pulsul creștea, respirațiile înlemneau. Am plecat. Am trecut prin 3 deshidratări, insolații, depresii, noroc de prieteni care m-au ținut pe drumul cel bun. Am dormit o oră. La <strong>km 130</strong>, ultimul checkpoint înainte de Giumalău — furtună îngrozitoare, copacii se rupeau, totul era vraiște. Cursa s-a oprit acolo.</p>
-      <p><em>Dar nu am renunțat.</em> Asta a fost lecția — să mă pregătesc mai bine.</p>
-      <p>Am terminat 2025 cu <strong>3.000 km</strong>. Și decembrie cu <strong>600km</strong> — un challenge nebun, 20km pe zi dimineața și seara, pe lângă muncă. Acum e 2026 și în câteva zile fac deja <strong>1.000km pe an</strong>. Cursele din 2026 sunt imposibile pentru un începător. Dar eu nu mai sunt începător.</p>
-    </div>
-  </div>
-
-  <!-- RACE HISTORY — imediat sub bio -->
-  <div class="bk-card" id="db-race-card" style="padding:20px;margin-bottom:0">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
-      <div>
-        <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">🏁 Race History</div>
-        <div style="font-size:11px;color:var(--t3);margin-top:3px" id="db-race-subtitle">sortate după dificultate</div>
-      </div>
-      <span id="db-race-count" style="font-family:var(--display);font-size:22px;color:var(--accent)"></span>
-    </div>
-    <div id="db-race-list"></div>
-    <!-- Pagination -->
-    <div id="db-race-pagination" style="display:none;margin-top:14px">
-      <div style="display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap">
-        <button id="db-race-prev" onclick="racePagePrev()" style="background:none;border:1px solid var(--border);color:var(--t2);border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;font-family:var(--body)">◀ Prev</button>
-        <div id="db-race-page-btns" style="display:flex;gap:4px;flex-wrap:wrap;justify-content:center"></div>
-        <button id="db-race-next" onclick="racePageNext()" style="background:none;border:1px solid var(--border);color:var(--t2);border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;font-family:var(--body)">Next ▶</button>
-      </div>
-      <div style="text-align:center;margin-top:8px;font-size:11px;color:var(--t3)" id="db-race-page-info"></div>
-    </div>
-  </div>
-
-  <div class="ph" style="margin-top:28px">
-    <div class="ph-left">
-      <h2 id="dash-title-display" onclick="startEditDashTitle()" style="cursor:default" title="">SEZONUL BESTIEI</h2>
-      <input id="dash-title-input" style="display:none;font-family:var(--display);font-size:46px;letter-spacing:2px;line-height:1;color:var(--text);background:transparent;border:none;border-bottom:2px solid var(--accent);outline:none;width:100%;max-width:500px" 
-        onblur="saveDashTitle()" onkeydown="if(event.key==='Enter')saveDashTitle()">
-      <p id="db-sub">Sezon 2026</p>
-    </div>
-  </div>
-
-  <!-- KPI tiles row -->
-  <div class="tiles" id="db-tiles"></div>
-
-  <!-- SPONSORI DONUT + LIST -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px" id="db-sp-row">
-
-    <!-- Donut chart sponsorizare vs necesar -->
-    <div class="bk-card" style="padding:20px">
-      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">💰 Sponsorizare vs Necesar</div>
-      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
-        <div id="db-donut" style="flex-shrink:0"></div>
-        <div id="db-donut-legend" style="display:flex;flex-direction:column;gap:10px;flex:1;min-width:120px"></div>
-      </div>
-      <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px" id="db-donut-breakdown"></div>
-    </div>
-
-    <!-- Top sponsori -->
-    <div class="bk-card" style="padding:20px">
-      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px">🤝 Sponsori</div>
-      <div id="db-sp-list"></div>
-      <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:10px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:11px;color:var(--t3)">Total angajat</span>
-        <span style="font-family:var(--display);font-size:18px;color:var(--green)" id="db-sp-total">—</span>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Plăți restante curse - MUTAT în Buget Curse -->
-
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin:24px 0 12px">Urmează curând</div>
-  <div class="cg" id="db-upcoming"></div>
-
-  <!-- TARGET KM PROGRESS -->
-  <div class="bk-card" style="padding:20px;margin-top:28px" id="db-target-card">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-      <div>
-        <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">🎯 Target anual km</div>
-        <div style="display:flex;align-items:baseline;gap:8px">
-          <span style="font-family:var(--display);font-size:36px;color:var(--accent)" id="db-km-actual">0</span>
-          <span style="color:var(--t3);font-size:14px">/ <span id="db-target-input" style="color:var(--text);font-size:14px;font-family:var(--body)">5000</span> km</span>
-        </div>
-      </div>
-      <div style="text-align:right">
-        <div style="font-size:11px;color:var(--t3)">La ritmul actual</div>
-        <div style="font-family:var(--display);font-size:20px;color:var(--yellow)" id="db-km-pred">—</div>
-        <div style="font-size:10px;color:var(--t3)">km estimat dec 2026</div>
-      </div>
-    </div>
-    <div style="background:var(--s3);border-radius:6px;height:10px;overflow:hidden;margin-bottom:8px">
-      <div id="db-target-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:6px;transition:width .5s"></div>
-    </div>
-    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t3)">
-      <span id="db-target-pct">0% din target</span>
-      <span id="db-target-rem">5000 km rămași</span>
-    </div>
-  </div>
-
-  <!-- STREAK -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px" id="db-streak-row">
-    <div class="bk-card" style="padding:16px;text-align:center">
-      <div style="font-size:24px;margin-bottom:4px">🔥</div>
-      <div style="font-family:var(--display);font-size:32px;color:var(--orange)" id="db-streak-cur">—</div>
-      <div style="font-size:11px;color:var(--t3)">zile consecutive acum</div>
-    </div>
-    <div class="bk-card" style="padding:16px;text-align:center">
-      <div style="font-size:24px;margin-bottom:4px">⚡</div>
-      <div style="font-family:var(--display);font-size:32px;color:var(--yellow)" id="db-streak-best">—</div>
-      <div style="font-size:11px;color:var(--t3)">zile — best streak ever</div>
-    </div>
-  </div>
-
-  <!-- HEATMAP -->
-  <div class="bk-card" style="padding:20px;margin-top:16px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">🗓️ Heatmap activitate</div>
-      <div style="font-size:11px;color:var(--t3)" id="db-heatmap-year">2026</div>
-    </div>
-    <div id="db-heatmap" style="overflow-x:auto"></div>
-  </div>
-
-
-
-  <!-- ACTIVITY FEED -->
-  <div style="margin-top:24px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">⚡ Activitate recentă</div>
-      <button onclick="go('stats',document.querySelector('.ni[onclick*=stats]'))" style="font-size:11px;color:var(--accent);background:none;border:none;cursor:pointer;padding:0">Vezi toate →</button>
-    </div>
-    <div id="db-activity-feed" style="display:flex;flex-direction:column;gap:10px"></div>
-  </div>
-
-</div>
-
-<!-- CURSE -->
-<div class="page" id="pg-curse">
-  <div class="ph">
-    <div class="ph-left"><h2>CURSE</h2><p>Gestionează toate cursele sezonului</p></div>
-    <div class="ph-right"><button class="btn btn-primary" onclick="openRC(null)">＋ Adaugă cursă</button></div>
-  </div>
-  <div class="tabs">
-    <button class="tab on" onclick="filterC('all',this)">Toate</button>
-    <button class="tab" onclick="filterC('upcoming',this)">Viitoare</button>
-    <button class="tab" onclick="filterC('paid',this)">Înscrise</button>
-    <button class="tab" onclick="filterC('unpaid',this)">Neachitate</button>
-  </div>
-  <div class="cg" id="rc-list"></div>
-</div>
-
-<!-- CALENDAR -->
-<div class="page" id="pg-cal">
-  <div class="ph"><div class="ph-left"><h2>CALENDAR</h2><p>Sezon 2026 — vizualizare lunară</p></div></div>
-  <div class="cal" id="cal-view"></div>
-</div>
-
-<!-- BUGET -->
-<div class="page" id="pg-buget">
-  <div class="ph"><div class="ph-left"><h2>BUGET CURSE</h2><p>Costuri per cursă — ce mai e de plătit</p></div></div>
-
-  <!-- Plăți restante -->
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px" id="db-unpaid-label"></div>
-  <div id="db-unpaid-list" style="margin-bottom:24px"></div>
-
-  <div class="tiles" id="bg-tiles"></div>
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">Status plăți per cursă</div>
-  <div id="bg-curse-cards"></div>
-</div>
-
-<!-- ESTIMARE AN -->
-<div class="page" id="pg-estimare">
-  <div class="ph"><div class="ph-left"><h2>ESTIMARE AN</h2><p>Toate costurile 2026 — curse + recurente lunare</p></div></div>
-  <div class="tiles" id="est-tiles"></div>
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin:4px 0 14px">Defalcare pe categorii</div>
-  <div id="est-breakdown"></div>
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin:24px 0 14px">Timeline lunar — cheltuieli estimate</div>
-  <div id="est-timeline"></div>
-</div>
-
-<!-- SPONSORI -->
-<div class="page" id="pg-sponsori">
-  <div class="ph">
-    <div class="ph-left"><h2>SPONSORI</h2><p>Sponsorizări și finanțare sezon</p></div>
-    <div class="ph-right"><button class="btn btn-primary" onclick="openSP(null)">＋ Adaugă sponsor</button></div>
-  </div>
-  <div class="tiles" id="sp-tiles"></div>
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">Lista sponsori</div>
-  <div id="sp-cards"></div>
-</div>
-
-<!-- ECHIPAMENT -->
-<div class="page" id="pg-echip">
-  <div class="ph">
-    <div class="ph-left"><h2>ECHIPAMENT</h2><p>Pantofi și gear activ</p></div>
-    <div class="ph-right"><button class="btn btn-primary" onclick="openEQ(null)">＋ Adaugă</button></div>
-  </div>
-  <div id="eq-list"></div>
-</div>
-
-<!-- NUTRITIE -->
-<div class="page" id="pg-nutri">
-  <div class="ph">
-    <div class="ph-left"><h2>NUTRIȚIE & TRANSPORT</h2><p>Geluri, suplimente, destinații</p></div>
-  </div>
-
-  <!-- Geluri settings -->
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">⚙️ Setări geluri</div>
-  <div class="tiles" style="margin-bottom:28px" id="gel-settings-tiles">
-    <div class="tile" style="display:flex;flex-direction:column;gap:10px">
-      <span class="lbl">Preț set 24 geluri (RON)</span>
-      <div style="display:flex;gap:8px;align-items:center">
-        <input type="number" id="gel-pret" style="max-width:120px" placeholder="200">
-        <button class="btn btn-ghost btn-sm" onclick="saveGelSettings()">Salvează</button>
-      </div>
-    </div>
-    <div class="tile" style="display:flex;flex-direction:column;gap:10px">
-      <span class="lbl">Geluri training lunar (buc)</span>
-      <div style="display:flex;gap:8px;align-items:center">
-        <input type="number" id="gel-training" style="max-width:120px" placeholder="8">
-        <button class="btn btn-ghost btn-sm" onclick="saveGelSettings()">Salvează</button>
-      </div>
-    </div>
-    <div class="tile">
-      <span class="lbl">Preț / gel calculat</span>
-      <div class="tv accent" id="gel-pret-calc">—</div>
-      <div class="ts">RON per gel</div>
-    </div>
-  </div>
-
-  <!-- Suplimente -->
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-    <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">💊 Suplimente lunare</div>
-    <button class="btn btn-ghost btn-sm" onclick="openSupl(null)">＋ Adaugă</button>
-  </div>
-  <div id="supl-list" style="margin-bottom:28px"></div>
-
-  <!-- Transport -->
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-    <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">🚗 Destinații transport</div>
-    <button class="btn btn-ghost btn-sm" onclick="openTr(null)">＋ Adaugă</button>
-  </div>
-  <div id="tr-list"></div>
-</div>
-
-<!-- STATISTICI ALERGĂRI -->
-<div class="page" id="pg-stats">
-  <div class="ph">
-    <div class="ph-left"><h2>STATISTICI</h2><p>Evoluție · 3 ani de date</p></div>
-    <div class="ph-right">
-      <label class="btn btn-primary" style="cursor:pointer">
-        ＋ Import
-        <input type="file" id="stats-file-input" accept=".csv,.gpx,.tcx,.fit" multiple style="display:none" onchange="importActivities(this.files)">
-      </label>
-      <button class="btn btn-ghost btn-sm" onclick="checkWebhook()" title="Status webhook Strava" style="color:var(--t3);border-color:var(--border);font-size:10px" id="webhook-btn">📡</button>
-      <button class="btn btn-ghost btn-sm" onclick="syncStrava()" title="Sync Strava" style="color:#fc5200;border-color:rgba(252,82,0,.3)">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-right:4px"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
-        Sync Strava
-      </button>
-      <button class="btn btn-ghost btn-sm" onclick="clearActivities()" title="Șterge toate">🗑</button>
-      <button class="btn btn-ghost btn-sm" onclick="deduplicateActivities()" title="Elimină duplicate" style="color:var(--yellow);border-color:rgba(255,200,79,.3)">🧹 Deduplică</button>
-    </div>
-  </div>
-
-  <!-- KPI tiles -->
-  <div class="tiles" id="st-tiles" style="margin-bottom:24px"></div>
-
-  <!-- AN SELECTOR + TARGET -->
-  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap" id="st-year-tabs"></div>
-  <div id="st-target-block" style="margin-bottom:20px"></div>
-
-  <!-- YEARLY COMPARISON CARDS -->
-  <div id="st-year-cards" style="margin-bottom:20px"></div>
-  <div id="st-growth-row" style="margin-bottom:20px"></div>
-
-  <!-- KM pe lună — full width -->
-  <div class="bk-card" style="padding:20px;margin-bottom:16px">
-    <h4 style="margin-bottom:4px">📅 KM pe lună</h4>
-    <div style="font-size:11px;color:var(--t3);margin-bottom:14px" id="chart-km-month-sub">—</div>
-    <div style="position:relative;height:180px" id="chart-km-month"></div>
-  </div>
-
-  <!-- D+ + Ore — 2 col pe desktop, 1 pe mobile -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" id="st-charts-row2">
-    <div class="bk-card" style="padding:20px">
-      <h4 style="margin-bottom:14px">⛰️ D+ pe lună (m)</h4>
-      <div style="position:relative;height:150px" id="chart-elev-month"></div>
-    </div>
-    <div class="bk-card" style="padding:20px">
-      <h4 style="margin-bottom:14px">⏱️ Ore alergare / lună</h4>
-      <div style="position:relative;height:150px" id="chart-dur-month"></div>
-    </div>
-  </div>
-
-  <!-- Cumulative + Pie — 3fr 1fr pe desktop -->
-  <div style="display:grid;grid-template-columns:3fr 1fr;gap:16px;margin-bottom:16px" id="st-charts-row3">
-    <div class="bk-card" style="padding:20px">
-      <h4 style="margin-bottom:4px">📈 KM cumulați în timp</h4>
-      <div style="font-size:11px;color:var(--t3);margin-bottom:14px" id="chart-cum-sub">—</div>
-      <div style="position:relative;height:180px" id="chart-cumulative"></div>
-    </div>
-    <div class="bk-card" style="padding:20px;display:flex;flex-direction:column">
-      <h4 style="margin-bottom:4px">🏷️ Tipuri</h4>
-      <div style="font-size:11px;color:var(--t3);margin-bottom:14px">distribuție</div>
-      <div style="flex:1;display:flex;align-items:center;justify-content:center;min-height:140px" id="chart-pie"></div>
-    </div>
-  </div>
-
-  <!-- Personal records -->
-  <div id="st-records" style="margin-bottom:20px"></div>
-
-  <!-- HEATMAP — full width -->
-  <div class="bk-card" style="padding:20px;margin-bottom:20px">
-    <h4 style="margin-bottom:4px">🗓️ Heatmap activitate</h4>
-    <div style="font-size:11px;color:var(--t3);margin-bottom:14px" id="st-heatmap-sub">zile cu alergare</div>
-    <div id="st-heatmap" style="overflow-x:auto"></div>
-  </div>
-
-  <!-- Filter + list -->
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
-    <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px">📋 Activități</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <select id="st-filter-year" onchange="renderStats()" style="padding:6px 10px;font-size:12px;background:var(--s2);border:1px solid var(--border);border-radius:6px;color:var(--text)">
-        <option value="">Toți anii</option>
-      </select>
-      <select id="st-filter-type" onchange="renderStats()" style="padding:6px 10px;font-size:12px;background:var(--s2);border:1px solid var(--border);border-radius:6px;color:var(--text)">
-        <option value="">Toate tipurile</option>
-        <option value="trail">Trail</option>
-        <option value="road">Road</option>
-        <option value="track">Track</option>
-      </select>
-    </div>
-  </div>
-  <div id="st-activity-list"></div>
-
-  <!-- Empty state -->
-  <div id="st-empty" style="display:none;text-align:center;padding:60px 20px">
-    <div style="font-size:48px;margin-bottom:16px">📂</div>
-    <div style="font-family:var(--display);font-size:28px;letter-spacing:2px;color:var(--t2);margin-bottom:8px">NICIO ACTIVITATE</div>
-    <div style="color:var(--t3);font-size:13px;margin-bottom:24px">Importă CSV din Garmin Connect sau GPX/TCX individual</div>
-    <label class="btn btn-primary" style="cursor:pointer">
-      ＋ Import primul fișier
-      <input type="file" accept=".csv,.gpx,.tcx" multiple style="display:none" onchange="importActivities(this.files)">
-    </label>
-    <div style="margin-top:20px;font-size:12px;color:var(--t3)">
-      💡 <strong style="color:var(--t2)">Garmin:</strong> Garmin Connect → hamburger → Import/Export → Export your data → Activities CSV<br>
-      💡 <strong style="color:var(--t2)">Strava:</strong> Settings → My Account → Download or Delete Data → Request Archive
-    </div>
+  <div style="padding:12px 16px;border-top:1px solid rgba(255,255,255,.1);flex-shrink:0">
+    <div style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;
+      font-family:'Inter',sans-serif">swipe stânga/dreapta pentru slide-uri</div>
   </div>
 </div>
 
-
-<!-- ── SETĂRI PROFIL ── (owner only) -->
-<div class="page" id="pg-profil">
-<div class="ph">
-  <div class="ph-left"><h2>👤 SETĂRI PROFIL</h2><p>Informații personale afișate în Hero și Landing</p></div>
-  <div class="ph-right">
-    <button class="btn btn-primary" onclick="saveProfile()">💾 Salvează profil</button>
-  </div>
-</div>
-
-<!-- IDENTITATE -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">🏃 Identitate</div>
-  <div class="fg">
-    <div class="fi fgrow">
-      <span class="lbl">Nume complet</span>
-      <input type="text" id="prof-name" placeholder="Balan Gabriel">
-    </div>
-    <div class="fi">
-      <span class="lbl">Poreclă / Alias</span>
-      <input type="text" id="prof-nickname" placeholder="HAX">
-    </div>
-    <div class="fi fgrow">
-      <span class="lbl">Oraș / Club</span>
-      <input type="text" id="prof-city" placeholder="Bârlad · HAX Running">
-    </div>
-    <div class="fi">
-      <span class="lbl">An debut alergare</span>
-      <input type="number" id="prof-year" placeholder="2024" min="2000" max="2030">
-    </div>
-  </div>
-</div>
-
-<!-- FOTO PROFIL -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">📸 Foto profil</div>
-  <div class="fi">
-    <span class="lbl">URL poză profil</span>
-    <div style="display:flex;gap:8px;align-items:center">
-      <input type="url" id="prof-photo" placeholder="https://i.imgur.com/..." style="flex:1"
-        oninput="const p=document.getElementById('prof-photo-prev');const i=document.getElementById('prof-photo-img');if(this.value&&p&&i){i.src=this.value;i.onload=()=>p.style.display='block';i.onerror=()=>p.style.display='none';}else if(p)p.style.display='none';">
-      <div id="prof-photo-prev" style="display:none">
-        <img id="prof-photo-img" src="" style="width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)">
-      </div>
-    </div>
-    <div style="font-size:10px;color:var(--t3);margin-top:4px">Apare ca avatar în Hero și pe landing. Imgur, Cloudinary etc.</div>
-  </div>
-</div>
-
-<!-- BIO -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">📝 Bio</div>
-  <div class="fi" style="margin-bottom:12px">
-    <span class="lbl">Preview bio (1 rând — apare sub nume în Hero)</span>
-    <input type="text" id="prof-bio-short" placeholder="Totul a început cu o simplă întrebare, în mai 2024...">
-  </div>
-  <div class="fi">
-    <span class="lbl">Bio complet (apare la "Vezi mai mult" în Hero)</span>
-    <textarea id="prof-bio-full" rows="8" style="resize:vertical" placeholder="Scrie povestea ta..."></textarea>
-    <div style="font-size:10px;color:var(--t3);margin-top:4px">Suportă <strong>bold</strong> și <em>italic</em> ca HTML.</div>
-  </div>
-</div>
-
-<!-- PLATFORME -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">🔗 Platforme sportive</div>
-  <div class="fg">
-    <div class="fi fgrow">
-      <span class="lbl">Strava Athlete ID</span>
-      <input type="text" id="prof-strava-id" placeholder="136130375">
-      <div style="font-size:10px;color:var(--t3);margin-top:3px">Din URL-ul profilului tău Strava: strava.com/athletes/<strong>ID</strong></div>
-    </div>
-    <div class="fi fgrow">
-      <span class="lbl">ITRA Profile URL</span>
-      <input type="url" id="prof-itra-url" placeholder="https://itra.run/RunnerSpace/...">
-    </div>
-    <div class="fi">
-      <span class="lbl">ITRA Performance Index (manual)</span>
-      <input type="number" id="prof-itra-pi" placeholder="536" min="0" max="1000">
-      <div style="font-size:10px;color:var(--t3);margin-top:3px">Se actualizează manual după fiecare cursă ITRA.</div>
-    </div>
-  </div>
-</div>
-
-<!-- SOCIAL -->
-<div class="bk-card" style="padding:20px;margin-bottom:12px">
-  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">📱 Social & Contact</div>
-  <div class="fg">
-    <div class="fi fgrow">
-      <span class="lbl">Instagram (username fără @)</span>
-      <input type="text" id="prof-instagram" placeholder="gabriel.hax">
-    </div>
-    <div class="fi fgrow">
-      <span class="lbl">Facebook (URL profil sau pagină)</span>
-      <input type="url" id="prof-facebook" placeholder="https://facebook.com/...">
-    </div>
-    <div class="fi fgrow">
-      <span class="lbl">WhatsApp (număr internațional fără +)</span>
-      <input type="tel" id="prof-whatsapp" placeholder="40712345678">
-      <div style="font-size:10px;color:var(--t3);margin-top:3px">Ex: 40 urmat de numărul fără 0. Folosit pe landing.</div>
-    </div>
-  </div>
-</div>
-
-<button class="btn btn-primary" onclick="saveProfile()" style="width:100%;padding:14px;font-size:14px;margin-bottom:24px">💾 Salvează toate setările profil</button>
-</div>
-
-<!-- ── SETĂRI PAGINA SPONSOR ── (owner only) -->
-<div class="page" id="pg-setari">
-<div class="ph">
-  <div class="ph-left"><h2>⚙️ SETĂRI PREZENTARE</h2><p>Configurează prezentarea și pagina publică</p></div>
-  <div class="ph-right">
-    <button class="btn btn-ghost btn-sm" onclick="openSponsorPrez()" style="color:var(--accent);border-color:var(--accent-border)">▶ Deschide prezentarea</button>
-  </div>
-</div>
-
-<!-- ═══ SETĂRI EDITOR ═══ -->
-<div class="set-editor">
-
-  <!-- Sidebar navigare -->
-  <nav class="set-nav">
-    <button class="set-nav-btn active" onclick="setTab(this,'tab-general')">
-      <span class="set-nav-icon">🔗</span><span>General</span>
-    </button>
-    <button class="set-nav-btn" onclick="setTab(this,'tab-profil')">
-      <span class="set-nav-icon">👤</span><span>Profil</span>
-    </button>
-    <button class="set-nav-btn" onclick="setTab(this,'tab-prezentare')">
-      <span class="set-nav-icon">🎬</span><span>Prezentare</span>
-    </button>
-    <button class="set-nav-btn" onclick="setTab(this,'tab-story')">
-      <span class="set-nav-icon">📖</span><span>Poveste</span>
-    </button>
-    <button class="set-nav-btn" onclick="setTab(this,'tab-roi')">
-      <span class="set-nav-icon">💰</span><span>Pachete ROI</span>
-    </button>
-    <button class="set-nav-btn" onclick="setTab(this,'tab-faq')">
-      <span class="set-nav-icon">❓</span><span>FAQ</span>
-    </button>
-    <button class="set-nav-btn" onclick="setTab(this,'tab-slideuri')">
-      <span class="set-nav-icon">🎞️</span><span>Ordine</span>
-    </button>
-    <button class="set-nav-btn" onclick="setTab(this,'tab-dashboard')">
-      <span class="set-nav-icon">📊</span><span>Dashboard</span>
-    </button>
-  </nav>
-
-  <!-- Content -->
-  <div class="set-content">
-
-    <!-- ── TAB GENERAL ── -->
-    <div class="set-tab active" id="tab-general">
-      <div class="set-tab-title">🔗 Link & Contact</div>
-
-      <div class="set-field-group">
-        <div class="set-field-label">Link prezentare sponsor</div>
-        <div class="set-link-row">
-          <div class="set-link-url" id="set-sponsor-link">—</div>
-          <button class="set-btn-copy" onclick="setCopyLink()">📋 Copiază</button>
-        </div>
-        <div class="set-hint">Trimite acest link sponsorilor — se deschide direct prezentarea</div>
-      </div>
-
-      <div class="set-2col">
-        <div class="set-field-group">
-          <div class="set-field-label">Email contact</div>
-          <input type="email" id="set-contact-email" class="set-input" placeholder="email@exemplu.com">
-        </div>
-        <div class="set-field-group">
-          <div class="set-field-label">WhatsApp (fără +)</div>
-          <input type="tel" id="set-whatsapp-phone" class="set-input" placeholder="40712345678">
-          <div class="set-hint">Apare pe butonul de contact</div>
-        </div>
-      </div>
-
-      <div class="set-field-group">
-        <div class="set-field-label">Citat personal
-          <span class="set-badge">S1 · Atletul</span>
-        </div>
-        <textarea id="set-quote" class="set-input set-textarea" rows="2" placeholder="Nu alerg să câștig. Alerg ca să demonstrez că din Bârlad se poate."></textarea>
-      </div>
-
-      <div class="set-field-group">
-        <div class="set-field-label">Text testimonial
-          <span class="set-badge">S10 · Testimonial</span>
-        </div>
-        <textarea id="set-testimonial-text" class="set-input set-textarea" rows="3" placeholder="„Susținem această inițiativă pentru că reprezintă exact valorile noastre...""></textarea>
-        <div class="set-hint">Apare pe ultimul slide al prezentării</div>
-      </div>
-
-      <div class="set-field-group">
-        <div class="set-field-label">Text testimonial — semnătură</div>
-        <input id="set-testimonial-author" class="set-input" placeholder="— PRISCOM, Bârlad">
-      </div>
-
-      <!-- Parteneri S1 -->
-      <div class="set-tab-title" style="margin-top:24px">🤝 Susținut de (Slide 1)</div>
-      <div class="set-hint" style="margin-bottom:12px">Apar pe S1 sub statistici. Maxim 4 parteneri. Logo e opțional — dacă lipsește, apare numele.</div>
-      <div id="set-s1-partners-list" style="display:flex;flex-direction:column;gap:8px"></div>
-      <button class="set-btn-add" onclick="addS1Partner()" style="margin-bottom:16px">+ Adaugă partener</button>
-
-      <div class="set-toggles-grid">
-        <div class="set-toggle-row">
-          <div>
-            <div class="set-toggle-label">🌐 Prezentare activă</div>
-            <div class="set-hint">Dacă e dezactivat, link-ul afișează pagină blocată</div>
-          </div>
-          <label class="set-switch"><input type="checkbox" id="set-landing-active"><span class="set-switch-slider"></span></label>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── TAB PROFIL ── -->
-    <div class="set-tab" id="tab-profil">
-      <div class="set-tab-title">👤 Profil & Media</div>
-
-      <div class="set-field-group">
-        <div class="set-field-label">Poză profil
-          <span class="set-badge">S1 · Atletul (background)</span>
-        </div>
-        <div class="set-media-input">
-          <input type="url" id="set-photo-url" class="set-input" placeholder="https://i.imgur.com/... sau cloudinary.com/...">
-          <div id="set-photo-preview" class="set-media-preview" style="display:none">
-            <img id="set-photo-img" src="" style="width:100%;height:100%;object-fit:cover;border-radius:8px">
-          </div>
-        </div>
-        <div class="set-hint">Imgur, Cloudinary, orice URL direct la imagine</div>
-      </div>
-
-      <div class="set-field-group">
-        <div class="set-field-label">Subtitlu hero</div>
-        <input type="text" id="set-hero-sub" class="set-input" placeholder="Ultra-trail runner din Bârlad. Sezonul 2026 — 10 curse...">
-      </div>
-
-      <div class="set-field-group">
-        <div class="set-field-label">Mesaj bun-venit</div>
-        <textarea id="set-welcome-msg" class="set-input set-textarea" rows="3" placeholder="Bun venit! Sunt Gabriel Balan..."></textarea>
-        <div class="set-hint">Primul text vizibil pentru un sponsor care deschide link-ul</div>
-      </div>
-
-      <div class="set-field-group">
-        <div class="set-field-label">Poveste scurtă</div>
-        <textarea id="set-story-short" class="set-input set-textarea" rows="4" placeholder="2025: 3.000km alergați..."></textarea>
-        <div class="set-hint">Paragraful introductiv din cardul de poveste</div>
-      </div>
-
-      <!-- S9 De ce eu texts -->
-      <div class="set-field-group">
-        <div class="set-field-label">S9 — Motivul 1 (titlu)</div>
-        <input id="set-why1-title" class="set-input" placeholder="BÂRLADUL PE HARTA TRAIL-ULUI">
-      </div>
-      <div class="set-field-group">
-        <div class="set-field-label">S9 — Motivul 1 (descriere)</div>
-        <textarea id="set-why1-desc" class="set-input set-textarea" rows="2"></textarea>
-      </div>
-      <div class="set-field-group">
-        <div class="set-field-label">S9 — Motivul 2 (titlu)</div>
-        <input id="set-why2-title" class="set-input" placeholder="TRANSPARENȚĂ TOTALĂ">
-      </div>
-      <div class="set-field-group">
-        <div class="set-field-label">S9 — Motivul 2 (descriere)</div>
-        <textarea id="set-why2-desc" class="set-input set-textarea" rows="2"></textarea>
-      </div>
-      <div class="set-field-group">
-        <div class="set-field-label">S9 — Motivul 3 (titlu)</div>
-        <input id="set-why3-title" class="set-input" placeholder="PARTENERIATUL AUTENTIC">
-      </div>
-      <div class="set-field-group">
-        <div class="set-field-label">S9 — Motivul 3 (descriere)</div>
-        <textarea id="set-why3-desc" class="set-input set-textarea" rows="2"></textarea>
-      </div>
-    </div>
-
-    <!-- ── TAB PREZENTARE ── -->
-    <div class="set-tab" id="tab-prezentare">
-      <div class="set-tab-title">🎬 Vizibilitate Secțiuni</div>
-      <div class="set-hint" style="margin-bottom:20px">Controlează ce secțiuni apar în prezentare și pe pagina publică</div>
-
-      <div class="set-toggles-grid">
-        <div class="set-toggle-row">
-          <span class="set-toggle-label">🗺️ Hartă curse (S5)</span>
-          <label class="set-switch"><input type="checkbox" id="set-show-map"><span class="set-switch-slider"></span></label>
-        </div>
-        <div class="set-toggle-row">
-          <span class="set-toggle-label">🎥 Video (landing)</span>
-          <label class="set-switch"><input type="checkbox" id="set-show-video"><span class="set-switch-slider"></span></label>
-        </div>
-        <div class="set-toggle-row">
-          <span class="set-toggle-label">💸 Unde se duc banii (S7)</span>
-          <label class="set-switch"><input type="checkbox" id="set-show-budget"><span class="set-switch-slider"></span></label>
-        </div>
-        <div class="set-toggle-row">
-          <span class="set-toggle-label">❓ FAQ (landing)</span>
-          <label class="set-switch"><input type="checkbox" id="set-show-faq"><span class="set-switch-slider"></span></label>
-        </div>
-        <div class="set-toggle-row">
-          <span class="set-toggle-label">⛰️ Timeline carieră</span>
-          <label class="set-switch"><input type="checkbox" id="set-show-timeline"><span class="set-switch-slider"></span></label>
-        </div>
-        <div class="set-toggle-row">
-          <span class="set-toggle-label">💰 Simulator ROI (S4)</span>
-          <label class="set-switch"><input type="checkbox" id="set-show-roi"><span class="set-switch-slider"></span></label>
-        </div>
-        <div class="set-toggle-row">
-          <span class="set-toggle-label">🤝 De ce eu (S9)</span>
-          <label class="set-switch"><input type="checkbox" id="set-show-benefits"><span class="set-switch-slider"></span></label>
-        </div>
-      </div>
-
-
-      <div class="set-tab-title" style="margin-top:28px">🖼️ Media Slide-uri (panoul stâng)</div>
-      <div class="set-hint" style="margin-bottom:14px">Fiecare slide are un panou stâng. Poți pune o imagine sau video MP4 din Cloudinary în loc de gradient.</div>
-      <div style="display:flex;flex-direction:column;gap:6px">
-        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
-          <div class="set-field-label">🏃 S1 — Atletul</div>
-          <div style="display:flex;gap:6px;margin-bottom:6px">
-            <select id="sm-s1-type" class="set-story-sel" onchange="smPreview('s1')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video MP4 / YouTube</option>
-            </select>
-          </div>
-          <input id="sm-s1-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
-            oninput="smPreview('s1')">
-          <div id="sm-s1-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
-        </div>
-        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
-          <div class="set-field-label">🗺️ S2 — Curse + Hartă</div>
-          <div style="display:flex;gap:6px;margin-bottom:6px">
-            <select id="sm-s2-type" class="set-story-sel" onchange="smPreview('s2')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video MP4 / YouTube</option>
-            </select>
-          </div>
-          <input id="sm-s2-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
-            oninput="smPreview('s2')">
-          <div id="sm-s2-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
-        </div>
-        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
-          <div class="set-field-label">📊 S3 — Dovada</div>
-          <div style="display:flex;gap:6px;margin-bottom:6px">
-            <select id="sm-s3-type" class="set-story-sel" onchange="smPreview('s3')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video MP4 / YouTube</option>
-            </select>
-          </div>
-          <input id="sm-s3-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
-            oninput="smPreview('s3')">
-          <div id="sm-s3-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
-        </div>
-        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
-          <div class="set-field-label">🤝 S4 — Parteneriat ROI</div>
-          <div style="display:flex;gap:6px;margin-bottom:6px">
-            <select id="sm-s4-type" class="set-story-sel" onchange="smPreview('s4')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video MP4 / YouTube</option>
-            </select>
-          </div>
-          <input id="sm-s4-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
-            oninput="smPreview('s4')">
-          <div id="sm-s4-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
-        </div>
-        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
-          <div class="set-field-label">👟 S4b — Wishlist Echipament</div>
-          <div style="display:flex;gap:6px;margin-bottom:6px">
-            <select id="sm-s4b-type" class="set-story-sel" onchange="smPreview('s4b')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video MP4 / YouTube</option>
-            </select>
-          </div>
-          <input id="sm-s4b-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
-            oninput="smPreview('s4b')">
-          <div id="sm-s4b-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
-        </div>
-        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
-          <div class="set-field-label">⏱️ S6 — Countdown</div>
-          <div style="display:flex;gap:6px;margin-bottom:6px">
-            <select id="sm-s6-type" class="set-story-sel" onchange="smPreview('s6')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video MP4 / YouTube</option>
-            </select>
-          </div>
-          <input id="sm-s6-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
-            oninput="smPreview('s6')">
-          <div id="sm-s6-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
-        </div>
-        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
-          <div class="set-field-label">📊 S7 — Buget</div>
-          <div style="display:flex;gap:6px;margin-bottom:6px">
-            <select id="sm-s7-type" class="set-story-sel" onchange="smPreview('s7')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video MP4 / YouTube</option>
-            </select>
-          </div>
-          <input id="sm-s7-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
-            oninput="smPreview('s7')">
-          <div id="sm-s7-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
-        </div>
-        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
-          <div class="set-field-label">⚡ S8 — Ultima alergare</div>
-          <div style="display:flex;gap:6px;margin-bottom:6px">
-            <select id="sm-s8-type" class="set-story-sel" onchange="smPreview('s8')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video MP4 / YouTube</option>
-            </select>
-          </div>
-          <input id="sm-s8-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
-            oninput="smPreview('s8')">
-          <div id="sm-s8-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
-        </div>
-        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
-          <div class="set-field-label">🧩 S9 — De ce eu</div>
-          <div style="display:flex;gap:6px;margin-bottom:6px">
-            <select id="sm-s9-type" class="set-story-sel" onchange="smPreview('s9')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video MP4 / YouTube</option>
-            </select>
-          </div>
-          <input id="sm-s9-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
-            oninput="smPreview('s9')">
-          <div id="sm-s9-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
-        </div>
-        <div class="set-field-group" style="background:var(--s2);border-radius:8px;padding:10px">
-          <div class="set-field-label">💬 S10 — Testimonial</div>
-          <div style="display:flex;gap:6px;margin-bottom:6px">
-            <select id="sm-s10-type" class="set-story-sel" onchange="smPreview('s10')">
-              <option value="gradient">Gradient (default)</option>
-              <option value="image">Imagine (URL)</option>
-              <option value="video">Video MP4 / YouTube</option>
-            </select>
-          </div>
-          <input id="sm-s10-url" class="set-story-inp" placeholder="URL imagine sau MP4..."
-            oninput="smPreview('s10')">
-          <div id="sm-s10-prev" style="display:none;margin-top:6px;height:60px;border-radius:6px;overflow:hidden;background:var(--s3)"></div>
-        </div>
-      </div>
-      <div class="set-tab-title" style="margin-top:28px">📹 Video Landing</div>
-      <div class="set-field-group">
-        <div class="set-field-label">URL Video embed (YouTube sau MP4 direct)</div>
-        <input type="url" id="set-video-url" class="set-input" placeholder="https://www.youtube.com/embed/... sau https://res.cloudinary.com/....mp4">
-        <div class="set-hint">YouTube: youtu.be/ID sau youtube.com/watch?v=ID · MP4: link direct Cloudinary</div>
-      </div>
-    </div>
-
-    <!-- ── TAB STORY ── -->
-    <div class="set-tab" id="tab-story">
-      <div class="set-tab-title">📖 Slide-uri Poveste (S11–S14)</div>
-      <div class="set-hint" style="margin-bottom:16px">Editează textele și media pentru fiecare slide de poveste. Imaginile/video apar în panoul stâng.</div>
-
-      <div id="set-story-accordion"></div>
-    </div>
-
-    <!-- ── TAB ROI ── -->
-    <div class="set-tab" id="tab-roi">
-      <div class="set-tab-title">💰 Pachete Sponsorizare (ROI Simulator)</div>
-      <div class="set-hint" style="margin-bottom:16px">Nivelele din simulatorul ROI din slide-ul 4. Suma minimă determină ce beneficii se deblochează.</div>
-      <div id="set-packages-list"></div>
-      <button class="set-btn-add" onclick="setAddPackage()">+ Adaugă pachet</button>
-    </div>
-
-    <!-- ── TAB FAQ ── -->
-    <div class="set-tab" id="tab-faq">
-      <div class="set-tab-title">❓ Întrebări Frecvente (FAQ)</div>
-      <div class="set-hint" style="margin-bottom:16px">Apar pe pagina publică de landing pentru sponsori potențiali.</div>
-      <div id="set-faq-list"></div>
-      <button class="set-btn-add" onclick="setAddFaq()">+ Adaugă întrebare</button>
-    </div>
-
-    <!-- ── TAB ORDINE ── -->
-    <div class="set-tab" id="tab-slideuri">
-      <div class="set-tab-title">🎞️ Ordine Slide-uri Prezentare</div>
-      <div class="set-hint" style="margin-bottom:16px">Trage sau folosește ↑↓ pentru a reordona. Toggle-ul dezactivează slide-urile pe care nu le vrei.</div>
-      <div id="set-slides-order" style="display:flex;flex-direction:column;gap:6px"></div>
-      <button class="set-btn-ghost" onclick="resetSlideOrder()" style="margin-top:12px;font-size:11px">↺ Resetează la ordinea implicită</button>
-    </div>
-
-    <!-- ── TAB DASHBOARD ── -->
-    <div class="set-tab" id="tab-dashboard">
-      <div class="set-tab-title">📊 Dashboard</div>
-
-      <div class="set-2col">
-        <div class="set-field-group">
-          <div class="set-field-label">Target km anual</div>
-          <input type="number" id="set-target-km" class="set-input" placeholder="5000">
-          <div class="set-hint">Apare în bara de progres</div>
-        </div>
-        <div class="set-field-group">
-          <div class="set-field-label">Titlu dashboard</div>
-          <input type="text" id="set-dash-title" class="set-input" placeholder="SEZONUL BESTIEI">
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /set-content -->
-</div><!-- /set-editor -->
-
-<!-- Buton save sticky -->
-<div class="set-save-bar">
-  <button class="btn btn-primary" onclick="saveSettings()" style="flex:1;padding:14px;font-size:14px;border-radius:12px">💾 Salvează toate setările</button>
-  <button class="btn btn-ghost" onclick="openSponsorPrez()" style="padding:14px;border-radius:12px" title="Preview prezentare">▶</button>
-</div>
-
-</main>
-</div>
-<div class="overlay" id="ov-rc">
-<div class="modal">
-  <div class="mh"><h3 id="rc-title">CURSĂ NOUĂ</h3><button class="mx" onclick="closeRC()">✕</button></div>
-  <div class="mb">
-    <div class="fg">
-      <div class="fi fgrow"><span class="lbl">Denumire cursă *</span><input id="f-den" placeholder="ex: Ultra Trail Apuseni"></div>
-      <div class="fi"><span class="lbl">Distanță (km)</span><input type="number" id="f-dist" placeholder="42"></div>
-      <div class="fi"><span class="lbl">Denivelare (m)</span><input type="number" id="f-deniv" placeholder="2400"></div>
-      <div class="fi"><span class="lbl">Data cursei *</span><input type="date" id="f-dc"></div>
-      <div class="fi"><span class="lbl">Ora start</span><input type="time" id="f-ora" value="09:00"></div>
-      <div class="fi"><span class="lbl">Data plecare</span><input type="date" id="f-dp"></div>
-      <div class="fi"><span class="lbl">Data întoarcere</span><input type="date" id="f-di"></div>
-      
-      <div class="fi"><span class="lbl">Nr. geluri estimat</span><input type="number" id="f-gel" placeholder="5"></div>
-      <div class="fi"><span class="lbl">Cost cazare (RON)</span><input type="number" id="f-caz" placeholder="300"></div>
-      <div class="fi fgrow"><span class="lbl">Cost înscriere (RON)</span><input type="number" id="f-ins" placeholder="200"></div>
-    </div>
-    <div class="sl">Status & plăți</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
-      <div class="cb-row"><input type="checkbox" id="f-rez"><label for="f-rez">🏨 Cazare rezervată</label></div>
-      <div class="cb-row"><input type="checkbox" id="f-pcaz"><label for="f-pcaz">✅ Cazare plătită</label></div>
-      <div class="cb-row"><input type="checkbox" id="f-pins"><label for="f-pins">✅ Înscriere plătită</label></div>
-    </div>
-    <div class="sl">🔗 Dovezi & facturi</div>
-    <div class="fg">
-      <div class="fi fgrow"><span class="lbl">📋 Dovadă înscriere</span>
-        <div style="display:flex;gap:6px;align-items:center">
-          <input id="f-link-ins" placeholder="https://..." style="flex:1">
-          <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('f-link-ins')" title="Preview">👁</button>
-        </div></div>
-      <div class="fi fgrow"><span class="lbl">🧾 Factură înscriere</span>
-        <div style="display:flex;gap:6px;align-items:center">
-          <input id="f-factura-ins" placeholder="https://..." style="flex:1">
-          <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('f-factura-ins')" title="Preview">👁</button>
-        </div></div>
-      <div class="fi fgrow"><span class="lbl">📋 Dovadă cazare</span>
-        <div style="display:flex;gap:6px;align-items:center">
-          <input id="f-link-caz" placeholder="https://..." style="flex:1">
-          <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('f-link-caz')" title="Preview">👁</button>
-        </div></div>
-      <div class="fi fgrow"><span class="lbl">🧾 Factură cazare</span>
-        <div style="display:flex;gap:6px;align-items:center">
-          <input id="f-factura-caz" placeholder="https://..." style="flex:1">
-          <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('f-factura-caz')" title="Preview">👁</button>
-        </div></div>
-      <div class="fi fgrow"><span class="lbl">🚗 Factură transport</span>
-        <div style="display:flex;gap:6px;align-items:center">
-          <input id="f-link-factura" placeholder="https://..." style="flex:1">
-          <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('f-link-factura')" title="Preview">👁</button>
-        </div></div>
-      <div class="fi fgrow"><span class="lbl">💬 Descriere factură transport</span>
-        <input id="f-factura-desc" placeholder="ex: Bilet tren Bârlad-Brașov"></div>
-    </div>
-    <div class="sl">Note</div>
-    <textarea id="f-note" rows="2" placeholder="Observații, parteneri de cursă, detalii logistice..."></textarea>
-  </div>
-  <div class="mf">
-    <button class="btn btn-ghost" onclick="closeRC()">Anulează</button>
-    <button class="btn btn-primary" onclick="saveRC()">Salvează</button>
-  </div>
-</div>
-</div>
-
-<!-- MODAL PREVIEW DOCUMENT -->
-<div class="overlay" id="ov-preview" onclick="if(event.target===this)closePreview()">
-<div class="modal" style="max-width:800px;width:95vw;height:85vh;display:flex;flex-direction:column">
-  <div class="mh">
-    <h3 id="preview-title">PREVIZUALIZARE DOCUMENT</h3>
-    <div style="display:flex;gap:8px;align-items:center">
-      <a id="preview-open-link" href="#" target="_blank" class="btn btn-ghost btn-sm" style="font-size:11px">🔗 Deschide</a>
-      <button class="mx" onclick="closePreview()">✕</button>
-    </div>
-  </div>
-  <div style="flex:1;position:relative;background:var(--s2);border-radius:0 0 var(--r) var(--r);overflow:hidden">
-    <div id="preview-loading" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--t3)">
-      <div style="font-size:32px">⏳</div>
-      <div style="font-size:13px">Se încarcă...</div>
-    </div>
-    <iframe id="preview-iframe" 
-      style="width:100%;height:100%;border:none;display:none" 
-      onload="document.getElementById('preview-loading').style.display='none';this.style.display='block'"
-      onerror="previewFallback()">
-    </iframe>
-    <div id="preview-fallback" style="display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;position:absolute;inset:0;color:var(--t2);text-align:center;padding:32px">
-      <div style="font-size:48px">📄</div>
-      <div style="font-family:var(--display);font-size:22px;letter-spacing:1px">PREVIEW INDISPONIBIL</div>
-      <div style="font-size:13px;color:var(--t3);max-width:360px">Sursa nu permite afișarea în iframe (ex: Gmail, WhatsApp). Deschide direct linkul.</div>
-      <a id="preview-fallback-link" href="#" target="_blank" class="btn btn-primary">🔗 Deschide în tab nou</a>
-    </div>
-  </div>
-</div>
-</div>
-
-<!-- MODAL ECHIPAMENT -->
-<div class="overlay" id="ov-eq">
-<div class="modal">
-  <div class="mh"><h3 id="eq-title">ECHIPAMENT NOU</h3><button class="mx" onclick="closeEQ()">✕</button></div>
-  <div class="mb">
-    <div class="fg">
-      <div class="fi fgrow"><span class="lbl">Denumire *</span><input id="eq-den" placeholder="ex: Hoka Speedgoat 7"></div>
-      <div style="display:grid;grid-template-columns:80px 1fr;gap:8px">
-        <div class="fi"><span class="lbl">ID (ex: 01)</span><input id="eq-shoe-id" placeholder="01" maxlength="4"></div>
-        <div class="fi fgrow"><span class="lbl">Nickname (ex: "Speedgoat-ul de munte")</span><input id="eq-nickname" placeholder="Porecla pantofului..."></div>
-      </div>
-      <div class="fi"><span class="lbl">Categorie</span>
-        <select id="eq-cat">
-          <option>Pantofi Curse Scurte</option><option>Pantofi Curse Lungi</option>
-          <option>Rucsac</option><option>Bastoane</option><option>Altele</option>
-        </select>
-      </div>
-      <div class="fi"><span class="lbl">Preț (RON)</span><input type="number" id="eq-prt" placeholder="700"></div>
-      <div class="fi"><span class="lbl">Km maximi</span><input type="number" id="eq-kmx" placeholder="800"></div>
-      <div class="fi"><span class="lbl">Km actuali parcurși</span><input type="number" id="eq-kma" placeholder="0"></div>
-      <div class="fi fgrow"><span class="lbl">Note</span><textarea id="eq-note" rows="2" placeholder="Observații..."></textarea></div>
-      <div class="fi fgrow">
-        <span class="lbl">Link produs (eMAG, Decathlon, etc)</span>
-        <input id="eq-product-link" placeholder="https://www.emag.ro/...">
-      </div>
-      <div class="fi">
-        <span class="lbl">Status</span>
-        <div style="display:flex;gap:8px;margin-top:4px">
-          <button type="button" id="eq-btn-owned" onclick="eqSetStatus('owned')"
-            class="btn btn-primary btn-sm" style="flex:1">✅ Cumpărat</button>
-          <button type="button" id="eq-btn-wishlist" onclick="eqSetStatus('wishlist')"
-            class="btn btn-ghost btn-sm" style="flex:1">🎯 Wishlist</button>
-        </div>
-        <input type="hidden" id="eq-status" value="owned">
-      </div>
-      <div class="sl">Dovadă achiziție</div>
-      <div class="fi fgrow"><span class="lbl">Link dovadă (factură/chitanță)</span><input id="eq-link" placeholder="https://..."></div>
-      <div style="margin-top:4px" id="eq-link-preview-wrap"></div>
-      <div class="sl">Utilizare</div>
-      <div class="fi fgrow">
-        <div style="display:flex;gap:8px;margin-bottom:12px">
-          <button type="button" id="eq-use-race-btn" onclick="setEqUse('race')" class="btn btn-ghost btn-sm" style="flex:1;border-color:var(--accent);color:var(--accent)">🏁 Curse</button>
-          <button type="button" id="eq-use-train-btn" onclick="setEqUse('training')" class="btn btn-ghost btn-sm" style="flex:1">🏃 Training</button>
-        </div>
-        <input type="hidden" id="eq-use-type" value="race">
-        <!-- Training section -->
-        <div id="eq-train-section" style="display:none">
-          <span class="lbl">Luni de utilizare (training)</span>
-          <input type="number" id="eq-train-months" placeholder="ex: 6" min="1" max="24" style="margin-top:6px">
-          <div style="font-size:11px;color:var(--t3);margin-top:4px">Costul va fi distribuit lunar în Estimare An</div>
-        </div>
-        <!-- Race section -->
-        <div id="eq-race-section">
-          <span class="lbl">Selectează cursele în care se folosește</span>
-          <div id="eq-race-checkboxes" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;max-height:280px;overflow-y:auto;padding:2px"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="mf">
-    <button class="btn btn-ghost" onclick="closeEQ()">Anulează</button>
-    <button class="btn btn-primary" onclick="saveEQ()">Salvează</button>
-  </div>
-</div>
-</div>
-
-<!-- MODAL SPONSOR -->
-<div class="overlay" id="ov-sp">
-<div class="modal">
-  <div class="mh"><h3 id="sp-title">SPONSOR NOU</h3><button class="mx" onclick="closeSP()">✕</button></div>
-  <div class="mb">
-    <div class="fg">
-      <div class="fi fgrow"><span class="lbl">Nume sponsor *</span><input id="sp-den" placeholder="ex: SC PRISCOM SRL"></div>
-      <div class="fi"><span class="lbl">Sumă (RON)</span><input type="number" id="sp-suma" placeholder="5000"></div>
-      <div class="fi"><span class="lbl">Data acordului</span><input type="date" id="sp-data"></div>
-      <div class="fi fgrow"><span class="lbl">Contact</span><input id="sp-contact" placeholder="Persoană / telefon / email"></div>
-      <div class="fi fgrow"><span class="lbl">Ce acoperă</span>
-        <select id="sp-tip">
-          <option value="general">General (sezon întreg)</option>
-          <option value="echipament">Echipament</option>
-          <option value="inscrisuri">Înscrieri curse</option>
-          <option value="transport">Transport</option>
-          <option value="nutritie">Nutriție</option>
-          <option value="altele">Altele</option>
-        </select>
-      </div>
-      <div class="fi fgrow"><span class="lbl">Note</span><textarea id="sp-note" rows="2" placeholder="Condiții, termeni, observații..."></textarea></div>
-    </div>
-    <div class="sl">🌐 Prezență online (opțional)</div>
-    <div class="fg">
-      <div class="fi fgrow">
-        <span class="lbl">Website</span>
-        <input id="sp-website" type="url" placeholder="ex: https://dezmembraru.ro">
-      </div>
-      <div class="fi fgrow">
-        <span class="lbl">URL Logo (imgur, drive etc.)</span>
-        <div style="display:flex;gap:6px;align-items:flex-start">
-          <input id="sp-logo-url" type="url" placeholder="https://i.imgur.com/..." style="flex:1"
-            oninput="
-              const p=document.getElementById('sp-logo-preview');
-              const img=document.getElementById('sp-logo-img');
-              if(this.value&&p&&img){img.src=this.value;img.onload=()=>p.style.display='block';img.onerror=()=>p.style.display='none';}
-              else if(p) p.style.display='none';">
-          <div id="sp-logo-preview" style="display:none;flex-shrink:0">
-            <img id="sp-logo-img" src="" style="height:36px;width:auto;max-width:80px;object-fit:contain;border-radius:4px;border:1px solid var(--border);background:white;padding:2px">
-          </div>
-        </div>
-        <div style="font-size:10px;color:var(--t3);margin-top:3px">Se va afișa în sidebar și pe landing page.</div>
-      </div>
-    </div>
-    <div class="sl">Status</div>
-    <div class="cb-row"><input type="checkbox" id="sp-primit"><label for="sp-primit">✅ Sumă primită / confirmată</label></div>
-  </div>
-  <div class="mf">
-    <button class="btn btn-ghost" onclick="closeSP()">Anulează</button>
-    <button class="btn btn-primary" onclick="saveSP()">Salvează</button>
-  </div>
-</div>
-</div>
-
-<!-- MODAL SUPLIMENT -->
-<div class="overlay" id="ov-supl">
-<div class="modal" style="max-width:460px">
-  <div class="mh"><h3 id="supl-title">SUPLIMENT NOU</h3><button class="mx" onclick="closeSupl()">✕</button></div>
-  <div class="mb"><div class="fg">
-    <div class="fi fgrow"><span class="lbl">Denumire *</span><input id="supl-den" placeholder="ex: Colagen, Creatina"></div>
-    <div class="sl">📦 Ambalaj & Doză</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-      <div class="fi"><span class="lbl">Gramaj ambalaj (g)</span><input type="number" id="supl-cant-total" placeholder="500" oninput="suplPreview()"></div>
-      <div class="fi"><span class="lbl">Doză zilnică (g)</span><input type="number" id="supl-cant-portie" placeholder="18" oninput="suplPreview()"></div>
-      <div class="fi"><span class="lbl">Preț pachet (RON)</span><input type="number" id="supl-pret-comanda" placeholder="120" oninput="suplPreview()"></div>
-    </div>
-    <div style="background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
-      <div style="text-align:center"><div style="font-family:var(--display);font-size:19px;color:var(--accent)" id="prev-cost-zi">—</div><div style="font-size:9px;color:var(--t3);text-transform:uppercase">RON/zi</div></div>
-      <div style="text-align:center"><div style="font-family:var(--display);font-size:19px;color:var(--accent)" id="prev-cost-luna">—</div><div style="font-size:9px;color:var(--t3);text-transform:uppercase">RON/lună</div></div>
-      <div style="text-align:center"><div style="font-family:var(--display);font-size:19px;color:var(--accent)" id="prev-zile-buc">—</div><div style="font-size:9px;color:var(--t3);text-transform:uppercase">zile/pachet</div></div>
-    </div>
-    <div class="sl">📊 Stoc curent</div>
-    <div class="fi"><span class="lbl">Stoc actual (grame în casă)</span><input type="number" id="supl-stoc" placeholder="350" oninput="suplPreview()"></div>
-    <div id="supl-stoc-info" style="font-size:11px;padding:2px;min-height:16px"></div>
-    <div class="sl">📝 Link produs / factură</div>
-    <div class="fi fgrow"><span class="lbl">Link produs</span><input id="supl-note" placeholder="https://gymbeam.ro/..."></div>
-    <div class="fi fgrow"><span class="lbl">Link factură</span>
-      <div style="display:flex;gap:6px"><input id="supl-link" placeholder="https://..." style="flex:1">
-        <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('supl-link')" title="Preview">👁</button></div>
-    </div>
-  </div></div>
-  <div class="mf"><button class="btn btn-ghost" onclick="closeSupl()">Anulează</button><button class="btn btn-primary" onclick="saveSupl()">Salvează</button></div>
-</div></div>
-<div class="overlay" id="ov-supl-stoc">
-<div class="modal" style="max-width:400px">
-  <div class="mh"><h3>+ ADAUGĂ STOC</h3><button class="mx" onclick="closeAddStoc()">✕</button></div>
-  <div class="mb"><div class="fg">
-    <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px" id="stoc-supl-name">—</div>
-    <div style="font-size:12px;color:var(--t3);margin-bottom:12px" id="stoc-supl-info">—</div>
-    <div class="fi fgrow"><span class="lbl">Câte pachete ai cumpărat?</span><input type="number" id="stoc-nr-pachete" value="1" min="1" oninput="stocCalcPreview()"></div>
-    <div style="background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;margin-top:4px">
-      <div><div style="font-size:10px;color:var(--t3)">Grame adăugate</div><div style="font-family:var(--display);font-size:22px;color:var(--accent)" id="stoc-preview-gr">—</div></div>
-      <div style="text-align:right"><div style="font-size:10px;color:var(--t3)">Zile suplimentare</div><div style="font-family:var(--display);font-size:22px;color:var(--green)" id="stoc-preview-zile">—</div></div>
-    </div>
-    <div class="sl">📦 Sursa (salvat în istoric)</div>
-    <div class="fi fgrow"><span class="lbl">Link produs / magazin</span><input id="stoc-link-produs" placeholder="https://gymbeam.ro/..."></div>
-    <div class="fi fgrow"><span class="lbl">Link factură / comandă</span>
-      <div style="display:flex;gap:6px"><input id="stoc-link-factura" placeholder="https://..." style="flex:1">
-        <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('stoc-link-factura')" title="Preview">👁</button></div>
-    </div>
-  </div></div>
-  <div class="mf"><button class="btn btn-ghost" onclick="closeAddStoc()">Anulează</button><button class="btn btn-primary" onclick="saveAddStoc()">✅ Adaugă Stoc</button></div>
-</div></div>
-
-<!-- MODAL TRANSPORT -->
-<div class="overlay" id="ov-tr">
-<div class="modal" style="max-width:480px">
-  <div class="mh"><h3 id="tr-title">DESTINAȚIE NOUĂ</h3><button class="mx" onclick="closeTr()">✕</button></div>
-  <div class="mb">
-    <div class="fg">
-      <div class="fi fgrow"><span class="lbl">Destinație *</span><input id="tr-dest" placeholder="ex: Brașov"></div>
-      <div class="fi"><span class="lbl">Distanță dus (km)</span><input type="number" id="tr-km" placeholder="456"></div>
-      <div class="fi fgrow"><span class="lbl">Cost estimat dus-întors (RON)</span><input type="number" id="tr-pret" placeholder="260"></div>
-    </div>
-  </div>
-  <div class="mf">
-    <button class="btn btn-ghost" onclick="closeTr()">Anulează</button>
-    <button class="btn btn-primary" onclick="saveTr()">Salvează</button>
-  </div>
-</div>
-</div>
-
-<!-- MODAL SETUP GUIDE -->
-<div class="overlay" id="ov-setup">
-<div class="modal" style="max-width:560px">
-  <div class="mh"><h3>SETUP SUPABASE</h3><button class="mx" onclick="document.getElementById('ov-setup').classList.remove('on')">✕</button></div>
-  <div class="mb" style="line-height:1.8">
-    <div style="font-size:13px;color:var(--t2)">
-      <div style="margin-bottom:16px">Urmează pașii de mai jos — durează ~5 minute:</div>
-
-      <div style="background:var(--s2);border-radius:8px;padding:14px 16px;margin-bottom:10px">
-        <div style="font-weight:600;color:var(--text);margin-bottom:8px">1. Creează proiect Supabase</div>
-        <div>Mergi pe <a href="https://supabase.com" target="_blank" style="color:var(--accent)">supabase.com</a> → Sign up gratuit → New Project</div>
-      </div>
-
-      <div style="background:var(--s2);border-radius:8px;padding:14px 16px;margin-bottom:10px">
-        <div style="font-weight:600;color:var(--text);margin-bottom:8px">2. Creează tabelul</div>
-        <div>În proiect → <strong>SQL Editor</strong> → New Query → Rulează:</div>
-        <pre style="background:var(--bg);border-radius:6px;padding:10px;margin-top:8px;font-size:12px;color:var(--accent);overflow-x:auto">create table trail_data (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references auth.users(id) on delete cascade,
-  data jsonb
-);
-
-alter table trail_data enable row level security;
-create policy "Users see own data" on trail_data
-  for all using (auth.uid() = user_id)
-  with check (auth.uid() = user_id);</pre>
-      </div>
-
-      <div style="background:var(--s2);border-radius:8px;padding:14px 16px;margin-bottom:10px">
-        <div style="font-weight:600;color:var(--text);margin-bottom:8px">3. Copiază credențialele</div>
-        <div>Settings → API → copiază <strong>Project URL</strong> și <strong>anon public key</strong></div>
-      </div>
-
-      <div style="background:var(--s2);border-radius:8px;padding:14px 16px">
-        <div style="font-weight:600;color:var(--text);margin-bottom:8px">4. Conectează</div>
-        <div>Lipește URL și key în câmpurile din banner și apasă <strong>Conectează</strong></div>
-      </div>
-    </div>
-  </div>
-  <div class="mf">
-    <button class="btn btn-primary" onclick="document.getElementById('ov-setup').classList.remove('on')">Am înțeles</button>
-  </div>
-</div>
-</div>
-
-<div class="toast" id="toast"></div>
-
+<script src="https://formular230.ro/share/9b0d9573e26" defer></script>
 <script>
+
 
 // ══════════════════════════════════════════════════════
 //  SUPABASE CONFIG
@@ -4629,56 +3250,79 @@ function updateAuthButtons() {
 }
 
 // ── Auto-login on page load ───────────────────────────
-window.addEventListener('load', async () => {
-  document.body.classList.add('readonly');
 
-  // Dacă ?prez=1, arată splash imediat
-  const _isPrez = new URLSearchParams(window.location.search).get('prez') === '1';
-  const _isSponsor = new URLSearchParams(window.location.search).get('sponsor') === '1';
-  if (_isPrez || _isSponsor) {
-    const splash = document.getElementById('sp-splash');
-    const splashName = document.getElementById('sp-splash-name');
-    const fill = document.getElementById('sp-splash-fill');
-    if (splash) {
-      splash.classList.add('on');
-      // Aplica PROFILE.name daca e disponibil
-      // splash name e fix: BÂRLADUL PE FUGĂ — nu suprascrie cu PROFILE.name
-      requestAnimationFrame(() => splash.classList.add('vis'));
-      // Animam progress bar simulat
-      let pct = 0;
-      const fillTimer = setInterval(() => {
-        pct = Math.min(90, pct + Math.random() * 8 + 2);
-        if (fill) fill.style.width = pct + '%';
-      }, 120);
-      window._splashFillTimer = fillTimer;
-      window._splashEl = splash;
-      window._splashFillEl = fill;
-    }
+// ── STANDALONE: load data + show prez ────────────────
+window.addEventListener('load', async function() {
+  // Show splash immediately
+  const splashEl = document.getElementById('sp-splash');
+  if (splashEl) {
+    splashEl.classList.add('on');
+    window._splashEl = splashEl;
+    requestAnimationFrame(() => splashEl.classList.add('vis'));
   }
 
-  const saved = localStorage.getItem('sb_session');
-  if (saved) {
+  // Progress bar fill
+  const fill = document.getElementById('sp-splash-fill');
+  window._splashFillEl = fill;
+  let pct = 0;
+  window._splashFillTimer = setInterval(() => {
+    pct = Math.min(pct + 1.5, 88);
+    if (fill) fill.style.width = pct + '%';
+  }, 50);
+
+  // Load from Supabase (anon)
+  async function sf(table, params) {
+    params = params || 'limit=500';
     try {
-      const session = JSON.parse(saved);
-      if (session.access_token && session.user) {
-        const r = await fetch(`${SB_URL}/auth/v1/user`, {
-          headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + session.access_token }
-        });
-        if (r.ok) {
-          authToken   = session.access_token;
-          currentUser = { id: session.user.id, email: session.user.email };
-          await onLoggedIn();
-          return;
-        }
-      }
-    } catch(e) {}
-    localStorage.removeItem('sb_session');
+      const r = await fetch(SB_URL + '/rest/v1/' + table + '?' + params,
+        { headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY } });
+      return r.ok ? r.json() : [];
+    } catch(e) { return []; }
   }
-  await loadAllData(false);
-  updateAuthButtons();
-  // Nu randa dashboard daca suntem in modul prezentare
-  if (!_isPrez && !_isSponsor) renderDash();
-  checkSponsorParam();
+
+  try {
+    const [prefs, races, sponsors, eq, nutri, supls, acts] = await Promise.all([
+      sf('user_prefs', 'limit=1'),
+      sf('races', 'order=data_cursa.asc&limit=200'),
+      sf('sponsors', 'limit=100'),
+      sf('equipment', 'limit=200'),
+      sf('nutrition_settings', 'limit=1'),
+      sf('supplements', 'limit=100'),
+      sf('activities', 'order=date.desc&limit=500'),
+    ]);
+
+    DB.prefs       = prefs[0]  || {};
+    DB.races       = races     || [];
+    DB.sponsors    = sponsors  || [];
+    DB.equipment   = eq        || [];
+    DB.nutri       = nutri[0]  || { gel_pret_set24: 0 };
+    DB.supplements = supls     || [];
+    DB.activities  = acts      || [];
+    DB.transport   = [];
+  } catch(e) { console.error('Load error:', e); }
+
+  // Finish bar
+  clearInterval(window._splashFillTimer);
+  if (fill) { fill.style.transition = 'width .4s ease'; fill.style.width = '100%'; }
+
+  // Show button
+  setTimeout(() => {
+    const btn     = document.getElementById('sp-splash-btn');
+    const loading = document.getElementById('sp-splash-loading');
+    if (btn)     btn.style.display = 'block';
+    if (loading) loading.style.display = 'none';
+  }, 450);
+
+  // Click handler on splash button
+  window.spSplashUserClick = function() {
+    const s = window._splashEl;
+    if (s) {
+      s.style.transition = 'opacity .35s ease'; s.style.opacity = '0';
+      setTimeout(() => { s.classList.remove('on'); s.style.opacity = ''; }, 350);
+    }
+    loadSettings();
+    openSponsorPrez();
+  };
 });
 
 // ══════════════════════════════════════════════════════
@@ -4982,21 +3626,6 @@ function renderCurse(f = 'all') {
   document.getElementById('rc-list').innerHTML = list.map(rcCardFull).join('') || '<p style="color:var(--t3);padding:20px 0">Nicio cursă.</p>';
 }
 
-
-async function saveRaceResult(id){
-  if(!isOwnerLoggedIn())return;
-  const loc  =+document.getElementById('rc-loc-'+id)?.value||null;
-  const total=+document.getElementById('rc-total-'+id)?.value||null;
-  const link =document.getElementById('rc-link-'+id)?.value.trim()||null;
-  if(!loc&&!link){toast('⚠️ Introduceți cel puțin locul obținut!','err');return;}
-  try{
-    const[u]=await sbPatch('races',id,{loc_obtinut:loc,total_participanti:total,link_rezultat:link});
-    const i=DB.races.findIndex(r=>r.id===id);if(i>=0)DB.races[i]=u;
-    toast('✅ Rezultat salvat!','ok');
-    renderCurse(curFilter||'all');
-  }catch(e){toast('❌ Eroare: '+e.message,'err');}
-}
-
 function rcCardFull(c) {
   const today = new Date(); today.setHours(0,0,0,0);
   const dc = c.data_cursa ? new Date(c.data_cursa) : null;
@@ -5052,32 +3681,7 @@ function rcCardFull(c) {
       ${c.link_dovada_ins?`<button onclick="openPreview('${c.link_dovada_ins.replace(/'/g,"\'")}','Dovadă înscriere — ${c.denumire.replace(/'/g,"\'")}')" class="btn btn-ghost btn-sm" style="font-size:11px">📄 Dovadă înscriere</button>`:''}
       ${c.link_dovada_caz?`<button onclick="openPreview('${c.link_dovada_caz.replace(/'/g,"\'")}','Dovadă cazare — ${c.denumire.replace(/'/g,"\'")}')" class="btn btn-ghost btn-sm" style="font-size:11px">🏨 Dovadă cazare</button>`:''}
     </div>`:''}
-    ${(()=>{const eq=DB.equipment.filter(e=>(e.race_ids||[]).includes(c.id));return eq.length?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)"><div style="font-size:10px;color:var(--t3);margin-bottom:4px">🎽 ECHIPAMENT ALOCAT</div><div style="display:flex;flex-wrap:wrap;gap:4px">${eq.map(e=>`<span class="badge" style="color:var(--green);border-color:rgba(79,255,155,.2)">${e.shoe_id?`[${e.shoe_id}] `:''} ${e.nickname||e.denumire}</span>`).join('')}</div></div>`:'';})()}
-  ${(()=>{
-    const todayPR=new Date();todayPR.setHours(0,0,0,0);
-    const dcPR=c.data_cursa?new Date(c.data_cursa):null;
-    if(!dcPR||dcPR>=todayPR)return '';
-    if(c.loc_obtinut||c.link_rezultat)return `<div style="margin-top:8px;padding:8px 10px;background:rgba(204,255,0,.07);border:1px solid rgba(204,255,0,.2);border-radius:8px">
-      <div style="font-size:10px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">🏆 Rezultat Final</div>
-      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        ${c.loc_obtinut?`<span style="font-family:var(--display);font-size:22px;color:var(--accent)">Loc ${c.loc_obtinut}</span>`:''}
-        ${c.total_participanti?`<span style="font-size:13px;color:var(--t2)">din ${c.total_participanti} participanți</span>`:''}
-        ${c.link_rezultat?`<a href="${escHtml(c.link_rezultat)}" target="_blank" rel="noopener" style="font-size:11px;color:var(--accent);text-decoration:none">📊 Clasament</a>`:''}
-      </div>
-    </div>`;
-    return `<div style="margin-top:8px;padding:8px 10px;background:var(--s2);border:1px solid var(--border);border-radius:8px">
-      <div style="font-size:10px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">🏆 Adaugă Rezultat</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end">
-        <div><div style="font-size:10px;color:var(--t3);margin-bottom:3px">Loc</div>
-          <input type="number" id="rc-loc-${c.id}" placeholder="5" style="width:70px;height:30px;font-size:13px;border-radius:6px;border:1px solid var(--border);background:var(--s1);color:var(--text);padding:0 8px"></div>
-        <div><div style="font-size:10px;color:var(--t3);margin-bottom:3px">Total</div>
-          <input type="number" id="rc-total-${c.id}" placeholder="200" style="width:80px;height:30px;font-size:13px;border-radius:6px;border:1px solid var(--border);background:var(--s1);color:var(--text);padding:0 8px"></div>
-        <div style="flex:1;min-width:120px"><div style="font-size:10px;color:var(--t3);margin-bottom:3px">Link clasament</div>
-          <input type="url" id="rc-link-${c.id}" placeholder="https://..." style="width:100%;height:30px;font-size:12px;border-radius:6px;border:1px solid var(--border);background:var(--s1);color:var(--text);padding:0 8px"></div>
-        <button class="btn btn-ghost btn-sm" style="height:30px;color:var(--accent)" onclick="saveRaceResult('${c.id}')">✅ Salvează</button>
-      </div>
-    </div>`;
-  })()}
+    ${(()=>{const eq=DB.equipment.filter(e=>(e.race_ids||[]).includes(c.id));return eq.length?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)"><div style="font-size:10px;color:var(--t3);margin-bottom:4px">🎽 ECHIPAMENT ALOCAT</div><div style="display:flex;flex-wrap:wrap;gap:4px">${eq.map(e=>`<span class="badge" style="color:var(--green);border-color:rgba(79,255,155,.2)">${e.denumire}</span>`).join('')}</div></div>`:'';})()}
   </div>`;
 }
 
@@ -5386,24 +3990,9 @@ function renderEstimare() {
         monthly[mi].total += Math.round(perMonth);
       }
     } else {
-      // Race equipment: put in month of first associated race, or purchase date
-      const raceIds=e.race_ids||[];
-      let placed=false;
-      if(raceIds.length>0){
-        const raceMonths=raceIds.map(rid=>DB.races.find(r=>r.id===rid))
-          .filter(Boolean).map(r=>r.data_cursa?new Date(r.data_cursa).getMonth():-1)
-          .filter(m=>m>=0).sort((a,b)=>a-b);
-        if(raceMonths.length>0){
-          const m=raceMonths[0];
-          const lbl=`👟 ${e.shoe_id?'['+e.shoe_id+'] ':''}${e.nickname||e.denumire}`;
-          monthly[m].items.push({lbl,v:cost}); monthly[m].total+=cost; placed=true;
-        }
-      }
-      if(!placed){
-        const m=e.data_achizitie?new Date(e.data_achizitie).getMonth():0;
-        const lbl=`👟 ${e.shoe_id?'['+e.shoe_id+'] ':''}${e.nickname||e.denumire}`;
-        monthly[m].items.push({lbl,v:cost}); monthly[m].total+=cost;
-      }
+      // Race equipment: put in January as upfront cost
+      monthly[0].items.push({lbl:`👟 ${e.denumire}`, v:cost});
+      monthly[0].total += cost;
     }
   });
   c.forEach(x=>{
@@ -5531,9 +4120,7 @@ function renderEchip() {
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap">
         <div style="flex:1;min-width:160px">
           <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">${escHtml(x.categorie||'—')}</div>
-          <div style="font-family:var(--display);font-size:18px;letter-spacing:1px;color:var(--text);margin-bottom:2px">
-            ${x.shoe_id?`<span style="font-size:12px;color:var(--accent);margin-right:4px">[${escHtml(x.shoe_id)}]</span>`:''}${escHtml(x.denumire)}</div>
-          ${x.nickname?`<div style="font-size:12px;color:var(--t2);font-style:italic;margin-bottom:4px">"${escHtml(x.nickname)}"</div>`:''}
+          <div style="font-family:var(--display);font-size:18px;letter-spacing:1px;color:var(--text);margin-bottom:6px">${escHtml(x.denumire)}</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
             <span class="badge">💰 ${fmt(x.pret)} RON</span>
             <span class="badge">🏃 ${x.km_actuali||0} / ${x.km_max||0} km</span>
@@ -5565,76 +4152,20 @@ function renderNutri() {
   const calcEl = document.getElementById('gel-pret-calc');
   if (calcEl) calcEl.textContent = gpp.toFixed(2) + ' RON';
 
-  document.getElementById('supl-list').innerHTML = (() => {
-    if (!DB.supplements.length) return '<p style="color:var(--t3)">Niciun supliment adăugat.</p>';
-    const END_2026    = new Date('2026-12-31T23:59:59');
-    const TODAY       = new Date(); TODAY.setHours(0,0,0,0);
-    const ZILE_RAMASE = Math.max(0, Math.ceil((END_2026-TODAY)/86400000));
-    return DB.supplements.map(x => {
-      const cantTotal   = parseFloat(x.cant_total)||0;
-      const cantPortie  = parseFloat(x.cant_portie)||0;
-      const pretComanda = parseFloat(x.pret_comanda)||0;
-      const stocGrame   = parseFloat(x.stoc_portii)||0;
-      const pretPerGram = cantTotal>0 ? pretComanda/cantTotal : 0;
-      const costZi      = pretPerGram*cantPortie;
-      const costLuna    = costZi*30.5;
-      const necesarGrame= ZILE_RAMASE*cantPortie;
-      const diferentaGr = necesarGrame-stocGrame;
-      const pacheteLipsa= cantTotal>0 ? Math.ceil(diferentaGr/cantTotal) : 0;
-      const zileStoc    = cantPortie>0 ? Math.floor(stocGrame/cantPortie) : 0;
-      const dataStoc    = new Date(TODAY.getTime()+zileStoc*86400000);
-      const dataStocStr = dataStoc.toLocaleDateString('ro-RO',{day:'numeric',month:'long',year:'numeric'});
-      const stocColor   = zileStoc<15?'var(--red)':zileStoc<30?'var(--orange)':'var(--green)';
-      const difColor    = diferentaGr>0?'var(--orange)':'var(--green)';
-      const fmtR = v => v>0?fmt(Math.round(v))+' RON':'—';
-      let historic=[];try{historic=JSON.parse(x.note_historic||'[]');}catch(e2){}
-      return `<div class="bk-card" style="padding:14px 16px">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:12px">
-          <div style="flex:1;min-width:0">
-            <div style="font-size:14px;font-weight:700;color:var(--text)">${escHtml(x.denumire)}</div>
-            <div style="font-size:11px;color:var(--t3);margin-top:2px">${cantPortie}g/zi · ${cantTotal}g/pachet · ${fmtR(pretComanda)}/pachet${pretPerGram>0?' · <span style="color:var(--t2)">'+pretPerGram.toFixed(2)+' RON/g</span>':''}</div>
-          </div>
-          <div style="display:flex;gap:5px;flex-shrink:0">
-            <button class="btn btn-ghost btn-sm" onclick="openAddStoc('${x.id}')" style="color:var(--green);font-weight:700">+ Stoc</button>
-            <button class="btn btn-ghost btn-sm btn-icon" onclick="openSupl('${x.id}')">✏️</button>
-            <button class="btn btn-ghost btn-sm btn-icon" onclick="delSupl('${x.id}')" style="color:var(--red)">🗑</button>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
-          <div style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px">
-            <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">💰 Cost lunar</div>
-            <div style="font-family:var(--display);font-size:20px;color:var(--accent)">${fmtR(costLuna)}</div>
-            <div style="font-size:10px;color:var(--t3);margin-top:1px">${costZi>0?costZi.toFixed(2)+' RON/zi':'—'}</div>
-          </div>
-          <div style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px">
-            <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">📦 Stoc actual</div>
-            <div style="font-family:var(--display);font-size:20px;color:${stocColor}">${fmt(stocGrame)}g</div>
-            <div style="font-size:10px;color:${stocColor};margin-top:1px">${zileStoc} zile rămase</div>
-          </div>
-          <div style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px">
-            <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">📅 Stocul ajunge până</div>
-            <div style="font-size:13px;font-weight:600;color:${stocColor};line-height:1.3">${stocGrame>0?dataStocStr:'Stoc gol'}</div>
-          </div>
-          <div style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px">
-            <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">🛒 Necesar până 31.12</div>
-            <div style="font-family:var(--display);font-size:20px;color:${difColor}">${diferentaGr>0?'+'+fmt(Math.round(diferentaGr))+'g':'✅ OK'}</div>
-            <div style="font-size:10px;color:var(--t3);margin-top:1px">${diferentaGr>0?'≈ '+pacheteLipsa+' pachet'+(pacheteLipsa>1?'e':'')+' · '+fmtR(necesarGrame*pretPerGram):'Stoc suficient'}</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:${historic.length?'4':'0'}px">
-          ${x.note?`<a href="${escHtml(x.note)}" target="_blank" rel="noopener" style="font-size:11px;color:var(--accent);text-decoration:none">🔗 Produs</a>`:''}
-          ${x.link_dovada?`<button class="btn btn-ghost btn-sm" style="font-size:11px" onclick="previewDoc('',${JSON.stringify(x.link_dovada)})">📄 Factură</button>`:''}
-        </div>
-        ${historic.length?`<details><summary style="font-size:11px;color:var(--t3);cursor:pointer;user-select:none">📋 Istoric (${historic.length})</summary>
-          <div style="margin-top:6px;display:flex;flex-direction:column;gap:4px">
-          ${historic.slice().reverse().map(h=>`<div style="font-size:11px;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:6px 8px;display:flex;justify-content:space-between;align-items:center;gap:8px">
-            <div><span style="color:var(--t3)">${h.data}</span> · +${fmt(h.grame)}g${h.cost?' · '+fmt(h.cost)+' RON':''}</div>
-            <div style="display:flex;gap:4px">${h.link_produs?`<a href="${escHtml(h.link_produs)}" target="_blank" style="font-size:10px;color:var(--accent)">🔗</a>`:''}${h.link_factura?`<a href="${escHtml(h.link_factura)}" target="_blank" style="font-size:10px;color:var(--t2)">📄</a>`:''}</div>
-          </div>`).join('')}
-          </div></details>`:''}
-      </div>`;
-    }).join('')
-  })()
+  document.getElementById('supl-list').innerHTML = DB.supplements.map(x=>`
+    <div class="bk-card" style="padding:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+      <div style="flex:1">
+        <div style="font-size:13px;color:var(--text)">${escHtml(x.denumire)}</div>
+        ${x.cantitate?`<div style="font-size:11px;color:var(--t3)">${escHtml(x.cantitate)}</div>`:''}
+        ${x.note?`<div style="font-size:11px;color:var(--t3)">${escHtml(x.note)}</div>`:''}
+        ${x.link_dovada?`<button class="btn btn-ghost btn-sm" style="margin-top:4px;font-size:11px" onclick="openPreview('${(x.link_dovada||'').replace(/'/g,"\'")}','Dovadă — ${(x.denumire||'').replace(/'/g,"\'")}')">📄 Dovadă achiziție</button>`:''}
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-family:var(--display);font-size:16px;color:var(--accent)">${fmt(x.pret_lunar)} RON<span style="font-family:var(--body);font-size:10px;color:var(--t3)">/lună</span></div>
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="openSupl('${x.id}')">✏️</button>
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="delSupl('${x.id}')" style="color:var(--red)">🗑</button>
+      </div>
+    </div>`).join('') || '<p style="color:var(--t3)">Niciun supliment.</p>';
 
   document.getElementById('tr-list').innerHTML = DB.transport.map(x=>`
     <div class="bk-card" style="padding:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
@@ -5677,10 +4208,7 @@ function openRC(id) {
   v('f-dp',x.data_plecare); v('f-di',x.data_sfarsit);
   v('f-gel',x.geluri); v('f-caz',x.cazare); v('f-ins',x.plata_concurs);
   ck('f-rez',x.rezervat); ck('f-pcaz',x.plata_cazare); ck('f-pins',x.plata_concurs_ok);
-  v('f-note',x.note);
-  v('f-link-ins',x.link_dovada_ins);   v('f-factura-ins',x.factura_ins||'');
-  v('f-link-caz',x.link_dovada_caz);   v('f-factura-caz',x.factura_caz||'');
-  v('f-link-factura',x.link_dovada_factura||''); v('f-factura-desc',x.factura_desc||'');
+  v('f-note',x.note); v('f-link-ins',x.link_dovada_ins); v('f-link-caz',x.link_dovada_caz);
   document.getElementById('ov-rc').classList.add('on');
 }
 
@@ -5715,11 +4243,7 @@ async function saveRC() {
     plata_concurs_ok: document.getElementById('f-pins').checked,
     note: document.getElementById('f-note').value.trim(),
     link_dovada_ins: document.getElementById('f-link-ins').value.trim()||null,
-    link_dovada_caz:     document.getElementById('f-link-caz').value.trim()||null,
-    factura_ins:         document.getElementById('f-factura-ins')?.value.trim()||null,
-    factura_caz:         document.getElementById('f-factura-caz')?.value.trim()||null,
-    link_dovada_factura: document.getElementById('f-link-factura')?.value.trim()||null,
-    factura_desc:        document.getElementById('f-factura-desc')?.value.trim()||null,
+    link_dovada_caz: document.getElementById('f-link-caz').value.trim()||null,
   };
   try {
     if (editRCid) {
@@ -5829,8 +4353,7 @@ function openEQ(id) {
   const x = id ? DB.equipment.find(e=>e.id===id) : {};
   const v=(fid,val)=>{const el=document.getElementById(fid);if(el)el.value=val||'';};
   const cat=document.getElementById('eq-cat'); if(cat) cat.value=x.categorie||'Pantofi Curse Scurte';
-  v('eq-den',x.denumire); v('eq-prt',x.pret); v('eq-kmx',x.km_max);
-  v('eq-shoe-id',x.shoe_id||''); v('eq-nickname',x.nickname||'');; v('eq-kma',x.km_actuali); v('eq-note',x.note);
+  v('eq-den',x.denumire); v('eq-prt',x.pret); v('eq-kmx',x.km_max); v('eq-kma',x.km_actuali); v('eq-note',x.note);
   v('eq-link', x.link_dovada);
   // Preview button
   const pw = document.getElementById('eq-link-preview-wrap');
@@ -5916,8 +4439,6 @@ async function saveEQ() {
     km_actuali: +document.getElementById('eq-kma').value||0,
     note: document.getElementById('eq-note').value.trim(),
     link_dovada: document.getElementById('eq-link').value.trim()||null,
-    shoe_id:     document.getElementById('eq-shoe-id')?.value.trim()||null,
-    nickname:    document.getElementById('eq-nickname')?.value.trim()||null,
     race_ids: useType==='race' ? Array.from(raceChecks).map(c=>c.value) : [],
     use_type: useType,
     train_months: useType==='training' ? (+document.getElementById('eq-train-months').value||0) : null,
@@ -5952,121 +4473,50 @@ async function delEQ(id) {
 // ══════════════════════════════════════════════════════
 //  MODAL CRUD — SUPLIMENTE
 // ══════════════════════════════════════════════════════
-
-// ── Supliment helpers ─────────────────────────────────
-let _stocSuplId=null;
-
-function suplPreview(){
-  const ct=parseFloat(document.getElementById('supl-cant-total')?.value)||0;
-  const cp=parseFloat(document.getElementById('supl-cant-portie')?.value)||0;
-  const pr=parseFloat(document.getElementById('supl-pret-comanda')?.value)||0;
-  const st=parseFloat(document.getElementById('supl-stoc')?.value)||0;
-  const ppg=ct>0?pr/ct:0; const cz=ppg*cp; const cl=cz*30.5; const zpb=cp>0?Math.floor(ct/cp):0;
-  const s=id=>document.getElementById(id);
-  if(s('prev-cost-zi'))  s('prev-cost-zi').textContent  =cz>0?cz.toFixed(2)+' RON':'—';
-  if(s('prev-cost-luna'))s('prev-cost-luna').textContent=cl>0?Math.round(cl)+' RON':'—';
-  if(s('prev-zile-buc')) s('prev-zile-buc').textContent =zpb||'—';
-  const ie=s('supl-stoc-info');
-  if(ie&&st&&cp){const zs=Math.floor(st/cp);const col=zs<15?'var(--red)':zs<30?'var(--orange)':'var(--green)';
-    ie.innerHTML=`<span style="color:${col}">Stocul curent ajunge pentru <strong>${zs} zile</strong></span>`;}
-  else if(ie)ie.textContent='';
-}
-function suplCalcAll(){suplPreview();}
-function suplCalcPortii(){suplPreview();}
-function suplUpdateRamas(){suplPreview();}
-
-function openAddStoc(id){
-  _stocSuplId=id;
-  const x=DB.supplements.find(s=>s.id===id)||{};
-  document.getElementById('stoc-supl-name').textContent=x.denumire||'—';
-  const ct=parseFloat(x.cant_total)||0; const cp=parseFloat(x.cant_portie)||0;
-  const zpb=cp>0?Math.floor(ct/cp):0;
-  document.getElementById('stoc-supl-info').textContent=
-    ct?ct+'g/pachet · '+zpb+' zile/pachet · '+fmt(x.pret_comanda||0)+' RON':'—';
-  document.getElementById('stoc-nr-pachete').value=1;
-  if(document.getElementById('stoc-link-produs'))document.getElementById('stoc-link-produs').value='';
-  if(document.getElementById('stoc-link-factura'))document.getElementById('stoc-link-factura').value='';
-  stocCalcPreview();
-  document.getElementById('ov-supl-stoc').classList.add('on');
-}
-function closeAddStoc(){document.getElementById('ov-supl-stoc').classList.remove('on');_stocSuplId=null;}
-function stocCalcPreview(){
-  const x=_stocSuplId?DB.supplements.find(s=>s.id===_stocSuplId)||{}:{};
-  const nr=parseInt(document.getElementById('stoc-nr-pachete').value)||1;
-  const ct=parseFloat(x.cant_total)||0; const cp=parseFloat(x.cant_portie)||0;
-  const gr=ct*nr; const zile=cp>0?Math.floor(gr/cp):0;
-  const pg=document.getElementById('stoc-preview-gr');
-  const pz=document.getElementById('stoc-preview-zile');
-  if(pg)pg.textContent=gr?'+'+fmt(gr)+'g':'—';
-  if(pz)pz.textContent=zile?'+'+zile+' zile':'—';
-}
-async function saveAddStoc(){
-  if(!isOwnerLoggedIn()||!_stocSuplId)return;
-  const x=DB.supplements.find(s=>s.id===_stocSuplId)||{};
-  const nr=parseInt(document.getElementById('stoc-nr-pachete').value)||1;
-  const lp=document.getElementById('stoc-link-produs')?.value.trim()||null;
-  const lf=document.getElementById('stoc-link-factura')?.value.trim()||null;
-  const ct=parseFloat(x.cant_total)||0; const cp=parseFloat(x.cant_portie)||0;
-  const gr=ct*nr; const newStoc=(parseFloat(x.stoc_portii)||0)+gr;
-  const cost=(parseFloat(x.pret_comanda)||0)*nr;
-  let hist=[];try{hist=JSON.parse(x.note_historic||'[]');}catch(e2){}
-  hist.push({data:new Date().toISOString().slice(0,10),nr_pachete:nr,grame:gr,cost,link_produs:lp,link_factura:lf});
-  try{
-    const[u]=await sbPatch('supplements',x.id,{
-      stoc_portii:newStoc, data_achizitie:new Date().toISOString().slice(0,10),
-      note_historic:JSON.stringify(hist),
-      link_dovada:lf||x.link_dovada, note:lp||x.note,
-    });
-    const i=DB.supplements.findIndex(s=>s.id===x.id);if(i>=0)DB.supplements[i]=u;
-    toast('✅ +'+fmt(gr)+'g adăugat! Stoc nou: '+fmt(newStoc)+'g','ok');
-    closeAddStoc();renderNutri();
-  }catch(e){toast('❌ Eroare: '+e.message,'err');}
-}
-
 function openSupl(id) {
   editSuplId=id||null;
   const x=id?DB.supplements.find(s=>s.id===id):{};
-  document.getElementById('supl-title').textContent=id?'EDITEAZĂ SUPLIMENT':'SUPLIMENT NOU';
   const v=(fid,val)=>{const el=document.getElementById(fid);if(el)el.value=val||'';};
-  v('supl-den',x?.denumire); v('supl-cant-total',x?.cant_total);
-  v('supl-cant-portie',x?.cant_portie); v('supl-pret-comanda',x?.pret_comanda);
-  v('supl-stoc',x?.stoc_portii); v('supl-note',x?.note); v('supl-link',x?.link_dovada);
-  suplPreview();
+  v('supl-den',x.denumire); v('supl-cant',x.cantitate); v('supl-pret',x.pret_lunar); v('supl-note',x.note);
+  v('supl-link',x.link_dovada);
+  const pw=document.getElementById('supl-link-preview-wrap');
+  if(pw) pw.innerHTML = x.link_dovada ? `<button class="btn btn-ghost btn-sm" onclick="openPreview('${(x.link_dovada||'').replace(/'/g,"\'")}','Dovadă supliment — ${(x.denumire||'').replace(/'/g,"\'")}')">👁️ Previzualizare</button>` : '';
   document.getElementById('ov-supl').classList.add('on');
 }
-
 function closeSupl() { document.getElementById('ov-supl').classList.remove('on'); editSuplId=null; }
 
 async function saveSupl() {
   if (!isOwnerLoggedIn()) return;
-  if (!authToken){try{const sv=JSON.parse(localStorage.getItem('sb_session')||'{}');authToken=sv.access_token;}catch(e){}}
-  if (!authToken){toast('🔒 Sesiunea a expirat','err');showLoginModal();return;}
+  // Încearcă să restaureze tokenul din localStorage dacă lipsește
+  if (!authToken) {
+    try {
+      const saved = localStorage.getItem('sb_session');
+      if (saved) { const s = JSON.parse(saved); authToken = s.access_token; }
+    } catch(e) {}
+  }
+  if (!authToken) { toast('🔒 Sesiunea a expirat — reconectează-te.','err'); showLoginModal(); return; }
   const den=document.getElementById('supl-den').value.trim();
-  if(!den){toast('⚠️ Introduceți denumirea!','err');return;}
-  const cantTotal  =parseFloat(document.getElementById('supl-cant-total').value)||null;
-  const cantPortie =parseFloat(document.getElementById('supl-cant-portie').value)||null;
-  const pretComanda=parseFloat(document.getElementById('supl-pret-comanda').value)||null;
-  const stoc       =parseFloat(document.getElementById('supl-stoc').value)||null;
-  const pretPerGram=(cantTotal&&pretComanda)?pretComanda/cantTotal:0;
-  const pretLunar  =(pretPerGram&&cantPortie)?Math.round(pretPerGram*cantPortie*30.5):0;
+  if (!den) { toast('⚠️ Introduceți denumirea!','err'); return; }
   const payload={
-    user_id:currentUser.id, denumire:den,
-    cant_total:cantTotal, cant_portie:cantPortie,
-    pret_comanda:pretComanda, pret_lunar:pretLunar, stoc_portii:stoc,
-    note:document.getElementById('supl-note').value.trim()||null,
+    user_id:currentUser.id,
+    denumire:den,
+    cantitate:document.getElementById('supl-cant').value.trim(),
+    pret_lunar:+document.getElementById('supl-pret').value||0,
+    note:document.getElementById('supl-note').value.trim(),
     link_dovada:document.getElementById('supl-link').value.trim()||null,
   };
-  try{
-    if(editSuplId){
-      const[u]=await sbPatch('supplements',editSuplId,payload);
-      const i=DB.supplements.findIndex(s=>s.id===editSuplId);if(i>=0)DB.supplements[i]=u;
+  try {
+    if (editSuplId) {
+      const [u]=await sbPatch('supplements',editSuplId,payload);
+      const idx=DB.supplements.findIndex(s=>s.id===editSuplId); if(idx>=0) DB.supplements[idx]=u;
       toast('✅ Supliment actualizat!','ok');
-    }else{
-      const[c]=await sbPost('supplements',payload);
-      DB.supplements.push(c);toast('✅ Supliment adăugat!','ok');
+    } else {
+      const [c]=await sbPost('supplements',payload);
+      DB.supplements.push(c);
+      toast('✅ Supliment adăugat!','ok');
     }
-    closeSupl();renderNutri();renderEstimare();
-  }catch(e){toast('❌ Eroare: '+e.message,'err');}
+    closeSupl(); renderNutri(); renderEstimare();
+  } catch(e) { toast('❌ Eroare: '+e.message,'err'); }
 }
 
 async function delSupl(id) {
@@ -7655,15 +6105,19 @@ function spGoSlide(idx) {
   const target = targetId ? document.getElementById(targetId) : null;
   if (!target) return;
 
+  // Debug în consolă
+  const _allIds2 = window._spActiveOrder || ALL_SLIDES.map(s=>s.id);
+  const _sid2 = _allIds2[idx] || '?';
+  console.log('[SLIDE]', (idx+1) + '/' + (window._spTotalDynamic||SP_TOTAL), '·', _sid2.toUpperCase());
+
+  // Set delays BEFORE adding 'on' so transitions fire correctly
+  target.querySelectorAll('.sp-reveal').forEach(el => {
+    const delay = parseInt(el.dataset.delay)||0;
+    el.style.transitionDelay = delay + 'ms';
+  });
+
   requestAnimationFrame(() => {
     target.classList.add('on');
-    // Reveal animatii pentru story slides
-    if (['sp-s11','sp-s12','sp-s13','sp-s14'].includes(targetId)) {
-      target.querySelectorAll('.sp-reveal').forEach(el => {
-        const delay = parseInt(el.dataset.delay)||0;
-        el.style.transitionDelay = delay + 'ms';
-      });
-    }
     // Porneste video pe slide-ul activ, opreste pe celelalte
     document.querySelectorAll('[data-story-video]').forEach(v => {
       const onActiveSlide = v.closest('.sp-slide') === target;
@@ -7710,13 +6164,29 @@ function spStartCountdown() {
 // ── Slide 7: ROI ─────────────────────────────────────
 function spInitROI() {
   const slider = document.getElementById('sp-roi-slider');
-  if (slider) spUpdateROI(parseInt(slider.value)||500);
+  if (!slider) return;
+  if (!slider._roiInit) {
+    slider._roiInit = true;
+    slider.addEventListener('input', function() {
+      spUpdateROI(parseInt(this.value));
+    });
+  }
+  // Populate cu delay pentru a lăsa slide-ul să se randeze
+  requestAnimationFrame(() => {
+    spUpdateROI(parseInt(slider.value)||500);
+  });
 }
 
 function spUpdateROI(amount) {
   const amEl = document.getElementById('sp-roi-amount');
   if (amEl) amEl.textContent = amount.toLocaleString('ro-RO') + ' RON';
-  const tiers = SETTINGS.packages || [];
+  const tiers = (SETTINGS.packages && SETTINGS.packages.length)
+    ? SETTINGS.packages
+    : DEFAULT_SETTINGS.packages || [
+        { min:500,  icon:'🥉', title:'BRONZE', desc:'Logo kit & mulțumiri' },
+        { min:1000, icon:'🥈', title:'SILVER', desc:'Logo + social media' },
+        { min:2500, icon:'🥇', title:'GOLD',   desc:'Logo echipament + prezentare' },
+      ];
   const grid = document.getElementById('sp-roi-grid');
   if (grid) grid.innerHTML = tiers.map(t => {
     const on = amount >= (t.min||0);
@@ -7816,7 +6286,15 @@ function spPopulateBudget() {
 
 function spAnimateBudget() {
   spPopulateBudget();
-  setTimeout(()=>{ document.querySelectorAll('.sp-budget-bar-fill').forEach(b=>{ b.style.width=b.dataset.pct+'%'; }); }, 200);
+  // Elements just created by innerHTML — need real layout tick before animating
+  setTimeout(() => {
+    const bars = document.querySelectorAll('.sp-budget-bar-fill');
+    // Force reflow by reading offsetWidth
+    bars.forEach(b => void b.offsetWidth);
+    bars.forEach(b => {
+      b.style.width = (b.dataset.pct || '0') + '%';
+    });
+  }, 80);
 }
 
 
@@ -7977,6 +6455,8 @@ function spPopulateAll() {
   applyStorySlides();
   // Slide 4B — wishlist
   spPopulateSuportSlide();
+  spInitWAFloat();
+  spLoadTheme();
   // S9 — De ce eu
   const wi = SETTINGS.why_items || [];
   ['1','2','3'].forEach((n,i) => {
@@ -8821,7 +7301,11 @@ function spDrawMapS2(races, today) {
     if (!target) return;
     const i = parseInt(target.dataset.race);
     spSelectRace(i);
-    if (window.innerWidth <= 600) openMobileRaceModal(i); else spOpenRaceDetail(i);
+    if (window.innerWidth <= 600) {
+      openMobileRaceModal(i);
+    } else {
+      spOpenRaceDetail(i);
+    }
   });
 }
 
@@ -9127,14 +7611,21 @@ const ALL_SLIDES = [
 function getSlideOrder() {
   const saved = SETTINGS.slide_order;
   if (saved && Array.isArray(saved) && saved.length > 0) {
+    // Add any new slides not in saved order
     const merged = [...saved];
     ALL_SLIDES.forEach(s => {
       if (!merged.find(o => o.id === s.id)) merged.push({ id: s.id, active: true });
     });
     const result = merged.filter(o => ALL_SLIDES.find(s => s.id === o.id));
+    // If result has fewer slides than ALL_SLIDES, something is wrong — reset
+    const activeInResult = result.filter(o => o.active !== false).length;
+    const activeInAll    = ALL_SLIDES.length;
+    if (activeInResult < Math.floor(activeInAll * 0.6)) {
+      console.warn('[getSlideOrder] saved order incomplete, using default');
+      return ALL_SLIDES.map(s => ({ id:s.id, active:true }));
+    }
     return result;
   }
-  console.log('[getSlideOrder] no saved order, returning default');
   return ALL_SLIDES.map(s => ({ id:s.id, active:true }));
 }
 
@@ -10150,38 +8641,6 @@ function slContact() {
   window.location.href = 'mailto:' + email + '?subject=Sponsorizare Trail 2026&body=Buna ziua, sunt interesat de un parteneriat pentru sezonul 2026.';
 }
 
-
-function spPopulateSuportSlide(){
-  const races=DB.races||[],eq=DB.equipment||[],supls=DB.supplements||[];
-  const gpp=(DB.nutri?.gel_pret_set24||0)/24;
-  const items=[
-    {icon:'🏁',label:'Înscrieri',  val:Math.round(races.reduce((s,r)=>s+(r.plata_concurs||0),0))||4200},
-    {icon:'🏨',label:'Cazare',     val:Math.round(races.reduce((s,r)=>s+(r.cazare||0),0))||2800},
-    {icon:'🚗',label:'Transport',  val:Math.round(races.reduce((s,r)=>s+(r.cost_transport||0),0))||1500},
-    {icon:'👟',label:'Echipament', val:Math.round(eq.reduce((s,e)=>s+(parseFloat(e.pret)||0),0))||3200},
-    {icon:'🧃',label:'Nutriție',   val:Math.round(races.reduce((s,r)=>s+(r.geluri||0)*gpp,0))||800},
-    {icon:'💊',label:'Suplimente', val:Math.round(supls.reduce((s,x)=>s+(x.pret_lunar||0)*12,0))||900},
-  ];
-  const total=items.reduce((s,i)=>s+i.val,0);
-  const maxV=Math.max(...items.map(i=>i.val),1);
-  const list=document.getElementById('sp-s4b-budget-list');
-  if(list){
-    list.innerHTML=items.map(item=>`<div style="display:flex;align-items:center;gap:8px">
-      <span style="font-size:13px;flex-shrink:0;width:18px">${item.icon}</span>
-      <span style="font-size:10px;color:rgba(255,255,255,.45);font-family:'Inter',sans-serif;min-width:72px;flex-shrink:0">${item.label}</span>
-      <div style="flex:1;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden">
-        <div style="height:100%;background:var(--accent);border-radius:2px;width:0;transition:width .8s cubic-bezier(.4,0,.2,1)" data-pct="${Math.round(item.val/maxV*100)}"></div>
-      </div>
-      <span style="font-family:'Bebas Neue',sans-serif;font-size:12px;color:var(--accent);min-width:54px;text-align:right">${fmt(item.val)}</span>
-    </div>`).join('');
-    setTimeout(()=>{list.querySelectorAll('[data-pct]').forEach(b=>{b.style.width=b.dataset.pct+'%';});},600);
-  }
-  const totEl=document.getElementById('sp-s4b-total');
-  if(totEl)totEl.textContent=fmt(total)+' RON';
-  const waBtn=document.getElementById('sp-s4b-wa-btn');
-  if(waBtn){const phone=(SETTINGS.whatsapp_phone||'').replace(/\D/g,'')||'40763829093';
-    waBtn.href='https://wa.me/'+phone+'?text='+encodeURIComponent('Bună! Am văzut wishlist-ul de echipament și vreau să te susțin!');}
-}
 function checkSponsorParam() {
   const params = new URLSearchParams(window.location.search);
   const isPrez = params.get('prez') === '1' || params.get('sponsor') === '1';
@@ -10241,6 +8700,148 @@ document.addEventListener('keydown',e=>{
   }
 });
 
+
+
+
+
+
+// ── Slide 4B: grafic buget stânga + WA wishlist ──────
+function spPopulateSuportSlide() {
+  // Grafic mini-buget stânga
+  const races=DB.races||[], eq=DB.equipment||[], supls=DB.supplements||[];
+  const gpp=(DB.nutri?.gel_pret_set24||0)/24;
+  const items=[
+    {icon:'🏁', label:'Înscrieri',   val:Math.round(races.reduce((s,r)=>s+(r.plata_concurs||0),0)) || 4200},
+    {icon:'🏨', label:'Cazare',      val:Math.round(races.reduce((s,r)=>s+(r.cazare||0),0))        || 2800},
+    {icon:'🚗', label:'Transport',   val:Math.round(races.reduce((s,r)=>s+(r.cost_transport||0),0))|| 1500},
+    {icon:'👟', label:'Echipament',  val:Math.round(eq.reduce((s,e)=>s+(parseFloat(e.pret)||0),0)) || 3200},
+    {icon:'🧃', label:'Nutriție',    val:Math.round(races.reduce((s,r)=>s+(r.geluri||0)*gpp,0))    || 800},
+    {icon:'💊', label:'Suplimente',  val:Math.round(supls.reduce((s,x)=>s+(x.pret_lunar||0)*12,0)) || 900},
+  ];
+  const total  = items.reduce((s,i)=>s+i.val,0);
+  const maxVal = Math.max(...items.map(i=>i.val),1);
+
+  const list = document.getElementById('sp-s4b-budget-list');
+  if (list) {
+    list.innerHTML = items.map(item => `
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:13px;flex-shrink:0;width:18px">${item.icon}</span>
+        <span style="font-size:10px;color:rgba(255,255,255,.45);font-family:'Inter',sans-serif;
+          min-width:72px;flex-shrink:0">${item.label}</span>
+        <div style="flex:1;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden">
+          <div style="height:100%;background:var(--accent);border-radius:2px;width:0;
+            transition:width .8s cubic-bezier(.4,0,.2,1)"
+            data-pct="${Math.round(item.val/maxVal*100)}"></div>
+        </div>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:12px;color:var(--accent);
+          min-width:54px;text-align:right">${fmt(item.val)}</span>
+      </div>`).join('');
+    // Animate after render
+    setTimeout(() => {
+      list.querySelectorAll('[data-pct]').forEach(b => { b.style.width = b.dataset.pct+'%'; });
+    }, 600);
+  }
+
+  const totEl = document.getElementById('sp-s4b-total');
+  if (totEl) totEl.textContent = fmt(total)+' RON';
+
+  // WA button wishlist
+  const waBtn = document.getElementById('sp-s4b-wa-btn');
+  if (waBtn) {
+    const phone = (SETTINGS.whatsapp_phone||DEFAULT_SETTINGS.whatsapp_phone||'40763829093').replace(/\D/g,'');
+    waBtn.href = 'https://wa.me/'+phone+'?text='+encodeURIComponent('Bună! Am văzut wishlist-ul de echipament și vreau să te susțin!');
+  }
+}
+
+
+// ── Tema prezentare ────────────────────────────────────
+function spLoadTheme() {
+  // Preia tema din index.html (salvată ca tm_theme în localStorage)
+  try {
+    const saved = localStorage.getItem('tm_theme') || 'default';
+    if (saved && saved !== 'default') {
+      document.documentElement.setAttribute('data-theme', saved);
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  } catch(e) {}
+}
+
+// ── WhatsApp float button ──────────────────────────────
+function spInitWAFloat() {
+  const btn = document.getElementById('sp-wa-float');
+  if (!btn) return;
+  const phone = (SETTINGS.whatsapp_phone || DEFAULT_SETTINGS.whatsapp_phone || '40763829093').replace(/\D/g,'');
+  btn.href = 'https://wa.me/' + phone + '?text=' + encodeURIComponent('Bună! Am văzut prezentarea ta și sunt interesat de un parteneriat pentru sezonul 2026.');
+}
+
+// ── Mobile race modal ──────────────────────────────────
+function openMobileRaceModal(i) {
+  const r = _spMapRaces[i];
+  if (!r) return;
+  const modal = document.getElementById('sp-race-mobile-modal');
+  if (!modal) return;
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const past  = r.data_cursa && new Date(r.data_cursa) < today;
+  const days  = r.data_cursa ? Math.ceil((new Date(r.data_cursa)-today)/86400000) : null;
+  const gpp   = (DB.nutri?.gel_pret_set24||120)/24;
+  const gelCost = Math.round((r.geluri||0)*gpp);
+
+  document.getElementById('mob-race-name').textContent = r.denumire || '—';
+
+  document.getElementById('mob-race-stats').innerHTML = [
+    { icon:'🏃', val:(r.distanta||'?')+' km', lbl:'Distanță' },
+    { icon:'⛰️', val:r.denivelare?Math.round(r.denivelare/1000)+'k D+':'—', lbl:'Denivelare' },
+    { icon:'📅', val:past?'✅ Fin.':days!==null?days+'z':'—', lbl:'Status' },
+  ].map(s => `<div style="background:rgba(255,255,255,.06);border-radius:8px;padding:10px;text-align:center">
+    <div style="font-size:16px;margin-bottom:3px">${s.icon}</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--accent);line-height:1">${s.val}</div>
+    <div style="font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;font-family:'Inter',sans-serif">${s.lbl}</div>
+  </div>`).join('');
+
+  const rows = [
+    r.data_cursa ? { icon:'📅', lbl:'Data', val: new Date(r.data_cursa).toLocaleDateString('ro-RO',{weekday:'short',day:'numeric',month:'long',year:'numeric'}) } : null,
+    r.data_plecare ? { icon:'🚗', lbl:'Plecare', val: new Date(r.data_plecare).toLocaleDateString('ro-RO',{weekday:'short',day:'numeric',month:'long'}) } : null,
+    r.cazare!=null ? { icon:'🏨', lbl:'Cazare', val: r.cazare>0?fmt(r.cazare)+' RON':'Fără cazare', ok:r.plata_cazare } : null,
+    r.plata_concurs ? { icon:'🏁', lbl:'Înscriere', val: fmt(r.plata_concurs)+' RON', ok:r.plata_concurs_ok } : null,
+    r.geluri ? { icon:'🧃', lbl:'Geluri', val: r.geluri+' buc'+(gelCost?' · ~'+fmt(gelCost)+' RON':'') } : null,
+    r.ora_start ? { icon:'⏰', lbl:'Start', val: r.ora_start } : null,
+    r.note ? { icon:'📝', lbl:'Note', val: r.note } : null,
+  ].filter(Boolean);
+
+  document.getElementById('mob-race-info').innerHTML = rows.map(row => `
+    <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+      <span style="font-size:13px;flex-shrink:0;width:20px">${row.icon}</span>
+      <span style="font-size:10px;color:rgba(255,255,255,.4);min-width:64px;text-transform:uppercase;letter-spacing:.4px;font-family:'Inter',sans-serif;margin-top:1px">${row.lbl}</span>
+      <span style="font-size:13px;color:#fff;flex:1;font-family:'Inter',sans-serif">${String(row.val||'—')}</span>
+      ${row.ok!==undefined?`<span>${row.ok?'✅':'⏳'}</span>`:''}
+    </div>`).join('');
+
+  modal.classList.add('open');
+}
+
+function closeMobileRaceModal() {
+  const modal = document.getElementById('sp-race-mobile-modal');
+  if (modal) modal.classList.remove('open');
+}
+
+// ── Standalone stubs ─────────────────────────────────
+function isOwnerLoggedIn() { return false; }
+function toast() {}
+function setSyncStatus() {}
+function renderAll() {}
+function showLoginModal() {}
+function goBack() { if(document.referrer)window.history.back();else window.location.href='/'; }
+
+
+// ── Standalone stubs ─────────────────────────────────
+function isOwnerLoggedIn() { return false; }
+function toast() {}
+function setSyncStatus() {}
+function renderAll() {}
+function showLoginModal() {}
+function goBack() { if(document.referrer)window.history.back();else window.location.href='/'; }
 
 </script>
 </body>
