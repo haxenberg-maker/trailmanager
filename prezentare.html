@@ -1507,17 +1507,51 @@ body.readonly [data-owner-only] { display:none !important }
 
 /* ── MOBILE ── */
 @media(max-width:600px){
-  .sp-split { grid-template-columns:1fr;grid-template-rows:160px 1fr; }
-  .sp-split-img { padding:16px 20px; }
-  .sp-split-year { font-size:36px;top:12px;left:14px; }
-  .sp-split-quote { font-size:16px; }
-  .sp-split-km-pill { font-size:11px;padding:4px 12px; }
-  .sp-split-title { font-size:clamp(24px,8vw,40px);margin-bottom:14px; }
-  .sp-split-content { padding:16px 16px;overflow-y:auto; }
+  /* Split layout: stânga sus 38%, dreapta jos 62% */
+  .sp-split {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 38vh 1fr !important;
+    height: 100%;
+  }
+  .sp-split-img {
+    height: 38vh !important;
+    min-height: 0 !important;
+    padding: 14px 16px !important;
+    overflow: hidden;
+  }
+  .sp-split-img .sp-split-year { font-size:clamp(60px,18vw,90px);opacity:.05; }
+  .sp-split-img .sp-split-quote { font-size:clamp(14px,4vw,18px); }
+  .sp-split-img .sp-split-km-pill { font-size:11px;padding:4px 12px; }
+
+  /* Content dreapta: scrollabil, nu depășește */
+  .sp-split-content {
+    padding: 14px 16px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    max-height: calc(62vh - 0px);
+  }
+  .sp-split-eyebrow { font-size:9px;margin-bottom:8px; }
+  .sp-split-title { font-size:clamp(22px,7vw,36px) !important;margin-bottom:10px !important; }
   .sp-split-lines p { font-size:13px; }
-  .sp-split-eyebrow { font-size:9px;margin-bottom:10px; }
-  .sp-s1-stats { gap:12px!important;flex-wrap:wrap; }
-  .sp-s1-val { font-size:clamp(24px,6vw,36px)!important; }
+
+  /* S1 stats */
+  .sp-s1-stats { gap:10px !important;flex-wrap:wrap; }
+  .sp-s1-val { font-size:clamp(20px,5.5vw,30px) !important; }
+
+  /* Why items mai compacte */
+  .sp-why-item { padding:8px 10px; gap:8px; }
+  .sp-why-nr { font-size:20px; }
+  .sp-why-title { font-size:11px; }
+  .sp-why-desc { font-size:10px;line-height:1.4; }
+
+  /* ROI items mai mici */
+  .sp-roi-item { padding:6px 10px; }
+  .sp-roi-item-title { font-size:10px; }
+
+  /* Budget bars */
+  .sp-budget-row { gap:6px; }
+  .sp-budget-label { font-size:10px;min-width:72px; }
+  .sp-budget-amount { font-size:12px;min-width:52px; }
 }
 
 /* ── STORY SLIDES (vechi, pastrat pentru compatibilitate) ── */
@@ -1576,9 +1610,9 @@ body.readonly [data-owner-only] { display:none !important }
 
   /* Slide base - padding mai mic, text mai mic */
   .sp-slide {
-    padding:52px 14px 20px;
-    justify-content:flex-start;
-    overflow-y:hidden;
+    padding: 52px 0 0 0;
+    justify-content: flex-start;
+    overflow: hidden !important;
   }
 
   /* Titluri slide-uri */
@@ -1896,6 +1930,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 @keyframes fadeInModal {
   from { opacity:0;transform:translateY(20px); }
   to   { opacity:1;transform:translateY(0); }
+}
+
+/* ── S4b mobile: budget compact + metode sus/jos ── */
+@media(max-width:600px) {
+  #sp-s4b .sp-split-img {
+    padding: 12px 14px !important;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+  #sp-s4b .sp-split-content {
+    padding: 10px 14px !important;
+  }
+  /* Formular 230 button full width */
+  #sp-s4b .f230ro-lansare { font-size:12px !important; padding:7px 10px !important; }
 }
 </style>
 </head>
@@ -6998,7 +7047,11 @@ function spDrawMapS2(races, today) {
     if (!target) return;
     const i = parseInt(target.dataset.race);
     spSelectRace(i);
-    spOpenRaceDetail(i);
+    if (window.innerWidth <= 600) {
+      openMobileRaceModal(i);
+    } else {
+      spOpenRaceDetail(i);
+    }
   });
 }
 
