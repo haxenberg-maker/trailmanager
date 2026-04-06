@@ -2585,43 +2585,120 @@ body.readonly [data-owner-only] { display:none !important }
     <div class="sp-slide" id="sp-s4b">
       <div class="sp-bg" style="background:#000"></div>
       <div class="sp-split">
-        <div class="sp-split-img" style="background:linear-gradient(160deg,#080010 0%,#130020 50%,#000 100%)">
-          <div class="sp-split-year" style="opacity:.06">GEAR</div>
-          <div style="position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;
-                      align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center">
-            <div style="font-size:52px">👟</div>
-            <div class="sp-split-quote" style="font-size:clamp(18px,3vw,28px)">
-              Echipament<br>înseamnă<br>siguranță.
+
+        <!-- STÂNGA: Grafic cheltuieli live -->
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#060008 0%,#0a000e 50%,#000 100%);
+          padding:20px 16px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:12px">
+          <div class="sp-split-year" style="opacity:.04">RON</div>
+          <div style="position:relative;z-index:2;width:100%">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(11px,1.8vw,14px);
+              color:rgba(255,255,255,.4);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">
+              📊 Unde se duc banii — Sezon 2026
             </div>
-            <div id="sp-wish-total-pill" class="sp-split-km-pill"
-              style="background:rgba(167,139,250,.15);color:#a78bfa;border-color:rgba(167,139,250,.3);margin:0">
-              — RON total
+            <div id="sp-s4b-budget-list" style="display:flex;flex-direction:column;gap:6px;overflow:hidden"></div>
+            <div style="border-top:1px solid rgba(255,255,255,.1);margin-top:10px;padding-top:10px;
+              display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:11px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;
+                text-transform:uppercase;letter-spacing:1px">Total sezon</span>
+              <span style="font-family:'Bebas Neue',sans-serif;font-size:clamp(18px,3vw,26px);
+                color:var(--accent)" id="sp-s4b-total">— RON</span>
             </div>
+            <a href="/plati" target="_blank" rel="noopener"
+              style="display:flex;align-items:center;justify-content:center;gap:7px;
+                margin-top:10px;padding:8px 12px;
+                background:rgba(204,255,0,.07);border:1px solid rgba(204,255,0,.2);
+                border-radius:8px;text-decoration:none;
+                font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1.5px;
+                color:var(--accent);transition:background .2s"
+              onmouseover="this.style.background='rgba(204,255,0,.15)'"
+              onmouseout="this.style.background='rgba(204,255,0,.07)'">
+              📊 TRANSPARENȚĂ FINANCIARĂ
+            </a>
           </div>
         </div>
-        <div class="sp-split-content" style="padding:0;overflow:hidden;display:flex;flex-direction:column">
-          <div style="padding:16px 18px 10px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0">
-            <div class="sp-split-eyebrow sp-reveal" data-delay="0">🎯 SUSȚINE-MĂ CU ECHIPAMENT</div>
-            <h2 class="sp-split-title sp-reveal" data-delay="80"
-              style="font-size:clamp(20px,3.2vw,38px);margin-bottom:0">
-              CE AM NEVOIE<br>PENTRU SEZON
-            </h2>
+
+        <!-- DREAPTA: 3 metode de susținere -->
+        <div class="sp-split-content" style="padding:24px 28px;overflow-y:auto">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">💛 CUM MĂ POȚI SUSȚINE</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="80"
+            style="font-size:clamp(20px,3.2vw,38px);margin-bottom:14px">
+            3 METODE.<br>ZERO SCUZE.
+          </h2>
+
+          <!-- Metodă 1: Donație -->
+          <div class="sp-reveal" data-delay="200"
+            style="background:rgba(204,255,0,.06);border:1px solid rgba(204,255,0,.2);
+              border-radius:9px;padding:12px 14px;margin-bottom:8px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-size:18px">💳</span>
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--accent);
+                letter-spacing:1px">DONAȚIE DIRECTĂ</div>
+            </div>
+            <div style="font-size:10px;color:rgba(255,255,255,.5);font-family:'Inter',sans-serif;
+              line-height:1.5;margin-bottom:6px">
+              Orice sumă merge direct spre curse, echipament și deplasări.
+            </div>
+            <div style="font-size:10px;color:rgba(255,255,255,.35);font-family:'Inter',sans-serif;
+              font-variant-numeric:tabular-nums">
+              ASOCIAȚIA CLUB SPORTIV ATLET LA ORICE VÂRSTĂ<br>
+              IBAN: RO44BTRLRONCRT0T14CC9C01<br>
+              Banca Transilvania · CIF: 44107794
+            </div>
           </div>
-          <div id="sp-wishlist-grid" class="sp-reveal" data-delay="200"
-            style="flex:1;overflow-y:auto;padding:8px 10px;display:flex;flex-direction:column;gap:5px"></div>
-          <div style="padding:10px 14px;border-top:1px solid rgba(255,255,255,.07);flex-shrink:0" class="sp-reveal" data-delay="450">
-            <a id="sp-wish-wa-btn" href="#" target="_blank" rel="noopener"
-              style="display:flex;align-items:center;justify-content:center;gap:10px;
-                     background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3);
-                     border-radius:10px;padding:11px;text-decoration:none;
-                     font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;
-                     color:#25d366;transition:background .2s"
-              onmouseover="this.style.background='rgba(37,211,102,.22)'"
-              onmouseout="this.style.background='rgba(37,211,102,.12)'">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-              </svg>
-              VREAU SĂ SUSȚIN ECHIPAMENTUL
+
+          <!-- Metodă 2: Formular 230 -->
+          <div class="sp-reveal" data-delay="350"
+            style="background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.2);
+              border-radius:9px;padding:12px 14px;margin-bottom:8px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:18px">📋</span>
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#a78bfa;
+                  letter-spacing:1px">REDIRECȚIONEAZĂ IMPOZITUL</div>
+              </div>
+              <span style="font-size:9px;background:rgba(167,139,250,.2);color:#a78bfa;
+                padding:2px 7px;border-radius:10px;font-family:'Inter',sans-serif;font-weight:700;
+                white-space:nowrap">ZERO COST</span>
+            </div>
+            <div style="font-size:10px;color:rgba(255,255,255,.5);font-family:'Inter',sans-serif;
+              line-height:1.5;margin-bottom:8px">
+              <strong style="color:rgba(255,255,255,.8)">Persoană fizică</strong> — 3,5% din impozitul pe venit (Formular 230).<br>
+              <strong style="color:rgba(255,255,255,.8)">Firmă</strong> — până la 20% din impozitul pe profit.
+            </div>
+            <button class="f230ro-lansare"
+              style="width:100%;padding:8px 12px;background:rgba(167,139,250,.2);
+                border:1px solid rgba(167,139,250,.35);border-radius:7px;
+                color:#a78bfa;font-family:'Bebas Neue',sans-serif;font-size:13px;
+                letter-spacing:1.5px;cursor:pointer;transition:background .2s"
+              onmouseover="this.style.background='rgba(167,139,250,.35)'"
+              onmouseout="this.style.background='rgba(167,139,250,.2)'">
+              📋 COMPLETEAZĂ FORMULARUL 230
+            </button>
+          </div>
+
+          <!-- Metodă 3: Echipament + share -->
+          <div class="sp-reveal" data-delay="500"
+            style="background:rgba(37,211,102,.06);border:1px solid rgba(37,211,102,.2);
+              border-radius:9px;padding:12px 14px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-size:18px">👟</span>
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#25d366;
+                letter-spacing:1px">ECHIPAMENT SAU SHARE</div>
+            </div>
+            <div style="font-size:10px;color:rgba(255,255,255,.5);font-family:'Inter',sans-serif;
+              line-height:1.5;margin-bottom:8px">
+              Susține cu echipament din wishlist sau redistribuie prezentarea. Fiecare share contează.
+            </div>
+            <a id="sp-s4b-wa-btn" href="#" target="_blank" rel="noopener"
+              style="display:flex;align-items:center;justify-content:center;gap:8px;
+                padding:8px 12px;background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.3);
+                border-radius:7px;text-decoration:none;
+                color:#25d366;font-family:'Bebas Neue',sans-serif;font-size:13px;
+                letter-spacing:1.5px;transition:background .2s"
+              onmouseover="this.style.background='rgba(37,211,102,.3)'"
+              onmouseout="this.style.background='rgba(37,211,102,.15)'">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              SUSȚINE CU ECHIPAMENT
             </a>
           </div>
         </div>
@@ -2701,88 +2778,115 @@ body.readonly [data-owner-only] { display:none !important }
     <div class="sp-slide" id="sp-s9">
       <div class="sp-bg" style="background:#000"></div>
       <div class="sp-split">
-        <div class="sp-split-img" style="background:linear-gradient(160deg,#0a0400 0%,#180800 50%,#000 100%)">
-          <div class="sp-split-year">DE<br>CE<br>EU</div>
-          <div style="position:relative;z-index:2">
-            <div class="sp-split-quote">Autenticitate.<br>Constanță.<br>Impact local.</div>
-            <div class="sp-split-km-pill">Bârlad · 2026</div>
-          </div></div>
-        <div class="sp-split-content">
-          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🧩 3 MOTIVE REALE</div>
-          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(26px,4vw,48px)">DE CE SĂ NE<br>PARTENERIĂM.</h2>
-          <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px">
-            <div class="sp-why-item sp-reveal" data-delay="250">
-              <div class="sp-why-nr">01</div>
-              <div><div class="sp-why-title">BÂRLADUL PE HARTA TRAIL-ULUI</div>
-              <div class="sp-why-desc">La fiecare dintre cele 10 curse — Brașov, Sinaia, Bucovina — logo-ul tău e prezent fizic, în mișcare, în fața a mii de oameni.</div></div>
-            </div>
-            <div class="sp-why-item sp-reveal" data-delay="400">
-              <div class="sp-why-nr">02</div>
-              <div><div class="sp-why-title">TRANSPARENȚĂ TOTALĂ</div>
-              <div class="sp-why-desc">Ești pe pagina de răspuns. Fiecare km, fiecare cursă, fiecare cheltuială — live, în timp real.</div></div>
-            </div>
-            <div class="sp-why-item sp-reveal" data-delay="550">
-              <div class="sp-why-nr">03</div>
-              <div><div class="sp-why-title">PARTENERIATUL AUTENTIC</div>
-              <div class="sp-why-desc">Nu reclamă. Asociere reală cu un om real din Bârlad care demonstrează că se poate.</div></div>
-            </div>
-          </div></div>
-      </div>
-    </div>
 
-    <!-- ── SLIDE 10 — TESTIMONIAL ── -->
-    <div class="sp-slide" id="sp-s10">
-      <div class="sp-bg" style="background:#000"></div>
-      <div class="sp-split">
-        <div class="sp-split-img" style="background:linear-gradient(160deg,#080005 0%,#12000a 50%,#000 100%)">
-          <div class="sp-split-year" style="opacity:.05">❝</div>
-          <div style="position:relative;z-index:2;display:flex;flex-direction:column;gap:16px">
-            <div style="font-size:72px;line-height:1;color:rgba(255,255,255,.3)">❝</div>
-            <div class="sp-split-quote" id="sp-test-name-left" style="font-size:clamp(18px,3vw,28px)">PRISCOM</div>
-            <div class="sp-split-km-pill">Partener confirmat</div>
-            <div id="sp-test-logo-wrap" style="display:none;background:white;border-radius:8px;padding:8px 14px;width:fit-content">
-              <img id="sp-test-logo-img" src="" style="max-height:40px;max-width:120px;object-fit:contain;display:block">
+        <!-- Stânga: 3 motive (din S9 original) -->
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#0a0400 0%,#180800 50%,#000 100%);
+          padding:28px 24px;display:flex;flex-direction:column;justify-content:center;gap:14px">
+          <div class="sp-split-year" style="opacity:.05">WHY</div>
+          <div style="position:relative;z-index:2;width:100%">
+            <div class="sp-split-eyebrow" style="margin-bottom:12px">🧩 3 MOTIVE REALE</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div class="sp-why-item">
+                <div class="sp-why-nr">🏔️</div>
+                <div><div class="sp-why-title">BÂRLADUL PE HARTA TRAIL-ULUI</div>
+                <div class="sp-why-desc">Logo-ul tău prezent fizic la 10 curse naționale — Brașov, Bucovina, Sinaia.</div></div>
+              </div>
+              <div class="sp-why-item">
+                <div class="sp-why-nr">📊</div>
+                <div><div class="sp-why-title">TRANSPARENȚĂ TOTALĂ</div>
+                <div class="sp-why-desc">Fiecare km, fiecare cursă, fiecare cheltuială — live pe <a href="/plati" target="_blank" style="color:var(--accent);text-decoration:none">/plati</a>.</div></div>
+              </div>
+              <div class="sp-why-item">
+                <div class="sp-why-nr">🤝</div>
+                <div><div class="sp-why-title">PARTENERIAT AUTENTIC</div>
+                <div class="sp-why-desc">Nu reclamă. Un om real din Bârlad care demonstrează că se poate.</div></div>
+              </div>
             </div>
-          </div></div>
-        <div class="sp-split-content">
+          </div>
+        </div>
+
+        <!-- Dreapta: testimonial + CTA (din S10 original) -->
+        <div class="sp-split-content" style="padding:28px 32px">
           <div class="sp-split-eyebrow sp-reveal" data-delay="0">💬 CE SPUN PARTENERII</div>
-          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(26px,4vw,48px)">REZULTATE<br>REALE.</h2>
-          <div class="sp-reveal" data-delay="250" style="margin-bottom:24px">
-            <p id="sp-testimonial-text" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(16px,2.5vw,24px);color:#fff;letter-spacing:1px;line-height:1.4">
+          <h2 class="sp-split-title sp-reveal" data-delay="100"
+            style="font-size:clamp(24px,3.8vw,46px);margin-bottom:16px">FACI<br>PARTE?</h2>
+
+          <!-- Testimonial -->
+          <div class="sp-reveal" data-delay="250"
+            style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+              border-radius:10px;padding:14px 16px;margin-bottom:16px">
+            <div style="font-size:28px;color:rgba(255,255,255,.2);line-height:1;margin-bottom:6px">❝</div>
+            <p id="sp-testimonial-text"
+              style="font-family:'Bebas Neue',sans-serif;font-size:clamp(14px,2.2vw,20px);
+                color:#fff;letter-spacing:.5px;line-height:1.4">
               „Susținem această inițiativă pentru că reprezintă exact valorile noastre: perseverență, autenticitate și mândrie locală."
             </p>
-            <p id="sp-test-logo-text" style="font-size:12px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;margin-top:10px">— PRISCOM, Bârlad</p>
+            <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+              <div id="sp-test-logo-wrap" style="display:none;background:white;border-radius:6px;padding:4px 10px">
+                <img id="sp-test-logo-img" src="" style="max-height:28px;max-width:90px;object-fit:contain;display:block">
+              </div>
+              <p id="sp-test-logo-text"
+                style="font-size:11px;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif">
+                — PRISCOM, Bârlad
+              </p>
+            </div>
           </div>
-          <a id="sp-test-wa" href="#" target="_blank" rel="noopener" class="sp-cta-btn sp-reveal" data-delay="400"
-            style="font-size:14px;padding:12px 24px;border-radius:10px;display:inline-flex;align-items:center;gap:8px">
+
+          <!-- CTA WA -->
+          <a id="sp-test-wa" href="#" target="_blank" rel="noopener"
+            class="sp-cta-btn sp-reveal" data-delay="400"
+            style="font-size:14px;padding:12px 24px;border-radius:10px;
+              display:flex;align-items:center;justify-content:center;gap:8px;width:100%">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            CONTACTEAZĂ-NE
-          </a></div>
+            CONTACTEAZĂ-MĂ
+          </a>
+        </div>
       </div>
     </div>
 <!-- ── SLIDE 11 — POVESTE A: ORIGINEA ── -->
     <div class="sp-slide" id="sp-s11">
-      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-bg" style="background:linear-gradient(160deg,#020008 0%,#08001a 60%,#000 100%)"></div>
       <div class="sp-split">
-        <!-- Stanga: imagine / background vizual -->
-        <div class="sp-split-img" style="background:linear-gradient(160deg,#0a0015 0%,#1a0530 50%,#000 100%)">
-          <div class="sp-split-year">MAI<br>2024</div>
-          <div class="sp-split-quote">&ldquo;Nimic nu<br>mai era<br>al meu.&rdquo;</div>
-          <div class="sp-split-km-pill">Km 0</div>
-        </div>
-        <!-- Dreapta: text reveal -->
-        <div class="sp-split-content">
-          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🏃 ORIGINEA</div>
-          <h2 class="sp-split-title sp-reveal" data-delay="150">O SINGURĂ<br>DECIZIE<br>PROPRIE.</h2>
-          <div class="sp-split-lines">
-            <p class="sp-reveal" data-delay="400">Într-o perioadă în care simțeam că nimic nu mai îmi aparține — am luat singura decizie care era a mea.</p>
-            <p class="sp-reveal" data-delay="650">Fără plan. Fără echipament. Fără experiență.</p>
-            <p class="sp-reveal sp-accent-line" data-delay="900">Doar eu și asfaltul Bârladului.</p>
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#020008 0%,#08001a 60%,#000 100%);
+          display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center">
+          <div class="sp-split-year" style="opacity:.06;font-size:clamp(60px,14vw,160px)">2024</div>
+          <div style="position:relative;z-index:2">
+            <div style="font-size:52px;margin-bottom:16px">🏃</div>
+            <div class="sp-split-quote" style="font-size:clamp(16px,2.8vw,26px);line-height:1.4">
+              „Ba, ce aș vrea<br>și eu să alerg."
+            </div>
+            <div style="margin-top:12px;font-size:clamp(13px,2vw,18px);color:rgba(255,255,255,.5);
+              font-family:'Inter',sans-serif;font-style:italic">
+              „Pai de ce nu o faci?"
+            </div>
+            <div class="sp-split-km-pill" style="margin-top:20px">Mai 2024 · Km 0</div>
           </div>
-          <div class="sp-split-stat sp-reveal" data-delay="1100">
-            <span class="sp-split-stat-val">Km 0</span>
-            <span class="sp-split-stat-arrow">→</span>
-            <span class="sp-split-stat-val sp-green">5.000 km</span>
+        </div>
+        <div class="sp-split-content">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🏃 CAPITOLUL 1 — ORIGINEA</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(28px,5vw,56px)">
+            O SINGURĂ<br>ÎNTREBARE.
+          </h2>
+          <div class="sp-reveal" data-delay="250" style="display:flex;flex-direction:column;gap:14px">
+            <p style="font-size:clamp(13px,1.8vw,16px);color:var(--t2);line-height:1.7;font-family:'Inter',sans-serif">
+              Eram la sală. Un prieten de-al meu tot alerga. L-am văzut, l-am privit cum se duce și m-am trezit spunând tare:
+              <strong style="color:#fff"> „Ba, ce aș vrea și eu să alerg."</strong>
+            </p>
+            <p style="font-size:clamp(13px,1.8vw,16px);color:var(--t2);line-height:1.7;font-family:'Inter',sans-serif">
+              El s-a întors și m-a întrebat simplu: <strong style="color:#fff">„Pai de ce nu o faci?"</strong>
+            </p>
+            <p style="font-size:clamp(13px,1.8vw,16px);color:var(--t2);line-height:1.7;font-family:'Inter',sans-serif">
+              Nu era o invitație la un maraton. Era o întrebare fără răspuns logic de refuz.
+              Atât a trebuit. <strong style="color:#fff">Două replici.</strong> Și viața mea s-a schimbat.
+            </p>
+          </div>
+          <div class="sp-reveal" data-delay="500"
+            style="margin-top:20px;padding:12px 16px;background:rgba(204,255,0,.06);
+              border-left:3px solid var(--accent);border-radius:0 8px 8px 0">
+            <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;
+              margin-bottom:6px;font-family:'Inter',sans-serif">Mai 2024</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(16px,2.5vw,22px);
+              color:#fff;letter-spacing:1px">Primul km. De la zero. Fără background sportiv.</div>
           </div>
         </div>
       </div>
@@ -2790,24 +2894,46 @@ body.readonly [data-owner-only] { display:none !important }
 
     <!-- ── SLIDE 12 — POVESTE B: PRIMUL MUNTE ── -->
     <div class="sp-slide" id="sp-s12">
-      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-bg" style="background:linear-gradient(160deg,#0a0500 0%,#1a0a00 60%,#000 100%)"></div>
       <div class="sp-split">
-        <div class="sp-split-img" style="background:linear-gradient(160deg,#001408 0%,#003010 50%,#000 100%)">
-          <div class="sp-split-year">TRIPLE<br>CROWN</div>
-          <div class="sp-split-quote">&ldquo;Un chin.<br>O măreție.&rdquo;</div>
-          <div class="sp-split-km-pill" style="background:rgba(204,255,0,.15);color:#ccff00">Top 50</div>
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#0a0500 0%,#1a0a00 60%,#000 100%);
+          display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center">
+          <div class="sp-split-year" style="opacity:.06;font-size:clamp(50px,12vw,130px)">3000<br>KM</div>
+          <div style="position:relative;z-index:2">
+            <div style="font-size:48px;margin-bottom:16px">🏭</div>
+            <div class="sp-split-quote" style="font-size:clamp(15px,2.5vw,24px);line-height:1.4">
+              Naveta.<br>Vânzări.<br>Ceartă.<br>Stres.<br><br>
+              <span style="color:var(--accent)">Și apoi — pe ușă.</span>
+            </div>
+          </div>
         </div>
         <div class="sp-split-content">
-          <div class="sp-split-eyebrow sp-reveal" data-delay="0">⛰️ PRIMUL MUNTE</div>
-          <h2 class="sp-split-title sp-reveal" data-delay="150">CHIN.<br>MĂREȚIE.<br>TOP 50.</h2>
-          <div class="sp-split-lines">
-            <p class="sp-reveal" data-delay="400">Prima cursă de trail. Pe urcare simțeam un chin pe care nu îl mai cunoscusem.</p>
-            <p class="sp-reveal" data-delay="650">Dar în același timp — mă simțeam mai puternic ca niciodată în viața mea.</p>
-            <p class="sp-reveal sp-accent-line" data-delay="900">Am terminat în <strong>Top 50</strong>. La prima mea cursă de munte. Ceva s-a schimbat pentru totdeauna.</p>
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🏙️ CAPITOLUL 2 — BÂRLADUL</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(22px,4vw,46px)">
+            BÂRLADUL MĂ ȘTIE.<br>DAR NU MĂ ȘTIE.
+          </h2>
+          <div class="sp-reveal" data-delay="250" style="display:flex;flex-direction:column;gap:14px">
+            <p style="font-size:clamp(13px,1.8vw,16px);color:var(--t2);line-height:1.7;font-family:'Inter',sans-serif">
+              Dimineața — naveta la Similă. Muncesc, vorbesc cu oamenii, mă cert, mă stresez cu vânzările.
+              Ajung acasă. Mă chinui să mă reîmprospătez. Și apoi —
+              <strong style="color:#fff">pe ușă afară.</strong>
+            </p>
+            <p style="font-size:clamp(13px,1.8vw,16px);color:var(--t2);line-height:1.7;font-family:'Inter',sans-serif">
+              3.000 de kilometri alergați prin Bârlad. Oamenii m-au văzut alergând prin oraș,
+              prin cartiere, pe ploaie, pe frig. Sigur m-au văzut.
+            </p>
+            <p style="font-size:clamp(13px,1.8vw,16px);color:var(--t2);line-height:1.7;font-family:'Inter',sans-serif">
+              Dar <strong style="color:#fff">nu știu cine e Gabi.</strong> Nu știu că omul ăla care
+              fuge prin fața blocului se antrenează pentru curse de 100km în munți.
+            </p>
           </div>
-          <div class="sp-split-badges sp-reveal" data-delay="1100">
-            <div class="sp-badge">Prima cursă de munte</div>
-            <div class="sp-badge sp-badge-accent">Top 50 finiseri</div>
+          <div class="sp-reveal" data-delay="500"
+            style="margin-top:20px;padding:12px 16px;background:rgba(249,115,22,.08);
+              border-left:3px solid var(--orange);border-radius:0 8px 8px 0">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(14px,2.2vw,20px);
+              color:#fff;letter-spacing:.5px;line-height:1.4">
+              „Nu alerg să câștig. Alerg ca să demonstrez că din Bârlad se poate."
+            </div>
           </div>
         </div>
       </div>
@@ -2815,25 +2941,56 @@ body.readonly [data-owner-only] { display:none !important }
 
     <!-- ── SLIDE 13 — POVESTE C: KM 130 ── -->
     <div class="sp-slide" id="sp-s13">
-      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-bg" style="background:linear-gradient(160deg,#000510 0%,#001030 60%,#000 100%)"></div>
       <div class="sp-split">
-        <div class="sp-split-img" style="background:linear-gradient(160deg,#140800 0%,#2a1000 50%,#000 100%)">
-          <div class="sp-split-year">BUCO-<br>VINA<br>2025</div>
-          <div class="sp-split-quote">&ldquo;Nu pentru<br>mine.<br>Pentru ei.&rdquo;</div>
-          <div class="sp-split-km-pill" style="background:rgba(255,100,0,.15);color:#ff6400">Km 130/161</div>
-        </div>
-        <div class="sp-split-content">
-          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🌩️ KM 130 · FURTUNA</div>
-          <h2 class="sp-split-title sp-reveal" data-delay="150">AM VRUT<br>SĂ RENUNȚ.</h2>
-          <div class="sp-split-lines">
-            <p class="sp-reveal" data-delay="400">Înainte să aflu că furtuna a oprit cursa, voiam să abandonez. Prietenii m-au ținut pe linia de plutire.</p>
-            <p class="sp-reveal" data-delay="650">Când am auzit că nu mai putem continua — m-am simțit dărâmat.</p>
-            <p class="sp-reveal sp-accent-line" data-delay="900">Nu pentru mine. <strong>Pentru ei.</strong> Voiam să termin pentru ei.</p>
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#000510 0%,#001030 60%,#000 100%);
+          display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center">
+          <div class="sp-split-year" style="opacity:.06;font-size:clamp(50px,10vw,120px)">130<br>KM</div>
+          <div style="position:relative;z-index:2">
+            <div style="font-size:48px;margin-bottom:12px">🌩️</div>
+            <div class="sp-split-quote" style="font-size:clamp(15px,2.5vw,24px);line-height:1.3">
+              Beast 100M.<br>130km din 167.<br>Furtună.<br>Cursă anulată.
+            </div>
+            <div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+              <div class="sp-split-km-pill">35 ore</div>
+              <div class="sp-split-km-pill">6.507 m+</div>
+              <div class="sp-split-km-pill" style="color:#ff6b35;border-color:rgba(255,107,53,.3);background:rgba(255,107,53,.1)">1h somn</div>
+            </div>
           </div>
-          <div class="sp-split-stat sp-reveal" data-delay="1100">
-            <span class="sp-split-stat-val" style="color:#ff6400">Km 130</span>
-            <span class="sp-split-stat-arrow">din</span>
-            <span class="sp-split-stat-val">161 planificați</span>
+        </div>
+        <div class="sp-split-content" style="overflow-y:auto">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">🌩️ CAPITOLUL 3 — BUCOVINA</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(20px,3.5vw,42px)">
+            AM OPRIT CEASUL.<br>N-AM OPRIT<br>DORINȚA.
+          </h2>
+          <div class="sp-reveal" data-delay="250" style="display:flex;flex-direction:column;gap:10px">
+            <p style="font-size:clamp(12px,1.6vw,14px);color:var(--t2);line-height:1.7;font-family:'Inter',sans-serif">
+              <strong style="color:#fff">35 de ore.</strong> O oră de somn la km 83. Deshidratare, întuneric total,
+              rătăciri în noaptea fără marcaje. Căldură care te lovea frontal ca o palmă.
+              Picioare zgâriate de spini. Vânând izvoare ca un animal speriat.
+            </p>
+            <p style="font-size:clamp(12px,1.6vw,14px);color:var(--t2);line-height:1.7;font-family:'Inter',sans-serif">
+              La km 120 — <strong style="color:var(--accent)">second wind</strong>. Am prins aripi.
+              Treceam pe lângă concurenți. Unii exclamau: „Bravo!" Nici ei nu înțelegeau
+              de unde mai aveam viteză după 120km.
+            </p>
+            <p style="font-size:clamp(12px,1.6vw,14px);color:var(--t2);line-height:1.7;font-family:'Inter',sans-serif">
+              Km 126. Vatra Dornei. Prietenul meu m-a așteptat. Mâncare, masaj,
+              apă termală. <strong style="color:#fff">Cel mai frumos moment al cursei.</strong>
+              Și atunci — furtuna.
+            </p>
+          </div>
+          <div class="sp-reveal" data-delay="450"
+            style="margin-top:14px;padding:12px 16px;background:rgba(99,179,255,.08);
+              border-left:3px solid rgba(99,179,255,.5);border-radius:0 8px 8px 0">
+            <div style="font-size:clamp(12px,1.8vw,15px);color:rgba(255,255,255,.8);
+              line-height:1.6;font-family:'Inter',sans-serif;font-style:italic">
+              „Poate că am oprit ceasul, dar dorința din mine n-a murit.
+              Pofta de a termina BEAST 100M până la capăt e acolo.
+              Mai vie ca niciodată."
+            </div>
+            <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:6px;
+              font-family:'Inter',sans-serif">75% · 130km / 167km · 6505m+</div>
           </div>
         </div>
       </div>
@@ -2841,25 +2998,65 @@ body.readonly [data-owner-only] { display:none !important }
 
     <!-- ── SLIDE 14 — POVESTE D: 5KM → 5000KM + STREAK ── -->
     <div class="sp-slide" id="sp-s14">
-      <div class="sp-bg" style="background:#000"></div>
+      <div class="sp-bg" style="background:linear-gradient(160deg,#000a00 0%,#001f08 60%,#000 100%)"></div>
       <div class="sp-split">
-        <div class="sp-split-img" style="background:linear-gradient(160deg,#000a00 0%,#001f08 50%,#000 100%)">
-          <div class="sp-split-year">2024<br>→<br>AZI</div>
-          <div class="sp-split-quote">&ldquo;Nu mă<br>opresc.&rdquo;</div>
-          <div class="sp-split-km-pill" style="background:rgba(204,255,0,.15);color:#ccff00" id="sp-s14-streak-pill">🔥 — zile</div>
+        <div class="sp-split-img" style="background:linear-gradient(160deg,#000a00 0%,#001f08 60%,#000 100%);
+          display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center">
+          <div class="sp-split-year" style="opacity:.06;font-size:clamp(40px,9vw,110px)">26H<br>46M</div>
+          <div style="position:relative;z-index:2">
+            <div style="font-size:48px;margin-bottom:12px">⛰️</div>
+            <div class="sp-split-quote" style="font-size:clamp(15px,2.5vw,24px);line-height:1.3">
+              Transylvania 100k.<br>103.8km · 6.495m+<br><br>
+              <span style="color:var(--accent)">Primul ultramaraton oficial.</span>
+            </div>
+            <div style="margin-top:16px">
+              <div class="sp-split-km-pill">26h 46min</div>
+            </div>
+          </div>
         </div>
-        <div class="sp-split-content">
-          <div class="sp-split-eyebrow sp-reveal" data-delay="0">📈 REZILIENTĂ · CONTINUITATE</div>
-          <h2 class="sp-split-title sp-reveal" data-delay="150">DE LA 5 KM<br>LA <span style="color:#ccff00">5.000 KM.</span></h2>
-          <div class="sp-split-lines">
-            <p class="sp-reveal" data-delay="400">Ianuarie 2025 — <strong>500km</strong> într-o lună, zi de zi după muncă. Decembrie — <strong>600km</strong>, 20km dimineața și seara.</p>
-            <p class="sp-reveal" data-delay="650">Bucovina 2026 mă așteaptă. De data asta știu ce e un Ultra adevărat.</p>
-            <p class="sp-reveal sp-accent-line" data-delay="900">Și nu m-am oprit nicio zi. <span id="sp-s14-streak-inline" style="color:#ff6b35;font-weight:700">— zile</span> consecutive de alergare.</p>
+        <div class="sp-split-content" style="overflow-y:auto">
+          <div class="sp-split-eyebrow sp-reveal" data-delay="0">⛰️ CAPITOLUL 4 — TRANSYLVANIA</div>
+          <h2 class="sp-split-title sp-reveal" data-delay="100" style="font-size:clamp(20px,3.5vw,42px)">
+            „CE CAUT<br>EU AICI?"
+          </h2>
+          <div class="sp-reveal" data-delay="250" style="display:flex;flex-direction:column;gap:10px">
+            <p style="font-size:clamp(12px,1.6vw,14px);color:var(--t2);line-height:1.7;font-family:'Inter',sans-serif">
+              Noaptea a intrat în mine. Ploaie care nu s-a mai oprit. Singur în ceață,
+              cu o lumină slabă de la frontală. <strong style="color:#fff">„Ce caut eu aici?"</strong>
+            </p>
+            <p style="font-size:clamp(12px,1.6vw,14px);color:var(--t2);line-height:1.7;font-family:'Inter',sans-serif">
+              Grecul cel mai experimentat se uită la mine și zice: <strong style="color:#fff">„Eu mă opresc."</strong>
+              Primul moment în care m-am clătinat psihic. Cum să renunțe el și eu să continui?
+            </p>
+            <p style="font-size:clamp(12px,1.6vw,14px);color:var(--t2);line-height:1.7;font-family:'Inter',sans-serif">
+              Francesco, un prieten făcut pe drum: <strong style="color:var(--accent)">„Hai. Mergem împreună
+              dacă nu vrei să te oprești."</strong>
+            </p>
+            <p style="font-size:clamp(12px,1.6vw,14px);color:var(--t2);line-height:1.7;font-family:'Inter',sans-serif">
+              Ultimii 20km — noroi, ceață, tobogan de pământ. La final,
+              după 26 ore și 46 minute — <strong style="color:#fff">linia de finish.</strong>
+            </p>
           </div>
-          <!-- Grafic km -->
-          <div class="sp-reveal" data-delay="1100" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px;margin-top:8px">
-            <canvas id="sp-km-chart" height="80" style="width:100%;display:block"></canvas>
+          <div class="sp-reveal" data-delay="500"
+            style="margin-top:14px;padding:12px 16px;background:rgba(204,255,0,.06);
+              border-left:3px solid var(--accent);border-radius:0 8px 8px 0">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(14px,2.2vw,20px);
+              color:#fff;letter-spacing:.5px;line-height:1.4">
+              Primul ultramaraton oficial. 103.8km. 6.495m+.<br>
+              <span style="color:var(--accent)">Încă nu-mi vine să cred.</span>
+            </div>
           </div>
+          <a href="/plati" target="_blank" rel="noopener" class="sp-reveal" data-delay="700"
+            style="display:flex;align-items:center;justify-content:center;gap:8px;
+              margin-top:14px;padding:10px 16px;
+              background:rgba(204,255,0,.07);border:1px solid rgba(204,255,0,.2);
+              border-radius:8px;text-decoration:none;
+              font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;
+              color:var(--accent);transition:background .2s"
+            onmouseover="this.style.background='rgba(204,255,0,.15)'"
+            onmouseout="this.style.background='rgba(204,255,0,.07)'">
+            📊 TRANSPARENȚĂ FINANCIARĂ
+          </a>
         </div>
       </div>
     </div>
@@ -3860,22 +4057,35 @@ body.readonly [data-owner-only] { display:none !important }
       <div class="cb-row"><input type="checkbox" id="f-pcaz"><label for="f-pcaz">✅ Cazare plătită</label></div>
       <div class="cb-row"><input type="checkbox" id="f-pins"><label for="f-pins">✅ Înscriere plătită</label></div>
     </div>
-    <div class="sl">🔗 Dovezi plăți</div>
+    <div class="sl">🔗 Dovezi & facturi</div>
     <div class="fg">
-      <div class="fi fgrow">
-        <span class="lbl">Link dovadă înscriere</span>
+      <div class="fi fgrow"><span class="lbl">📋 Dovadă înscriere</span>
         <div style="display:flex;gap:6px;align-items:center">
-          <input id="f-link-ins" placeholder="https://drive.google.com/... sau orice link" style="flex:1">
+          <input id="f-link-ins" placeholder="https://..." style="flex:1">
           <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('f-link-ins')" title="Preview">👁</button>
-        </div>
-      </div>
-      <div class="fi fgrow">
-        <span class="lbl">Link dovadă cazare</span>
+        </div></div>
+      <div class="fi fgrow"><span class="lbl">🧾 Factură înscriere</span>
         <div style="display:flex;gap:6px;align-items:center">
-          <input id="f-link-caz" placeholder="https://drive.google.com/... sau orice link" style="flex:1">
+          <input id="f-factura-ins" placeholder="https://..." style="flex:1">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('f-factura-ins')" title="Preview">👁</button>
+        </div></div>
+      <div class="fi fgrow"><span class="lbl">📋 Dovadă cazare</span>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input id="f-link-caz" placeholder="https://..." style="flex:1">
           <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('f-link-caz')" title="Preview">👁</button>
-        </div>
-      </div>
+        </div></div>
+      <div class="fi fgrow"><span class="lbl">🧾 Factură cazare</span>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input id="f-factura-caz" placeholder="https://..." style="flex:1">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('f-factura-caz')" title="Preview">👁</button>
+        </div></div>
+      <div class="fi fgrow"><span class="lbl">🚗 Factură transport</span>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input id="f-link-factura" placeholder="https://..." style="flex:1">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('f-link-factura')" title="Preview">👁</button>
+        </div></div>
+      <div class="fi fgrow"><span class="lbl">💬 Descriere factură transport</span>
+        <input id="f-factura-desc" placeholder="ex: Bilet tren Bârlad-Brașov"></div>
     </div>
     <div class="sl">Note</div>
     <textarea id="f-note" rows="2" placeholder="Observații, parteneri de cursă, detalii logistice..."></textarea>
@@ -3924,6 +4134,10 @@ body.readonly [data-owner-only] { display:none !important }
   <div class="mb">
     <div class="fg">
       <div class="fi fgrow"><span class="lbl">Denumire *</span><input id="eq-den" placeholder="ex: Hoka Speedgoat 7"></div>
+      <div style="display:grid;grid-template-columns:80px 1fr;gap:8px">
+        <div class="fi"><span class="lbl">ID (ex: 01)</span><input id="eq-shoe-id" placeholder="01" maxlength="4"></div>
+        <div class="fi fgrow"><span class="lbl">Nickname (ex: "Speedgoat-ul de munte")</span><input id="eq-nickname" placeholder="Porecla pantofului..."></div>
+      </div>
       <div class="fi"><span class="lbl">Categorie</span>
         <select id="eq-cat">
           <option>Pantofi Curse Scurte</option><option>Pantofi Curse Lungi</option>
@@ -4035,25 +4249,53 @@ body.readonly [data-owner-only] { display:none !important }
 
 <!-- MODAL SUPLIMENT -->
 <div class="overlay" id="ov-supl">
-<div class="modal" style="max-width:480px">
+<div class="modal" style="max-width:460px">
   <div class="mh"><h3 id="supl-title">SUPLIMENT NOU</h3><button class="mx" onclick="closeSupl()">✕</button></div>
-  <div class="mb">
-    <div class="fg">
-      <div class="fi fgrow"><span class="lbl">Denumire *</span><input id="supl-den" placeholder="ex: Colagen"></div>
-      <div class="fi fgrow"><span class="lbl">Cantitate / porții</span><input id="supl-cant" placeholder="ex: 500gr = 28 porții"></div>
-      <div class="fi fgrow"><span class="lbl">Cost lunar (RON)</span><input type="number" id="supl-pret" placeholder="1400"></div>
-      <div class="fi fgrow"><span class="lbl">Note</span><textarea id="supl-note" rows="2" placeholder="Observații..."></textarea></div>
-      <div class="sl">Dovadă achiziție</div>
-      <div class="fi fgrow"><span class="lbl">Link dovadă (factură/comandă)</span><input id="supl-link" placeholder="https://..."></div>
-      <div style="margin-top:4px" id="supl-link-preview-wrap"></div>
+  <div class="mb"><div class="fg">
+    <div class="fi fgrow"><span class="lbl">Denumire *</span><input id="supl-den" placeholder="ex: Colagen, Creatina"></div>
+    <div class="sl">📦 Ambalaj & Doză</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      <div class="fi"><span class="lbl">Gramaj ambalaj (g)</span><input type="number" id="supl-cant-total" placeholder="500" oninput="suplPreview()"></div>
+      <div class="fi"><span class="lbl">Doză zilnică (g)</span><input type="number" id="supl-cant-portie" placeholder="18" oninput="suplPreview()"></div>
+      <div class="fi"><span class="lbl">Preț pachet (RON)</span><input type="number" id="supl-pret-comanda" placeholder="120" oninput="suplPreview()"></div>
     </div>
-  </div>
-  <div class="mf">
-    <button class="btn btn-ghost" onclick="closeSupl()">Anulează</button>
-    <button class="btn btn-primary" onclick="saveSupl()">Salvează</button>
-  </div>
-</div>
-</div>
+    <div style="background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+      <div style="text-align:center"><div style="font-family:var(--display);font-size:19px;color:var(--accent)" id="prev-cost-zi">—</div><div style="font-size:9px;color:var(--t3);text-transform:uppercase">RON/zi</div></div>
+      <div style="text-align:center"><div style="font-family:var(--display);font-size:19px;color:var(--accent)" id="prev-cost-luna">—</div><div style="font-size:9px;color:var(--t3);text-transform:uppercase">RON/lună</div></div>
+      <div style="text-align:center"><div style="font-family:var(--display);font-size:19px;color:var(--accent)" id="prev-zile-buc">—</div><div style="font-size:9px;color:var(--t3);text-transform:uppercase">zile/pachet</div></div>
+    </div>
+    <div class="sl">📊 Stoc curent</div>
+    <div class="fi"><span class="lbl">Stoc actual (grame în casă)</span><input type="number" id="supl-stoc" placeholder="350" oninput="suplPreview()"></div>
+    <div id="supl-stoc-info" style="font-size:11px;padding:2px;min-height:16px"></div>
+    <div class="sl">📝 Link produs / factură</div>
+    <div class="fi fgrow"><span class="lbl">Link produs</span><input id="supl-note" placeholder="https://gymbeam.ro/..."></div>
+    <div class="fi fgrow"><span class="lbl">Link factură</span>
+      <div style="display:flex;gap:6px"><input id="supl-link" placeholder="https://..." style="flex:1">
+        <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('supl-link')" title="Preview">👁</button></div>
+    </div>
+  </div></div>
+  <div class="mf"><button class="btn btn-ghost" onclick="closeSupl()">Anulează</button><button class="btn btn-primary" onclick="saveSupl()">Salvează</button></div>
+</div></div>
+<div class="overlay" id="ov-supl-stoc">
+<div class="modal" style="max-width:400px">
+  <div class="mh"><h3>+ ADAUGĂ STOC</h3><button class="mx" onclick="closeAddStoc()">✕</button></div>
+  <div class="mb"><div class="fg">
+    <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px" id="stoc-supl-name">—</div>
+    <div style="font-size:12px;color:var(--t3);margin-bottom:12px" id="stoc-supl-info">—</div>
+    <div class="fi fgrow"><span class="lbl">Câte pachete ai cumpărat?</span><input type="number" id="stoc-nr-pachete" value="1" min="1" oninput="stocCalcPreview()"></div>
+    <div style="background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+      <div><div style="font-size:10px;color:var(--t3)">Grame adăugate</div><div style="font-family:var(--display);font-size:22px;color:var(--accent)" id="stoc-preview-gr">—</div></div>
+      <div style="text-align:right"><div style="font-size:10px;color:var(--t3)">Zile suplimentare</div><div style="font-family:var(--display);font-size:22px;color:var(--green)" id="stoc-preview-zile">—</div></div>
+    </div>
+    <div class="sl">📦 Sursa (salvat în istoric)</div>
+    <div class="fi fgrow"><span class="lbl">Link produs / magazin</span><input id="stoc-link-produs" placeholder="https://gymbeam.ro/..."></div>
+    <div class="fi fgrow"><span class="lbl">Link factură / comandă</span>
+      <div style="display:flex;gap:6px"><input id="stoc-link-factura" placeholder="https://..." style="flex:1">
+        <button type="button" class="btn btn-ghost btn-sm" onclick="previewDoc('stoc-link-factura')" title="Preview">👁</button></div>
+    </div>
+  </div></div>
+  <div class="mf"><button class="btn btn-ghost" onclick="closeAddStoc()">Anulează</button><button class="btn btn-primary" onclick="saveAddStoc()">✅ Adaugă Stoc</button></div>
+</div></div>
 
 <!-- MODAL TRANSPORT -->
 <div class="overlay" id="ov-tr">
@@ -4854,6 +5096,21 @@ function renderCurse(f = 'all') {
   document.getElementById('rc-list').innerHTML = list.map(rcCardFull).join('') || '<p style="color:var(--t3);padding:20px 0">Nicio cursă.</p>';
 }
 
+
+async function saveRaceResult(id){
+  if(!isOwnerLoggedIn())return;
+  const loc  =+document.getElementById('rc-loc-'+id)?.value||null;
+  const total=+document.getElementById('rc-total-'+id)?.value||null;
+  const link =document.getElementById('rc-link-'+id)?.value.trim()||null;
+  if(!loc&&!link){toast('⚠️ Introduceți cel puțin locul obținut!','err');return;}
+  try{
+    const[u]=await sbPatch('races',id,{loc_obtinut:loc,total_participanti:total,link_rezultat:link});
+    const i=DB.races.findIndex(r=>r.id===id);if(i>=0)DB.races[i]=u;
+    toast('✅ Rezultat salvat!','ok');
+    renderCurse(curFilter||'all');
+  }catch(e){toast('❌ Eroare: '+e.message,'err');}
+}
+
 function rcCardFull(c) {
   const today = new Date(); today.setHours(0,0,0,0);
   const dc = c.data_cursa ? new Date(c.data_cursa) : null;
@@ -4909,7 +5166,32 @@ function rcCardFull(c) {
       ${c.link_dovada_ins?`<button onclick="openPreview('${c.link_dovada_ins.replace(/'/g,"\'")}','Dovadă înscriere — ${c.denumire.replace(/'/g,"\'")}')" class="btn btn-ghost btn-sm" style="font-size:11px">📄 Dovadă înscriere</button>`:''}
       ${c.link_dovada_caz?`<button onclick="openPreview('${c.link_dovada_caz.replace(/'/g,"\'")}','Dovadă cazare — ${c.denumire.replace(/'/g,"\'")}')" class="btn btn-ghost btn-sm" style="font-size:11px">🏨 Dovadă cazare</button>`:''}
     </div>`:''}
-    ${(()=>{const eq=DB.equipment.filter(e=>(e.race_ids||[]).includes(c.id));return eq.length?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)"><div style="font-size:10px;color:var(--t3);margin-bottom:4px">🎽 ECHIPAMENT ALOCAT</div><div style="display:flex;flex-wrap:wrap;gap:4px">${eq.map(e=>`<span class="badge" style="color:var(--green);border-color:rgba(79,255,155,.2)">${e.denumire}</span>`).join('')}</div></div>`:'';})()}
+    ${(()=>{const eq=DB.equipment.filter(e=>(e.race_ids||[]).includes(c.id));return eq.length?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)"><div style="font-size:10px;color:var(--t3);margin-bottom:4px">🎽 ECHIPAMENT ALOCAT</div><div style="display:flex;flex-wrap:wrap;gap:4px">${eq.map(e=>`<span class="badge" style="color:var(--green);border-color:rgba(79,255,155,.2)">${e.shoe_id?`[${e.shoe_id}] `:''} ${e.nickname||e.denumire}</span>`).join('')}</div></div>`:'';})()}
+  ${(()=>{
+    const todayPR=new Date();todayPR.setHours(0,0,0,0);
+    const dcPR=c.data_cursa?new Date(c.data_cursa):null;
+    if(!dcPR||dcPR>=todayPR)return '';
+    if(c.loc_obtinut||c.link_rezultat)return `<div style="margin-top:8px;padding:8px 10px;background:rgba(204,255,0,.07);border:1px solid rgba(204,255,0,.2);border-radius:8px">
+      <div style="font-size:10px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">🏆 Rezultat Final</div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        ${c.loc_obtinut?`<span style="font-family:var(--display);font-size:22px;color:var(--accent)">Loc ${c.loc_obtinut}</span>`:''}
+        ${c.total_participanti?`<span style="font-size:13px;color:var(--t2)">din ${c.total_participanti} participanți</span>`:''}
+        ${c.link_rezultat?`<a href="${escHtml(c.link_rezultat)}" target="_blank" rel="noopener" style="font-size:11px;color:var(--accent);text-decoration:none">📊 Clasament</a>`:''}
+      </div>
+    </div>`;
+    return `<div style="margin-top:8px;padding:8px 10px;background:var(--s2);border:1px solid var(--border);border-radius:8px">
+      <div style="font-size:10px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">🏆 Adaugă Rezultat</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end">
+        <div><div style="font-size:10px;color:var(--t3);margin-bottom:3px">Loc</div>
+          <input type="number" id="rc-loc-${c.id}" placeholder="5" style="width:70px;height:30px;font-size:13px;border-radius:6px;border:1px solid var(--border);background:var(--s1);color:var(--text);padding:0 8px"></div>
+        <div><div style="font-size:10px;color:var(--t3);margin-bottom:3px">Total</div>
+          <input type="number" id="rc-total-${c.id}" placeholder="200" style="width:80px;height:30px;font-size:13px;border-radius:6px;border:1px solid var(--border);background:var(--s1);color:var(--text);padding:0 8px"></div>
+        <div style="flex:1;min-width:120px"><div style="font-size:10px;color:var(--t3);margin-bottom:3px">Link clasament</div>
+          <input type="url" id="rc-link-${c.id}" placeholder="https://..." style="width:100%;height:30px;font-size:12px;border-radius:6px;border:1px solid var(--border);background:var(--s1);color:var(--text);padding:0 8px"></div>
+        <button class="btn btn-ghost btn-sm" style="height:30px;color:var(--accent)" onclick="saveRaceResult('${c.id}')">✅ Salvează</button>
+      </div>
+    </div>`;
+  })()}
   </div>`;
 }
 
@@ -5218,9 +5500,24 @@ function renderEstimare() {
         monthly[mi].total += Math.round(perMonth);
       }
     } else {
-      // Race equipment: put in January as upfront cost
-      monthly[0].items.push({lbl:`👟 ${e.denumire}`, v:cost});
-      monthly[0].total += cost;
+      // Race equipment: put in month of first associated race, or purchase date
+      const raceIds=e.race_ids||[];
+      let placed=false;
+      if(raceIds.length>0){
+        const raceMonths=raceIds.map(rid=>DB.races.find(r=>r.id===rid))
+          .filter(Boolean).map(r=>r.data_cursa?new Date(r.data_cursa).getMonth():-1)
+          .filter(m=>m>=0).sort((a,b)=>a-b);
+        if(raceMonths.length>0){
+          const m=raceMonths[0];
+          const lbl=`👟 ${e.shoe_id?'['+e.shoe_id+'] ':''}${e.nickname||e.denumire}`;
+          monthly[m].items.push({lbl,v:cost}); monthly[m].total+=cost; placed=true;
+        }
+      }
+      if(!placed){
+        const m=e.data_achizitie?new Date(e.data_achizitie).getMonth():0;
+        const lbl=`👟 ${e.shoe_id?'['+e.shoe_id+'] ':''}${e.nickname||e.denumire}`;
+        monthly[m].items.push({lbl,v:cost}); monthly[m].total+=cost;
+      }
     }
   });
   c.forEach(x=>{
@@ -5348,7 +5645,9 @@ function renderEchip() {
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap">
         <div style="flex:1;min-width:160px">
           <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">${escHtml(x.categorie||'—')}</div>
-          <div style="font-family:var(--display);font-size:18px;letter-spacing:1px;color:var(--text);margin-bottom:6px">${escHtml(x.denumire)}</div>
+          <div style="font-family:var(--display);font-size:18px;letter-spacing:1px;color:var(--text);margin-bottom:2px">
+            ${x.shoe_id?`<span style="font-size:12px;color:var(--accent);margin-right:4px">[${escHtml(x.shoe_id)}]</span>`:''}${escHtml(x.denumire)}</div>
+          ${x.nickname?`<div style="font-size:12px;color:var(--t2);font-style:italic;margin-bottom:4px">"${escHtml(x.nickname)}"</div>`:''}
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
             <span class="badge">💰 ${fmt(x.pret)} RON</span>
             <span class="badge">🏃 ${x.km_actuali||0} / ${x.km_max||0} km</span>
@@ -5380,20 +5679,76 @@ function renderNutri() {
   const calcEl = document.getElementById('gel-pret-calc');
   if (calcEl) calcEl.textContent = gpp.toFixed(2) + ' RON';
 
-  document.getElementById('supl-list').innerHTML = DB.supplements.map(x=>`
-    <div class="bk-card" style="padding:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
-      <div style="flex:1">
-        <div style="font-size:13px;color:var(--text)">${escHtml(x.denumire)}</div>
-        ${x.cantitate?`<div style="font-size:11px;color:var(--t3)">${escHtml(x.cantitate)}</div>`:''}
-        ${x.note?`<div style="font-size:11px;color:var(--t3)">${escHtml(x.note)}</div>`:''}
-        ${x.link_dovada?`<button class="btn btn-ghost btn-sm" style="margin-top:4px;font-size:11px" onclick="openPreview('${(x.link_dovada||'').replace(/'/g,"\'")}','Dovadă — ${(x.denumire||'').replace(/'/g,"\'")}')">📄 Dovadă achiziție</button>`:''}
-      </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <div style="font-family:var(--display);font-size:16px;color:var(--accent)">${fmt(x.pret_lunar)} RON<span style="font-family:var(--body);font-size:10px;color:var(--t3)">/lună</span></div>
-        <button class="btn btn-ghost btn-sm btn-icon" onclick="openSupl('${x.id}')">✏️</button>
-        <button class="btn btn-ghost btn-sm btn-icon" onclick="delSupl('${x.id}')" style="color:var(--red)">🗑</button>
-      </div>
-    </div>`).join('') || '<p style="color:var(--t3)">Niciun supliment.</p>';
+  document.getElementById('supl-list').innerHTML = (() => {
+    if (!DB.supplements.length) return '<p style="color:var(--t3)">Niciun supliment adăugat.</p>';
+    const END_2026    = new Date('2026-12-31T23:59:59');
+    const TODAY       = new Date(); TODAY.setHours(0,0,0,0);
+    const ZILE_RAMASE = Math.max(0, Math.ceil((END_2026-TODAY)/86400000));
+    return DB.supplements.map(x => {
+      const cantTotal   = parseFloat(x.cant_total)||0;
+      const cantPortie  = parseFloat(x.cant_portie)||0;
+      const pretComanda = parseFloat(x.pret_comanda)||0;
+      const stocGrame   = parseFloat(x.stoc_portii)||0;
+      const pretPerGram = cantTotal>0 ? pretComanda/cantTotal : 0;
+      const costZi      = pretPerGram*cantPortie;
+      const costLuna    = costZi*30.5;
+      const necesarGrame= ZILE_RAMASE*cantPortie;
+      const diferentaGr = necesarGrame-stocGrame;
+      const pacheteLipsa= cantTotal>0 ? Math.ceil(diferentaGr/cantTotal) : 0;
+      const zileStoc    = cantPortie>0 ? Math.floor(stocGrame/cantPortie) : 0;
+      const dataStoc    = new Date(TODAY.getTime()+zileStoc*86400000);
+      const dataStocStr = dataStoc.toLocaleDateString('ro-RO',{day:'numeric',month:'long',year:'numeric'});
+      const stocColor   = zileStoc<15?'var(--red)':zileStoc<30?'var(--orange)':'var(--green)';
+      const difColor    = diferentaGr>0?'var(--orange)':'var(--green)';
+      const fmtR = v => v>0?fmt(Math.round(v))+' RON':'—';
+      let historic=[];try{historic=JSON.parse(x.note_historic||'[]');}catch(e2){}
+      return `<div class="bk-card" style="padding:14px 16px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:12px">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:14px;font-weight:700;color:var(--text)">${escHtml(x.denumire)}</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:2px">${cantPortie}g/zi · ${cantTotal}g/pachet · ${fmtR(pretComanda)}/pachet${pretPerGram>0?' · <span style="color:var(--t2)">'+pretPerGram.toFixed(2)+' RON/g</span>':''}</div>
+          </div>
+          <div style="display:flex;gap:5px;flex-shrink:0">
+            <button class="btn btn-ghost btn-sm" onclick="openAddStoc('${x.id}')" style="color:var(--green);font-weight:700">+ Stoc</button>
+            <button class="btn btn-ghost btn-sm btn-icon" onclick="openSupl('${x.id}')">✏️</button>
+            <button class="btn btn-ghost btn-sm btn-icon" onclick="delSupl('${x.id}')" style="color:var(--red)">🗑</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
+          <div style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px">
+            <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">💰 Cost lunar</div>
+            <div style="font-family:var(--display);font-size:20px;color:var(--accent)">${fmtR(costLuna)}</div>
+            <div style="font-size:10px;color:var(--t3);margin-top:1px">${costZi>0?costZi.toFixed(2)+' RON/zi':'—'}</div>
+          </div>
+          <div style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px">
+            <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">📦 Stoc actual</div>
+            <div style="font-family:var(--display);font-size:20px;color:${stocColor}">${fmt(stocGrame)}g</div>
+            <div style="font-size:10px;color:${stocColor};margin-top:1px">${zileStoc} zile rămase</div>
+          </div>
+          <div style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px">
+            <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">📅 Stocul ajunge până</div>
+            <div style="font-size:13px;font-weight:600;color:${stocColor};line-height:1.3">${stocGrame>0?dataStocStr:'Stoc gol'}</div>
+          </div>
+          <div style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px">
+            <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">🛒 Necesar până 31.12</div>
+            <div style="font-family:var(--display);font-size:20px;color:${difColor}">${diferentaGr>0?'+'+fmt(Math.round(diferentaGr))+'g':'✅ OK'}</div>
+            <div style="font-size:10px;color:var(--t3);margin-top:1px">${diferentaGr>0?'≈ '+pacheteLipsa+' pachet'+(pacheteLipsa>1?'e':'')+' · '+fmtR(necesarGrame*pretPerGram):'Stoc suficient'}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:${historic.length?'4':'0'}px">
+          ${x.note?`<a href="${escHtml(x.note)}" target="_blank" rel="noopener" style="font-size:11px;color:var(--accent);text-decoration:none">🔗 Produs</a>`:''}
+          ${x.link_dovada?`<button class="btn btn-ghost btn-sm" style="font-size:11px" onclick="previewDoc('',${JSON.stringify(x.link_dovada)})">📄 Factură</button>`:''}
+        </div>
+        ${historic.length?`<details><summary style="font-size:11px;color:var(--t3);cursor:pointer;user-select:none">📋 Istoric (${historic.length})</summary>
+          <div style="margin-top:6px;display:flex;flex-direction:column;gap:4px">
+          ${historic.slice().reverse().map(h=>`<div style="font-size:11px;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:6px 8px;display:flex;justify-content:space-between;align-items:center;gap:8px">
+            <div><span style="color:var(--t3)">${h.data}</span> · +${fmt(h.grame)}g${h.cost?' · '+fmt(h.cost)+' RON':''}</div>
+            <div style="display:flex;gap:4px">${h.link_produs?`<a href="${escHtml(h.link_produs)}" target="_blank" style="font-size:10px;color:var(--accent)">🔗</a>`:''}${h.link_factura?`<a href="${escHtml(h.link_factura)}" target="_blank" style="font-size:10px;color:var(--t2)">📄</a>`:''}</div>
+          </div>`).join('')}
+          </div></details>`:''}
+      </div>`;
+    }).join('')
+  })()
 
   document.getElementById('tr-list').innerHTML = DB.transport.map(x=>`
     <div class="bk-card" style="padding:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
@@ -5436,7 +5791,10 @@ function openRC(id) {
   v('f-dp',x.data_plecare); v('f-di',x.data_sfarsit);
   v('f-gel',x.geluri); v('f-caz',x.cazare); v('f-ins',x.plata_concurs);
   ck('f-rez',x.rezervat); ck('f-pcaz',x.plata_cazare); ck('f-pins',x.plata_concurs_ok);
-  v('f-note',x.note); v('f-link-ins',x.link_dovada_ins); v('f-link-caz',x.link_dovada_caz);
+  v('f-note',x.note);
+  v('f-link-ins',x.link_dovada_ins);   v('f-factura-ins',x.factura_ins||'');
+  v('f-link-caz',x.link_dovada_caz);   v('f-factura-caz',x.factura_caz||'');
+  v('f-link-factura',x.link_dovada_factura||''); v('f-factura-desc',x.factura_desc||'');
   document.getElementById('ov-rc').classList.add('on');
 }
 
@@ -5471,7 +5829,11 @@ async function saveRC() {
     plata_concurs_ok: document.getElementById('f-pins').checked,
     note: document.getElementById('f-note').value.trim(),
     link_dovada_ins: document.getElementById('f-link-ins').value.trim()||null,
-    link_dovada_caz: document.getElementById('f-link-caz').value.trim()||null,
+    link_dovada_caz:     document.getElementById('f-link-caz').value.trim()||null,
+    factura_ins:         document.getElementById('f-factura-ins')?.value.trim()||null,
+    factura_caz:         document.getElementById('f-factura-caz')?.value.trim()||null,
+    link_dovada_factura: document.getElementById('f-link-factura')?.value.trim()||null,
+    factura_desc:        document.getElementById('f-factura-desc')?.value.trim()||null,
   };
   try {
     if (editRCid) {
@@ -5581,7 +5943,8 @@ function openEQ(id) {
   const x = id ? DB.equipment.find(e=>e.id===id) : {};
   const v=(fid,val)=>{const el=document.getElementById(fid);if(el)el.value=val||'';};
   const cat=document.getElementById('eq-cat'); if(cat) cat.value=x.categorie||'Pantofi Curse Scurte';
-  v('eq-den',x.denumire); v('eq-prt',x.pret); v('eq-kmx',x.km_max); v('eq-kma',x.km_actuali); v('eq-note',x.note);
+  v('eq-den',x.denumire); v('eq-prt',x.pret); v('eq-kmx',x.km_max);
+  v('eq-shoe-id',x.shoe_id||''); v('eq-nickname',x.nickname||'');; v('eq-kma',x.km_actuali); v('eq-note',x.note);
   v('eq-link', x.link_dovada);
   // Preview button
   const pw = document.getElementById('eq-link-preview-wrap');
@@ -5667,6 +6030,8 @@ async function saveEQ() {
     km_actuali: +document.getElementById('eq-kma').value||0,
     note: document.getElementById('eq-note').value.trim(),
     link_dovada: document.getElementById('eq-link').value.trim()||null,
+    shoe_id:     document.getElementById('eq-shoe-id')?.value.trim()||null,
+    nickname:    document.getElementById('eq-nickname')?.value.trim()||null,
     race_ids: useType==='race' ? Array.from(raceChecks).map(c=>c.value) : [],
     use_type: useType,
     train_months: useType==='training' ? (+document.getElementById('eq-train-months').value||0) : null,
@@ -5701,50 +6066,121 @@ async function delEQ(id) {
 // ══════════════════════════════════════════════════════
 //  MODAL CRUD — SUPLIMENTE
 // ══════════════════════════════════════════════════════
+
+// ── Supliment helpers ─────────────────────────────────
+let _stocSuplId=null;
+
+function suplPreview(){
+  const ct=parseFloat(document.getElementById('supl-cant-total')?.value)||0;
+  const cp=parseFloat(document.getElementById('supl-cant-portie')?.value)||0;
+  const pr=parseFloat(document.getElementById('supl-pret-comanda')?.value)||0;
+  const st=parseFloat(document.getElementById('supl-stoc')?.value)||0;
+  const ppg=ct>0?pr/ct:0; const cz=ppg*cp; const cl=cz*30.5; const zpb=cp>0?Math.floor(ct/cp):0;
+  const s=id=>document.getElementById(id);
+  if(s('prev-cost-zi'))  s('prev-cost-zi').textContent  =cz>0?cz.toFixed(2)+' RON':'—';
+  if(s('prev-cost-luna'))s('prev-cost-luna').textContent=cl>0?Math.round(cl)+' RON':'—';
+  if(s('prev-zile-buc')) s('prev-zile-buc').textContent =zpb||'—';
+  const ie=s('supl-stoc-info');
+  if(ie&&st&&cp){const zs=Math.floor(st/cp);const col=zs<15?'var(--red)':zs<30?'var(--orange)':'var(--green)';
+    ie.innerHTML=`<span style="color:${col}">Stocul curent ajunge pentru <strong>${zs} zile</strong></span>`;}
+  else if(ie)ie.textContent='';
+}
+function suplCalcAll(){suplPreview();}
+function suplCalcPortii(){suplPreview();}
+function suplUpdateRamas(){suplPreview();}
+
+function openAddStoc(id){
+  _stocSuplId=id;
+  const x=DB.supplements.find(s=>s.id===id)||{};
+  document.getElementById('stoc-supl-name').textContent=x.denumire||'—';
+  const ct=parseFloat(x.cant_total)||0; const cp=parseFloat(x.cant_portie)||0;
+  const zpb=cp>0?Math.floor(ct/cp):0;
+  document.getElementById('stoc-supl-info').textContent=
+    ct?ct+'g/pachet · '+zpb+' zile/pachet · '+fmt(x.pret_comanda||0)+' RON':'—';
+  document.getElementById('stoc-nr-pachete').value=1;
+  if(document.getElementById('stoc-link-produs'))document.getElementById('stoc-link-produs').value='';
+  if(document.getElementById('stoc-link-factura'))document.getElementById('stoc-link-factura').value='';
+  stocCalcPreview();
+  document.getElementById('ov-supl-stoc').classList.add('on');
+}
+function closeAddStoc(){document.getElementById('ov-supl-stoc').classList.remove('on');_stocSuplId=null;}
+function stocCalcPreview(){
+  const x=_stocSuplId?DB.supplements.find(s=>s.id===_stocSuplId)||{}:{};
+  const nr=parseInt(document.getElementById('stoc-nr-pachete').value)||1;
+  const ct=parseFloat(x.cant_total)||0; const cp=parseFloat(x.cant_portie)||0;
+  const gr=ct*nr; const zile=cp>0?Math.floor(gr/cp):0;
+  const pg=document.getElementById('stoc-preview-gr');
+  const pz=document.getElementById('stoc-preview-zile');
+  if(pg)pg.textContent=gr?'+'+fmt(gr)+'g':'—';
+  if(pz)pz.textContent=zile?'+'+zile+' zile':'—';
+}
+async function saveAddStoc(){
+  if(!isOwnerLoggedIn()||!_stocSuplId)return;
+  const x=DB.supplements.find(s=>s.id===_stocSuplId)||{};
+  const nr=parseInt(document.getElementById('stoc-nr-pachete').value)||1;
+  const lp=document.getElementById('stoc-link-produs')?.value.trim()||null;
+  const lf=document.getElementById('stoc-link-factura')?.value.trim()||null;
+  const ct=parseFloat(x.cant_total)||0; const cp=parseFloat(x.cant_portie)||0;
+  const gr=ct*nr; const newStoc=(parseFloat(x.stoc_portii)||0)+gr;
+  const cost=(parseFloat(x.pret_comanda)||0)*nr;
+  let hist=[];try{hist=JSON.parse(x.note_historic||'[]');}catch(e2){}
+  hist.push({data:new Date().toISOString().slice(0,10),nr_pachete:nr,grame:gr,cost,link_produs:lp,link_factura:lf});
+  try{
+    const[u]=await sbPatch('supplements',x.id,{
+      stoc_portii:newStoc, data_achizitie:new Date().toISOString().slice(0,10),
+      note_historic:JSON.stringify(hist),
+      link_dovada:lf||x.link_dovada, note:lp||x.note,
+    });
+    const i=DB.supplements.findIndex(s=>s.id===x.id);if(i>=0)DB.supplements[i]=u;
+    toast('✅ +'+fmt(gr)+'g adăugat! Stoc nou: '+fmt(newStoc)+'g','ok');
+    closeAddStoc();renderNutri();
+  }catch(e){toast('❌ Eroare: '+e.message,'err');}
+}
+
 function openSupl(id) {
   editSuplId=id||null;
   const x=id?DB.supplements.find(s=>s.id===id):{};
+  document.getElementById('supl-title').textContent=id?'EDITEAZĂ SUPLIMENT':'SUPLIMENT NOU';
   const v=(fid,val)=>{const el=document.getElementById(fid);if(el)el.value=val||'';};
-  v('supl-den',x.denumire); v('supl-cant',x.cantitate); v('supl-pret',x.pret_lunar); v('supl-note',x.note);
-  v('supl-link',x.link_dovada);
-  const pw=document.getElementById('supl-link-preview-wrap');
-  if(pw) pw.innerHTML = x.link_dovada ? `<button class="btn btn-ghost btn-sm" onclick="openPreview('${(x.link_dovada||'').replace(/'/g,"\'")}','Dovadă supliment — ${(x.denumire||'').replace(/'/g,"\'")}')">👁️ Previzualizare</button>` : '';
+  v('supl-den',x?.denumire); v('supl-cant-total',x?.cant_total);
+  v('supl-cant-portie',x?.cant_portie); v('supl-pret-comanda',x?.pret_comanda);
+  v('supl-stoc',x?.stoc_portii); v('supl-note',x?.note); v('supl-link',x?.link_dovada);
+  suplPreview();
   document.getElementById('ov-supl').classList.add('on');
 }
+
 function closeSupl() { document.getElementById('ov-supl').classList.remove('on'); editSuplId=null; }
 
 async function saveSupl() {
   if (!isOwnerLoggedIn()) return;
-  // Încearcă să restaureze tokenul din localStorage dacă lipsește
-  if (!authToken) {
-    try {
-      const saved = localStorage.getItem('sb_session');
-      if (saved) { const s = JSON.parse(saved); authToken = s.access_token; }
-    } catch(e) {}
-  }
-  if (!authToken) { toast('🔒 Sesiunea a expirat — reconectează-te.','err'); showLoginModal(); return; }
+  if (!authToken){try{const sv=JSON.parse(localStorage.getItem('sb_session')||'{}');authToken=sv.access_token;}catch(e){}}
+  if (!authToken){toast('🔒 Sesiunea a expirat','err');showLoginModal();return;}
   const den=document.getElementById('supl-den').value.trim();
-  if (!den) { toast('⚠️ Introduceți denumirea!','err'); return; }
+  if(!den){toast('⚠️ Introduceți denumirea!','err');return;}
+  const cantTotal  =parseFloat(document.getElementById('supl-cant-total').value)||null;
+  const cantPortie =parseFloat(document.getElementById('supl-cant-portie').value)||null;
+  const pretComanda=parseFloat(document.getElementById('supl-pret-comanda').value)||null;
+  const stoc       =parseFloat(document.getElementById('supl-stoc').value)||null;
+  const pretPerGram=(cantTotal&&pretComanda)?pretComanda/cantTotal:0;
+  const pretLunar  =(pretPerGram&&cantPortie)?Math.round(pretPerGram*cantPortie*30.5):0;
   const payload={
-    user_id:currentUser.id,
-    denumire:den,
-    cantitate:document.getElementById('supl-cant').value.trim(),
-    pret_lunar:+document.getElementById('supl-pret').value||0,
-    note:document.getElementById('supl-note').value.trim(),
+    user_id:currentUser.id, denumire:den,
+    cant_total:cantTotal, cant_portie:cantPortie,
+    pret_comanda:pretComanda, pret_lunar:pretLunar, stoc_portii:stoc,
+    note:document.getElementById('supl-note').value.trim()||null,
     link_dovada:document.getElementById('supl-link').value.trim()||null,
   };
-  try {
-    if (editSuplId) {
-      const [u]=await sbPatch('supplements',editSuplId,payload);
-      const idx=DB.supplements.findIndex(s=>s.id===editSuplId); if(idx>=0) DB.supplements[idx]=u;
+  try{
+    if(editSuplId){
+      const[u]=await sbPatch('supplements',editSuplId,payload);
+      const i=DB.supplements.findIndex(s=>s.id===editSuplId);if(i>=0)DB.supplements[i]=u;
       toast('✅ Supliment actualizat!','ok');
-    } else {
-      const [c]=await sbPost('supplements',payload);
-      DB.supplements.push(c);
-      toast('✅ Supliment adăugat!','ok');
+    }else{
+      const[c]=await sbPost('supplements',payload);
+      DB.supplements.push(c);toast('✅ Supliment adăugat!','ok');
     }
-    closeSupl(); renderNutri(); renderEstimare();
-  } catch(e) { toast('❌ Eroare: '+e.message,'err'); }
+    closeSupl();renderNutri();renderEstimare();
+  }catch(e){toast('❌ Eroare: '+e.message,'err');}
 }
 
 async function delSupl(id) {
@@ -6947,7 +7383,8 @@ let touchStartX=0;
 document.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;},{passive:true});
 document.addEventListener('touchend',e=>{
   const dx=touchStartX-e.changedTouches[0].clientX;
-  if(dx>60&&document.getElementById('drawer').classList.contains('on')) closeDrawer();
+  const drawer=document.getElementById('drawer');
+  if(dx>60&&drawer&&drawer.classList.contains('on')) closeDrawer();
 },{passive:true});
 
 function toggleBio() {
@@ -7653,7 +8090,7 @@ function spPopulateAll() {
   applySlideMedia();
   applyStorySlides();
   // Slide 4B — wishlist
-  spPopulateWishlist();
+  spPopulateSuportSlide();
   // S9 — De ce eu
   const wi = SETTINGS.why_items || [];
   ['1','2','3'].forEach((n,i) => {
@@ -8498,7 +8935,7 @@ function spDrawMapS2(races, today) {
     if (!target) return;
     const i = parseInt(target.dataset.race);
     spSelectRace(i);
-    spOpenRaceDetail(i);
+    if (window.innerWidth <= 600) openMobileRaceModal(i); else spOpenRaceDetail(i);
   });
 }
 
@@ -8787,14 +9224,13 @@ const ALL_SLIDES = [
   { id:'sp-s2',  icon:'🗺️', label:'Curse + Hartă România — interactiv' },
   { id:'sp-s3',  icon:'📊', label:'Dovada — numere reale' },
   { id:'sp-s4',  icon:'🤝', label:'Parteneriat + ROI Simulator' },
-  { id:'sp-s4b', icon:'👟', label:'Wishlist Echipament — Susține-mă' },
+  { id:'sp-s4b', icon:'💛', label:'Susține Sezonul — 3 metode' },
   // S5 combinat in S2
   // { id:'sp-s5',  icon:'📍', label:'Unde apar — hartă România animată' },
   { id:'sp-s6',  icon:'⏱️', label:'Countdown — next race' },
   { id:'sp-s7',  icon:'📈', label:'Unde se duc banii — buget' },
   { id:'sp-s8',  icon:'⚡', label:'Ultima alergare — live Strava' },
   { id:'sp-s9',  icon:'🧩', label:'De ce eu — 3 motive' },
-  { id:'sp-s10', icon:'💬', label:'Testimonial + CTA final' },
   { id:'sp-s11', icon:'🏃', label:'Povestea — O singură decizie proprie' },
   { id:'sp-s12', icon:'⛰️', label:'Povestea — Chin. Măreție. Top 50.' },
   { id:'sp-s13', icon:'🌩️', label:'Povestea — Km 130' },
@@ -9828,6 +10264,38 @@ function slContact() {
   window.location.href = 'mailto:' + email + '?subject=Sponsorizare Trail 2026&body=Buna ziua, sunt interesat de un parteneriat pentru sezonul 2026.';
 }
 
+
+function spPopulateSuportSlide(){
+  const races=DB.races||[],eq=DB.equipment||[],supls=DB.supplements||[];
+  const gpp=(DB.nutri?.gel_pret_set24||0)/24;
+  const items=[
+    {icon:'🏁',label:'Înscrieri',  val:Math.round(races.reduce((s,r)=>s+(r.plata_concurs||0),0))||4200},
+    {icon:'🏨',label:'Cazare',     val:Math.round(races.reduce((s,r)=>s+(r.cazare||0),0))||2800},
+    {icon:'🚗',label:'Transport',  val:Math.round(races.reduce((s,r)=>s+(r.cost_transport||0),0))||1500},
+    {icon:'👟',label:'Echipament', val:Math.round(eq.reduce((s,e)=>s+(parseFloat(e.pret)||0),0))||3200},
+    {icon:'🧃',label:'Nutriție',   val:Math.round(races.reduce((s,r)=>s+(r.geluri||0)*gpp,0))||800},
+    {icon:'💊',label:'Suplimente', val:Math.round(supls.reduce((s,x)=>s+(x.pret_lunar||0)*12,0))||900},
+  ];
+  const total=items.reduce((s,i)=>s+i.val,0);
+  const maxV=Math.max(...items.map(i=>i.val),1);
+  const list=document.getElementById('sp-s4b-budget-list');
+  if(list){
+    list.innerHTML=items.map(item=>`<div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:13px;flex-shrink:0;width:18px">${item.icon}</span>
+      <span style="font-size:10px;color:rgba(255,255,255,.45);font-family:'Inter',sans-serif;min-width:72px;flex-shrink:0">${item.label}</span>
+      <div style="flex:1;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden">
+        <div style="height:100%;background:var(--accent);border-radius:2px;width:0;transition:width .8s cubic-bezier(.4,0,.2,1)" data-pct="${Math.round(item.val/maxV*100)}"></div>
+      </div>
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:12px;color:var(--accent);min-width:54px;text-align:right">${fmt(item.val)}</span>
+    </div>`).join('');
+    setTimeout(()=>{list.querySelectorAll('[data-pct]').forEach(b=>{b.style.width=b.dataset.pct+'%';});},600);
+  }
+  const totEl=document.getElementById('sp-s4b-total');
+  if(totEl)totEl.textContent=fmt(total)+' RON';
+  const waBtn=document.getElementById('sp-s4b-wa-btn');
+  if(waBtn){const phone=(SETTINGS.whatsapp_phone||'').replace(/\D/g,'')||'40763829093';
+    waBtn.href='https://wa.me/'+phone+'?text='+encodeURIComponent('Bună! Am văzut wishlist-ul de echipament și vreau să te susțin!');}
+}
 function checkSponsorParam() {
   const params = new URLSearchParams(window.location.search);
   const isPrez = params.get('prez') === '1' || params.get('sponsor') === '1';
